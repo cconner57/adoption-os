@@ -13,7 +13,7 @@ const props = defineProps<{
 const isMobile = useIsMobile()
 
 const randomPet = ref<IPet | null>(null)
-
+console.log('AdoptionSpotlight props.pets:', props.pets)
 watch(
   [() => props.pets, isMobile],
   ([newPets, newIsMobile], [oldPets, oldIsMobile]) => {

@@ -11,6 +11,7 @@ func (app *Application) routes() http.Handler {
 	// Register Routes
 	mux.HandleFunc("GET /", app.Home)
 	mux.HandleFunc("GET /pets", app.GetAllPets)
+	mux.HandleFunc("GET /pets/spotlight", app.GetSpotlightPets)
 	mux.HandleFunc("GET /pets/available", app.GetAvailablePets)
 
 	// Setup CORS

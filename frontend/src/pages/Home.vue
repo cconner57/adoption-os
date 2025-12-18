@@ -1,7 +1,9 @@
 <script setup lang="ts">
 import { useRouter } from 'vue-router'
-import BannerButton from '../components/common/ui/BannerButton.vue'
+import { onMounted } from 'vue'
+import { usePets } from '../composables/usePets.ts'
 
+import BannerButton from '../components/common/ui/BannerButton.vue'
 import Footer from '../components/common/footer/Footer.vue'
 import AdoptionSpotlight from '../components/home/spotlight/AdoptionSpotlight.vue'
 import HeroSection from '../components/home/hero-section/HeroSection.vue'
@@ -9,13 +11,19 @@ import Mission from '../components/home/mission/Mission.vue'
 import Impact from '../components/home/impact/Impact.vue'
 
 const router = useRouter()
+
+const { spotlightPets, loading, error, fetchSpotlight } = usePets()
+
+onMounted(() => {
+  fetchSpotlight()
+})
 </script>
 
 <template>
   <div class="container">
     <HeroSection />
     <main class="section-1">
-      <AdoptionSpotlight />
+      <AdoptionSpotlight :pets="spotlightPets" :loading="loading" :error="error" />
       <Mission />
     </main>
     <main class="section-2">

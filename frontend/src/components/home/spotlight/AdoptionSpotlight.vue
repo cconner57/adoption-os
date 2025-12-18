@@ -3,27 +3,40 @@ import { ref, computed, watch } from 'vue'
 import PetItem from '../../common/pet-item/PetItem.vue'
 import { useIsMobile } from '../../../utils/useIsMobile.ts'
 import type { IPet } from '../../../models/common.ts'
-import { mockPetsData } from '../../../stores/mockPetData.ts'
+
+const props = defineProps<{
+  pets: IPet[]
+  loading: boolean
+  error: string | null
+}>()
 
 const isMobile = useIsMobile()
 
-const allPets = mockPetsData.filter((pet) => pet.profileSettings.isSpotlightFeatured)
+const randomPet = ref<IPet | null>(null)
 
-const randomPet = ref<IPet | null>(
-  isMobile.value ? allPets[Math.floor(Math.random() * allPets.length)] : null,
+watch(
+  [() => props.pets, isMobile],
+  ([newPets, newIsMobile], [oldPets, oldIsMobile]) => {
+    if (!newIsMobile) return
+
+    const hasPets = newPets && newPets.length > 0
+    if (!hasPets) return
+
+    const justSwitchedToMobile = !oldIsMobile
+    const justLoadedPets = !oldPets || oldPets.length === 0
+
+    if (justSwitchedToMobile || justLoadedPets) {
+      randomPet.value = newPets[Math.floor(Math.random() * newPets.length)]
+    }
+  },
+  { immediate: true },
 )
-
-watch(isMobile, (newIsMobile, oldIsMobile) => {
-  if (newIsMobile && !oldIsMobile) {
-    randomPet.value = allPets[Math.floor(Math.random() * allPets.length)]
-  }
-})
 
 const displayedPets = computed((): IPet[] => {
   if (isMobile.value) {
     return randomPet.value ? [randomPet.value] : []
   }
-  return allPets
+  return props.pets
 })
 </script>
 

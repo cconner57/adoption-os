@@ -32,3 +32,6 @@ coverage
 *.sw?
 
 *.tsbuildinfo
+
+# Gemini
+.gemini/

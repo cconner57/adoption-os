@@ -8,7 +8,7 @@
 
     <div class="times">
       <label class="time-card">
-        <input type="checkbox" />
+        <input type="checkbox" value="10AM – 12PM" />
         <div class="time-card__content">
           <strong>10AM – 12PM</strong>
           <small>Clean, feed & socialize with cats</small>
@@ -16,7 +16,7 @@
       </label>
 
       <label class="time-card">
-        <input type="checkbox" />
+        <input type="checkbox" value="12PM – 2PM" />
         <div class="time-card__content">
           <strong>12PM – 2PM</strong>
           <small>Focus on cat socializing & customer support</small>
@@ -24,7 +24,15 @@
       </label>
 
       <label class="time-card">
-        <input type="checkbox" />
+        <input type="checkbox" value="2PM – 4PM" />
+        <div class="time-card__content">
+          <strong>2PM – 4PM</strong>
+          <small>Focus on cat socializing & customer support</small>
+        </div>
+      </label>
+
+      <label class="time-card">
+        <input type="checkbox" value="4PM – 6PM" />
         <div class="time-card__content">
           <strong>4PM – 6PM</strong>
           <small>Focus on cat socializing & customer support</small>
@@ -32,12 +40,13 @@
       </label>
 
       <label class="time-card">
-        <input type="checkbox" />
+        <input type="checkbox" value="6PM – 8PM" />
         <div class="time-card__content">
-          <strong>3PM – 4PM</strong>
+          <strong>6PM – 8PM</strong>
           <small>Clean, feed & socialize with cats</small>
         </div>
       </label>
+
     </div>
   </fieldset>
 </template>

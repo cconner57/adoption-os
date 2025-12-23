@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { IVolunteerFormState } from '../../../models/volunteer-form.ts'
+
 import InputField from '../../common/ui/InputField.vue'
 import InputSignature from '../../common/ui/InputSignature.vue'
 
@@ -12,7 +12,7 @@ const {
   parentName,
   parentSignature,
   parentDate,
-  formState,
+
 } = defineProps<{
   age: number | null
   fullName: string
@@ -22,12 +22,12 @@ const {
   parentSignature: string | null
   signature: string | null
   signatureDate: string
-  formState: IVolunteerFormState
+
 }>()
 
 const emit = defineEmits<{
-  (e: 'update:fullName', value: string): void
-  (e: 'update:parentName', value: string): void
+  'update:fullName': [value: string]
+  'update:parentName': [value: string]
 }>()
 </script>
 

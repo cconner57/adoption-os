@@ -62,6 +62,12 @@ button {
   min-width: 220px;
   padding: 0 32px;
   font-size: 1.5rem;
+
+  @media (max-width: 768px) {
+    height: 50px;
+    font-size: 1.25rem;
+    padding: 0 24px;
+  }
 }
 
 .button-color-blue {

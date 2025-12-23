@@ -13,10 +13,14 @@ const props = defineProps<{
   modelValue: string | number | null
   fullWidth?: boolean
   required?: boolean
+  hasError?: boolean
 }>()
 
 // eslint-disable-next-line no-unused-vars
-const emit = defineEmits<{ (e: 'update:modelValue', value: string | number | null): void }>()
+const emit = defineEmits<{
+  (e: 'update:modelValue', value: string | number | null): void
+  (e: 'blur', event: Event): void
+}>()
 
 const attrs = useAttrs()
 const inputId = props.id ?? `input-${Math.random().toString(36).slice(2, 9)}`
@@ -25,10 +29,14 @@ function onInput(e: Event) {
   const target = e.target as HTMLInputElement | null
   emit('update:modelValue', target?.value ?? null)
 }
+
+function onBlur(e: Event) {
+  emit('blur', e)
+}
 </script>
 
 <template>
-  <div class="control field" :class="{ 'is-fullwidth': props.fullWidth }">
+  <div class="control field" :class="{ 'is-fullwidth': props.fullWidth, 'has-error': props.hasError }">
     <label class="label" :for="inputId">{{ props.label }}</label>
     <div class="field">
       <input
@@ -39,43 +47,57 @@ function onInput(e: Event) {
         :type="props.type"
         :value="props.modelValue"
         @input="onInput"
+        @blur="onBlur"
         :required="props.required"
       />
     </div>
   </div>
 </template>
 
-<style scoped lang="css">
-.input {
-  width: 100%;
-  padding: 0.5rem;
-  font-size: 1rem;
-  border: 1px solid var(--border-color);
-  border-radius: 4px;
-  box-sizing: border-box;
-  transition: border-color 0.2s ease-in-out;
-  color: var(--font-color-dark);
-  background-color: var(--font-color-light);
+<style scoped>
+.control {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
 }
-.input:focus {
-  border-color: var(--green);
-  outline: none;
+
+.label {
+  font-weight: 600;
+  font-size: 0.9rem;
 }
-.input::placeholder {
-  color: var(--font-color-dark);
-  opacity: 0.6;
+
+.has-error input {
+  border-color: #ef4444; /* Red-500 */
+  outline: 2px solid #ef4444;
 }
+/* Focus state for error to keep it red */
+.has-error input:focus {
+  border-color: #ef4444;
+  outline: 2px solid #ef4444;
+}
+
 input {
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  background-color: #ffffff;
-  border: 1px solid var(--border-color);
-  border-radius: 4px;
-  padding: 0.5rem;
+  width: 100%;
+  padding: 12px 16px;
+  border-radius: 8px;
+  border: 1px solid #e5e7eb;
+  font-size: 1rem;
+  transition: all 0.2s;
+  background-color: #ffffff; /* Explicit white background */
+
+  &::placeholder {
+    color: var(--font-color-light);
+    opacity: 0.6;
+  }
 }
-/* Added styles for date and time inputs */
-input[type='date'],
-input[type='time'] {
-  appearance: none; /* Removes default browser styles */
+
+.is-empty {
+  color: var(--font-color-light) !important;
+}
+
+/* Date input specific handling */
+input[type='date'] {
+  appearance: none;
   -webkit-appearance: none;
   -moz-appearance: none;
   min-height: 2.5rem; /* Ensure height matches text inputs */

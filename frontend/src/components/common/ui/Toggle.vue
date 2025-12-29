@@ -1,7 +1,12 @@
 <script setup lang="ts">
-const { leftLabel = 'No', rightLabel = 'Yes' } = defineProps<{
+const props = defineProps<{
   leftLabel?: string
   rightLabel?: string
+  modelValue?: boolean
+}>()
+
+const emit = defineEmits<{
+  'update:modelValue': [value: boolean]
 }>()
 </script>
 
@@ -9,7 +14,13 @@ const { leftLabel = 'No', rightLabel = 'Yes' } = defineProps<{
   <div class="switch-row">
     <span class="switch-text">{{ leftLabel }}</span>
     <label class="switch">
-      <input id="allergies" type="checkbox" class="switch-input" />
+      <input
+        id="allergies"
+        type="checkbox"
+        class="switch-input"
+        :checked="modelValue"
+        @change="emit('update:modelValue', ($event.target as HTMLInputElement).checked)"
+      />
       <span class="switch__track"></span>
       <span class="switch__thumb"></span>
     </label>

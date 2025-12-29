@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { defineEmits } from 'vue'
 
 const { formError, selectedAnimal } = defineProps<{
   formError: boolean

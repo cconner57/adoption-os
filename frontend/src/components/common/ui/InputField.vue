@@ -26,7 +26,15 @@ const inputId = props.id ?? `input-${Math.random().toString(36).slice(2, 9)}`
 
 function onInput(e: Event) {
   const target = e.target as HTMLInputElement | null
-  emit('update:modelValue', target?.value ?? null)
+  let val: string | number | null = target?.value ?? null
+
+  if (props.type === 'number' && val !== null && val !== '') {
+    const num = Number(val)
+    if (!isNaN(num)) {
+      val = num
+    }
+  }
+  emit('update:modelValue', val)
 }
 
 function onBlur(e: Event) {
@@ -92,7 +100,7 @@ input {
 }
 
 .is-empty {
-  color: var(--font-color-light) !important;
+  color: var(--font-color-dark);
 }
 
 /* Date input specific handling */

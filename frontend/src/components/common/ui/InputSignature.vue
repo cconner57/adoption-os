@@ -1,6 +1,16 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
 
+const props = defineProps<{
+  label?: string,
+  modelValue?: string | null,
+  hasError?: boolean
+}>()
+
+const emit = defineEmits<{
+  'update:modelValue': [value: string | null]
+}>()
+
 const canvasRef = ref<HTMLCanvasElement | null>(null)
 const isDrawing = ref(false)
 const signatureData = ref<string | null>(null)
@@ -46,14 +56,18 @@ const stopDrawing = () => {
   isDrawing.value = false
   if (context) {
     context.closePath()
-    signatureData.value = canvasRef.value?.toDataURL('image/png') || null
+    const data = canvasRef.value?.toDataURL('image/png') || null
+    signatureData.value = data
+    emit('update:modelValue', data)
   }
 }
 
 const clearCanvas = () => {
   if (context && canvasRef.value) {
-    context.clearRect(0, 0, canvasRef.value.width, canvasRef.value.height)
+    context.fillStyle = '#ffffff'
+    context.fillRect(0, 0, canvasRef.value.width, canvasRef.value.height)
     signatureData.value = null
+    emit('update:modelValue', null)
   }
 }
 
@@ -69,6 +83,9 @@ const scaleCanvas = () => {
       context.lineWidth = 2
       context.lineCap = 'round'
       context.strokeStyle = '#000'
+      // Fill with white initially
+      context.fillStyle = '#ffffff'
+      context.fillRect(0, 0, rect.width, rect.height)
     }
   }
 }
@@ -79,8 +96,8 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="signature-container">
-    <label for="signatureCanvas" class="signature-label">Please sign below:</label>
+  <div class="signature-container" :class="{ 'has-error': hasError }">
+    <label for="signatureCanvas" class="signature-label">{{ label || 'Please sign below:' }}</label>
     <canvas
       id="signatureCanvas"
       ref="canvasRef"
@@ -96,7 +113,7 @@ onMounted(() => {
       @touchend.prevent="stopDrawing"
     ></canvas>
     <div class="signature-actions">
-      <button @click="clearCanvas">Clear</button>
+      <button @click.prevent="clearCanvas">Clear</button>
     </div>
   </div>
 </template>
@@ -125,6 +142,10 @@ onMounted(() => {
   width: 100%;
   height: 200px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.has-error .signature-canvas {
+  border: 2px solid #ef4444;
 }
 
 .signature-actions {

@@ -3,17 +3,7 @@
 import InputField from '../../common/ui/InputField.vue'
 import InputSignature from '../../common/ui/InputSignature.vue'
 
-const {
-  name,
-  fullName,
-  age,
-  signature,
-  signatureDate,
-  parentName,
-  parentSignature,
-  parentDate,
-
-} = defineProps<{
+defineProps<{
   age: number | null
   fullName: string
   name: string
@@ -22,12 +12,21 @@ const {
   parentSignature: string | null
   signature: string | null
   signatureDate: string
-
+  hasNameError?: boolean
+  hasDateError?: boolean
+  hasSignatureError?: boolean
+  hasParentNameError?: boolean
+  hasParentDateError?: boolean
+  hasParentSignatureError?: boolean
 }>()
 
 const emit = defineEmits<{
   'update:fullName': [value: string]
   'update:parentName': [value: string]
+  'update:signature': [value: string | null]
+  'update:signatureDate': [value: string]
+  'update:parentSignature': [value: string | null]
+  'update:parentDate': [value: string]
 }>()
 </script>
 
@@ -35,10 +34,13 @@ const emit = defineEmits<{
   <fieldset class="waiver-container">
     <legend id="waiv" class="section-title">Agreement</legend>
     <p class="waiver">
-      I, {{ name === ' ' ? '(volunteer name)' : name }}, hereby volunteer to assist in various tasks
-      to support IDOHR. I understand that IDOHR and partners are not responsible for any illness or
-      injury caused during volunteer work. I agree to hold harmless IDOHR and partners should I
-      become sick or injured from any animals as a result of my volunteer work.
+      I, {{ name === ' ' ? '(volunteer name)' : name }}, agree to volunteer with I Dream of Home
+      Rescue (IDOHR) and abide by its policies. I understand that animal handling involves risks of
+      injury (e.g., bites, scratches) and illness, and I assume full responsibility for these risks.
+      I hereby release and forever discharge IDOHR, its board, and affiliates from any claims,
+      demands, or causes of action arising from my service. In an emergency, I authorize IDOHR to
+      seek medical treatment on my behalf. I further grant IDOHR the right to use photos or videos
+      of me for promotional or social media purposes.
     </p>
 
     <div class="acknowledgement">
@@ -48,10 +50,24 @@ const emit = defineEmits<{
           placeholder=""
           :modelValue="fullName"
           @update:modelValue="(val) => emit('update:fullName', String(val))"
+          :hasError="hasNameError"
         />
-        <InputField label="Date" placeholder="" type="date" :modelValue="signatureDate" />
+        <InputField
+          label="Date"
+          placeholder=""
+          type="date"
+          :modelValue="signatureDate"
+          @update:modelValue="(val) => emit('update:signatureDate', String(val))"
+          :hasError="hasDateError"
+        />
       </div>
-      <InputSignature label="Signature" placeholder="" :modelValue="signature" />
+      <InputSignature
+        label="Signature"
+        placeholder=""
+        :modelValue="signature"
+        @update:modelValue="(val) => emit('update:signature', val)"
+        :hasError="hasSignatureError"
+      />
     </div>
 
     <label v-if="age !== null && age < 21" for="parental-consent" class="label"
@@ -65,13 +81,23 @@ const emit = defineEmits<{
           placeholder=""
           :modelValue="parentName"
           @update:modelValue="(val) => emit('update:parentName', String(val))"
+          :hasError="hasParentNameError"
         />
-        <InputField label="Date" placeholder="" type="date" :modelValue="parentDate" />
+        <InputField
+          label="Date"
+          placeholder=""
+          type="date"
+          :modelValue="parentDate"
+          @update:modelValue="(val) => emit('update:parentDate', String(val))"
+          :hasError="hasParentDateError"
+        />
       </div>
       <InputSignature
         label="Parent/Guardian Signature"
         placeholder=""
         :modelValue="parentSignature"
+        @update:modelValue="(val) => emit('update:parentSignature', val)"
+        :hasError="hasParentSignatureError"
       />
     </div>
   </fieldset>

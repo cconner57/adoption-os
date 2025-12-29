@@ -10,7 +10,7 @@ import Button from '../components/common/ui/Button.vue'
 import InputField from '../components/common/ui/InputField.vue'
 import InputTextArea from '../components/common/ui/InputTextArea.vue'
 import type { IVolunteerFormState } from '../models/volunteer-form.ts'
-import { computed, reactive } from 'vue'
+import { computed, reactive, ref } from 'vue'
 
 type FormInput = string | number | null
 
@@ -20,7 +20,7 @@ const formatPhoneNumber = (value: FormInput): string => {
   if (digits.length === 0) return ''
   if (digits.length <= 3) return `(${digits}`
   if (digits.length <= 6) return `(${digits.slice(0, 3)})${digits.slice(3)}`
-  return `(${digits.slice(0, 3)})${digits.slice(3, 6)}-${digits.slice(6)}`
+  return `(${digits.slice(0, 3)})${digits.slice(3, 6)}-${digits.slice(6, 10)}` // Limit to 10 digits total (approx 13 chars with parens/dash)
 }
 
 const sanitizeName = (value: FormInput): string => {
@@ -33,10 +33,13 @@ const sanitizeCity = (value: FormInput): string => {
   return String(value).replace(/[^a-zA-Z0-9 -]/g, '')
 }
 
+
 const sanitizeZip = (value: FormInput): string => {
   if (!value) return ''
-  return String(value).replace(/[^a-zA-Z0-9 -]/g, '')
+  // Allow only digits, max 5 chars
+  return String(value).replace(/\D/g, '').substring(0, 5)
 }
+
 
 const sanitizeAddress = (value: FormInput): string => {
   if (!value) return ''
@@ -53,7 +56,7 @@ const formState = reactive<IVolunteerFormState>({
   phoneNumber: '',
   birthday: '',
   age: null as number | null,
-  allergies: '',
+  allergies: false,
   emergencyContactName: '',
   emergencyContactPhone: '',
   volunteerExperience: '',
@@ -70,6 +73,10 @@ const formState = reactive<IVolunteerFormState>({
 
 // Track which fields have been touched/blurred by the user
 const touched = reactive<Record<string, boolean>>({})
+const touched = reactive<Record<string, boolean>>({})
+const isSubmitted = ref(false)
+const hasAttemptedSubmit = ref(false)
+const apiError = ref<string | null>(null)
 
 const handleBlur = (field: string) => {
   touched[field] = true
@@ -130,43 +137,65 @@ const validationErrors = computed(() => {
 })
 
 const handleSubmit = async () => {
+  hasAttemptedSubmit.value = true
+  apiError.value = null
+
   if (!isFormValid.value) {
     // Mark all as touched to show errors on explicit submit attempt
     Object.keys(formState).forEach(key => touched[key] = true)
     return
   }
 
+  // Create a copy of formState to modify for payload
+  const payload = { ...formState }
+
+  // Remove parent fields if age is 21 or older
+  if (payload.age !== null && payload.age >= 21) {
+    delete (payload as any).parentName
+    delete (payload as any).parentSignatureData
+    delete (payload as any).parentSignatureDate
+  }
+
   try {
-    const response = await fetch('http://localhost:4000/applications/volunteer', {
+    const response = await fetch('http://localhost:8080/applications/volunteer', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify(formState),
+      body: JSON.stringify(payload),
     })
 
     if (!response.ok) {
-      const errorData = await response.json()
+      const errorData = await response.json().catch(() => ({}))
+      const errorMessage = errorData.error || `Server Error (${response.status})`
       console.error('Submission failed:', errorData)
-      alert(`Submission failed: ${errorData.error || 'Unknown error'}`)
+      apiError.value = errorMessage
       return
     }
 
     const result = await response.json()
     console.log('Form submitted successfully:', result)
-    alert('Application submitted successfully!')
+    const result = await response.json()
+    console.log('Form submitted successfully:', result)
+    isSubmitted.value = true
+    window.scrollTo({ top: 0, behavior: 'smooth' })
 
-    // Optional: Reset form here
   } catch (error) {
     console.error('Network error:', error)
-    alert('Network error. Please try again later.')
+    apiError.value = 'Network error. Please try again later.'
   }
+}
+
+const handleReset = () => {
+  isSubmitted.value = false
+  window.location.reload()
 }
 </script>
 
 <template>
   <section class="page-shell">
-    <form class="form-card" aria-labelledby="form-title" @submit.prevent="handleSubmit">
+    <div v-if="!isSubmitted" class="form-container">
+      <form class="form-card" aria-labelledby="form-title" @submit.prevent="handleSubmit">
       <ApplicationHeader
         header-title="Volunteer"
         header-text="I Dream of Home Rescue (IDOHR) is an all-volunteer, nonprofit dedicated to helping homeless cats
@@ -178,6 +207,34 @@ const handleSubmit = async () => {
       />
       <fieldset class="volunteer-grid" aria-labelledby="pi">
         <legend id="pi" class="section-title">Personal Information</legend>
+      </form>
+    </div>
+
+    <!-- Success State -->
+    <div v-else class="success-card">
+        <div class="icon-wrapper">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="48"
+            height="48"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            class="success-icon"
+          >
+            <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+            <polyline points="22 4 12 14.01 9 11.01"></polyline>
+          </svg>
+        </div>
+        <h3 class="success-title">Application Received!</h3>
+        <p class="success-message">Thank you for volunteering! We'll review your application and get back to you shortly.</p>
+        <div class="success-actions">
+          <Button title="Return to Home" color="green" @click="handleReset" />
+        </div>
+    </div>
 
         <InputField
           :modelValue="formState.firstName"
@@ -231,7 +288,7 @@ const handleSubmit = async () => {
           type="text"
           autocomplete="postal-code"
           name="zip"
-          maxlength="10"
+          maxlength="5"
           :hasError="touched.zip && !formState.zip"
           @blur="handleBlur('zip')"
         />
@@ -243,7 +300,7 @@ const handleSubmit = async () => {
           type="tel"
           autocomplete="tel"
           name="phoneNumber"
-          maxlength="15"
+          maxlength="13"
           :hasError="touched.phoneNumber && !formState.phoneNumber"
           @blur="handleBlur('phoneNumber')"
         />
@@ -254,18 +311,22 @@ const handleSubmit = async () => {
           type="date"
           autocomplete="bday"
           name="birthday"
+          max="9999-12-31"
           :hasError="touched.birthday && !formState.birthday"
           @blur="handleBlur('birthday')"
         />
         <InputField
-          v-model="formState.age"
+          :modelValue="formState.age"
+          @update:modelValue="(val) => {
+             const str = String(val).replace(/\D/g, '').substring(0, 3);
+             formState.age = str ? Number(str) : null;
+          }"
           label="If under 21, Age"
           placeholder="Age"
-          type="number"
+          type="text"
           name="age"
-          min="0"
-          max="100"
-          :hasError="touched.age && formState.age === null"
+          maxlength="3"
+          :hasError="touched.age && formState.age === null && false"
           @blur="handleBlur('age')"
         />
 
@@ -293,7 +354,7 @@ const handleSubmit = async () => {
           type="tel"
           name="emergencyContactPhone"
           autocomplete="off"
-          maxlength="15"
+          maxlength="13"
           :hasError="touched.emergencyContactPhone && !formState.emergencyContactPhone"
           @blur="handleBlur('emergencyContactPhone')"
         />
@@ -320,25 +381,40 @@ const handleSubmit = async () => {
           @blur="handleBlur('interestReason')"
         />
 
-        <PositionPreferences v-model="formState.positionPreferences" />
+        <PositionPreferences
+          v-model="formState.positionPreferences"
+          :hasError="touched.positionPreferences && formState.positionPreferences.length === 0"
+        />
       </fieldset>
 
-      <Availability v-model="formState.availability" />
+      <Availability
+        v-model="formState.availability"
+        :hasError="touched.availability && formState.availability.length === 0"
+      />
 
       <Agreement
         :name="formState.firstName + ' ' + formState.lastName"
-        :fullName="formState.nameFull"
-        @update:fullName="(val: string) => (formState.nameFull = sanitizeName(val))"
+        v-model:fullName="formState.nameFull"
         :age="formState.age!"
-        :signature="formState.signatureData"
-        :signature-date="formState.signatureDate"
-        :parent-name="formState.parentName"
-        @update:parentName="(val: string) => (formState.parentName = sanitizeName(val))"
-        :parent-signature="formState.parentSignatureData"
-        :parent-date="formState.parentSignatureDate"
+        v-model:signature="formState.signatureData"
+        v-model:signatureDate="formState.signatureDate"
+        v-model:parentName="formState.parentName"
+        v-model:parentSignature="formState.parentSignatureData"
+        v-model:parentDate="formState.parentSignatureDate"
+        :hasNameError="touched.nameFull && !formState.nameFull"
+        :hasDateError="touched.signatureDate && !formState.signatureDate"
+        :hasSignatureError="touched.signatureData && !formState.signatureData"
+        :hasParentNameError="touched.parentName && !formState.parentName"
+        :hasParentDateError="touched.parentSignatureDate && !formState.parentSignatureDate"
+        :hasParentSignatureError="touched.parentSignatureData && !formState.parentSignatureData"
       />
 
-      <div v-if="!isFormValid && validationErrors.length > 0 && Object.keys(touched).length > 0" class="validation-summary">
+      <div v-if="apiError" class="validation-summary error-alert">
+        <p class="summary-title">Submission Error</p>
+        <p>{{ apiError }}</p>
+      </div>
+
+      <div v-if="hasAttemptedSubmit && !isFormValid && validationErrors.length > 0" class="validation-summary">
         <p class="summary-title">Please complete the following required fields:</p>
         <div class="tags">
           <span v-for="err in validationErrors" :key="err" class="tag is-danger">{{ err }}</span>
@@ -351,10 +427,10 @@ const handleSubmit = async () => {
           title="Submit Application"
           color="green"
           size="large"
-          :disabled="!isFormValid"
         />
       </div>
     </form>
+    </div>
   </section>
 </template>
 
@@ -441,5 +517,70 @@ const handleSubmit = async () => {
 .has-error :deep(textarea) {
   border-color: #ef4444 !important;
   outline: 2px solid #ef4444 !important;
+}
+
+/* Success State Styles */
+.success-card {
+  max-width: 600px;
+  margin: 0 auto;
+  background: var(--white);
+  border-radius: 24px;
+  padding: 60px 32px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  animation: scaleIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.icon-wrapper {
+  color: var(--green);
+  background-color: color-mix(in srgb, var(--green) 10%, white);
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 32px;
+  animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) 0.1s both;
+}
+
+.success-icon {
+  width: 48px;
+  height: 48px;
+}
+
+.success-title {
+  font-size: 2rem;
+  font-weight: 700;
+  margin-bottom: 16px;
+  color: var(--font-color-dark);
+}
+
+.success-message {
+  color: #374151;
+  font-size: 1.1rem;
+  margin-bottom: 40px;
+  line-height: 1.6;
+  max-width: 400px;
+}
+
+.success-actions {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+}
+
+@keyframes scaleIn {
+  from { opacity: 0; transform: scale(0.9); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+@keyframes popIn {
+  from { opacity: 0; transform: scale(0.5); }
+  to { opacity: 1; transform: scale(1); }
 }
 </style>

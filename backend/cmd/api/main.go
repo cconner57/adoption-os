@@ -60,11 +60,11 @@ func main() {
 	flag.StringVar(&cfg.db.dsn, "db-dsn", os.Getenv("DB_DSN"), "PostgreSQL DSN")
 
 	// SMTP
-	flag.StringVar(&cfg.smtp.host, "smtp-host", os.Getenv("SMTP_HOST"), "SMTP host")
+	flag.StringVar(&cfg.smtp.host, "smtp-host", os.Getenv("SMTP_SERVER"), "SMTP host")
 	port, _ := strconv.Atoi(os.Getenv("SMTP_PORT")) // Simple fallback for env reading
 	flag.IntVar(&cfg.smtp.port, "smtp-port", port, "SMTP port")
-	flag.StringVar(&cfg.smtp.username, "smtp-username", os.Getenv("SMTP_USERNAME"), "SMTP username")
-	flag.StringVar(&cfg.smtp.password, "smtp-password", os.Getenv("SMTP_PASSWORD"), "SMTP password")
+	flag.StringVar(&cfg.smtp.username, "smtp-username", os.Getenv("SMTP_LOGIN"), "SMTP username")
+	flag.StringVar(&cfg.smtp.password, "smtp-password", os.Getenv("SMTP_KEY"), "SMTP password")
 	flag.StringVar(&cfg.smtp.sender, "smtp-sender", os.Getenv("SMTP_SENDER"), "SMTP sender email")
 
 	flag.Parse()

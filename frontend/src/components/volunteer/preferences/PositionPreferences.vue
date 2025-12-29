@@ -1,12 +1,41 @@
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import { computed } from 'vue'
+
+const props = defineProps<{
+  modelValue: string[]
+  hasError?: boolean
+}>()
+
+const emit = defineEmits<{
+  'update:modelValue': [value: string[]]
+}>()
+
+const selected = computed({
+  get: () => props.modelValue,
+  set: (val) => emit('update:modelValue', val),
+})
+</script>
 
 <template>
   <fieldset class="field col-span-2" aria-labelledby="position-preferences-legend">
     <legend id="position-preferences-legend" class="label">Volunteer Position Preferences:</legend>
-    <fieldset class="chips" aria-labelledby="position-preferences-legend">
-      <label class="chip"><input type="checkbox" /> <span>Feeding/Cleaning</span></label>
-      <label class="chip"><input type="checkbox" /> <span>Customer Support</span></label>
-      <label class="chip"><input type="checkbox" /> <span>Cat Socializing</span></label>
+    <fieldset
+      class="chips"
+      :class="{ 'has-error': hasError }"
+      aria-labelledby="position-preferences-legend"
+    >
+      <label class="chip"
+        ><input type="checkbox" value="Feeding/Cleaning" v-model="selected" />
+        <span>Feeding/Cleaning</span></label
+      >
+      <label class="chip"
+        ><input type="checkbox" value="Customer Support" v-model="selected" />
+        <span>Customer Support</span></label
+      >
+      <label class="chip"
+        ><input type="checkbox" value="Cat Socializing" v-model="selected" />
+        <span>Cat Socializing</span></label
+      >
     </fieldset>
   </fieldset>
 </template>
@@ -46,7 +75,9 @@ fieldset.field {
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
-  border: none;
+  border: 1px solid transparent; /* Reserve space for border */
+  border-radius: 12px;
+  padding: 4px; /* formatting spacing */
   @media (max-width: 440px) {
     margin-top: 8px;
     flex-direction: column;
@@ -54,6 +85,12 @@ fieldset.field {
     gap: 8px;
   }
 }
+
+.chips.has-error {
+  border-color: #ef4444;
+  background-color: #fef2f2;
+}
+
 .chip {
   position: relative;
   display: inline-flex;
@@ -110,9 +147,9 @@ fieldset.field {
   }
 }
 .chip:has(> input:checked) {
-  background: var(--green-weak);
+  background: color-mix(in srgb, var(--green) 10%, white);
   border-color: var(--green);
-  box-shadow: 0 0 0 3px #1e63d92e inset;
+  box-shadow: 0 0 0 1px var(--green) inset;
   color: var(--font-color-dark);
 }
 .chip:has(> input:focus-visible) {

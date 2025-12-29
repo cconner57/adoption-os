@@ -1,8 +1,12 @@
 package main
 
 import (
+	"encoding/base64"
 	"fmt"
 	"net/http"
+	"os"
+	"strings"
+	"time"
 
 	"github.com/cconner57/adoption-os/backend/internal/data"
 	"github.com/cconner57/adoption-os/backend/internal/validator"
@@ -39,32 +43,141 @@ func (app *application) submitVolunteerApplication(w http.ResponseWriter, r *htt
 		}()
 
 		subject := fmt.Sprintf("New Volunteer Application: %s %s", input.FirstName, input.LastName)
-		body := fmt.Sprintf(`
-New Volunteer Application Received!
 
-Name: %s %s
-Address: %s, %s, %s
-Phone: %s
-Birthday: %s
-Age: %d
+		// Helper to format bool
+		yesNo := func(b bool) string {
+			if b {
+				return "Yes"
+			}
+			return "No"
+		}
 
-Emergency Contact:
-%s (%s)
+		// Helper to format comma separated list
+		formatList := func(list []string) string {
+			return strings.Join(list, ", ")
+		}
 
-Interest Reason:
-%s
+		// Helper to format date
+		formatDate := func(dateStr string) string {
+			if dateStr == "" {
+				return ""
+			}
+			t, err := time.Parse("2006-01-02", dateStr)
+			if err != nil {
+				return dateStr // Return original if parse fails
+			}
+			return t.Format("Jan 02, 2006")
+		}
 
-This application was submitted via the Adoption OS Volunteer Form.
-`, input.FirstName, input.LastName, input.Address, input.City, input.Zip, input.PhoneNumber, input.Birthday, safeInt(input.Age), input.EmergencyContactName, input.EmergencyContactPhone, input.InterestReason)
+		// Helper to read logo
+		readLogo := func() []byte {
+			// Path relative to backend root where binary runs
+			data, err := os.ReadFile("../frontend/public/images/idohr-logo.jpg")
+			if err != nil {
+				app.logger.Println("Failed to read logo:", err)
+				return nil
+			}
+			return data
+		}
+
+		var sb strings.Builder
+		sb.WriteString(`<!DOCTYPE html>
+<html>
+<head>
+<style>
+  body { font-family: Arial, sans-serif; color: #333; line-height: 1.6; }
+  .container { max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #e0e0e0; border-radius: 8px; }
+  .header { text-align: center; margin-bottom: 30px; }
+  .logo { max-width: 150px; height: auto; }
+  h1 { color: #00a5ad; font-size: 24px; text-align: center; }
+  h2 { color: #00a5ad; font-size: 18px; border-bottom: 2px solid #00a5ad; padding-bottom: 5px; margin-top: 25px; }
+  .field { margin-bottom: 10px; }
+  .label { font-weight: bold; color: #555; }
+  .footer { margin-top: 30px; font-size: 12px; color: #333; text-align: center; border-top: 1px solid #eee; padding-top: 10px; }
+</style>
+</head>
+<body>
+<div class="container">
+  <div class="header">
+    <img src="cid:logo" alt="IDOHR Logo" class="logo">
+  </div>
+  <h1>New Volunteer Application</h1>
+`)
+
+		sb.WriteString(`<h2>Personal Information</h2>`)
+		fmt.Fprintf(&sb, `<div class="field"><span class="label">Name:</span> %s %s</div>`, input.FirstName, input.LastName)
+		fmt.Fprintf(&sb, `<div class="field"><span class="label">Address:</span> %s, %s, %s</div>`, input.Address, input.City, input.Zip)
+		fmt.Fprintf(&sb, `<div class="field"><span class="label">Phone:</span> %s</div>`, input.PhoneNumber)
+		fmt.Fprintf(&sb, `<div class="field"><span class="label">Birthday:</span> %s</div>`, formatDate(input.Birthday))
+		fmt.Fprintf(&sb, `<div class="field"><span class="label">Age:</span> %d</div>`, safeInt(input.Age))
+		fmt.Fprintf(&sb, `<div class="field"><span class="label">Allergies:</span> %s</div>`, yesNo(input.Allergies))
+
+		sb.WriteString(`<h2>Emergency Contact</h2>`)
+		fmt.Fprintf(&sb, `<div class="field"><span class="label">Name:</span> %s</div>`, input.EmergencyContactName)
+		fmt.Fprintf(&sb, `<div class="field"><span class="label">Phone:</span> %s</div>`, input.EmergencyContactPhone)
+
+		sb.WriteString(`<h2>Experience & Interests</h2>`)
+		sb.WriteString(`<div class="field"><span class="label">Volunteer Experience:</span></div>`)
+		fmt.Fprintf(&sb, `<div>%s</div><br>`, input.VolunteerExperience)
+		sb.WriteString(`<div class="field"><span class="label">Interest Reason:</span></div>`)
+		fmt.Fprintf(&sb, `<div>%s</div><br>`, input.InterestReason)
+		fmt.Fprintf(&sb, `<div class="field"><span class="label">Position Preferences:</span> %s</div>`, formatList(input.PositionPreferences))
+		fmt.Fprintf(&sb, `<div class="field"><span class="label">Availability:</span> %s</div>`, formatList(input.Availability))
+
+		sb.WriteString(`<h2>Agreement</h2>`)
+		fmt.Fprintf(&sb, `<div class="field"><span class="label">Signed By:</span> %s</div>`, input.NameFull)
+		fmt.Fprintf(&sb, `<div class="field"><span class="label">Date:</span> %s</div>`, formatDate(input.SignatureDate))
+
+		// Conditionally add Parent/Guardian info
+		if input.ParentName != "" {
+			fmt.Fprintf(&sb, `<br><div class="field"><span class="label">Parent/Guardian Name:</span> %s</div>`, input.ParentName)
+		}
+		if input.ParentSignatureDate != "" {
+			fmt.Fprintf(&sb, `<div class="field"><span class="label">Parent/Guardian Date:</span> %s</div>`, formatDate(input.ParentSignatureDate))
+		}
+
+		fmt.Fprintf(&sb, `
+  <div class="footer">
+    This application was submitted via the I Dream of Home Rescue Volunteer Form.<br>
+    %s
+  </div>
+</div>
+</body>
+</html>`, time.Now().Format("Jan 02, 2006"))
+
+		body := sb.String()
 
 		// Send to the configured sender address (acting as Admin)
 		// Or you could read a specific recipient from config.
 		recipient := app.config.smtp.sender
 		if recipient == "" {
-			recipient = "admin@example.com" // Fallback
+			recipient = "cats@idohr.org" // Fallback
 		}
 
-		err := app.mailer.Send(recipient, subject, body)
+		// Prepare attachments
+		attachments := make(map[string][]byte)
+
+		// Attach Logo
+		logoData := readLogo()
+		if logoData != nil {
+			attachments["logo.jpg"] = logoData
+		}
+
+		if input.SignatureData != nil && *input.SignatureData != "" {
+			// signatureData is likely "data:image/png;base64,....."
+			// Split by comma to get the actual base64 part
+			parts := strings.Split(*input.SignatureData, ",")
+			if len(parts) == 2 {
+				sigBytes, err := base64.StdEncoding.DecodeString(parts[1])
+				if err == nil {
+					attachments["signature.png"] = sigBytes
+				} else {
+					app.logger.Println("Failed to decode signature:", err)
+				}
+			}
+		}
+
+		err := app.mailer.Send(recipient, subject, body, attachments)
 		if err != nil {
 			app.logger.Println("Failed to send email notification:", err)
 		} else {

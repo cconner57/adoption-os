@@ -2,6 +2,11 @@
 const props = defineProps<{
   label: string
   placeholder: string
+  modelValue: string
+}>()
+
+const emit = defineEmits<{
+  'update:modelValue': [value: string]
 }>()
 </script>
 
@@ -10,8 +15,11 @@ const props = defineProps<{
     <label class="label">{{ props.label }}</label>
     <div class="control">
       <textarea
+        class="textarea"
         rows="3"
         :placeholder="props.placeholder"
+        :value="props.modelValue"
+        @input="(e) => emit('update:modelValue', (e.target as HTMLTextAreaElement).value)"
         style="box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); resize: none"
       />
     </div>

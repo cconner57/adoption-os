@@ -20,7 +20,7 @@ type VolunteerApplication struct {
 	PhoneNumber           string    `json:"phoneNumber"`
 	Birthday              string    `json:"birthday"`
 	Age                   *int      `json:"age"`
-	Allergies             string    `json:"allergies"`
+	Allergies             bool      `json:"allergies"`
 	EmergencyContactName  string    `json:"emergencyContactName"`
 	EmergencyContactPhone string    `json:"emergencyContactPhone"`
 	VolunteerExperience   string    `json:"volunteerExperience"`

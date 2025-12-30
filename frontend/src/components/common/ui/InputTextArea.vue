@@ -1,9 +1,13 @@
 <script setup lang="ts">
-const props = defineProps<{
+const props = withDefaults(defineProps<{
   label: string
   placeholder: string
   modelValue: string
-}>()
+  hasError?: boolean
+  spanFull?: boolean
+}>(), {
+  spanFull: true
+})
 
 const emit = defineEmits<{
   'update:modelValue': [value: string]
@@ -11,7 +15,7 @@ const emit = defineEmits<{
 </script>
 
 <template>
-  <div class="field col-span-2">
+  <div class="field" :class="{ 'col-span-2': props.spanFull, 'has-error': props.hasError }">
     <label class="label">{{ props.label }}</label>
     <div class="control">
       <textarea
@@ -29,5 +33,12 @@ const emit = defineEmits<{
 <style scoped lang="css">
 .col-span-2 {
   grid-column: span 2;
+}
+.full-width {
+  grid-column: 1 / -1;
+}
+.has-error .textarea {
+  border-color: #ef4444 !important;
+  outline: 2px solid #ef4444 !important;
 }
 </style>

@@ -1,5 +1,125 @@
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import Button from '../../common/ui/Button.vue'
 
-<template>Form as been submitted</template>
+interface Props {
+  title?: string
+  message?: string
+  formType: string
+}
 
-<style scoped lang="css"></style>
+const props = withDefaults(defineProps<Props>(), {
+  title: 'Application Received!',
+  message: "Thank you for volunteering! We'll review your application and get back to you shortly.",
+  formType: "volunteer"
+})
+
+const emit = defineEmits(['reset'])
+
+const handleReset = () => {
+  emit('reset')
+}
+
+const headerText = () => {
+  if (props.formType === 'volunteer') {
+    return 'Application Received!'
+  }
+  if (props.formType === 'surrender') {
+    return 'Thank you for submitting your form!'
+  }
+  if (props.formType === 'adoption') {
+    return 'Thank you for submitting your adoption application!'
+  }
+  return ''
+}
+</script>
+
+<template>
+  <div class="success-card">
+    <div class="icon-wrapper">
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        width="48"
+        height="48"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        class="success-icon"
+      >
+        <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+        <polyline points="22 4 12 14.01 9 11.01"></polyline>
+      </svg>
+    </div>
+    <h3 class="success-title">{{ headerText() }}</h3>
+    <p class="success-message">{{ props.message }}</p>
+    <div class="success-actions">
+      <Button title="Return to Home" color="green" @click="handleReset" />
+    </div>
+  </div>
+</template>
+
+<style scoped lang="css">.success-card {
+  max-width: 600px;
+  margin: 0 auto;
+  background: var(--white);
+  border-radius: 24px;
+  padding: 60px 32px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  animation: scaleIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.icon-wrapper {
+  color: var(--green);
+  background-color: color-mix(in srgb, var(--green) 10%, white);
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 32px;
+  animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) 0.1s both;
+}
+
+.success-icon {
+  width: 48px;
+  height: 48px;
+}
+
+.success-title {
+  font-size: 2rem;
+  font-weight: 700;
+  margin-bottom: 16px;
+  color: var(--font-color-dark);
+}
+
+.success-message {
+  color: #374151;
+  font-size: 1.1rem;
+  margin-bottom: 40px;
+  line-height: 1.6;
+  max-width: 400px;
+}
+
+.success-actions {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+}
+
+@keyframes scaleIn {
+  from { opacity: 0; transform: scale(0.9); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+@keyframes popIn {
+  from { opacity: 0; transform: scale(0.5); }
+  to { opacity: 1; transform: scale(1); }
+}</style>

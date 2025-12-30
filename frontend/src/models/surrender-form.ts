@@ -1,3 +1,9 @@
+export interface IHouseholdMember {
+  age: string
+  gender: 'Male' | 'Female'
+  count: number
+}
+
 export interface SurrenderFormState {
   firstName: string
   lastName: string
@@ -14,7 +20,7 @@ export interface SurrenderFormState {
   catOwnershipDuration: string
   catLocationFound: string
   catWhySurrendered: string
-  agesOfHouseholdMembers: string
+  householdMembers: IHouseholdMember[]
   otherPetsInHousehold: string
   catsBehaviorTowardsKnownPeople: string
   catsBehaviorTowardsStrangers: string

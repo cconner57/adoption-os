@@ -13,9 +13,9 @@ const goToSurrenderForm = () => {
 
 <template>
   <div class="surrender-cat-section">
-    <h2>Surrender Cat</h2>
+    <h2>Surrender Pet</h2>
     <p class="description">
-      If you need to surrender your cat, we understand this can be a difficult decision. Please fill
+      If you need to surrender your pet, we understand this can be a difficult decision. Please fill
       out our surrender form to help us find the best solution for your pet.
     </p>
     <Button

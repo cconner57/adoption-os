@@ -31,6 +31,12 @@ const emit = defineEmits<{
 </template>
 
 <style scoped lang="css">
+.label {
+  color: var(--font-color-dark);
+  font-weight: 600;
+  margin-bottom: 0.5em;
+  display: block;
+}
 .col-span-2 {
   grid-column: span 2;
 }

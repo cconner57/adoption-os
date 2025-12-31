@@ -2,6 +2,8 @@
 import InputField from '../../common/ui/InputField.vue'
 import type { SurrenderFormState } from '../../../models/surrender-form.ts'
 import InputTextArea from '../../common/ui/InputTextArea.vue'
+import InputSelectGroup from '../../common/ui/InputSelectGroup.vue'
+import ButtonToggle from '../../common/ui/ButtonToggle.vue'
 
 import {
   formatPhoneNumber,
@@ -11,17 +13,18 @@ import {
   sanitizeAddress,
 } from '../../../utils/validators.ts'
 
-const { formState, touched, handleBlur, hasAttemptedSubmit } = defineProps<{
+const { formState, touched, handleBlur, hasAttemptedSubmit, selectedAnimal } = defineProps<{
   formState: SurrenderFormState
   touched: Record<string, boolean>
-  handleBlur: (field: string) => void
+  handleBlur: (_field: string) => void // eslint-disable-line no-unused-vars
   hasAttemptedSubmit: boolean
+  selectedAnimal: string
 }>()
 </script>
 
 <template>
   <div class="household-section">
-    <h5>Cat & Household Information</h5>
+    <h5>{{ selectedAnimal }} & Household Information</h5>
     <fieldset class="household-grid">
       <InputField
         label="First Name"
@@ -91,77 +94,64 @@ const { formState, touched, handleBlur, hasAttemptedSubmit } = defineProps<{
 
       <InputTextArea
         class="full-width"
-        label="When do you need to surrender your cat"
-        placeholder="When do you need to surrender your cat"
-        :modelValue="formState.whenToSurrenderCat"
-        @update:modelValue="(val) => (formState.whenToSurrenderCat = val)"
-        :hasError="(touched.whenToSurrenderCat && !formState.whenToSurrenderCat) || (hasAttemptedSubmit && !formState.whenToSurrenderCat)"
-        @blur="handleBlur('whenToSurrenderCat')"
+        :label="`When do you need to surrender your ${selectedAnimal.toLowerCase()}`"
+        :placeholder="`When do you need to surrender your ${selectedAnimal.toLowerCase()}`"
+        :modelValue="formState.whenToSurrenderAnimal"
+        @update:modelValue="(val) => (formState.whenToSurrenderAnimal = val)"
+        :hasError="(touched.whenToSurrenderAnimal && !formState.whenToSurrenderAnimal) || (hasAttemptedSubmit && !formState.whenToSurrenderAnimal)"
+        @blur="handleBlur('whenToSurrenderAnimal')"
       />
       <InputField
-        label="Cat's Name"
-        placeholder="Cat's Name"
-        :modelValue="formState.catName"
-        @update:modelValue="(val) => (formState.catName = val)"
-        :hasError="(touched.catName && !formState.catName) || (hasAttemptedSubmit && !formState.catName)"
-        @blur="handleBlur('catName')"
+        :label="`${selectedAnimal}'s Name`"
+        :placeholder="`${selectedAnimal}'s Name`"
+        :modelValue="formState.animalName"
+        @update:modelValue="(val) => (formState.animalName = val as string)"
+        :hasError="(touched.animalName && !formState.animalName) || (hasAttemptedSubmit && !formState.animalName)"
+        @blur="handleBlur('animalName')"
       />
       <InputField
         label="Age"
         placeholder="Age"
-        :modelValue="formState.catAge"
-        @update:modelValue="(val) => (formState.catAge = val)"
-        :hasError="(touched.catAge && !formState.catAge) || (hasAttemptedSubmit && !formState.catAge)"
-        @blur="handleBlur('catAge')"
+        :modelValue="formState.animalAge"
+        @update:modelValue="(val) => (formState.animalAge = val as string)"
+        :hasError="(touched.animalAge && !formState.animalAge) || (hasAttemptedSubmit && !formState.animalAge)"
+        @blur="handleBlur('animalAge')"
       />
-      <fieldset
-        class="field full-width"
-        aria-labelledby="cat-sex-legend"
-        :class="{ 'has-error': (touched.catSex && !formState.catSex) || (hasAttemptedSubmit && !formState.catSex) }"
-      >
-        <legend id="cat-sex-legend" class="label centralized-legend">Sex</legend>
-        <fieldset class="chips" aria-labelledby="cat-sex-legend">
-          <label class="chip">
-            <input type="radio" value="Male" v-model="formState.catSex" @blur="handleBlur('catSex')" />
-            <span>Male</span>
-          </label>
-          <label class="chip">
-            <input type="radio" value="Female" v-model="formState.catSex" @blur="handleBlur('catSex')" />
-            <span>Female</span>
-          </label>
-          <label class="chip">
-            <input type="radio" value="Unknown" v-model="formState.catSex" @blur="handleBlur('catSex')" />
-            <span>Unknown</span>
-          </label>
-        </fieldset>
-      </fieldset>
+      <InputSelectGroup
+        label="Sex"
+        :options="['Male', 'Female', 'Unknown']"
+        :modelValue="formState.animalSex"
+        @update:modelValue="(val) => (formState.animalSex = val as string)"
+        :hasError="(touched.animalSex && !formState.animalSex) || (hasAttemptedSubmit && !formState.animalSex)"
+        @blur="handleBlur('animalSex')"
+      />
 
       <InputTextArea
         class="full-width"
-        label="How long have you had your cat?"
-        placeholder="How long have you had your cat?"
-        :modelValue="formState.catOwnershipDuration"
-        @update:modelValue="(val) => (formState.catOwnershipDuration = val)"
-        :hasError="(touched.catOwnershipDuration && !formState.catOwnershipDuration) || (hasAttemptedSubmit && !formState.catOwnershipDuration)"
-        @blur="handleBlur('catOwnershipDuration')"
+        :label="`How long have you had your ${selectedAnimal.toLowerCase()}?`"
+        :placeholder="`How long have you had your ${selectedAnimal.toLowerCase()}?`"
+        :modelValue="formState.animalOwnershipDuration"
+        @update:modelValue="(val) => (formState.animalOwnershipDuration = val)"
+        :hasError="(touched.animalOwnershipDuration && !formState.animalOwnershipDuration) || (hasAttemptedSubmit && !formState.animalOwnershipDuration)"
+        @blur="handleBlur('animalOwnershipDuration')"
       />
       <InputTextArea
         class="full-width"
-        label="Where did you get your cat?"
-        placeholder="Where did you get your cat?"
-        :modelValue="formState.catLocationFound"
-        @update:modelValue="(val) => (formState.catLocationFound = val)"
-        :hasError="(touched.catLocationFound && !formState.catLocationFound) || (hasAttemptedSubmit && !formState.catLocationFound)"
-        @blur="handleBlur('catLocationFound')"
+        :label="`Where did you get your ${selectedAnimal.toLowerCase()}?`"
+        :placeholder="`Where did you get your ${selectedAnimal.toLowerCase()}?`"
+        :modelValue="formState.animalLocationFound"
+        @update:modelValue="(val) => (formState.animalLocationFound = val)"
+        :hasError="(touched.animalLocationFound && !formState.animalLocationFound) || (hasAttemptedSubmit && !formState.animalLocationFound)"
+        @blur="handleBlur('animalLocationFound')"
       />
       <InputTextArea
         class="full-width"
-        label="Why are you surrendering your cat?"
-        placeholder="Why are you surrendering your cat?"
-        :modelValue="formState.catWhySurrendered"
-        @update:modelValue="(val) => (formState.catWhySurrendered = val)"
-        :hasError="(touched.catWhySurrendered && !formState.catWhySurrendered) || (hasAttemptedSubmit && !formState.catWhySurrendered)"
-        @blur="handleBlur('catWhySurrendered')"
+        :label="`Why are you surrendering your ${selectedAnimal.toLowerCase()}?`"
+        :placeholder="`Why are you surrendering your ${selectedAnimal.toLowerCase()}?`"
+        :modelValue="formState.animalWhySurrendered"
+        @update:modelValue="(val) => (formState.animalWhySurrendered = val)"
+        :hasError="(touched.animalWhySurrendered && !formState.animalWhySurrendered) || (hasAttemptedSubmit && !formState.animalWhySurrendered)"
+        @blur="handleBlur('animalWhySurrendered')"
       />
     </fieldset>
     <div class="household-members-section">
@@ -170,25 +160,13 @@ const { formState, touched, handleBlur, hasAttemptedSubmit } = defineProps<{
 
       <div v-for="(member, index) in formState.householdMembers" :key="index" class="member-row">
         <div class="field-group gender-group">
-          <label class="field-label">Gender</label>
-          <div class="gender-toggle">
-            <button
-              type="button"
-              class="toggle-btn"
-              :class="{ active: member.gender === 'Female' }"
-              @click="member.gender = 'Female'"
-            >
-              Female
-            </button>
-            <button
-              type="button"
-              class="toggle-btn"
-              :class="{ active: member.gender === 'Male' }"
-              @click="member.gender = 'Male'"
-            >
-              Male
-            </button>
-          </div>
+          <ButtonToggle
+            label="Gender"
+            :modelValue="member.gender"
+            @update:modelValue="(val) => (member.gender = val as 'Male' | 'Female')"
+            true-value="Male"
+            false-value="Female"
+          />
         </div>
 
         <div class="field-group age-group">
@@ -234,34 +212,15 @@ const { formState, touched, handleBlur, hasAttemptedSubmit } = defineProps<{
         Add Another Person / Group
       </button>
     </div>
-    <section>
-      <fieldset
-        class="field col-span-2"
-        aria-labelledby="other-animals-legend"
-        :class="{ 'has-error': (touched.otherPetsInHousehold && !formState.otherPetsInHousehold) || (hasAttemptedSubmit && !formState.otherPetsInHousehold) }"
-      >
-        <legend id="other-animals-legend" class="label centralized-legend">
-          What other animals did the cat live with?
-        </legend>
-        <fieldset class="chips" aria-labelledby="other-animals-legend">
-          <label class="chip">
-            <input type="radio" value="Dogs" v-model="formState.otherPetsInHousehold" @blur="handleBlur('otherPetsInHousehold')" />
-            <span>Dogs</span>
-          </label>
-          <label class="chip">
-            <input type="radio" value="Cats" v-model="formState.otherPetsInHousehold" @blur="handleBlur('otherPetsInHousehold')" />
-            <span>Cats</span>
-          </label>
-          <label class="chip">
-            <input type="radio" value="Other" v-model="formState.otherPetsInHousehold" @blur="handleBlur('otherPetsInHousehold')" />
-            <span>Other</span>
-          </label>
-          <label class="chip">
-            <input type="radio" value="No other animals" v-model="formState.otherPetsInHousehold" @blur="handleBlur('otherPetsInHousehold')" />
-            <span>No other animals</span>
-          </label>
-        </fieldset>
-      </fieldset>
+    <section class="full-width">
+      <InputSelectGroup
+        label="What other animals did the cat live with?"
+        :options="['Dogs', 'Cats', 'Other', 'No other animals']"
+        :modelValue="formState.otherPetsInHousehold"
+        @update:modelValue="(val) => (formState.otherPetsInHousehold = val as string)"
+        :hasError="(touched.otherPetsInHousehold && !formState.otherPetsInHousehold) || (hasAttemptedSubmit && !formState.otherPetsInHousehold)"
+        @blur="handleBlur('otherPetsInHousehold')"
+      />
     </section>
   </div>
 </template>
@@ -301,92 +260,7 @@ const { formState, touched, handleBlur, hasAttemptedSubmit } = defineProps<{
     font-weight: 600;
   }
 
-  .centralized-legend {
-    @media (max-width: 640px) {
-      text-align: center;
-      display: block;
-      width: 100%;
-    }
-  }
 
-  .chips {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
-    border: none;
-    padding: 0;
-    margin: 0;
-    @media (max-width: 440px) {
-      margin-top: 8px;
-      flex-direction: column;
-      text-align: center;
-      gap: 8px;
-      /* Center chips content */
-      align-items: center;
-    }
-  }
-  .chip {
-    position: relative;
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    padding: 8px 12px;
-    border-radius: 999px;
-    border: 1px solid #e7ebf0;
-    background-color: #fff;
-    cursor: pointer;
-    user-select: none;
-    font-size: 1rem;
-    transition:
-      background 0.2s,
-      border-color 0.2s,
-      box-shadow 0.2s;
-
-    @media (max-width: 440px) {
-       width: 100%;
-       justify-content: center;
-    }
-
-    span {
-      font-weight: 600;
-      color: var(--text-900);
-      line-height: 1.5;
-    }
-
-    &:hover {
-      border-color: #d7e2f2;
-      background: #f2f7ff;
-    }
-  }
-  .chip > input {
-    position: absolute;
-    opacity: 0;
-    width: 1px;
-    height: 1px;
-    pointer-events: none;
-  }
-  .chip:has(> input:checked) {
-    background: color-mix(in srgb, var(--green) 10%, white);
-    border: 1px solid var(--green);
-    box-shadow: 0 0 0 1px var(--green) inset;
-    color: var(--font-color-dark);
-  }
-  .chip:has(> input:focus-visible) {
-    box-shadow: 0 0 0 3px var(--ring);
-  }
-
-  @supports not (selector(:has(*))) {
-    .chip > input:checked + span {
-      background: #e8f1ff;
-      border-radius: 999px;
-      padding: 6px 10px;
-      margin: -6px -10px;
-      box-shadow: 0 0 0 2px #bfd0ff inset;
-    }
-    .chip > input:focus-visible + span {
-      box-shadow: 0 0 0 3px var(--ring);
-    }
-  }
 
   .household-members-section {
     display: flex;

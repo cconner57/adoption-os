@@ -92,6 +92,7 @@ input {
   transition: all 0.2s;
   background-color: #ffffff; /* Explicit white background */
   caret-color: #000000; /* Ensure caret is always visible */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 
   &::placeholder {
     color: #6b7280; /* Darker gray for better visibility */

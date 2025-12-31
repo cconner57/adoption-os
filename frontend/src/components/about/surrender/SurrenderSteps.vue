@@ -25,14 +25,14 @@ const { formStep, selectedAnimal } = defineProps<{
     </div>
     <div
       class="step"
-      :class="{ active: (selectedAnimal === 'cat' && formStep >= 5) || (selectedAnimal === 'dog' && formStep >= 4) }"
+      :class="{ active: formStep >= 5 }"
     >
       <div class="step-number">{{ selectedAnimal === 'cat' ? 5 : 4 }}</div>
       <div class="step-label">Feeding</div>
     </div>
     <div
       class="step"
-      :class="{ active: (selectedAnimal === 'cat' && formStep >= 6) || (selectedAnimal === 'dog' && formStep >= 5) }"
+      :class="{ active: formStep >= 6 }"
     >
       <div class="step-number">{{ selectedAnimal === 'cat' ? 6 : 5 }}</div>
       <div class="step-label">Other</div>

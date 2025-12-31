@@ -1,18 +1,23 @@
 <script setup lang="ts">
 import { onMounted } from 'vue'
 import InputTextArea from '../../common/ui/InputTextArea.vue'
-import type { SurrenderFormState } from '../../../models/common'
+import ButtonToggle from '../../common/ui/ButtonToggle.vue'
+import type { SurrenderFormState } from '../../../models/surrender-form.ts'
 
-const { formState } = defineProps<{
+const { formState, touched, handleBlur, hasAttemptedSubmit, selectedAnimal } = defineProps<{
   formState: SurrenderFormState
+  touched: Record<string, boolean>
+  handleBlur: (_field: string) => void // eslint-disable-line no-unused-vars
+  hasAttemptedSubmit: boolean
+  selectedAnimal: string
 }>()
 
 onMounted(() => {
-  if (!formState.catEverAttackedPeople) {
-    formState.catEverAttackedPeople = 'No'
+  if (!formState.animalEverAttackedPeople) {
+    formState.animalEverAttackedPeople = 'No'
   }
-  if (!formState.catEverAttackedOtherCats) {
-    formState.catEverAttackedOtherCats = 'No'
+  if (!formState.animalEverAttackedOtherCats) {
+    formState.animalEverAttackedOtherCats = 'No'
   }
 })
 </script>
@@ -21,66 +26,29 @@ onMounted(() => {
   <div class="aggressive-section">
     <h5>Aggressive Behavior</h5>
     <div class="aggressive-grid">
-      <!-- Toggle for Attacked People -->
-      <div class="field-group">
-        <label class="field-label">Has the cat ever attacked or bit a person?</label>
-        <div class="toggle-container">
-          <button
-            type="button"
-            class="toggle-btn"
-            :class="{ active: formState.catEverAttackedPeople === 'Yes' }"
-            @click="formState.catEverAttackedPeople = 'Yes'"
-          >
-            Yes
-          </button>
-          <button
-            type="button"
-            class="toggle-btn"
-            :class="{ active: formState.catEverAttackedPeople === 'No' }"
-            @click="formState.catEverAttackedPeople = 'No'"
-          >
-            No
-          </button>
-        </div>
-      </div>
-
-      <InputTextArea
-        label="If yes, please explain"
-        placeholder="Explanation"
-        :spanFull="false"
-        :modelValue="formState.catEverAttackedPeopleExplanation"
-        @update:modelValue="(val) => (formState.catEverAttackedPeopleExplanation = val)"
+        <ButtonToggle
+        :label="`Has the ${selectedAnimal.toLowerCase()} ever attacked or bit a person?`"
+        :modelValue="formState.animalEverAttackedPeople"
+        @update:modelValue="(val) => (formState.animalEverAttackedPeople = val as string)"
       />
-
-      <!-- Toggle for Attacked Cats -->
-      <div class="field-group">
-        <label class="field-label">Has the cat ever attacked or bit a cat?</label>
-        <div class="toggle-container">
-          <button
-            type="button"
-            class="toggle-btn"
-            :class="{ active: formState.catEverAttackedOtherCats === 'Yes' }"
-            @click="formState.catEverAttackedOtherCats = 'Yes'"
-          >
-            Yes
-          </button>
-          <button
-            type="button"
-            class="toggle-btn"
-            :class="{ active: formState.catEverAttackedOtherCats === 'No' }"
-            @click="formState.catEverAttackedOtherCats = 'No'"
-          >
-            No
-          </button>
-        </div>
-      </div>
-
       <InputTextArea
         label="If yes, please explain"
         placeholder="Explanation"
         :spanFull="false"
-        :modelValue="formState.catEverAttackedOtherCatsExplanation"
-        @update:modelValue="(val) => (formState.catEverAttackedOtherCatsExplanation = val)"
+        :modelValue="formState.animalEverAttackedPeopleExplanation"
+        @update:modelValue="(val) => (formState.animalEverAttackedPeopleExplanation = val)"
+      />
+        <ButtonToggle
+        :label="`Has the ${selectedAnimal.toLowerCase()} ever attacked or bit a cat?`"
+        :modelValue="formState.animalEverAttackedOtherCats"
+        @update:modelValue="(val) => (formState.animalEverAttackedOtherCats = val as string)"
+      />
+      <InputTextArea
+        label="If yes, please explain"
+        placeholder="Explanation"
+        :spanFull="false"
+        :modelValue="formState.animalEverAttackedOtherCatsExplanation"
+        @update:modelValue="(val) => (formState.animalEverAttackedOtherCatsExplanation = val)"
       />
     </div>
   </div>
@@ -104,51 +72,5 @@ onMounted(() => {
   }
 }
 
-.field-group {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
 
-.field-label {
-  font-size: 0.875rem;
-  font-weight: 600;
-  color: #374151;
-  /* Match InputTextArea label style usually found in global or scoped */
-  margin-bottom: 4px;
-}
-
-.toggle-container {
-  display: flex;
-  background: #fff;
-  border: 1px solid #e2e8f0;
-  border-radius: 8px;
-  padding: 4px;
-  height: 48px; /* Match typical input height */
-}
-
-.toggle-btn {
-  flex: 1;
-  border: none;
-  background: transparent;
-  border-radius: 6px;
-  font-weight: 500;
-  color: #64748b;
-  cursor: pointer;
-  padding: 0 4px;
-  transition: all 0.2s;
-  font-size: 1rem;
-
-  &.active {
-    background: color-mix(in srgb, var(--green) 10%, white);
-    border: 1px solid var(--green);
-    box-shadow: 0 0 0 1px var(--green) inset;
-    color: var(--font-color-dark);
-    font-weight: 600;
-  }
-
-  &:hover:not(.active) {
-    background-color: #f1f5f9;
-  }
-}
 </style>

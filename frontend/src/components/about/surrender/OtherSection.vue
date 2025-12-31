@@ -1,47 +1,68 @@
 <script setup lang="ts">
-import InputField from '../../common/ui/InputField.vue'
-import type { SurrenderFormState } from '../../../models/common'
+import type { SurrenderFormState } from '../../../models/surrender-form.ts'
+import InputTextArea from '../../common/ui/InputTextArea.vue'
+import InputFileUpload from '../../common/ui/InputFileUpload.vue'
 
-const { formState } = defineProps<{
+const { formState, touched, handleBlur, hasAttemptedSubmit } = defineProps<{
   formState: SurrenderFormState
+  touched: Record<string, boolean>
+  handleBlur: (_field: string) => void // eslint-disable-line no-unused-vars
+  hasAttemptedSubmit: boolean
 }>()
 </script>
 
 <template>
   <div>
     <h5>Other</h5>
-    <InputField
-      label="Please feel free to tell us any other information about the pet you feel is important"
-      placeholder="Answer"
-      :modelValue="formState.additionalInformation"
-      @update:modelValue="(val) => (formState.additionalInformation = val)"
-    />
-    <InputField
-      label="Please upload a full body picture of the pet"
-      placeholder="Answer"
-      :modelValue="formState.fullBodyPhotoOfCat"
-      @update:modelValue="(val) => (formState.fullBodyPhotoOfCat = val)"
-    />
-    <InputField
-      label="Please upload a up close head shot of the pet"
-      placeholder="Answer"
-      :modelValue="formState.closeUpPhotoOfCatsFace"
-      @update:modelValue="(val) => (formState.closeUpPhotoOfCatsFace = val)"
-    />
-    <InputField
-      label="Please upload any records you have for the pet"
-      placeholder="Answer"
-      :modelValue="formState.copiesOfRecords"
-      @update:modelValue="(val) => (formState.copiesOfRecords = val)"
-    />
+    <div class="other-grid">
+      <InputTextArea
+          label="Please feel free to tell us any other information about the pet you feel is important"
+          placeholder="Answer"
+          :spanFull="true"
+          :modelValue="formState.additionalInformation"
+          @update:modelValue="(val) => (formState.additionalInformation = val as string)"
+        />
+      <InputFileUpload
+        label="Please upload a full body picture of the pet"
+        :modelValue="formState.fullBodyPhotoOfCat"
+        @update:modelValue="(val) => (formState.fullBodyPhotoOfCat = val)"
+        :required="true"
+        accept="image/*"
+      />
+      <InputFileUpload
+        label="Please upload a up close head shot of the pet"
+        :modelValue="formState.closeUpPhotoOfCatsFace"
+        @update:modelValue="(val) => (formState.closeUpPhotoOfCatsFace = val)"
+        accept="image/*"
+      />
+      <InputFileUpload
+        label="Please upload any records you have for the pet"
+        :modelValue="formState.copiesOfRecords"
+        @update:modelValue="(val) => (formState.copiesOfRecords = val)"
+        :multiple="true"
+        accept=".pdf,.doc,.docx,.jpg,.jpeg,.png"
+      />
+    </div>
   </div>
 </template>
 
 <style scoped lang="css">
+.other-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+@media (min-width: 768px) {
+  .other-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    column-gap: 24px;
+    row-gap: 16px;
+  }
+}
+
 h5 {
   margin-bottom: 24px;
-}
-div > div {
-    margin-bottom: 16px;
 }
 </style>

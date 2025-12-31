@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import type { SurrenderFormState } from '../models/surrender-form.ts'
 import { reactive, ref, computed } from 'vue'
+import { useRouter } from 'vue-router'
 import {
   AggressiveSection,
   FeedingSection,
@@ -15,7 +16,6 @@ import PetSelectSection from '../components/about/surrender/PetSelectSection.vue
 import FormSubmitted from '../components/common/form-submitted/FormSubmitted.vue'
 
 const formState = reactive<SurrenderFormState>({
-  // Cat & Household Information
   firstName: '',
   lastName: '',
   phoneNumber: '',
@@ -24,82 +24,85 @@ const formState = reactive<SurrenderFormState>({
   city: '',
   state: '',
   zipCode: '',
-  whenToSurrenderCat: '',
-  catName: '',
-  catSex: '',
-  catAge: '',
-  catOwnershipDuration: '',
-  catLocationFound: '',
-  catWhySurrendered: '',
+  whenToSurrenderAnimal: '',
+  animalName: '',
+  animalSex: '',
+  animalAge: '',
+  animalOwnershipDuration: '',
+  animalLocationFound: '',
+  animalWhySurrendered: '',
   householdMembers: [{ age: '', gender: 'Female', count: 1 }],
   otherPetsInHousehold: '',
 
   // Behavior
-  catsBehaviorTowardsKnownPeople: '',
-  catsBehaviorTowardsStrangers: '',
-  catsBehaviorTowardsKnownAnimals: '',
+  animalsBehaviorTowardsKnownPeople: '',
+  animalsBehaviorTowardsStrangers: '',
+  animalsBehaviorTowardsKnownAnimals: '',
   commentsOnBehavior: '',
-  catsReactionToNewPeople: '',
-  catHouseTrained: '',
-  catSpendMajorityOfTime: '',
-  catLeftAloneDuration: '',
-  catWhenLeftAlone: '',
-  catLeftAloneBehaviors: '',
-  catHowItPlays: '',
-  catToysItLikes: '',
-  catGamesItLikes: '',
-  catScaredOfAnything: '',
-  catScaredOfAnythingExplanation: '',
-  catBadHabits: '',
-  catAllowedOnFurniture: '',
-  catSleepAtNight: '',
-  catBehaviorFoodOthers: '',
-  catBehaviorToysOthers: '',
-  catProblemsRidingInCar: '',
-  catProblemsRidingInCarExplanation: '',
-  catEscapedBefore: '',
-  catEscapedBeforeExplanation: '',
+  animalsReactionToNewPeople: '',
+  animalHouseTrained: '',
+  animalSpendMajorityOfTime: '',
+  animalLeftAloneDuration: '',
+  animalWhenLeftAlone: '',
+  animalLeftAloneBehaviors: '',
+  animalHowItPlays: '',
+  animalToysItLikes: '',
+  animalGamesItLikes: '',
+  animalScaredOfAnything: '',
+  animalScaredOfAnythingExplanation: '',
+  animalBadHabits: '',
+  animalAllowedOnFurniture: '',
+  animalSleepAtNight: '',
+  animalBehaviorFoodOthers: '',
+  animalBehaviorToysOthers: '',
+  animalProblemsRidingInCar: '',
+  animalProblemsRidingInCarExplanation: '',
+  animalEscapedBefore: '',
+  animalEscapedBeforeExplanation: '',
 
   // Aggressive Behavior
-  catEverAttackedPeople: '',
-  catEverAttackedPeopleExplanation: '',
-  catEverAttackedOtherCats: '',
-  catEverAttackedOtherCatsExplanation: '',
+  animalEverAttackedPeople: '',
+  animalEverAttackedPeopleExplanation: '',
+  animalEverAttackedOtherCats: '',
+  animalEverAttackedOtherCatsExplanation: '',
+  animalEverAttackedOtherDogs: '',
+  animalEverAttackedOtherDogsExplanation: '',
 
   // Medical History
-  catVeterinarianList: '',
-  catVeterinarianYearlyVisits: '',
-  catSpayedNeutered: '',
-  catVaccinationHistory: '',
-  catVaccinationsCurrent: '',
-  catTestedHeartworm: '',
-  catTestedHeartwormExplanation: '',
-  catHeartwormPrevention: '',
-  catHeartwormPreventionExplanation: '',
-  catMicrochipped: '',
-  catMicrochippedExplanation: '',
-  catVetOrGroomerBehavior: '',
-  catVetMuzzled: '',
-  catPastOrPresentHealthProblems: '',
-  catPastOrPresentHealthProblemsExplanation: '',
-  catCurrentMedications: '',
-  catCurrentMedicationsExplanation: '',
+  animalVeterinarianList: '',
+  animalVeterinarianYearlyVisits: '',
+  animalSpayedNeutered: '',
+  animalVaccinationHistory: '',
+  animalVaccinationsCurrent: '',
+  animalTestedHeartworm: '',
+  animalTestedHeartwormExplanation: '',
+  animalHeartwormPrevention: '',
+  animalHeartwormPreventionExplanation: '',
+  animalMicrochipped: '',
+  animalMicrochippedExplanation: '',
+  animalVetOrGroomerBehavior: '',
+  animalVetMuzzled: '',
+  animalPastOrPresentHealthProblems: '',
+  animalPastOrPresentHealthProblemsExplanation: '',
+  animalCurrentMedications: '',
+  animalCurrentMedicationsExplanation: '',
 
   // Feeding
-  catTypeOfFood: '',
-  catEatingFrequency: '',
-  catAmountOfFood: '',
-  catFoodTreats: '',
-  catFoodTreatsExplanation: '',
+  animalTypeOfFood: '',
+  animalEatingFrequency: '',
+  animalAmountOfFood: '',
+  animalFoodTreats: '',
+  animalFoodTreatsExplanation: '',
 
   // Other
   additionalInformation: '',
-  fullBodyPhotoOfCat: '',
-  closeUpPhotoOfCatsFace: '',
+  fullBodyPhotoOfAnimal: '',
+  closeUpPhotoOfAnimalFace: '',
   copiesOfRecords: '',
 })
 
 const formStep = ref(0)
+const router = useRouter()
 const selectedAnimal = ref<'dog' | 'cat' | null>(null)
 const formError = ref<boolean>(false)
 const isSubmitted = ref(false)
@@ -117,8 +120,8 @@ const validationErrors = computed(() => {
   if (formStep.value === 1) {
     const {
       firstName, lastName, phoneNumber, email, streetAddress, city, state, zipCode,
-      catName, catAge,
-      whenToSurrenderCat, catSex, catOwnershipDuration, catLocationFound, catWhySurrendered, otherPetsInHousehold
+      animalName, animalAge,
+      whenToSurrenderAnimal, animalSex, animalOwnershipDuration, animalLocationFound, animalWhySurrendered, otherPetsInHousehold
     } = formState
 
     if (!firstName) errors.push('First Name')
@@ -129,13 +132,13 @@ const validationErrors = computed(() => {
     if (!city) errors.push('City')
     if (!state) errors.push('State')
     if (!zipCode) errors.push('Zip Code')
-    if (!whenToSurrenderCat) errors.push('When do you need to surrender your cat')
-    if (!catName) errors.push("Cat's Name")
-    if (!catAge) errors.push("Age")
-    if (!catSex) errors.push("Sex")
-    if (!catOwnershipDuration) errors.push('How long have you had your cat?')
-    if (!catLocationFound) errors.push('Where did you get your cat?')
-    if (!catWhySurrendered) errors.push('Why are you surrendering your cat?')
+    if (!whenToSurrenderAnimal) errors.push('When do you need to surrender your animal')
+    if (!animalName) errors.push("Animal's Name")
+    if (!animalAge) errors.push("Age")
+    if (!animalSex) errors.push("Sex")
+    if (!animalOwnershipDuration) errors.push('How long have you had your animal?')
+    if (!animalLocationFound) errors.push('Where did you get your animal?')
+    if (!animalWhySurrendered) errors.push('Why are you surrendering your animal?')
 
     // Check dynamic household members
     let hasAgeError = false
@@ -174,7 +177,7 @@ const validateStep = (step: number): boolean => {
     // Mark regular fields as touched
     const fields = [
       'firstName', 'lastName', 'phoneNumber', 'email', 'streetAddress', 'city', 'state', 'zipCode',
-      'catName', 'catAge', 'whenToSurrenderCat', 'catSex', 'catOwnershipDuration', 'catLocationFound', 'catWhySurrendered', 'otherPetsInHousehold'
+      'animalName', 'animalAge', 'whenToSurrenderAnimal', 'animalSex', 'animalOwnershipDuration', 'animalLocationFound', 'animalWhySurrendered', 'otherPetsInHousehold'
     ]
     fields.forEach(f => touched[f] = true)
 
@@ -194,24 +197,28 @@ const validateStep = (step: number): boolean => {
 const handleSubmit = () => {
   hasAttemptedSubmit.value = true
   if (!validateStep(formStep.value)) {
-    window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' })
+    globalThis.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' })
     return
   }
 
   if (formStep.value < 6) {
-    formStep.value += 1
+    if (formStep.value === 3 && selectedAnimal.value === 'dog') {
+      formStep.value += 2
+    } else {
+      formStep.value += 1
+    }
     hasAttemptedSubmit.value = false // Reset for next step
-    window.scrollTo({ top: 0, behavior: 'smooth' })
+    globalThis.scrollTo({ top: 0, behavior: 'smooth' })
   } else {
     // Final submission logic
     isSubmitted.value = true
-    window.scrollTo({ top: 0, behavior: 'smooth' })
+    globalThis.scrollTo({ top: 0, behavior: 'smooth' })
   }
 }
 
 const handleReset = () => {
   isSubmitted.value = false
-  window.location.reload()
+  router.push('/')
 }
 
 const headerText = computed(() => {
@@ -219,6 +226,11 @@ const headerText = computed(() => {
     return 'Surrender Pet'
   }
   return selectedAnimal.value === 'cat' ? 'Feline Surrender' : 'Canine Surrender'
+})
+
+const formattedAnimal = computed(() => {
+  if (!selectedAnimal.value) return ''
+  return selectedAnimal.value.charAt(0).toUpperCase() + selectedAnimal.value.slice(1)
 })
 </script>
 
@@ -228,14 +240,14 @@ const headerText = computed(() => {
       <div class="form-header">
         <img
           v-if="selectedAnimal === 'cat' && formStep > 0"
-          src="../../public/images/cat.png"
+          src="/images/cat.png"
           alt="cat"
           height="50"
           width="100"
         />
         <img
           v-if="selectedAnimal === 'dog' && formStep > 0"
-          src="../../public/images/dog.png"
+          src="/images/dog.png"
           alt="cat"
           height="50"
           width="100"
@@ -259,17 +271,38 @@ const headerText = computed(() => {
           "
         />
         <HouseholdSection
-          v-if="formStep === 1"
+          v-if="formStep === 1 && selectedAnimal"
           :formState="formState"
           :touched="touched"
           :handleBlur="handleBlur"
           :hasAttemptedSubmit="hasAttemptedSubmit"
+          :selectedAnimal="formattedAnimal"
         />
-        <BehaviorSection v-if="formStep === 2" :formState="formState" />
-        <AggressiveSection v-if="formStep === 3" :formState="formState" />
-        <MedicalSection v-if="formStep === 4" :formState="formState" />
-        <FeedingSection v-if="formStep === 5" :formState="formState" />
-        <OtherSection v-if="formStep === 6" :formState="formState" />
+        <BehaviorSection v-if="formStep === 2 && selectedAnimal" :formState="formState" :touched="touched"
+          :handleBlur="handleBlur"
+          :hasAttemptedSubmit="hasAttemptedSubmit"
+          :selectedAnimal="formattedAnimal"
+        />
+        <AggressiveSection v-if="formStep === 3 && selectedAnimal" :formState="formState" :touched="touched"
+          :handleBlur="handleBlur"
+          :hasAttemptedSubmit="hasAttemptedSubmit"
+          :selectedAnimal="formattedAnimal"
+        />
+        <MedicalSection v-if="formStep === 4 && selectedAnimal" :formState="formState" :touched="touched"
+          :handleBlur="handleBlur"
+          :hasAttemptedSubmit="hasAttemptedSubmit"
+          :selectedAnimal="formattedAnimal"
+        />
+        <FeedingSection v-if="formStep === 5 && selectedAnimal" :formState="formState" :touched="touched"
+          :handleBlur="handleBlur"
+          :hasAttemptedSubmit="hasAttemptedSubmit"
+          :selectedAnimal="formattedAnimal"
+        />
+        <OtherSection v-if="formStep === 6 && selectedAnimal" :formState="formState" :touched="touched"
+          :handleBlur="handleBlur"
+          :hasAttemptedSubmit="hasAttemptedSubmit"
+          :selectedAnimal="formattedAnimal"
+        />
       </content>
 
       <div v-if="hasAttemptedSubmit && validationErrors.length > 0" class="validation-summary">

@@ -1,125 +1,391 @@
 <script setup lang="ts">
-import InputField from '../../common/ui/InputField.vue'
-import type { SurrenderFormState } from '../../../models/common'
+import { ref, watch } from 'vue'
+import InputTextArea from '../../common/ui/InputTextArea.vue'
+import ButtonToggle from '../../common/ui/ButtonToggle.vue'
+import InputGrid from '../../common/ui/InputGrid.vue'
+import type { SurrenderFormState } from '../../../models/surrender-form.ts'
 
-const { formState } = defineProps<{
+const { formState, touched, handleBlur, hasAttemptedSubmit } = defineProps<{
   formState: SurrenderFormState
+  touched: Record<string, boolean>
+  handleBlur: (_field: string) => void // eslint-disable-line no-unused-vars
+  hasAttemptedSubmit: boolean
 }>()
+
+const behaviorRows = [
+  'examine',
+  'restrain',
+  'administer shots',
+  'bathe',
+  'clean ears',
+  'trim nails',
+  'take blood'
+]
+
+const behaviorColumns = [
+  'never done',
+  'shows teeth/hisses',
+  'snap',
+  'bite',
+  'none of these'
+]
+
+
+const vaccineOptions = ['Rabies', 'FVRCP', 'FPV', 'FVR/FHV-1', 'FCV', 'None']
+const selectedVaccines = ref<string[]>([])
+
+
+const toggleFields: (
+  | 'catVeterinarianYearlyVisits'
+  | 'catSpayedNeutered'
+  | 'catVaccinationsCurrent'
+  | 'catTestedHeartworm'
+  | 'catHeartwormPrevention'
+  | 'catMicrochipped'
+  | 'catPastOrPresentHealthProblems'
+  | 'catCurrentMedications'
+  | 'catVetMuzzled'
+)[] = [
+  'catVeterinarianYearlyVisits',
+  'catSpayedNeutered',
+  'catVaccinationsCurrent',
+  'catTestedHeartworm',
+  'catHeartwormPrevention',
+  'catMicrochipped',
+  'catPastOrPresentHealthProblems',
+  'catCurrentMedications',
+  'catVetMuzzled'
+]
+
+toggleFields.forEach(field => {
+  if (!formState[field]) {
+
+    formState[field] = 'No'
+  }
+})
+
+
+if (formState.catVaccinationHistory) {
+  selectedVaccines.value = formState.catVaccinationHistory.split(', ')
+}
+
+
+if (!formState.catVetOrGroomerBehavior) {
+   const initialGridState: Record<string, string[]> = {}
+   behaviorRows.forEach(row => {
+     initialGridState[row] = ['none of these']
+   })
+   formState.catVetOrGroomerBehavior = JSON.stringify(initialGridState)
+}
+
+
+
+const toggleVaccine = (option: string) => {
+  if (option === 'None') {
+    selectedVaccines.value = ['None']
+  } else {
+
+    if (selectedVaccines.value.includes('None')) {
+      selectedVaccines.value = selectedVaccines.value.filter(v => v !== 'None')
+    }
+
+    if (selectedVaccines.value.includes(option)) {
+      selectedVaccines.value = selectedVaccines.value.filter(v => v !== option)
+    } else {
+      selectedVaccines.value.push(option)
+    }
+  }
+}
+
+watch(selectedVaccines, (newVal) => {
+  formState.catVaccinationHistory = newVal.join(', ')
+}, { deep: true })
+
 </script>
 
 <template>
-  <div>
+  <div class="medical-section">
     <h5>Medical History</h5>
-    <InputField
-      label="Please list all veterniarians that have seen the cat, including address and number"
-      placeholder="Answer"
-      :modelValue="formState.catVeterinarianList"
-      @update:modelValue="(val) => (formState.catVeterinarianList = val)"
-    />
-    <InputField
-      label="Does the cat see a veterinarian at least once a year?"
-      placeholder="Answer"
-      :modelValue="formState.catVeterinarianYearlyVisits"
-      @update:modelValue="(val) => (formState.catVeterinarianYearlyVisits = val)"
-    />
-    <InputField
-      label="Is the cat spayed/neutered?"
-      placeholder="Answer"
-      :modelValue="formState.catSpayedNeutered"
-      @update:modelValue="(val) => (formState.catSpayedNeutered = val)"
-    />
-    <InputField
-      label="What vaccinations has the cat received?"
-      placeholder="Answer"
-      :modelValue="formState.catVaccinationHistory"
-      @update:modelValue="(val) => (formState.catVaccinationHistory = val)"
-    />
-    <InputField
-      label="Are vaccinations current?"
-      placeholder="Answer"
-      :modelValue="formState.catVaccinationsCurrent"
-      @update:modelValue="(val) => (formState.catVaccinationsCurrent = val)"
-    />
-    <InputField
-      label="Has the cat been tested for heartworm?"
-      placeholder="Answer"
-      :modelValue="formState.catTestedHeartworm"
-      @update:modelValue="(val) => (formState.catTestedHeartworm = val)"
-    />
-    <InputField
-      label="If yes, what were the test results"
-      placeholder="Answer"
-      :modelValue="formState.catTestedHeartwormExplanation"
-      @update:modelValue="(val) => (formState.catTestedHeartwormExplanation = val)"
-    />
-    <InputField
-      label="Is the pet taking heartworm preventative?"
-      placeholder="Answer"
-      :modelValue="formState.catHeartwormPrevention"
-      @update:modelValue="(val) => (formState.catHeartwormPrevention = val)"
-    />
-    <InputField
-      label="If yes, when is the next dosage due?"
-      placeholder="Answer"
-      :modelValue="formState.catHeartwormPreventionExplanation"
-      @update:modelValue="(val) => (formState.catHeartwormPreventionExplanation = val)"
-    />
-    <InputField
-      label="Is the pet microchipped?"
-      placeholder="Answer"
-      :modelValue="formState.catMicrochipped"
-      @update:modelValue="(val) => (formState.catMicrochipped = val)"
-    />
-    <InputField
-      label="If yes, please provide microchip number"
-      placeholder="Answer"
-      :modelValue="formState.catMicrochippedExplanation"
-      @update:modelValue="(val) => (formState.catMicrochippedExplanation = val)"
-    />
-    <InputField
-      label="Check if the cat has ever shown any of the following behaviors when handled by a vet or groomer"
-      placeholder="Answer"
-      :modelValue="formState.catVetOrGroomerBehavior"
-      @update:modelValue="(val) => (formState.catVetOrGroomerBehavior = val)"
-    />
-    <InputField
-      label="Does the cat have to be muzzled at the veterinarians?"
-      placeholder="Answer"
-      :modelValue="formState.catVetMuzzled"
-      @update:modelValue="(val) => (formState.catVetMuzzled = val)"
-    />
-    <InputField
-      label="Does the pet have any past or present health problems"
-      placeholder="Answer"
-      :modelValue="formState.catPastOrPresentHealthProblems"
-      @update:modelValue="(val) => (formState.catPastOrPresentHealthProblems = val)"
-    />
-    <InputField
-      label="If yes, please describe"
-      placeholder="Answer"
-      :modelValue="formState.catPastOrPresentHealthProblemsExplanation"
-      @update:modelValue="(val) => (formState.catPastOrPresentHealthProblemsExplanation = val)"
-    />
-    <InputField
-      label="Is the cat currently taking any medications?"
-      placeholder="Answer"
-      :modelValue="formState.catCurrentMedications"
-      @update:modelValue="(val) => (formState.catCurrentMedications = val)"
-    />
-    <InputField
-      label="If yes, please list medications"
-      placeholder="Answer"
-      :modelValue="formState.catCurrentMedicationsExplanation"
-      @update:modelValue="(val) => (formState.catCurrentMedicationsExplanation = val)"
-    />
+    <div class="medical-grid">
+
+      <InputTextArea
+        label="Please list all veterniarians that have seen the cat, including address and number"
+        placeholder="List veterinarians, addresses, and phone numbers"
+        :spanFull="true"
+        :modelValue="formState.catVeterinarianList"
+        @update:modelValue="(val) => (formState.catVeterinarianList = val)"
+      />
+
+
+
+      <ButtonToggle
+        label="Does the cat see a veterinarian at least once a year?"
+        :modelValue="formState.catVeterinarianYearlyVisits"
+        @update:modelValue="(val) => (formState.catVeterinarianYearlyVisits = val as string)"
+      />
+
+
+
+      <ButtonToggle
+        label="Is the cat spayed/neutered?"
+        :modelValue="formState.catSpayedNeutered"
+        @update:modelValue="(val) => (formState.catSpayedNeutered = val as string)"
+      />
+
+
+      <fieldset class="field" aria-labelledby="vaccine-legend">
+        <legend id="vaccine-legend" class="field-label">What vaccinations has the cat received?</legend>
+        <div class="chips">
+          <label class="chip" v-for="option in vaccineOptions" :key="option">
+            <input
+              type="checkbox"
+              :value="option"
+              :checked="selectedVaccines.includes(option)"
+              @change="toggleVaccine(option)"
+            />
+            <span>{{ option }}</span>
+          </label>
+        </div>
+      </fieldset>
+
+
+
+      <ButtonToggle
+        label="Are vaccinations current?"
+        :modelValue="formState.catVaccinationsCurrent"
+        @update:modelValue="(val) => (formState.catVaccinationsCurrent = val as string)"
+      />
+
+
+
+      <ButtonToggle
+        label="Has the cat been tested for heartworm?"
+        :modelValue="formState.catTestedHeartworm"
+        @update:modelValue="(val) => (formState.catTestedHeartworm = val as string)"
+      />
+
+
+      <InputTextArea
+        label="If yes, what were the test results"
+        placeholder="Describe test results"
+        :spanFull="false"
+        :modelValue="formState.catTestedHeartwormExplanation"
+        @update:modelValue="(val) => (formState.catTestedHeartwormExplanation = val)"
+      />
+
+
+
+      <ButtonToggle
+        label="Is the pet taking heartworm preventative?"
+        :modelValue="formState.catHeartwormPrevention"
+        @update:modelValue="(val) => (formState.catHeartwormPrevention = val as string)"
+      />
+
+
+      <InputTextArea
+        label="If yes, when is the next dosage due?"
+        placeholder="Date or timeframe"
+        :spanFull="false"
+        :modelValue="formState.catHeartwormPreventionExplanation"
+        @update:modelValue="(val) => (formState.catHeartwormPreventionExplanation = val)"
+      />
+
+
+
+      <ButtonToggle
+        label="Is the pet microchipped?"
+        :modelValue="formState.catMicrochipped"
+        @update:modelValue="(val) => (formState.catMicrochipped = val as string)"
+      />
+
+
+      <InputTextArea
+        label="If yes, please provide microchip number"
+        placeholder="Microchip number"
+        :spanFull="false"
+        :modelValue="formState.catMicrochippedExplanation"
+        @update:modelValue="(val) => (formState.catMicrochippedExplanation = val)"
+      />
+
+
+      <InputGrid
+        label="Check if the cat has ever shown any of the following behaviors when handled by a vet or groomer"
+        :rows="behaviorRows"
+        :columns="behaviorColumns"
+        :modelValue="formState.catVetOrGroomerBehavior"
+        @update:modelValue="(val) => (formState.catVetOrGroomerBehavior = val)"
+        :exclusiveOptions="['none of these', 'never done']"
+      />
+
+
+
+
+
+      <ButtonToggle
+        label="Does the pet have any past or present health problems"
+        :modelValue="formState.catPastOrPresentHealthProblems"
+        @update:modelValue="(val) => (formState.catPastOrPresentHealthProblems = val as string)"
+      />
+
+
+      <InputTextArea
+        label="If yes, please describe"
+        placeholder="Describe health problems"
+        :spanFull="false"
+        :modelValue="formState.catPastOrPresentHealthProblemsExplanation"
+        @update:modelValue="(val) => (formState.catPastOrPresentHealthProblemsExplanation = val)"
+      />
+
+
+
+      <ButtonToggle
+        label="Is the cat currently taking any medications?"
+        :modelValue="formState.catCurrentMedications"
+        @update:modelValue="(val) => (formState.catCurrentMedications = val as string)"
+      />
+
+
+      <InputTextArea
+        label="If yes, please list medications"
+        placeholder="List medications"
+        :spanFull="false"
+        :modelValue="formState.catCurrentMedicationsExplanation"
+        @update:modelValue="(val) => (formState.catCurrentMedicationsExplanation = val)"
+      />
+
+
+      <ButtonToggle
+        label="Does the cat have to be muzzled at the veterinarians?"
+        :modelValue="formState.catVetMuzzled"
+        @update:modelValue="(val) => (formState.catVetMuzzled = val as string)"
+      />
+    </div>
   </div>
 </template>
 
 <style scoped lang="css">
-h5 {
+.medical-section h5 {
   margin-bottom: 24px;
 }
-div > div {
-    margin-bottom: 16px;
+
+.medical-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+
+  @media (min-width: 768px) {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    column-gap: 24px;
+    row-gap: 16px;
+  }
 }
+
+.field-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.field-label {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--font-color-dark);
+  margin-bottom: 4px;
+}
+
+
+
+
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  border: none;
+  padding: 0;
+  margin: 0;
+}
+
+.chip {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  border-radius: 999px;
+  border: 1px solid #e7ebf0;
+  background-color: #fff;
+  cursor: pointer;
+  user-select: none;
+  font-size: 1rem;
+  transition:
+    background 0.2s,
+    border-color 0.2s,
+    box-shadow 0.2s;
+
+  span {
+    font-weight: 600;
+    color: var(--text-900);
+    line-height: 1.5;
+  }
+
+  &:hover {
+    border-color: #d7e2f2;
+    background: #f2f7ff;
+  }
+}
+
+.chip > input {
+  position: absolute;
+  opacity: 0;
+  width: 1px;
+  height: 1px;
+  pointer-events: none;
+}
+
+.chip:has(> input:checked) {
+  background: color-mix(in srgb, var(--green) 10%, white);
+  border: 1px solid var(--green);
+  box-shadow: 0 0 0 1px var(--green) inset;
+  color: var(--font-color-dark);
+}
+
+.chip:has(> input:focus-visible) {
+  box-shadow: 0 0 0 3px var(--ring);
+}
+
+@supports not (selector(:has(*))) {
+  .chip > input:checked + span {
+    background: #e8f1ff;
+    border-radius: 999px;
+    padding: 6px 10px;
+    margin: -6px -10px;
+    box-shadow: 0 0 0 2px #bfd0ff inset;
+  }
+  .chip > input:focus-visible + span {
+    box-shadow: 0 0 0 3px var(--ring);
+  }
+}
+
+fieldset.field {
+  border: 0;
+  padding: 0;
+  margin: 0;
+  /* Ensure it doesn't break flex layout if needed, though mostly grid items */
+  min-width: 0;
+}
+
+.col-span-2 {
+  grid-column: span 2;
+}
+
+.span-full {
+  grid-column: 1 / -1;
+}
+
+.required {
+  color: #ef4444;
+}
+
+
 </style>

@@ -24,10 +24,23 @@ const headerText = () => {
     return 'Application Received!'
   }
   if (props.formType === 'surrender') {
-    return 'Thank you for submitting your form!'
+    return 'Form Received!'
   }
   if (props.formType === 'adoption') {
-    return 'Thank you for submitting your adoption application!'
+    return 'Application Received!'
+  }
+  return ''
+}
+
+const messageText = () => {
+  if (props.formType === 'volunteer') {
+    return "Thank you for volunteering! We'll review your application and get back to you shortly."
+  }
+  if (props.formType === 'surrender') {
+    return "We'll review your form and get back to you shortly."
+  }
+  if (props.formType === 'adoption') {
+    return "We'll review your adoption application and get back to you shortly."
   }
   return ''
 }
@@ -53,7 +66,7 @@ const headerText = () => {
       </svg>
     </div>
     <h3 class="success-title">{{ headerText() }}</h3>
-    <p class="success-message">{{ props.message }}</p>
+    <p class="success-message">{{ messageText() }}</p>
     <div class="success-actions">
       <Button title="Return to Home" color="green" @click="handleReset" />
     </div>

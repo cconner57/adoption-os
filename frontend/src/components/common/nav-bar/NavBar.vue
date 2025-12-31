@@ -38,7 +38,13 @@ const isTablet = useIsTablet()
         <section class="nav-links">
           <RouterLink to="/" class="nav-item" active-class="active"><p>Home</p></RouterLink>
           <RouterLink to="/about" class="nav-item" active-class="active"><p>About</p></RouterLink>
-          <RouterLink to="/adopt" class="nav-item" active-class="active"><p>Adopt</p></RouterLink>
+          <RouterLink
+            to="/adopt"
+            class="nav-item"
+            active-class="active"
+            :class="{ active: $route.path.startsWith('/adopt') }"
+            ><p>Adopt</p></RouterLink
+          >
           <RouterLink to="/volunteer" class="nav-item" active-class="active"
             ><p>Volunteer</p></RouterLink
           >

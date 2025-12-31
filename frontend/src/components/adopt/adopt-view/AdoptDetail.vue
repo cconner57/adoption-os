@@ -5,7 +5,6 @@ import Button from '../../common/ui/Button.vue'
 import Capsules from '../../common/ui/Capsules.vue'
 import AdoptionFAQ from '../adopt-faq/AdoptionFAQ.vue'
 import AdoptionProcess from '../adopt-process/AdoptionProcess.vue'
-import MoreFriends from '../more-friends/MoreFriends.vue'
 import { formatDate } from '../../../utils/common.ts'
 import AdditionalInfo from '../additional-info/AdditionalInfo.vue'
 import AdoptDrawer from './AdoptDrawer.vue'
@@ -147,7 +146,7 @@ function onImgError() {
       <AdoptionFAQ />
     </div>
   </div>
-  <MoreFriends :pet="pet" />
+  <!-- <MoreFriends :pet="pet" /> -->
   <AdoptDrawer
     :pet="pet"
     :isDrawerOpen="isDrawerOpen"

@@ -16,12 +16,15 @@ const props = defineProps<{
 const isDrawerOpen = ref(false)
 
 const handleStartAdoption = () => {
-  // Direct user to PetAdoption page
   globalThis.location.href = `/pet-adoption/${props.pet.id}`
 }
 
 const handleScheduleMeet = () => {
   isDrawerOpen.value = true
+}
+
+const handleRequestInformation = () => {
+  globalThis.location.href = `/pet-adoption/${props.pet.id}`
 }
 
 const handleShare = () => {
@@ -74,15 +77,21 @@ function onImgError() {
               title="Start Adoption"
               color="blue"
               @click="handleStartAdoption"
-              :fullWidth="false"
+              :fullWidth="true"
             />
             <Button
               title="Schedule a Meet"
               color="purple"
               @click="handleScheduleMeet"
-              :fullWidth="false"
+              :fullWidth="true"
             />
-            <Button title="Share" color="green" @click="handleShare" :fullWidth="false" />
+            <Button
+              title="Request Information"
+              color="orange"
+              @click="handleRequestInformation"
+              :fullWidth="true"
+            />
+            <Button title="Share" color="green" @click="handleShare" :fullWidth="true" />
           </div>
         </div>
         <AdditionalInfo :pet="pet" />
@@ -156,21 +165,29 @@ function onImgError() {
 
 <style scoped lang="css">
 .adopt-detail {
+  width: 100%;
+
   .adopt-detail__main {
     display: flex;
     gap: 30px;
+    width: 100%;
+
     img {
-      height: 500px;
-      width: 780px;
+      flex: 3;
+      width: 0;
+      min-width: 0;
+      height: 600px;
       object-fit: cover;
       border-radius: 16px;
       box-shadow: 0 4px 6px rgba(0, 0, 0, 0.25);
     }
     & .img-fallback {
-      height: 500px;
-      width: 780px;
+      flex: 3;
+      width: 0;
+      min-width: 0;
+      height: 600px;
       border-radius: 16px;
-      background: url('/images/paw.svg') 350px 180px/100px 100px no-repeat #add8e6;
+      background: url('/images/paw.svg') center/100px 100px no-repeat #add8e6;
       box-shadow: 0 4px 6px rgba(0, 0, 0, 0.25);
     }
     .adopt-detail__info {
@@ -179,18 +196,17 @@ function onImgError() {
       gap: 20px;
       background-color: var(--white);
       color: var(--font-color-dark);
-      padding: 20px;
+      padding: 32px;
       border-radius: 16px;
-      max-width: 560px;
-      height: 500px;
-      max-height: 550px;
+      flex: 2;
+      width: 0;
+      min-width: 0;
+      height: auto;
+      min-height: 600px;
       box-shadow: 0 4px 6px rgba(0, 0, 0, 0.25);
-      @media (max-width: 440px) {
-        max-width: 100%;
-        height: auto;
-        padding: 1rem;
-        gap: 15px;
-        max-height: none;
+      @media (max-width: 1024px) {
+        width: 100%;
+        min-height: auto;
       }
       .adopt-detail__info__main {
         display: flex;
@@ -199,7 +215,7 @@ function onImgError() {
         border-bottom: 1px solid rgb(178, 177, 177);
         padding-bottom: 20px;
         h1 {
-          font-size: 1.75rem;
+          font-size: 2.5rem; /* Larger title */
         }
         @media (min-width: 321px) and (max-width: 430px) {
           h1 {
@@ -210,34 +226,47 @@ function onImgError() {
           display: flex;
           flex-direction: row;
           gap: 10px;
+          flex-wrap: wrap;
           & p {
             background-color: var(--green-weak);
             padding: 4px 12px;
             border-radius: 16px;
           }
-          @media (min-width: 321px) and (max-width: 430px) {
-            flex-wrap: wrap;
-          }
         }
         .adopt-detail__actions {
-          display: flex;
-          flex-direction: row;
+          display: grid;
+          grid-template-columns: 1fr 1fr;
           gap: 14px;
+          flex-wrap: wrap; /* Allow wrapping */
           @media (max-width: 440px) {
+            display: flex;
             flex-direction: column;
           }
         }
       }
+    }
+    @media (max-width: 1024px) {
+        flex-direction: column;
+        img, .img-fallback {
+            width: 100%;
+            height: 400px;
+            flex: auto;
+        }
+        .adopt-detail__info {
+            width: 100%;
+            flex: auto;
+        }
     }
   }
   .adopt-detail__about {
     display: flex;
     margin-top: 20px;
     background-color: var(--white);
-    padding: 20px;
+    padding: 32px;
     border-radius: 16px;
     color: var(--font-color-dark);
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.25);
+    width: 100%;
     & .adopt-detail__about__content {
       width: 50%;
       margin-right: 20px;
@@ -264,13 +293,15 @@ function onImgError() {
           margin-bottom: 8px;
           display: flex;
           border-bottom: 1px solid rgb(178, 177, 177);
-          width: 500px;
+          width: 100%; /* Full width */
+          justify-content: space-between; /* Space out */
           p {
             margin-bottom: 8px;
           }
           p:first-child {
             margin-right: 8px;
-            width: 300px;
+            /* width: 300px; removed fixed width */
+            flex: 1;
           }
           p:last-child {
             font-weight: bold;
@@ -291,60 +322,15 @@ function onImgError() {
       line-height: 1.5;
       margin-bottom: 12px;
     }
-    @media (min-width: 321px) and (max-width: 430px) {
+    @media (max-width: 768px) {
       flex-direction: column;
-      & .adopt-detail__about__fun {
-        h2 {
-          font-size: 1.25rem;
-        }
-        p {
-          font-size: 1rem;
-          line-height: 1.5;
-        }
-      }
       & .adopt-detail__about__content,
       & .adopt-detail__about__medical {
         width: 100%;
         margin-right: 0px;
       }
-      & .adopt-detail__about__additional-info {
-        margin-bottom: 2rem;
-        ul {
-          padding-left: 15px;
-          li {
-            font-size: 1rem;
-            margin-bottom: 6px;
-          }
-        }
-        h2 {
-          font-size: 1.25rem;
-        }
-        p {
-          font-size: 1rem;
-          line-height: 1.5;
-        }
-      }
       & .adopt-detail__about__medical {
-        ul {
-          margin-bottom: 0px;
-          li {
-            width: 100%;
-            flex-direction: column;
-            p:first-child {
-              margin-right: 0px;
-              width: 100%;
-            }
-          }
-        }
-        h2 {
-          font-size: 1.25rem;
-          margin-bottom: 12px;
-        }
-        p {
-          font-size: 1rem;
-          line-height: 1.5;
-          margin-bottom: 12px;
-        }
+        margin-top: 2rem;
       }
     }
   }
@@ -353,71 +339,18 @@ function onImgError() {
     margin-top: 30px;
     background-color: var(--white);
     color: var(--font-color-dark);
-    padding: 20px;
+    padding: 32px;
     border-radius: 16px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.25);
-    @media (max-width: 440px) {
+    width: 100%;
+    @media (max-width: 768px) {
       flex-direction: column;
     }
   }
-  @media (min-width: 0px) and (max-width: 320px) {
-  }
-  @media (min-width: 321px) and (max-width: 430px) {
-    padding: 0 1rem;
-    .adopt-detail__main {
-      flex-direction: column;
-      img {
-        width: 100%;
-        height: auto;
-        margin-top: 3rem;
-      }
-      & .img-fallback {
-        width: 100%;
-        height: 300px;
-        margin-top: 3rem;
-        background: url('/images/paw.svg') 150px 100px/100px 100px no-repeat #add8e6;
-      }
-    }
-  }
-  @media (min-width: 431px) and (max-width: 768px) {
-  }
-  @media (min-width: 769px) and (max-width: 1024px) {
-  }
-  @media (min-width: 1025px) and (max-width: 1440px) {
-    display: flex;
-    justify-content: center;
-    flex-direction: column;
-    align-items: center;
-    & .adopt-detail__main {
-      max-width: 1100px;
-      & img {
-        width: 500px;
-      }
-    }
-    & .adopt-detail__adoption {
-      max-width: 1100px;
-      width: 100%;
-    }
-  }
-  @media (min-width: 1441px) {
-    display: flex;
-    justify-content: center;
-    flex-direction: column;
-    align-items: center;
-    & .adopt-detail__main {
-      max-width: 1500px;
-      & img {
-        width: 900px;
-      }
-    }
-    & .adopt-detail__about {
-      max-width: 1500px;
-      width: 100%;
-    }
-    & .adopt-detail__adoption {
-      max-width: 1500px;
-      width: 100%;
-    }
+
+  /* Mobile padding fix */
+  @media (max-width: 430px) {
+    padding: 0; /* Let parent handle padding */
   }
 }
 </style>

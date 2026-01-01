@@ -43,7 +43,7 @@ const pet = computed(() => pets.find((p) => p.id === id.value))
 
   .content-wrapper {
     width: 100%;
-    max-width: 1600px;
+    /* max-width: 1600px; removed to let children fill 1600px independently of padding */
     margin: 0 auto;
     padding: 8rem var(--layout-padding-side) 3rem;
     display: flex;
@@ -92,6 +92,7 @@ const pet = computed(() => pets.find((p) => p.id === id.value))
     }
     main {
       width: 100%;
+      max-width: 1600px;
     }
   }
   @media (min-width: 431px) and (max-width: 768px) {

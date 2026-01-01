@@ -29,7 +29,7 @@ const houseTrainedText = () => {
     return 'N/A'
   }
   if (props.pet.behavior?.isHouseTrained) {
-    return 'Yes'
+    return 'Yes';
   } else {
     return 'No'
   }
@@ -49,10 +49,6 @@ const houseTrainedText = () => {
     <div class="adopt-detail__additional-info__item">
       <p>Size</p>
       <p>{{ pet.physical?.size ?? 'N/A' }}</p>
-    </div>
-    <div class="adopt-detail__additional-info__item">
-      <p>Birthday</p>
-      <p>{{ formatDate(pet?.physical?.dateOfBirth ?? '') }}</p>
     </div>
     <div class="adopt-detail__additional-info__item">
       <p>House-trained</p>
@@ -99,10 +95,8 @@ const houseTrainedText = () => {
     }
     p:last-child {
       text-wrap: wrap;
-      width: 150px;
-      @media (max-width: 404px) {
-        width: 130px;
-      }
+      width: auto; /* Allow flexible width */
+      flex: 1;    /* Take remaining space */
     }
   }
 }
@@ -111,18 +105,24 @@ const houseTrainedText = () => {
   display: flex;
   flex-direction: row;
   p {
-    margin-right: 8px;
     text-transform: capitalize;
+    text-align: left;
   }
   & p:first-child {
-    width: 225px;
-    @media (max-width: 404px) {
-      width: 170px;
+    width: 200px;
+    flex-shrink: 0;
+    @media (max-width: 440px) {
+      width: 110px;
+      margin-right: 12px;
     }
   }
   & p:last-child {
     font-weight: bold;
     width: 300px;
+    @media (max-width: 440px) {
+      width: auto;
+      flex: 1;
+    }
   }
 }
 </style>

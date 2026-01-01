@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { reactive } from 'vue'
 import Drawer from '../../common/drawer/Drawer.vue'
-import type { IPet } from '../../../models/common'
+import type { IPet } from '../../../models/common.ts'
 import InputField from '../../common/ui/InputField.vue'
 import Button from '../../common/ui/Button.vue'
 

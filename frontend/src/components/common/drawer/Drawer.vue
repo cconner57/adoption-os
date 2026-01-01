@@ -25,7 +25,8 @@ function closeDrawer() {
 </script>
 
 <template>
-  <div v-show="open" class="overlay" @click="closeDrawer">
+  <Transition name="drawer-fade">
+    <div v-if="open" class="overlay" @click="closeDrawer">
     <div class="drawer" @click.stop>
       <div class="drawer-header">
         <h2>{{ props.header }}</h2>
@@ -57,6 +58,7 @@ function closeDrawer() {
       <div class="drawer-body"><slot></slot></div>
     </div>
   </div>
+  </Transition>
 </template>
 
 <style scoped lang="css">
@@ -162,5 +164,25 @@ function closeDrawer() {
       }
     }
   }
+}
+
+.drawer-fade-enter-active,
+.drawer-fade-leave-active {
+  transition: opacity 0.3s ease;
+}
+
+.drawer-fade-enter-from,
+.drawer-fade-leave-to {
+  opacity: 0;
+}
+
+.drawer-fade-enter-active .drawer,
+.drawer-fade-leave-active .drawer {
+  transition: transform 0.3s ease-out;
+}
+
+.drawer-fade-enter-from .drawer,
+.drawer-fade-leave-to .drawer {
+  transform: translateX(100%);
 }
 </style>

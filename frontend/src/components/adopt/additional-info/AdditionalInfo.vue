@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import type { IPet } from '../../../models/common.ts'
-import { formatDate } from '../../../utils/common.ts'
 
 const props = defineProps<{
   pet: IPet
@@ -83,6 +82,7 @@ const houseTrainedText = () => {
   display: flex;
   flex-direction: column;
   gap: 8px;
+  max-height: 250px;
 
   @media (max-width: 440px) {
     gap: 5px;

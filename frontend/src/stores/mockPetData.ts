@@ -184,7 +184,7 @@ export const mockPetsData: IPet[] = [
       color: 'white, orange, & gray',
       coatLength: 'short',
       ageGroup: null,
-      dateOfBirth: null,
+      dateOfBirth: '2024-01-01',
       currentWeight: null,
       breed: 'Unknown',
     },

@@ -16,16 +16,17 @@ const props = defineProps<{
 const isDrawerOpen = ref(false)
 
 const handleStartAdoption = () => {
+  sessionStorage.setItem('adoption_pet_id', JSON.stringify({petId: props.pet.id, petName: props.pet.name}))
   globalThis.location.href = `/pet-adoption/${props.pet.id}`
 }
 
-const handleScheduleMeet = () => {
-  isDrawerOpen.value = true
-}
+// const handleScheduleMeet = () => {
+//   isDrawerOpen.value = true
+// }
 
-const handleRequestInformation = () => {
-  globalThis.location.href = `/pet-adoption/${props.pet.id}`
-}
+// const handleRequestInformation = () => {
+//   globalThis.location.href = `/pet-adoption/${props.pet.id}`
+// }
 
 const handleShare = () => {
   const shareData = {
@@ -79,18 +80,18 @@ function onImgError() {
               @click="handleStartAdoption"
               :fullWidth="true"
             />
-            <Button
+            <!-- <Button
               title="Schedule a Meet"
               color="purple"
               @click="handleScheduleMeet"
               :fullWidth="true"
-            />
-            <Button
+            /> -->
+            <!-- <Button
               title="Request Information"
               color="orange"
               @click="handleRequestInformation"
               :fullWidth="true"
-            />
+            /> -->
             <Button title="Share" color="green" @click="handleShare" :fullWidth="true" />
           </div>
         </div>

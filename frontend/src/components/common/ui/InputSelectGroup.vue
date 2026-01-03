@@ -3,7 +3,7 @@ import { computed } from 'vue'
 
 const props = withDefaults(defineProps<{
   label?: string
-  modelValue: string | string[]
+  modelValue: string | string[] | null
   options: string[] | { label: string; value: string }[]
   multiple?: boolean
   hasError?: boolean
@@ -13,7 +13,7 @@ const props = withDefaults(defineProps<{
 })
 
 const emit = defineEmits<{
-  'update:modelValue': [value: string | string[]]
+  'update:modelValue': [value: string | string[] | null]
   'blur': []
 }>()
 
@@ -80,6 +80,7 @@ const toggleOption = (value: string) => {
   padding: 0;
   margin: 0;
   width: 100%;
+  margin-bottom: 12px;
 }
 
 .label {

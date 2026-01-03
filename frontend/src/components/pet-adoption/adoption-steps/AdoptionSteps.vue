@@ -3,10 +3,6 @@ const { formStep, selectedAnimal } = defineProps<{
   formStep: number
   selectedAnimal: 'dog' | 'cat' | null
 }>()
-
-// Debugging logs to check prop values
-console.log('formStep:', formStep)
-console.log('selectedAnimal:', selectedAnimal)
 </script>
 
 <template>
@@ -16,15 +12,15 @@ console.log('selectedAnimal:', selectedAnimal)
       :class="{ activeLine: formStep >= 1 }"
       :style="{ width: selectedAnimal === 'dog' ? '100px' : '80px' }"
     ></div>
-    <div class="step" :class="{ active: formStep >= 1 || formStep === 0 }">
+    <div class="step" :class="{ active: formStep >= 0 }">
       <div class="step-number">1</div>
       <div class="step-label">General</div>
     </div>
-    <div class="step" :class="{ active: formStep >= 2 }">
+    <div class="step" :class="{ active: formStep >= 1 }">
       <div class="step-number">2</div>
       <div class="step-label">Home</div>
     </div>
-    <div class="step" :class="{ active: formStep >= 5 }">
+    <div class="step" :class="{ active: formStep >= 2 }">
       <div class="step-number">3</div>
       <div class="step-label">New Cat</div>
     </div>
@@ -36,7 +32,7 @@ console.log('selectedAnimal:', selectedAnimal)
       <div class="step-number">{{ selectedAnimal === 'dog' ? 4 : 5 }}</div>
       <div class="step-label">Past Pets</div>
     </div>
-    <div class="step" :class="{ active: formStep >= 6 }">
+    <div class="step" :class="{ active: formStep >= 5 }">
       <div class="step-number">{{ selectedAnimal === 'dog' ? 5 : 6 }}</div>
       <div class="step-label">Other</div>
     </div>

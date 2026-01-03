@@ -2,9 +2,9 @@
 import { computed } from 'vue'
 const props = withDefaults(defineProps<{
   label: string
-  modelValue?: string | number | boolean
-  trueValue?: string | number | boolean
-  falseValue?: string | number | boolean
+  modelValue?: string | number | boolean | null
+  trueValue?: string | number | boolean | null
+  falseValue?: string | number | boolean | null
   trueLabel?: string
   falseLabel?: string
 }>(), {
@@ -14,7 +14,7 @@ const props = withDefaults(defineProps<{
 })
 
 const emit = defineEmits<{
-  'update:modelValue': [value: string | number | boolean]
+  'update:modelValue': [value: string | number | boolean | null]
 }>()
 
 const displayTrueLabel = computed(() => {
@@ -60,6 +60,7 @@ const displayFalseLabel = computed(() => {
   flex-direction: column;
   gap: 8px;
   width: 100%;
+  margin-bottom: 12px;
 }
 
 .field-label {

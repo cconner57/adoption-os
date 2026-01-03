@@ -39,6 +39,7 @@ button {
   border-radius: 6px;
   color: var(--white);
   transition: background-color 0.2s;
+  white-space: nowrap; /* Force single line */
   &:hover {
     cursor: pointer;
   }
@@ -56,6 +57,12 @@ button {
   min-width: 160px;
   padding: 0 24px;
   font-size: 1rem;
+
+  @media (max-width: 480px) {
+    padding: 0 8px; /* Reduce padding on mobile */
+    font-size: clamp(0.7rem, 2.5vw, 1rem); /* Scale text dynamically */
+    min-width: auto; /* Allow shrinking below 160px if needed */
+  }
 }
 
 .large {

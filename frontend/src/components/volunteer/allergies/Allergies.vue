@@ -1,5 +1,9 @@
 <script setup lang="ts">
-import Toggle from '../../common/ui/Toggle.vue'
+import ButtonToggle from '../../common/ui/ButtonToggle.vue'
+
+defineOptions({
+  inheritAttrs: false,
+})
 
 defineProps<{
   modelValue?: boolean
@@ -11,19 +15,28 @@ const emit = defineEmits<{
 </script>
 
 <template>
-  <div class="field col-span-2">
-    <label class="label">Allergies?</label>
-    <Toggle
-      leftLabel="No"
-      rightLabel="Yes"
-      :modelValue="modelValue"
+  <div class="field" v-bind="$attrs">
+    <ButtonToggle
+      label="Allergies?"
       @update:modelValue="emit('update:modelValue', $event)"
+      :options="[
+        { label: 'No', value: false },
+        { label: 'Yes', value: true },
+      ]"
+      :value="modelValue"
     />
   </div>
+  <div class="field spacer"></div>
 </template>
 
 <style scoped lang="css">
-.col-span-2 {
-  grid-column: span 2;
+.spacer {
+  display: none;
+}
+
+@media (min-width: 768px) {
+  .spacer {
+    display: block;
+  }
 }
 </style>

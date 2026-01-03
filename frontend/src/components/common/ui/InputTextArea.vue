@@ -2,7 +2,7 @@
 const props = withDefaults(defineProps<{
   label: string
   placeholder: string
-  modelValue: string
+  modelValue: string | null
   hasError?: boolean
   spanFull?: boolean
 }>(), {
@@ -10,7 +10,7 @@ const props = withDefaults(defineProps<{
 })
 
 const emit = defineEmits<{
-  'update:modelValue': [value: string]
+  'update:modelValue': [value: string | null]
 }>()
 </script>
 

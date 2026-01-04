@@ -171,4 +171,20 @@ const handleBlur = (field: string) => {
   </div>
 </template>
 
-<style scoped lang="css"></style>
+<style scoped lang="css">
+.home-section {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+@media (min-width: 768px) {
+  .home-section {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    column-gap: 24px; /* Space between columns */
+    row-gap: 24px; /* Space between rows */
+    align-items: start;
+  }
+}
+</style>

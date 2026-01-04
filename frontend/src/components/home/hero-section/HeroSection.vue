@@ -45,7 +45,7 @@ function handleAdopt() {
     & h1 {
       font-size: 2.5rem;
       line-height: 3rem;
-      width: 300px;
+      width: 220px;
       max-width: 100%;
       margin-bottom: 16px;
     }

@@ -7,6 +7,15 @@ export interface CurrentPet {
   likesDogs: string
 }
 
+export interface PastPet {
+  name: string
+  speciesBreedSize: string
+  age: string
+  source: string
+  spayedNeutered: string
+  passedAwayReason: string
+}
+
 export interface FormState {
   firstName: string | null
   lastName: string | null
@@ -16,7 +25,9 @@ export interface FormState {
   roommatesNames: string[]
   childrenNamesAges: { name: string; age: string }[]
   currentPets: CurrentPet[]
-  currentlyHavePets: boolean | null
+  currentlyHavePets: string | null /** changed boolean to string for 'Yes'/'No' select */
+  pastPets: PastPet[]
+  ownPetsBefore: string | null
   email: string | null
   address: string | null
   addressLine2: string | null
@@ -54,4 +65,19 @@ export interface FormState {
   catHomeAloneHours: string | null
   catDisciplineType: string | null
   catEscapeSteps: string | null
+  // Other Section
+  bredAnimalDescription: string | null
+  ownedDeclawedOrDebarked: string | null
+  movedWithPet: string | null
+  ownedSpecialNeedsPet: string | null
+  mobilityDevice: string | null
+  surrenderConditions: string[] // Check all that apply
+  surrenderPlan: string | null
+  foodTypeBrand: string | null
+  affordVetCare: string | null
+  affordEmergencyCost: string | null
+  // Summary Section
+  agreementSignature1: string | null
+  agreementSignature2: string | null
+  agreementSignature3: string | null
 }

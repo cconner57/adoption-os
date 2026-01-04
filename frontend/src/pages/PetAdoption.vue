@@ -24,6 +24,17 @@ const formState = reactive<FormState>({
     { name: '', speciesBreedSize: '', age: '', source: '', spayedNeutered: '', likesDogs: '' },
   ],
   currentlyHavePets: null,
+  pastPets: [
+    {
+      name: '',
+      speciesBreedSize: '',
+      age: '',
+      source: '',
+      spayedNeutered: '',
+      passedAwayReason: '',
+    },
+  ],
+  ownPetsBefore: null,
   email: null,
   address: null,
   addressLine2: null,
@@ -61,6 +72,19 @@ const formState = reactive<FormState>({
   catHomeAloneHours: null,
   catDisciplineType: null,
   catEscapeSteps: null,
+  bredAnimalDescription: null,
+  ownedDeclawedOrDebarked: null,
+  movedWithPet: null,
+  ownedSpecialNeedsPet: null,
+  mobilityDevice: null,
+  surrenderConditions: [],
+  surrenderPlan: null,
+  foodTypeBrand: null,
+  affordVetCare: null,
+  affordEmergencyCost: null,
+  agreementSignature1: null,
+  agreementSignature2: null,
+  agreementSignature3: null,
 })
 
 const formStep = ref(0)

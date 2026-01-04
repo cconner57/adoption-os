@@ -49,7 +49,8 @@ const imgSrcComputed = computed(() => (props.imgSrc && props.imgSrc.length ? pro
   padding: 24px;
   border-radius: 8px;
   cursor: pointer;
-  height: 160px;
+  min-height: 160px;
+  height: auto;
   width: 100%;
   transition:
     background-color 0.2s,

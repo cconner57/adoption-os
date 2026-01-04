@@ -23,13 +23,13 @@
   text-align: start;
   display: flex;
   flex-direction: column;
-  gap: 24px;
+  gap: 16px;
   justify-content: center;
-
 
   & h4 {
     font-size: 2.75rem;
     color: var(--font-color-light);
+    margin: 0;
   }
   .mission-content {
     display: flex;
@@ -62,15 +62,13 @@
       font-size: 1.2rem;
       color: var(--font-color-medium);
       line-height: 1.6;
-      margin-top: 20px;
+      line-height: 1.6;
       font-weight: 400;
     }
   }
 
   /* Mobile: 321px - 430px (and generally small screens) */
   @media (max-width: 768px) {
-
-
     & h4 {
       font-size: 2rem;
     }

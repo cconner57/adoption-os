@@ -15,11 +15,12 @@ import Candid from '../../common/candid-award/Candid.vue'
       <div class="stats">
         <span>
           <h5>500+</h5>
-          <p>pets rescued since 2020</p>
+          <p>pets rescued in 2025</p>
         </span>
         <span>
           <h5>500+</h5>
-          <p>pets rescued since 2020</p>
+          xsd
+          <p>pets rescued in 2026</p>
         </span>
       </div>
     </content>
@@ -33,10 +34,12 @@ import Candid from '../../common/candid-award/Candid.vue'
   display: flex;
   flex-direction: column;
   gap: 16px;
-  padding: 24px 50px 50px 50px;
+  padding: 24px 32px 50px 32px;
   border-radius: 12px;
   margin-top: -200px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.25);
+  container-type: inline-size;
+  container-name: impact;
 
   & h4 {
     font-size: 2rem;
@@ -46,18 +49,15 @@ import Candid from '../../common/candid-award/Candid.vue'
   & content {
     display: flex;
     align-items: center;
-    justify-content: space-between;
+    justify-content: center;
     width: 100%;
     color: var(--font-color-dark);
-    flex-wrap: wrap;
     gap: 40px;
   }
   & .awards {
     display: flex;
-    gap: 50px;
-    min-width: 300px;
+    gap: 40px;
     justify-content: center;
-    flex-wrap: wrap;
   }
   .divider {
     border-left: 2px solid #e5e7eb;
@@ -66,10 +66,10 @@ import Candid from '../../common/candid-award/Candid.vue'
   }
   .stats {
     display: flex;
-    gap: 60px;
-    flex: 1;
-    min-width: 300px;
+    gap: 40px;
     justify-content: center;
+    width: 100%;
+    max-width: 450px;
 
     & span {
       display: flex;
@@ -90,31 +90,14 @@ import Candid from '../../common/candid-award/Candid.vue'
     }
   }
 
-  @media (min-width: 431px) and (max-width: 768px) {
-    margin-top: -100px;
-    .awards {
-      margin-top: 20px;
-      gap: 50px;
-    }
-    .divider {
-      height: 1px;
-      margin: 20px 0 0;
-      border-left: none;
-      border-top: 2px solid #e5e7eb;
-      width: 80%;
-      margin-left: auto;
-      margin-right: auto;
-    }
-  }
-  /* Mobile and Small Tablet */
-  @media (min-width: 769px) and (max-width: 1024px) {
+  @container impact (max-width: 900px) {
     margin-top: -80px;
     padding: 30px;
     height: auto;
 
     & h4 {
       margin-left: 0;
-      text-align: center;
+      text-align: left;
       width: 100%;
       margin-bottom: 20px;
     }
@@ -122,10 +105,11 @@ import Candid from '../../common/candid-award/Candid.vue'
     & content {
       flex-direction: column;
       gap: 40px;
+      align-items: center;
     }
 
     .divider {
-      width: 80%;
+      width: 100%;
       height: 2px;
       border-left: none;
       border-top: 2px solid #e5e7eb;
@@ -134,21 +118,33 @@ import Candid from '../../common/candid-award/Candid.vue'
 
     & .awards {
       width: 100%;
-      gap: 50px;
+      gap: 40px;
+      margin-top: 0;
+      justify-content: center;
+      min-width: 0;
+      flex-wrap: wrap;
     }
 
     .stats {
       width: 100%;
-      gap: 40px;
+      gap: 30px;
+      justify-content: center;
+      min-width: 0;
+
+      & span {
+        align-items: center;
+        text-align: center;
+      }
     }
   }
 
-  @media (max-width: 480px) {
+  @container impact (max-width: 480px) {
     padding: 24px;
 
     .stats {
       flex-direction: column;
       gap: 30px;
+      align-items: center;
     }
   }
 }

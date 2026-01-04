@@ -14,13 +14,14 @@ func (app *application) routes() http.Handler { // <--- lowercase application
 	mux.HandleFunc("GET /pets", app.getAllPets)
 	mux.HandleFunc("GET /pets/spotlight", app.getSpotlightPets)
 	mux.HandleFunc("GET /pets/available", app.getAvailablePets)
+	mux.HandleFunc("GET /pets/adopted-count", app.getAdoptedPetsCount)
 
 	// Add the new Volunteer Route
 	mux.HandleFunc("POST /applications/volunteer", app.submitVolunteerApplication)
 
 	// Setup CORS
 	c := cors.New(cors.Options{
-		AllowedOrigins:   []string{"http://localhost:5173", "http://*"},
+		AllowedOrigins:   []string{"*"},
 		AllowedMethods:   []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
 		AllowedHeaders:   []string{"Accept", "Authorization", "Content-Type"},
 		AllowCredentials: true,

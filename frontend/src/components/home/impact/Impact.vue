@@ -1,5 +1,35 @@
 <script setup lang="ts">
+import { ref, onMounted } from 'vue'
 import Candid from '../../common/candid-award/Candid.vue'
+
+const currentYear = new Date().getFullYear()
+const previousYear = currentYear - 1
+
+const countCurrent = ref(0)
+const countPrevious = ref(0)
+const isLoading = ref(true)
+
+const fetchCount = async (year: number) => {
+  try {
+    const response = await fetch(`http://localhost:8080/pets/adopted-count?year=${year}`)
+    const data = await response.json()
+    return data.count || 0
+  } catch (error) {
+    console.error(`Error fetching count for ${year}:`, error)
+    return 0
+  }
+}
+
+const getLabel = (count: number) => (count === 1 ? 'pet' : 'pets')
+
+onMounted(async () => {
+  // Parallel fetch
+  const [prev, curr] = await Promise.all([fetchCount(previousYear), fetchCount(currentYear)])
+
+  countPrevious.value = prev
+  countCurrent.value = curr
+  isLoading.value = false
+})
 </script>
 
 <template>
@@ -13,20 +43,50 @@ import Candid from '../../common/candid-award/Candid.vue'
       </div>
       <div class="divider"></div>
       <div class="stats">
-        <span>
-          <h5>500+</h5>
-          <p>pets rescued in 2025</p>
-        </span>
-        <span>
-          <h5>500+</h5>
-          <p>pets rescued in 2026</p>
-        </span>
+        <div v-if="isLoading" class="loader-container">
+          <div class="spinner"></div>
+        </div>
+        <template v-else>
+          <span>
+            <h5>{{ countPrevious }}</h5>
+            <p>{{ getLabel(countPrevious) }} rescued in {{ previousYear }}</p>
+          </span>
+          <span>
+            <h5>{{ countCurrent }}</h5>
+            <p>{{ getLabel(countCurrent) }} rescued in {{ currentYear }}</p>
+          </span>
+        </template>
       </div>
     </content>
   </section>
 </template>
 
 <style scoped lang="css">
+/* Loader Styles */
+.loader-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+}
+
+.spinner {
+  width: 40px;
+  height: 40px;
+  border: 4px solid rgba(0, 0, 0, 0.1);
+  border-left-color: var(--primary-color, #00c3c3);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Main Layout Styles */
 .impact {
   width: 100%;
   background-color: var(--white);
@@ -69,6 +129,7 @@ import Candid from '../../common/candid-award/Candid.vue'
     justify-content: center;
     width: 100%;
     max-width: 450px;
+    min-height: 100px; /* Prevent layout jump during loading */
 
     & span {
       display: flex;

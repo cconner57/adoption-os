@@ -75,10 +75,12 @@ func main() {
 	// Create the DB connection pool
 	db, err := openDB(cfg)
 	if err != nil {
-		logger.Fatal(err)
+		logger.Printf("WARNING: Could not connect to database: %v. Running in CSV-fallback mode.", err)
+		// db will be nil or unusable, handled in models
+	} else {
+		defer db.Close()
+		logger.Printf("database connection pool established")
 	}
-	defer db.Close()
-	logger.Printf("database connection pool established")
 
 	// 👇 INITIALIZE THE APP INSTANCE
 	app := &application{

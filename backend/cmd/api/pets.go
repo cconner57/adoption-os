@@ -29,3 +29,20 @@ func (app *application) getAvailablePets(w http.ResponseWriter, r *http.Request)
 	data := envelope{"message": "GetAvailablePets coming soon"}
 	app.writeJSON(w, http.StatusOK, data, nil)
 }
+
+func (app *application) getAdoptedPetsCount(w http.ResponseWriter, r *http.Request) {
+	// Parse year from query param, default to current year if missing
+	yearStr := r.URL.Query().Get("year")
+	year := 2026 // Default
+	if yearStr != "" {
+		fmt.Sscanf(yearStr, "%d", &year)
+	}
+
+	count, err := app.models.Pets.GetAdoptedCount(year)
+	if err != nil {
+		app.serverErrorResponse(w, r, err)
+		return
+	}
+
+	app.writeJSON(w, http.StatusOK, envelope{"count": count}, nil)
+}

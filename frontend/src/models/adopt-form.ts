@@ -1,3 +1,12 @@
+export interface CurrentPet {
+  name: string
+  speciesBreedSize: string
+  age: string
+  source: string
+  spayedNeutered: string
+  likesDogs: string
+}
+
 export interface FormState {
   firstName: string | null
   lastName: string | null
@@ -6,6 +15,8 @@ export interface FormState {
   spouseLastName: string | null
   roommatesNames: string[]
   childrenNamesAges: { name: string; age: string }[]
+  currentPets: CurrentPet[]
+  currentlyHavePets: boolean | null
   email: string | null
   address: string | null
   addressLine2: string | null

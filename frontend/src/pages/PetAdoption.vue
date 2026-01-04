@@ -20,6 +20,10 @@ const formState = reactive<FormState>({
   spouseLastName: null,
   roommatesNames: [''],
   childrenNamesAges: [{ name: '', age: '' }],
+  currentPets: [
+    { name: '', speciesBreedSize: '', age: '', source: '', spayedNeutered: '', likesDogs: '' },
+  ],
+  currentlyHavePets: null,
   email: null,
   address: null,
   addressLine2: null,
@@ -137,10 +141,10 @@ const handleSubmit = () => {
         header-text="This application is intended as a means to match the right cat with the right home. The more detail you provide, the better.  All of our adoptable pets are spayed/neutered, vaccinated, and microchipped. Typical adoption fees are $300 for kittens and $250 for adults. Adoption fees are tax-deductible donations, not purchase prices. Thank you for considering adoption!"
       />
       <AdoptionSteps :formStep="formStep" selectedAnimal="cat" />
-<div class="cat-name-display">
-      <h2>Adopting Pet:</h2>
-      <p>{{ selectedCat }}</p>
-    </div>
+      <div class="cat-name-display">
+        <h2>Adopting Pet:</h2>
+        <p>{{ selectedCat }}</p>
+      </div>
       <GeneralSection
         v-show="formStep === 0"
         v-model="formState"
@@ -157,27 +161,32 @@ const handleSubmit = () => {
         v-show="formStep === 2"
         v-model="formState"
         :touched="touched"
-        :handleBlur="handleBlur" />
+        :handleBlur="handleBlur"
+      />
       <CurrentPetsSection
         v-show="formStep === 3"
         v-model="formState"
         :touched="touched"
-        :handleBlur="handleBlur" />
+        :handleBlur="handleBlur"
+      />
       <PastPetsSection
         v-show="formStep === 4"
         v-model="formState"
         :touched="touched"
-        :handleBlur="handleBlur" />
+        :handleBlur="handleBlur"
+      />
       <OtherSection
         v-show="formStep === 5"
         v-model="formState"
         :touched="touched"
-        :handleBlur="handleBlur" />
+        :handleBlur="handleBlur"
+      />
       <SummarySection
         v-show="formStep === 6"
         v-model="formState"
         :touched="touched"
-        :handleBlur="handleBlur" />
+        :handleBlur="handleBlur"
+      />
 
       <div v-if="hasAttemptedSubmit && validationErrors.length > 0" class="validation-summary">
         <p class="summary-title">Please complete the following required fields:</p>

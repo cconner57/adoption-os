@@ -44,182 +44,217 @@ function removeChild(index: number) {
 
 <template>
   <div class="cat-adoption-form">
-
     <div>
       <h2>Applicant Information</h2>
-    <div class="form-grid">
-      <InputField
-        v-model="modelValue.firstName"
-        label="First Name"
-        name="firstName"
-        placeholder="First Name"
-        required
-        :hasError="touched?.firstName && !modelValue.firstName"
-        @blur="handleBlur?.('firstName')"
-      />
-      <InputField
-        v-model="modelValue.lastName"
-        label="Last Name"
-        name="lastName"
-        placeholder="Last Name"
-        required
-        :hasError="touched?.lastName && !modelValue.lastName"
-        @blur="handleBlur?.('lastName')"
-      />
-      <InputField
-        v-model="modelValue.age"
-        label="Age"
-        name="age"
-        placeholder="Age"
-        required
-        :hasError="touched?.age && !modelValue.age"
-        @blur="handleBlur?.('age')"
-      />
-      <InputField
-        v-model="modelValue.email"
-        label="Email"
-        name="email"
-        placeholder="Email"
-        required
-        :hasError="touched?.email && !modelValue.email"
-        @blur="handleBlur?.('email')"
-      />
-      <InputField
-        class="full-width"
-        v-model="modelValue.address"
-        label="Address"
-        name="address"
-        placeholder="Street Address"
-        required
-        :hasError="touched?.address && !modelValue.address"
-        @blur="handleBlur?.('address')"
-      />
-      <InputField
-        class="full-width"
-        v-model="modelValue.addressLine2"
-        label="Address Line 2"
-        name="addressLine2"
-        placeholder="Address Line 2"
-        required
-        :hasError="touched?.addressLine2 && !modelValue.addressLine2"
-        @blur="handleBlur?.('addressLine2')"
-      />
-      <InputField
-        v-model="modelValue.city"
-        label="City"
-        name="city"
-        placeholder="City"
-        required
-        :hasError="touched?.city && !modelValue.city"
-        @blur="handleBlur?.('city')"
-      />
-      <InputField
-        v-model="modelValue.state"
-        label="State"
-        name="state"
-        placeholder="State"
-        required
-        :hasError="touched?.state && !modelValue.state"
-        @blur="handleBlur?.('state')"
-      />
-      <InputField
-        v-model="modelValue.zip"
-        label="Zip Code"
-        name="zip"
-        placeholder="Zip Code"
-        required
-        :hasError="touched?.zip && !modelValue.zip"
-        @blur="handleBlur?.('zip')"
-      />
-      <InputField
-        v-model="modelValue.phoneNumber"
-        label="Phone Number"
-        name="phoneNumber"
-        placeholder="Phone Number"
-        required
-        :hasError="touched?.phoneNumber && !modelValue.phoneNumber"
-        @blur="handleBlur?.('phoneNumber')"
-      />
-      <InputField
-        v-model="modelValue.spouseFirstName"
-        label="Spouse/Partner First Name"
-        name="spouseFirstName"
-        placeholder="First Name"
-        required
-      />
-      <InputField
-        v-model="modelValue.spouseLastName"
-        label="Spouse/Partner Last Name"
-        name="spouseLastName"
-        placeholder="Last Name"
-        required
-      />
+      <div class="form-grid">
+        <InputField
+          v-model="modelValue.firstName"
+          label="First Name"
+          name="firstName"
+          placeholder="First Name"
+          required
+          :hasError="touched?.firstName && !modelValue.firstName"
+          @blur="handleBlur?.('firstName')"
+        />
+        <InputField
+          v-model="modelValue.lastName"
+          label="Last Name"
+          name="lastName"
+          placeholder="Last Name"
+          required
+          :hasError="touched?.lastName && !modelValue.lastName"
+          @blur="handleBlur?.('lastName')"
+        />
+        <InputField
+          v-model="modelValue.age"
+          label="Age"
+          name="age"
+          placeholder="Age"
+          required
+          :hasError="touched?.age && !modelValue.age"
+          @blur="handleBlur?.('age')"
+        />
+        <InputField
+          v-model="modelValue.email"
+          label="Email"
+          name="email"
+          placeholder="Email"
+          required
+          :hasError="touched?.email && !modelValue.email"
+          @blur="handleBlur?.('email')"
+        />
+        <InputField
+          class="full-width"
+          v-model="modelValue.address"
+          label="Address"
+          name="address"
+          placeholder="Street Address"
+          required
+          :hasError="touched?.address && !modelValue.address"
+          @blur="handleBlur?.('address')"
+        />
+        <InputField
+          class="full-width"
+          v-model="modelValue.addressLine2"
+          label="Address Line 2"
+          name="addressLine2"
+          placeholder="Address Line 2"
+          required
+          :hasError="touched?.addressLine2 && !modelValue.addressLine2"
+          @blur="handleBlur?.('addressLine2')"
+        />
+        <InputField
+          v-model="modelValue.city"
+          label="City"
+          name="city"
+          placeholder="City"
+          required
+          :hasError="touched?.city && !modelValue.city"
+          @blur="handleBlur?.('city')"
+        />
+        <InputField
+          v-model="modelValue.state"
+          label="State"
+          name="state"
+          placeholder="State"
+          required
+          :hasError="touched?.state && !modelValue.state"
+          @blur="handleBlur?.('state')"
+        />
+        <InputField
+          v-model="modelValue.zip"
+          label="Zip Code"
+          name="zip"
+          placeholder="Zip Code"
+          required
+          :hasError="touched?.zip && !modelValue.zip"
+          @blur="handleBlur?.('zip')"
+        />
+        <InputField
+          v-model="modelValue.phoneNumber"
+          label="Phone Number"
+          name="phoneNumber"
+          placeholder="Phone Number"
+          required
+          :hasError="touched?.phoneNumber && !modelValue.phoneNumber"
+          @blur="handleBlur?.('phoneNumber')"
+        />
+        <InputField
+          v-model="modelValue.spouseFirstName"
+          label="Spouse/Partner First Name"
+          name="spouseFirstName"
+          placeholder="First Name"
+          required
+        />
+        <InputField
+          v-model="modelValue.spouseLastName"
+          label="Spouse/Partner Last Name"
+          name="spouseLastName"
+          placeholder="Last Name"
+          required
+        />
 
-      <div class="roommates">
-        <label class="section-label">Name of roommmate(s) and other adults in the household</label>
-        <div v-for="(roommate, index) in modelValue.roommatesNames" :key="index" class="dynamic-input-row">
-          <div class="flex-grow">
-            <InputField
-              v-model="modelValue.roommatesNames[index]"
-              :name="`roommate-${index}`"
-              placeholder="Names"
-              required
-              :label="`Roommate ${index + 1}`"
-            />
-          </div>
-          <button v-if="index === 0" class="add-btn" @click.prevent="addRoommate">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="24" height="24">
-              <path d="M12 4.5c.414 0 .75.336.75.75v6h6c.414 0 .75.336.75.75s-.336.75-.75.75h-6v6c0 .414-.336.75-.75.75s-.75-.336-.75-.75v-6h-6c-.414 0-.75-.336-.75-.75s.336-.75.75-.75h6v-6c0-.414.336-.75.75-.75z" />
-            </svg>
-          </button>
-           <button v-else class="remove-btn" @click.prevent="removeRoommate(index)">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="24" height="24">
+        <div class="roommates">
+          <label class="section-label"
+            >Name of roommmate(s) and other adults in the household</label
+          >
+          <div
+            v-for="(roommate, index) in modelValue.roommatesNames"
+            :key="index"
+            class="dynamic-input-row"
+          >
+            <div class="flex-grow">
+              <InputField
+                v-model="modelValue.roommatesNames[index]"
+                :name="`roommate-${index}`"
+                placeholder="Names"
+                required
+                :label="`Roommate ${index + 1}`"
+              />
+            </div>
+            <button v-if="index === 0" class="add-btn" @click.prevent="addRoommate">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 24 24"
+                fill="currentColor"
+                width="24"
+                height="24"
+              >
+                <path
+                  d="M12 4.5c.414 0 .75.336.75.75v6h6c.414 0 .75.336.75.75s-.336.75-.75.75h-6v6c0 .414-.336.75-.75.75s-.75-.336-.75-.75v-6h-6c-.414 0-.75-.336-.75-.75s.336-.75.75-.75h6v-6c0-.414.336-.75.75-.75z"
+                />
+              </svg>
+            </button>
+            <button v-else class="remove-btn" @click.prevent="removeRoommate(index)">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 24 24"
+                fill="currentColor"
+                width="24"
+                height="24"
+              >
                 <rect x="5" y="11" width="14" height="2" />
-            </svg>
-          </button>
-        </div>
-      </div>
-      <div class="children">
-        <label class="section-label">Name and ages of children (under 18) in the household</label>
-        <div v-for="(child, index) in modelValue.childrenNamesAges" :key="index" class="dynamic-input-row">
-          <div class="flex-grow">
-             <InputField
-              v-model="child.name"
-              :name="`child-name-${index}`"
-              placeholder="Name"
-              required
-              :label="`Child ${index + 1}`"
-            />
+              </svg>
+            </button>
           </div>
-          <div class="age-wrapper">
-            <InputField
-              v-model="child.age"
-              :name="`child-age-${index}`"
-              placeholder="Age"
-              required
-              :label="`Child ${index + 1}`"
-            />
-          </div>
-           <button v-if="index === 0" class="add-btn" @click.prevent="addChild">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="24" height="24">
-              <path d="M12 4.5c.414 0 .75.336.75.75v6h6c.414 0 .75.336.75.75s-.336.75-.75.75h-6v6c0 .414-.336.75-.75.75s-.75-.336-.75-.75v-6h-6c-.414 0-.75-.336-.75-.75s.336-.75.75-.75h6v-6c0-.414.336-.75.75-.75z" />
-            </svg>
-          </button>
-          <button v-else class="remove-btn" @click.prevent="removeChild(index)">
-             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="24" height="24">
-                 <rect x="5" y="11" width="14" height="2" />
-            </svg>
-          </button>
         </div>
+        <div class="children">
+          <label class="section-label">Name and ages of children (under 18) in the household</label>
+          <div
+            v-for="(child, index) in modelValue.childrenNamesAges"
+            :key="index"
+            class="dynamic-input-row"
+          >
+            <div class="flex-grow">
+              <InputField
+                v-model="child.name"
+                :name="`child-name-${index}`"
+                placeholder="Name"
+                required
+                :label="`Child ${index + 1}`"
+              />
+            </div>
+            <div class="age-wrapper">
+              <InputField
+                v-model="child.age"
+                :name="`child-age-${index}`"
+                placeholder="Age"
+                required
+                :label="`Child ${index + 1}`"
+              />
+            </div>
+            <button v-if="index === 0" class="add-btn" @click.prevent="addChild">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 24 24"
+                fill="currentColor"
+                width="24"
+                height="24"
+              >
+                <path
+                  d="M12 4.5c.414 0 .75.336.75.75v6h6c.414 0 .75.336.75.75s-.336.75-.75.75h-6v6c0 .414-.336.75-.75.75s-.75-.336-.75-.75v-6h-6c-.414 0-.75-.336-.75-.75s.336-.75.75-.75h6v-6c0-.414.336-.75.75-.75z"
+                />
+              </svg>
+            </button>
+            <button v-else class="remove-btn" @click.prevent="removeChild(index)">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 24 24"
+                fill="currentColor"
+                width="24"
+                height="24"
+              >
+                <rect x="5" y="11" width="14" height="2" />
+              </svg>
+            </button>
+          </div>
+        </div>
+        <ButtonToggle
+          label="Have all adult members of the household agreed to this adoption?"
+          :modelValue="modelValue.adultMembersAgreed"
+          @update:modelValue="(val) => (modelValue.adultMembersAgreed = val as 'Yes' | 'No')"
+        />
       </div>
-      <ButtonToggle
-            label="Have all adult members of the household agreed to this adoption?"
-            :modelValue="modelValue.adultMembersAgreed"
-            @update:modelValue="(val) => (modelValue.adultMembersAgreed = val as 'Yes' | 'No')"
-          />
-
-    </div>
-
     </div>
   </div>
 </template>
@@ -271,10 +306,10 @@ function removeChild(index: number) {
   }
 
   .dynamic-input-row {
-     display: flex;
-     align-items: flex-start;
-     gap: 8px;
-     width: 100%;
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    width: 100%;
   }
 
   .flex-grow {
@@ -296,7 +331,8 @@ function removeChild(index: number) {
     gap: 0;
   }
 
-  .add-btn, .remove-btn {
+  .add-btn,
+  .remove-btn {
     width: 52px;
     height: 52px; /* Match typical input height with padding/borders */
     background: none;
@@ -313,13 +349,9 @@ function removeChild(index: number) {
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   }
 
-  /* Since we moved the label OUT of the InputField for the list, we might not need margin-top on the button if the InputField renders without a label.
-     However, InputField likely renders a label prop if provided.
-     We handled this by passing NO label to InputField ("label" prop omitted) and putting a manual label above the loop.
-     In that case, InputField is just the input box.
-  */
-  .add-btn, .remove-btn {
-      margin-top: 0;
+  .add-btn,
+  .remove-btn {
+    margin-top: 0;
   }
 
   .add-btn:hover {
@@ -327,9 +359,9 @@ function removeChild(index: number) {
     border-color: var(--blue-hover);
   }
   .remove-btn:hover {
-      color: var(--red);
-      border-color: var(--red);
-      background-color: #fff5f5;
+    color: var(--red);
+    border-color: var(--red);
+    background-color: #fff5f5;
   }
 }
 .all-agreed {

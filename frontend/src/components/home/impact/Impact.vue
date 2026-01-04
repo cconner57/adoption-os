@@ -19,7 +19,6 @@ import Candid from '../../common/candid-award/Candid.vue'
         </span>
         <span>
           <h5>500+</h5>
-          xsd
           <p>pets rescued in 2026</p>
         </span>
       </div>

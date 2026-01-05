@@ -1,5 +1,14 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import { About, Adopt, Donate, Home, SurrenderPet, Volunteer, PetAdoption } from '../pages/index.ts'
+import {
+  About,
+  Adopt,
+  Donate,
+  Home,
+  SurrenderPet,
+  Volunteer,
+  PetAdoption,
+  NotFound,
+} from '../pages/index.ts'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -34,6 +43,11 @@ const router = createRouter({
     {
       path: '/pet-adoption/:id',
       component: PetAdoption,
+    },
+    {
+      path: '/:pathMatch(.*)*',
+      name: 'not-found',
+      component: NotFound,
     },
   ],
   scrollBehavior(to, from, savedPosition) {

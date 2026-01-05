@@ -7,7 +7,8 @@ import type { FormState } from '../../../models/adopt-form.ts'
 const { modelValue } = defineProps<{
   modelValue: FormState
   touched?: Record<string, boolean>
-  handleBlur?: (field: string) => void
+  // eslint-disable-next-line no-unused-vars
+  handleBlur: (_field: string) => void
 }>()
 </script>
 
@@ -53,7 +54,16 @@ const { modelValue } = defineProps<{
       :hasError="touched?.mobilityDevice && !modelValue.mobilityDevice"
       @blur="handleBlur?.('mobilityDevice')"
     />
+    <InputField
+      v-model="modelValue.foodTypeBrand"
+      label="What type and brand of food do you plan on feeding your new cat?"
+      name="foodTypeBrand"
+      placeholder="Type and Brand"
+      :hasError="touched?.foodTypeBrand && !modelValue.foodTypeBrand"
+      @blur="handleBlur?.('foodTypeBrand')"
+    />
     <InputSelectGroup
+      class="full-width"
       label="Check all that apply. Under what conditions would you NOT KEEP your new pet?"
       :options="[
         'Moved to a place that didn\'t allow pets',
@@ -84,6 +94,7 @@ const { modelValue } = defineProps<{
       @blur="handleBlur?.('surrenderConditions')"
     />
     <InputField
+      class="full-width"
       v-model="modelValue.surrenderPlan"
       label="What would you do with your cat if you could not keep it for the above reason(s)?"
       name="surrenderPlan"
@@ -91,14 +102,7 @@ const { modelValue } = defineProps<{
       :hasError="touched?.surrenderPlan && !modelValue.surrenderPlan"
       @blur="handleBlur?.('surrenderPlan')"
     />
-    <InputField
-      v-model="modelValue.foodTypeBrand"
-      label="What type and brand of food do you plan on feeding your new cat?"
-      name="foodTypeBrand"
-      placeholder="Type and Brand"
-      :hasError="touched?.foodTypeBrand && !modelValue.foodTypeBrand"
-      @blur="handleBlur?.('foodTypeBrand')"
-    />
+
     <InputField
       v-model="modelValue.affordVetCare"
       label="Can you afford regular veterinary care for this cat - including yearly vaccinations, annual physical exams, dental care, etc. ($300 or more per year)?"
@@ -118,4 +122,23 @@ const { modelValue } = defineProps<{
   </div>
 </template>
 
-<style scoped lang="css"></style>
+<style scoped lang="css">
+.other-section {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+@media (min-width: 768px) {
+  .other-section {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+  }
+
+  /* Make the "Surrender Conditions" and "Surrender Plan" span full width */
+  .other-section .full-width {
+    grid-column: 1 / -1;
+  }
+}
+</style>

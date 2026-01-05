@@ -47,27 +47,57 @@ const { formStep, selectedAnimal } = defineProps<{
 .steps-container {
   display: flex;
   justify-content: space-between;
-  width: 600px;
+  width: 100%;
+  max-width: 600px;
   margin: 0 auto 20px;
   align-items: center;
   position: relative;
+
+  /* The continuous line */
   & .line {
-    flex-grow: 1;
-    height: 2px;
-    background-color: var(--green);
-    margin: 0 5px;
-    width: 550px;
-    min-width: 550px;
-    max-width: 550px;
+    /* Using pseudo-element line approach is cleaner, but keeping existing structure for minimal refactor if desired.
+       However, the existing 'line' div is hardcoded width. Let's switch to ::before like SurrenderSteps or adapt the div.
+       The existing .line div is complex because of dynamic width prop in template.
+       Actually, replacing it with the SurrenderSteps CSS approach (::before) is better for responsiveness.
+       BUT the template uses a div for the line with dynamic style.
+       Let's keep the div but make it responsive.
+    */
     position: absolute;
     top: 14px;
     left: 20px;
+    right: 20px;
+    height: 2px;
+    background-color: var(--green);
     z-index: 1;
+    width: auto !important; /* Override inline style for desktop responsive */
+    max-width: none;
+    min-width: 0;
   }
+
+  @media (max-width: 600px) {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+    padding-left: 16px;
+
+    /* Hide horizontal line on mobile */
+    & .line {
+      display: none;
+    }
+  }
+
   .step {
     display: flex;
     flex-direction: column;
     align-items: center;
+    position: relative;
+    z-index: 2; /* Above line */
+
+    @media (max-width: 600px) {
+      flex-direction: row;
+      gap: 12px;
+      width: 100%;
+    }
 
     .step-number {
       width: 30px;
@@ -81,10 +111,20 @@ const { formStep, selectedAnimal } = defineProps<{
       align-items: center;
       margin-bottom: 8px;
       z-index: 5;
+
+      @media (max-width: 600px) {
+        margin-bottom: 0;
+      }
     }
     .step-label {
       font-size: 0.875rem;
       text-align: center;
+
+      @media (max-width: 600px) {
+        font-size: 1rem;
+        font-weight: 500;
+        text-align: left;
+      }
     }
     &.active {
       .step-number {

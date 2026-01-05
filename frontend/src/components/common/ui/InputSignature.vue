@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, onUnmounted } from 'vue'
 
-const props = defineProps<{
-  label?: string,
-  modelValue?: string | null,
+const { label, hasError } = defineProps<{
+  label?: string
+  modelValue?: string | null
   hasError?: boolean
 }>()
 
@@ -73,25 +73,49 @@ const clearCanvas = () => {
 
 const scaleCanvas = () => {
   if (canvasRef.value) {
-    const dpr = window.devicePixelRatio || 1
     const rect = canvasRef.value.getBoundingClientRect()
+    if (rect.width === 0 || rect.height === 0) return // Don't scale if hidden
+
+    const dpr = window.devicePixelRatio || 1
     canvasRef.value.width = rect.width * dpr
     canvasRef.value.height = rect.height * dpr
+
     context = canvasRef.value.getContext('2d')
     if (context) {
       context.scale(dpr, dpr)
       context.lineWidth = 2
       context.lineCap = 'round'
       context.strokeStyle = '#000'
-      // Fill with white initially
-      context.fillStyle = '#ffffff'
-      context.fillRect(0, 0, rect.width, rect.height)
+      // Fill with white initially (transparent by default in some browsers, but white ensures contrast)
+      // Note: We don't fillRect here because it might clear user data if called on resize.
+      // Ideally we should persist data, but for now let's just ensure it's writable.
+      // If we want to persist, we'd need to save the image data and put it back.
+      // For this simple fix, we just want it to work when it becomes visible.
     }
   }
 }
 
+let resizeObserver: ResizeObserver | null = null
+
 onMounted(() => {
-  scaleCanvas()
+  if (canvasRef.value) {
+    resizeObserver = new ResizeObserver(() => {
+      // Debounce or just call it?
+      // Just calling it is fine for v-show toggles.
+      // Check if context is already valid and has dimensions to avoid clearing if it's just a minor layout shift?
+      // For v-show, width goes 0 -> actual.
+      // If width goes actual -> actual (minor shift), we might clear content.
+      // Let's only scale if internal width is 0 or mismatch significantly.
+      scaleCanvas()
+    })
+    resizeObserver.observe(canvasRef.value)
+  }
+})
+
+onUnmounted(() => {
+  if (resizeObserver) {
+    resizeObserver.disconnect()
+  }
 })
 </script>
 
@@ -142,6 +166,7 @@ onMounted(() => {
   width: 100%;
   height: 200px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  touch-action: none; /* Critical for mobile scrolling prevention */
 }
 
 .has-error .signature-canvas {

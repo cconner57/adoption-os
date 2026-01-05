@@ -16,10 +16,13 @@ const props = defineProps<{
 const isDrawerOpen = ref(false)
 
 const handleStartAdoption = () => {
-  sessionStorage.setItem('adoption_pet_id', JSON.stringify({petId: props.pet.id, petName: props.pet.name}))
+  sessionStorage.setItem(
+    'adoption_pet',
+    JSON.stringify({ petId: props.pet.id, petName: props.pet.name, species: props.pet.species }),
+  )
   globalThis.location.href = `/pet-adoption/${props.pet.id}`
 }
-
+console.log('pet', props.pet)
 // const handleScheduleMeet = () => {
 //   isDrawerOpen.value = true
 // }
@@ -127,12 +130,42 @@ function onImgError() {
         <h2>Medical History</h2>
         <h3>Vaccinations</h3>
         <ul>
-          <VaccinationItem name="Rabies" :date-administered="pet.medical?.vaccinations?.rabies?.dateAdministered" />
-          <VaccinationItem name="Bordetella" :date-administered="pet.medical?.vaccinations?.bordetella?.dateAdministered" />
-          <VaccinationItem name="Canine Distemper" :round1="pet.medical?.vaccinations?.canineDistemper?.round1?.dateAdministered" :round2="pet.medical?.vaccinations?.canineDistemper?.round2?.dateAdministered" :round3="pet.medical?.vaccinations?.canineDistemper?.round3?.dateAdministered" :isComplete="pet.medical?.vaccinations?.canineDistemper?.isComplete" />
-          <VaccinationItem name="Feline Distemper" :round1="pet.medical?.vaccinations?.felineDistemper?.round1?.dateAdministered" :round2="pet.medical?.vaccinations?.felineDistemper?.round2?.dateAdministered" :round3="pet.medical?.vaccinations?.felineDistemper?.round3?.dateAdministered" :isComplete="pet.medical?.vaccinations?.felineDistemper?.isComplete" />
-          <VaccinationItem name="Feline Leukemia" :round1="pet.medical?.vaccinations?.felineLeukemia?.round1?.dateAdministered" :round2="pet.medical?.vaccinations?.felineLeukemia?.round2?.dateAdministered" :round3="pet.medical?.vaccinations?.felineLeukemia?.round3?.dateAdministered" :isComplete="pet.medical?.vaccinations?.felineLeukemia?.isComplete" />
-          <VaccinationItem name="Leptospira" :round1="pet.medical?.vaccinations?.leptospira?.round1?.dateAdministered" :round2="pet.medical?.vaccinations?.leptospira?.round2?.dateAdministered" :round3="pet.medical?.vaccinations?.leptospira?.round3?.dateAdministered" :isComplete="pet.medical?.vaccinations?.leptospira?.isComplete" />
+          <VaccinationItem
+            name="Rabies"
+            :date-administered="pet.medical?.vaccinations?.rabies?.dateAdministered"
+          />
+          <VaccinationItem
+            name="Bordetella"
+            :date-administered="pet.medical?.vaccinations?.bordetella?.dateAdministered"
+          />
+          <VaccinationItem
+            name="Canine Distemper"
+            :round1="pet.medical?.vaccinations?.canineDistemper?.round1?.dateAdministered"
+            :round2="pet.medical?.vaccinations?.canineDistemper?.round2?.dateAdministered"
+            :round3="pet.medical?.vaccinations?.canineDistemper?.round3?.dateAdministered"
+            :isComplete="pet.medical?.vaccinations?.canineDistemper?.isComplete"
+          />
+          <VaccinationItem
+            name="Feline Distemper"
+            :round1="pet.medical?.vaccinations?.felineDistemper?.round1?.dateAdministered"
+            :round2="pet.medical?.vaccinations?.felineDistemper?.round2?.dateAdministered"
+            :round3="pet.medical?.vaccinations?.felineDistemper?.round3?.dateAdministered"
+            :isComplete="pet.medical?.vaccinations?.felineDistemper?.isComplete"
+          />
+          <VaccinationItem
+            name="Feline Leukemia"
+            :round1="pet.medical?.vaccinations?.felineLeukemia?.round1?.dateAdministered"
+            :round2="pet.medical?.vaccinations?.felineLeukemia?.round2?.dateAdministered"
+            :round3="pet.medical?.vaccinations?.felineLeukemia?.round3?.dateAdministered"
+            :isComplete="pet.medical?.vaccinations?.felineLeukemia?.isComplete"
+          />
+          <VaccinationItem
+            name="Leptospira"
+            :round1="pet.medical?.vaccinations?.leptospira?.round1?.dateAdministered"
+            :round2="pet.medical?.vaccinations?.leptospira?.round2?.dateAdministered"
+            :round3="pet.medical?.vaccinations?.leptospira?.round3?.dateAdministered"
+            :isComplete="pet.medical?.vaccinations?.leptospira?.isComplete"
+          />
           <VaccinationItem name="Other" :otherRounds="pet.medical?.vaccinations?.other" />
         </ul>
 
@@ -141,11 +174,7 @@ function onImgError() {
           <li v-for="(surgery, index) in pet.medical.surgeries" :key="'surgery-' + index">
             <p>{{ surgery.name }}</p>
             <p>
-              {{
-                surgery.date
-                  ? 'Performed on ' + formatDate(surgery.date)
-                  : 'Date not available'
-              }}
+              {{ surgery.date ? 'Performed on ' + formatDate(surgery.date) : 'Date not available' }}
             </p>
           </li>
         </ul>
@@ -247,16 +276,17 @@ function onImgError() {
       }
     }
     @media (max-width: 1024px) {
-        flex-direction: column;
-        img, .img-fallback {
-            width: 100%;
-            height: 400px;
-            flex: auto;
-        }
-        .adopt-detail__info {
-            width: 100%;
-            flex: auto;
-        }
+      flex-direction: column;
+      img,
+      .img-fallback {
+        width: 100%;
+        height: 400px;
+        flex: auto;
+      }
+      .adopt-detail__info {
+        width: 100%;
+        flex: auto;
+      }
     }
   }
   .adopt-detail__about {

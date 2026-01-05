@@ -1,12 +1,13 @@
 <script setup lang="ts">
 import InputField from '../../common/ui/InputField.vue'
 import InputSelectGroup from '../../common/ui/InputSelectGroup.vue'
-import type { FormState, PastPet } from '../../../models/adopt-form.ts'
+import type { FormState } from '../../../models/adopt-form.ts'
 
 const { modelValue } = defineProps<{
   modelValue: FormState
   touched?: Record<string, boolean>
-  handleBlur?: (field: string) => void
+  // eslint-disable-next-line no-unused-vars
+  handleBlur: (_field: string) => void
 }>()
 
 const addPet = () => {

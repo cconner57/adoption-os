@@ -23,7 +23,8 @@ const { modelValue } = defineProps<{
     catIndoorOutdoor: string | null
   }
   touched?: Record<string, boolean>
-  handleBlur?: (field: string) => void
+  // eslint-disable-next-line no-unused-vars
+  handleBlur: (_field: string) => void
 }>()
 
 const touched = reactive<Record<string, boolean>>({})

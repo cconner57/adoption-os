@@ -80,4 +80,5 @@ export interface FormState {
   agreementSignature1: string | null
   agreementSignature2: string | null
   agreementSignature3: string | null
+  signatureData: string | null
 }

@@ -1,11 +1,13 @@
 <script setup lang="ts">
 import type { FormState } from '../../../models/adopt-form.ts'
 import InputField from '../../common/ui/InputField.vue'
+import InputSignature from '../../common/ui/InputSignature.vue'
 
 defineProps<{
   modelValue: FormState
   touched: Record<string, boolean>
-  handleBlur: (field: string) => void
+  // eslint-disable-next-line no-unused-vars
+  handleBlur: (_field: string) => void
 }>()
 </script>
 
@@ -33,7 +35,7 @@ defineProps<{
       v-model="modelValue.agreementSignature1"
       label="Type your name"
       name="agreementSignature1"
-      placeholder="Type your name"
+      placeholder="Type your full name to acknowledge commitment"
       :hasError="touched.agreementSignature1 && !modelValue.agreementSignature1"
       @blur="handleBlur('agreementSignature1')"
     />
@@ -47,7 +49,7 @@ defineProps<{
       v-model="modelValue.agreementSignature2"
       label="Type your name"
       name="agreementSignature2"
-      placeholder="Type your name"
+      placeholder="Type your full name to consent to homecheck"
       :hasError="touched.agreementSignature2 && !modelValue.agreementSignature2"
       @blur="handleBlur('agreementSignature2')"
     />
@@ -59,11 +61,41 @@ defineProps<{
       v-model="modelValue.agreementSignature3"
       label="Type your name"
       name="agreementSignature3"
-      placeholder="Type your name"
+      placeholder="Type your full name to confirm read"
       :hasError="touched.agreementSignature3 && !modelValue.agreementSignature3"
       @blur="handleBlur('agreementSignature3')"
+    />
+
+    <InputSignature
+      label="Signature"
+      :modelValue="modelValue.signatureData"
+      @update:modelValue="(val) => (modelValue.signatureData = val)"
+      :hasError="touched.signatureData && !modelValue.signatureData"
     />
   </div>
 </template>
 
-<style scoped lang="css"></style>
+<style scoped lang="css">
+.summary-section {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 1rem 0;
+}
+
+p {
+  line-height: 1.6;
+  color: var(--font-color-dark);
+  font-size: 1rem;
+  max-width: 100%; /* Override global max-width: 75ch constraint */
+}
+
+/* Add some emphasis to the instructions associated with inputs */
+p:has(+ .field),
+p:last-of-type {
+  font-weight: 500;
+  margin-bottom: -1rem; /* Pull input closer to its label text */
+}
+</style>

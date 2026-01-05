@@ -85,6 +85,7 @@ const formState = reactive<FormState>({
   agreementSignature1: null,
   agreementSignature2: null,
   agreementSignature3: null,
+  signatureData: null,
 })
 
 const formStep = ref(0)
@@ -95,13 +96,13 @@ const handleBlur = (field: string) => {
   touched[field] = true
 }
 
-const selectedCat = ref()
+const selectedPet = ref()
 
 onMounted(() => {
-  const storedPet = sessionStorage.getItem('adoption_pet_id')
+  const storedPet = sessionStorage.getItem('adoption_pet')
   if (storedPet) {
     const pet = JSON.parse(storedPet)
-    selectedCat.value = pet.petName
+    selectedPet.value = pet
   }
 })
 
@@ -152,6 +153,7 @@ const handleSubmit = () => {
     return
   }
 
+  sessionStorage.removeItem('adoption_pet')
   console.log('Form submitted with state:', formState)
   // Proceed to API call
 }
@@ -161,13 +163,17 @@ const handleSubmit = () => {
   <section class="page-shell">
     <section class="form-card" aria-labelledby="form-title">
       <ApplicationHeader
-        header-title="Pet"
-        header-text="This application is intended as a means to match the right cat with the right home. The more detail you provide, the better.  All of our adoptable pets are spayed/neutered, vaccinated, and microchipped. Typical adoption fees are $300 for kittens and $250 for adults. Adoption fees are tax-deductible donations, not purchase prices. Thank you for considering adoption!"
+        :header-title="selectedPet?.species === 'cat' ? 'Cat' : 'Dog'"
+        :header-text="
+          selectedPet?.species === 'cat'
+            ? 'This application is intended as a means to match the right cat with the right home. The more detail you provide, the better.  All of our adoptable pets are spayed/neutered, vaccinated, and microchipped. Typical adoption fees are $300 for kittens and $250 for adults. Adoption fees are tax-deductible donations, not purchase prices. Thank you for considering adoption!'
+            : 'This application is intended as a means to match the right dog with the right home. The more detail you provide, the better.  All of our adoptable pets are spayed/neutered, vaccinated, and microchipped. Typical adoption fees are $450 for puppies, $400 for adults, and $350 for seniors. Adoption fees are tax-deductible donations, not purchase prices. Thank you for considering adoption!'
+        "
       />
       <AdoptionSteps :formStep="formStep" selectedAnimal="cat" />
       <div class="cat-name-display">
         <h2>Adopting Pet:</h2>
-        <p>{{ selectedCat }}</p>
+        <p>{{ selectedPet?.petName }}</p>
       </div>
       <GeneralSection
         v-show="formStep === 0"

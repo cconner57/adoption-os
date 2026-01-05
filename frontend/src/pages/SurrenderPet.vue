@@ -119,9 +119,22 @@ const validationErrors = computed(() => {
 
   if (formStep.value === 1) {
     const {
-      firstName, lastName, phoneNumber, email, streetAddress, city, state, zipCode,
-      animalName, animalAge,
-      whenToSurrenderAnimal, animalSex, animalOwnershipDuration, animalLocationFound, animalWhySurrendered, otherPetsInHousehold
+      firstName,
+      lastName,
+      phoneNumber,
+      email,
+      streetAddress,
+      city,
+      state,
+      zipCode,
+      animalName,
+      animalAge,
+      whenToSurrenderAnimal,
+      animalSex,
+      animalOwnershipDuration,
+      animalLocationFound,
+      animalWhySurrendered,
+      otherPetsInHousehold,
     } = formState
 
     if (!firstName) errors.push('First Name')
@@ -134,18 +147,17 @@ const validationErrors = computed(() => {
     if (!zipCode) errors.push('Zip Code')
     if (!whenToSurrenderAnimal) errors.push('When do you need to surrender your animal')
     if (!animalName) errors.push("Animal's Name")
-    if (!animalAge) errors.push("Age")
-    if (!animalSex) errors.push("Sex")
+    if (!animalAge) errors.push('Age')
+    if (!animalSex) errors.push('Sex')
     if (!animalOwnershipDuration) errors.push('How long have you had your animal?')
     if (!animalLocationFound) errors.push('Where did you get your animal?')
     if (!animalWhySurrendered) errors.push('Why are you surrendering your animal?')
 
-    // Check dynamic household members
     let hasAgeError = false
     let hasQtyError = false
     formState.householdMembers.forEach((member) => {
-       if (!member.age) hasAgeError = true
-       if (!member.count || member.count < 1) hasQtyError = true
+      if (!member.age) hasAgeError = true
+      if (!member.count || member.count < 1) hasQtyError = true
     })
 
     if (hasAgeError) errors.push('Household - Age')
@@ -165,7 +177,7 @@ const isStepValid = computed(() => {
 
 const validateStep = (step: number): boolean => {
   if (step === 0) {
-     if (!selectedAnimal.value) {
+    if (!selectedAnimal.value) {
       formError.value = true
       return false
     }
@@ -174,12 +186,25 @@ const validateStep = (step: number): boolean => {
   }
 
   if (!isStepValid.value) {
-    // Mark regular fields as touched
     const fields = [
-      'firstName', 'lastName', 'phoneNumber', 'email', 'streetAddress', 'city', 'state', 'zipCode',
-      'animalName', 'animalAge', 'whenToSurrenderAnimal', 'animalSex', 'animalOwnershipDuration', 'animalLocationFound', 'animalWhySurrendered', 'otherPetsInHousehold'
+      'firstName',
+      'lastName',
+      'phoneNumber',
+      'email',
+      'streetAddress',
+      'city',
+      'state',
+      'zipCode',
+      'animalName',
+      'animalAge',
+      'whenToSurrenderAnimal',
+      'animalSex',
+      'animalOwnershipDuration',
+      'animalLocationFound',
+      'animalWhySurrendered',
+      'otherPetsInHousehold',
     ]
-    fields.forEach(f => touched[f] = true)
+    fields.forEach((f) => (touched[f] = true))
 
     // Mark household members as touched on submit
     formState.householdMembers.forEach((_, index) => {
@@ -225,7 +250,7 @@ const headerText = computed(() => {
   if (!selectedAnimal.value || formStep.value === 0) {
     return 'Surrender Pet'
   }
-  return selectedAnimal.value === 'cat' ? 'Feline Surrender' : 'Canine Surrender'
+  return selectedAnimal.value === 'cat' ? 'Cat Surrender' : 'Dog Surrender'
 })
 
 const formattedAnimal = computed(() => {
@@ -278,27 +303,42 @@ const formattedAnimal = computed(() => {
           :hasAttemptedSubmit="hasAttemptedSubmit"
           :selectedAnimal="formattedAnimal"
         />
-        <BehaviorSection v-if="formStep === 2 && selectedAnimal" :formState="formState" :touched="touched"
+        <BehaviorSection
+          v-if="formStep === 2 && selectedAnimal"
+          :formState="formState"
+          :touched="touched"
           :handleBlur="handleBlur"
           :hasAttemptedSubmit="hasAttemptedSubmit"
           :selectedAnimal="formattedAnimal"
         />
-        <AggressiveSection v-if="formStep === 3 && selectedAnimal" :formState="formState" :touched="touched"
+        <AggressiveSection
+          v-if="formStep === 3 && selectedAnimal"
+          :formState="formState"
+          :touched="touched"
           :handleBlur="handleBlur"
           :hasAttemptedSubmit="hasAttemptedSubmit"
           :selectedAnimal="formattedAnimal"
         />
-        <MedicalSection v-if="formStep === 4 && selectedAnimal" :formState="formState" :touched="touched"
+        <MedicalSection
+          v-if="formStep === 4 && selectedAnimal"
+          :formState="formState"
+          :touched="touched"
           :handleBlur="handleBlur"
           :hasAttemptedSubmit="hasAttemptedSubmit"
           :selectedAnimal="formattedAnimal"
         />
-        <FeedingSection v-if="formStep === 5 && selectedAnimal" :formState="formState" :touched="touched"
+        <FeedingSection
+          v-if="formStep === 5 && selectedAnimal"
+          :formState="formState"
+          :touched="touched"
           :handleBlur="handleBlur"
           :hasAttemptedSubmit="hasAttemptedSubmit"
           :selectedAnimal="formattedAnimal"
         />
-        <OtherSection v-if="formStep === 6 && selectedAnimal" :formState="formState" :touched="touched"
+        <OtherSection
+          v-if="formStep === 6 && selectedAnimal"
+          :formState="formState"
+          :touched="touched"
           :handleBlur="handleBlur"
           :hasAttemptedSubmit="hasAttemptedSubmit"
           :selectedAnimal="formattedAnimal"
@@ -364,15 +404,32 @@ const formattedAnimal = computed(() => {
       margin-top: 20px;
     }
   }
+  @media (max-width: 768px) {
+    .form-card {
+      padding: 32px 16px;
+      .form-header {
+        flex-direction: column;
+        align-items: center;
+        gap: 0px;
+        margin-bottom: 1rem;
+        & h1 {
+          font-size: 2.25rem; /* Balanced size for tablets */
+          text-align: center;
+        }
+        img {
+          width: 60px;
+          height: 60px;
+        }
+      }
+    }
+  }
+
   @media (max-width: 440px) {
-    .form-header {
-      flex-direction: column;
-      align-items: center;
-      gap: 0px;
-      margin-bottom: 1rem;
-      & h1 {
-        font-size: 1.75rem;
-        text-align: center;
+    .form-card {
+      .form-header {
+        & h1 {
+          font-size: 1.75rem; /* Matches Pet Application header size */
+        }
       }
     }
   }

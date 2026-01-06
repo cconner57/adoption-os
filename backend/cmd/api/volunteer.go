@@ -34,54 +34,47 @@ func (app *application) submitVolunteerApplication(w http.ResponseWriter, r *htt
 	fmt.Printf("Volunteer Application Validated Successfully: %+v\n", input)
 
 	// Send Email Notification
-	// Runs in a goroutine to avoid blocking the response
-	go func() {
-		defer func() {
-			if err := recover(); err != nil {
-				app.logger.Println("Panic in email goroutine:", err)
-			}
-		}()
+	// Runs synchronously to ensure we only return success if email sends (or is simulated)
+	subject := fmt.Sprintf("New Volunteer Application: %s %s", input.FirstName, input.LastName)
 
-		subject := fmt.Sprintf("New Volunteer Application: %s %s", input.FirstName, input.LastName)
-
-		// Helper to format bool
-		yesNo := func(b bool) string {
-			if b {
-				return "Yes"
-			}
-			return "No"
+	// Helper to format bool
+	yesNo := func(b bool) string {
+		if b {
+			return "Yes"
 		}
+		return "No"
+	}
 
-		// Helper to format comma separated list
-		formatList := func(list []string) string {
-			return strings.Join(list, ", ")
+	// Helper to format comma separated list
+	formatList := func(list []string) string {
+		return strings.Join(list, ", ")
+	}
+
+	// Helper to format date
+	formatDate := func(dateStr string) string {
+		if dateStr == "" {
+			return ""
 		}
-
-		// Helper to format date
-		formatDate := func(dateStr string) string {
-			if dateStr == "" {
-				return ""
-			}
-			t, err := time.Parse("2006-01-02", dateStr)
-			if err != nil {
-				return dateStr // Return original if parse fails
-			}
-			return t.Format("Jan 02, 2006")
+		t, err := time.Parse("2006-01-02", dateStr)
+		if err != nil {
+			return dateStr // Return original if parse fails
 		}
+		return t.Format("Jan 02, 2006")
+	}
 
-		// Helper to read logo
-		readLogo := func() []byte {
-			// Path relative to backend root where binary runs
-			data, err := os.ReadFile("../frontend/public/images/idohr-logo.jpg")
-			if err != nil {
-				app.logger.Println("Failed to read logo:", err)
-				return nil
-			}
-			return data
+	// Helper to read logo
+	readLogo := func() []byte {
+		// Path relative to backend root where binary runs
+		data, err := os.ReadFile("../frontend/public/images/idohr-logo.jpg")
+		if err != nil {
+			app.logger.Println("Failed to read logo:", err)
+			return nil
 		}
+		return data
+	}
 
-		var sb strings.Builder
-		sb.WriteString(`<!DOCTYPE html>
+	var sb strings.Builder
+	sb.WriteString(`<!DOCTYPE html>
 <html>
 <head>
 <style>
@@ -104,39 +97,39 @@ func (app *application) submitVolunteerApplication(w http.ResponseWriter, r *htt
   <h1>New Volunteer Application</h1>
 `)
 
-		sb.WriteString(`<h2>Personal Information</h2>`)
-		fmt.Fprintf(&sb, `<div class="field"><span class="label">Name:</span> %s %s</div>`, input.FirstName, input.LastName)
-		fmt.Fprintf(&sb, `<div class="field"><span class="label">Address:</span> %s, %s, %s</div>`, input.Address, input.City, input.Zip)
-		fmt.Fprintf(&sb, `<div class="field"><span class="label">Phone:</span> %s</div>`, input.PhoneNumber)
-		fmt.Fprintf(&sb, `<div class="field"><span class="label">Birthday:</span> %s</div>`, formatDate(input.Birthday))
-		fmt.Fprintf(&sb, `<div class="field"><span class="label">Age:</span> %d</div>`, safeInt(input.Age))
-		fmt.Fprintf(&sb, `<div class="field"><span class="label">Allergies:</span> %s</div>`, yesNo(input.Allergies))
+	sb.WriteString(`<h2>Personal Information</h2>`)
+	fmt.Fprintf(&sb, `<div class="field"><span class="label">Name:</span> %s %s</div>`, input.FirstName, input.LastName)
+	fmt.Fprintf(&sb, `<div class="field"><span class="label">Address:</span> %s, %s, %s</div>`, input.Address, input.City, input.Zip)
+	fmt.Fprintf(&sb, `<div class="field"><span class="label">Phone:</span> %s</div>`, input.PhoneNumber)
+	fmt.Fprintf(&sb, `<div class="field"><span class="label">Birthday:</span> %s</div>`, formatDate(input.Birthday))
+	fmt.Fprintf(&sb, `<div class="field"><span class="label">Age:</span> %d</div>`, safeInt(input.Age))
+	fmt.Fprintf(&sb, `<div class="field"><span class="label">Allergies:</span> %s</div>`, yesNo(input.Allergies))
 
-		sb.WriteString(`<h2>Emergency Contact</h2>`)
-		fmt.Fprintf(&sb, `<div class="field"><span class="label">Name:</span> %s</div>`, input.EmergencyContactName)
-		fmt.Fprintf(&sb, `<div class="field"><span class="label">Phone:</span> %s</div>`, input.EmergencyContactPhone)
+	sb.WriteString(`<h2>Emergency Contact</h2>`)
+	fmt.Fprintf(&sb, `<div class="field"><span class="label">Name:</span> %s</div>`, input.EmergencyContactName)
+	fmt.Fprintf(&sb, `<div class="field"><span class="label">Phone:</span> %s</div>`, input.EmergencyContactPhone)
 
-		sb.WriteString(`<h2>Experience & Interests</h2>`)
-		sb.WriteString(`<div class="field"><span class="label">Volunteer Experience:</span></div>`)
-		fmt.Fprintf(&sb, `<div>%s</div><br>`, input.VolunteerExperience)
-		sb.WriteString(`<div class="field"><span class="label">Interest Reason:</span></div>`)
-		fmt.Fprintf(&sb, `<div>%s</div><br>`, input.InterestReason)
-		fmt.Fprintf(&sb, `<div class="field"><span class="label">Position Preferences:</span> %s</div>`, formatList(input.PositionPreferences))
-		fmt.Fprintf(&sb, `<div class="field"><span class="label">Availability:</span> %s</div>`, formatList(input.Availability))
+	sb.WriteString(`<h2>Experience & Interests</h2>`)
+	sb.WriteString(`<div class="field"><span class="label">Volunteer Experience:</span></div>`)
+	fmt.Fprintf(&sb, `<div>%s</div><br>`, input.VolunteerExperience)
+	sb.WriteString(`<div class="field"><span class="label">Interest Reason:</span></div>`)
+	fmt.Fprintf(&sb, `<div>%s</div><br>`, input.InterestReason)
+	fmt.Fprintf(&sb, `<div class="field"><span class="label">Position Preferences:</span> %s</div>`, formatList(input.PositionPreferences))
+	fmt.Fprintf(&sb, `<div class="field"><span class="label">Availability:</span> %s</div>`, formatList(input.Availability))
 
-		sb.WriteString(`<h2>Agreement</h2>`)
-		fmt.Fprintf(&sb, `<div class="field"><span class="label">Signed By:</span> %s</div>`, input.NameFull)
-		fmt.Fprintf(&sb, `<div class="field"><span class="label">Date:</span> %s</div>`, formatDate(input.SignatureDate))
+	sb.WriteString(`<h2>Agreement</h2>`)
+	fmt.Fprintf(&sb, `<div class="field"><span class="label">Signed By:</span> %s</div>`, input.NameFull)
+	fmt.Fprintf(&sb, `<div class="field"><span class="label">Date:</span> %s</div>`, formatDate(input.SignatureDate))
 
-		// Conditionally add Parent/Guardian info
-		if input.ParentName != "" {
-			fmt.Fprintf(&sb, `<br><div class="field"><span class="label">Parent/Guardian Name:</span> %s</div>`, input.ParentName)
-		}
-		if input.ParentSignatureDate != "" {
-			fmt.Fprintf(&sb, `<div class="field"><span class="label">Parent/Guardian Date:</span> %s</div>`, formatDate(input.ParentSignatureDate))
-		}
+	// Conditionally add Parent/Guardian info
+	if input.ParentName != "" {
+		fmt.Fprintf(&sb, `<br><div class="field"><span class="label">Parent/Guardian Name:</span> %s</div>`, input.ParentName)
+	}
+	if input.ParentSignatureDate != "" {
+		fmt.Fprintf(&sb, `<div class="field"><span class="label">Parent/Guardian Date:</span> %s</div>`, formatDate(input.ParentSignatureDate))
+	}
 
-		fmt.Fprintf(&sb, `
+	fmt.Fprintf(&sb, `
   <div class="footer">
     This application was submitted via the I Dream of Home Rescue Volunteer Form.<br>
     %s
@@ -145,45 +138,58 @@ func (app *application) submitVolunteerApplication(w http.ResponseWriter, r *htt
 </body>
 </html>`, time.Now().Format("Jan 02, 2006"))
 
-		body := sb.String()
+	body := sb.String()
 
-		// Send to the configured sender address (acting as Admin)
-		// Or you could read a specific recipient from config.
-		recipient := app.config.smtp.sender
-		if recipient == "" {
-			recipient = "cats@idohr.org" // Fallback
-		}
+	// Send to the configured sender address (acting as Admin)
+	// Or you could read a specific recipient from config.
+	recipient := app.config.smtp.sender
+	if recipient == "" {
+		recipient = "cats@idohr.org" // Fallback
+	}
 
-		// Prepare attachments
-		attachments := make(map[string][]byte)
+	// Prepare attachments
+	attachments := make(map[string][]byte)
 
-		// Attach Logo
-		logoData := readLogo()
-		if logoData != nil {
-			attachments["logo.jpg"] = logoData
-		}
+	// Attach Logo
+	logoData := readLogo()
+	if logoData != nil {
+		attachments["logo.jpg"] = logoData
+	}
 
-		if input.SignatureData != nil && *input.SignatureData != "" {
-			// signatureData is likely "data:image/png;base64,....."
-			// Split by comma to get the actual base64 part
-			parts := strings.Split(*input.SignatureData, ",")
-			if len(parts) == 2 {
-				sigBytes, err := base64.StdEncoding.DecodeString(parts[1])
-				if err == nil {
-					attachments["signature.png"] = sigBytes
-				} else {
-					app.logger.Println("Failed to decode signature:", err)
-				}
+	if input.SignatureData != nil && *input.SignatureData != "" {
+		// signatureData is likely "data:image/png;base64,....."
+		// Split by comma to get the actual base64 part
+		parts := strings.Split(*input.SignatureData, ",")
+		if len(parts) == 2 {
+			sigBytes, err := base64.StdEncoding.DecodeString(parts[1])
+			if err == nil {
+				attachments["signature.png"] = sigBytes
+			} else {
+				app.logger.Println("Failed to decode signature:", err)
 			}
 		}
+	}
 
+	// Check if we have credentials; if not, simulate sending
+	if app.config.smtp.password == "" || app.config.smtp.username == "" {
+		app.logger.Printf("Development Mode: Simulating sending email to %s (Subject: %s)\n", recipient, subject)
+	} else {
+		// Attempt to send email
 		err := app.mailer.Send(recipient, subject, body, attachments)
 		if err != nil {
 			app.logger.Println("Failed to send email notification:", err)
+
+			// In development, don't block the application if email fails (common with bad/missing creds)
+			if app.config.env == "development" {
+				app.logger.Println("Development Mode: Ignoring email usage error, proceeding with success.")
+			} else {
+				app.serverErrorResponse(w, r, fmt.Errorf("failed to send email notification: %w", err))
+				return
+			}
 		} else {
 			app.logger.Println("Email notification sent successfully to", recipient)
 		}
-	}()
+	}
 
 	// TODO: Insert into DB (Reserved for next task)
 	// err = app.models.Volunteers.Insert(&input)

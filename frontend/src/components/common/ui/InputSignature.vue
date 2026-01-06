@@ -21,15 +21,15 @@ const getEventPosition = (event: MouseEvent | TouchEvent) => {
     const rect = canvasRef.value.getBoundingClientRect()
     if (event instanceof MouseEvent) {
       return {
-        offsetX: (event.clientX - rect.left) / dpr,
+        offsetX: event.clientX - rect.left,
 
-        offsetY: (event.clientY - rect.top) / dpr, // Adjust for scaling
+        offsetY: event.clientY - rect.top, // Adjust for scaling
       }
     } else {
       const touch = event.touches[0]
       return {
-        offsetX: (touch.clientX - rect.left) / dpr,
-        offsetY: (touch.clientY - rect.top) / dpr,
+        offsetX: touch.clientX - rect.left,
+        offsetY: touch.clientY - rect.top,
       }
     }
   }

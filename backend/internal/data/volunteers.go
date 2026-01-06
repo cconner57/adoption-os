@@ -64,7 +64,6 @@ func (m VolunteerModel) Insert(application *VolunteerApplication) error {
 }
 
 func ValidateVolunteerApplication(v *validator.Validator, application *VolunteerApplication) {
-	// Personal Info
 	v.Check(application.FirstName != "", "firstName", "must be provided")
 	v.Check(application.LastName != "", "lastName", "must be provided")
 	v.Check(application.Address != "", "address", "must be provided")
@@ -73,27 +72,47 @@ func ValidateVolunteerApplication(v *validator.Validator, application *Volunteer
 	v.Check(application.PhoneNumber != "", "phoneNumber", "must be provided")
 	v.Check(application.Birthday != "", "birthday", "must be provided")
 
-	v.Check(application.Age != nil, "age", "must be provided")
-	if application.Age != nil {
-		v.Check(*application.Age >= 0, "age", "must be a positive number")
+	var isUnder21 bool
+	if application.Birthday != "" {
+		t, err := time.Parse("2006-01-02", application.Birthday)
+		if err != nil {
+			// Try parsing MM/DD/YYYY
+			t, err = time.Parse("01/02/2006", application.Birthday)
+		}
+
+		if err == nil {
+			now := time.Now()
+			age := now.Year() - t.Year()
+			if now.YearDay() < t.YearDay() {
+				age--
+			}
+			if age < 21 {
+				isUnder21 = true
+			}
+
+			if application.Age == nil {
+				ageInt := age
+				application.Age = &ageInt
+			}
+		}
+	}
+
+	if isUnder21 {
+		v.Check(application.Age != nil, "age", "must be provided for applicants under 21")
+		if application.Age != nil {
+			v.Check(*application.Age >= 0, "age", "must be a positive number")
+		}
 	}
 
 	v.Check(application.EmergencyContactName != "", "emergencyContactName", "must be provided")
 	v.Check(application.EmergencyContactPhone != "", "emergencyContactPhone", "must be provided")
-
-	// Experience & Interests
-	// v.Check(application.VolunteerExperience != "", "volunteerExperience", "must be provided") // Optional
 	v.Check(application.InterestReason != "", "interestReason", "must be provided")
 	v.Check(len(application.PositionPreferences) > 0, "positionPreferences", "must select at least one position")
 	v.Check(len(application.Availability) > 0, "availability", "must select at least one availability slot")
-
-	// Agreement
 	v.Check(application.NameFull != "", "nameFull", "must be provided")
 	v.Check(application.SignatureDate != "", "signatureDate", "must be provided")
 	v.Check(application.SignatureData != nil && *application.SignatureData != "", "signatureData", "must be provided")
-
-	// Parental Consent (Under 21)
-	if application.Age != nil && *application.Age < 21 {
+	if isUnder21 {
 		v.Check(application.ParentName != "", "parentName", "must be provided for applicants under 21")
 		v.Check(application.ParentSignatureDate != "", "parentSignatureDate", "must be provided for applicants under 21")
 		v.Check(application.ParentSignatureData != nil && *application.ParentSignatureData != "", "parentSignatureData", "must be provided for applicants under 21")

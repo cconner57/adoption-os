@@ -6,6 +6,7 @@ const props = defineProps<{
   title: string
   fullWidth?: boolean
   disabled?: boolean
+  loading?: boolean
 }>()
 </script>
 
@@ -22,12 +23,13 @@ const props = defineProps<{
       medium: props.size === 'medium' || !props.size,
       large: props.size === 'large',
       'w-full': props.fullWidth,
-      'button-disabled': props.disabled,
+      'button-disabled': props.disabled || props.loading,
     }"
     @click="props.onClick && props.onClick()"
-    :disabled="props.disabled"
+    :disabled="props.disabled || props.loading"
   >
-    {{ props.title }}
+    <span v-if="props.loading" class="spinner"></span>
+    <span v-else>{{ props.title }}</span>
   </button>
 </template>
 
@@ -46,6 +48,25 @@ button {
   }
 }
 
+.spinner {
+  width: 1em; /* Scales with font size */
+  height: 1em;
+  border: 2px solid currentColor;
+  border-right-color: transparent;
+  border-radius: 50%;
+  animation: spin 0.75s linear infinite;
+  display: inline-block;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
 .small {
   height: 30px;
   min-width: 120px;
@@ -60,9 +81,9 @@ button {
   font-size: 1rem;
 
   @media (max-width: 480px) {
-    padding: 0 8px; /* Reduce padding on mobile */
-    font-size: clamp(0.7rem, 2.5vw, 1rem); /* Scale text dynamically */
-    min-width: auto; /* Allow shrinking below 160px if needed */
+    padding: 0 16px; /* Slightly reduced padding but comfortable */
+    font-size: 0.95rem; /* Readable size, close to desktop */
+    min-width: 140px;
   }
 }
 

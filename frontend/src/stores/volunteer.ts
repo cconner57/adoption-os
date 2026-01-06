@@ -1,6 +1,7 @@
 import { defineStore } from 'pinia'
 import { ref, reactive, computed } from 'vue'
 import type { IVolunteerFormState } from '../models/volunteer-form'
+import { API_ENDPOINTS } from '../constants/api'
 
 export const useVolunteerStore = defineStore('volunteer', () => {
   const isSubmitted = ref(false)
@@ -41,7 +42,31 @@ export const useVolunteerStore = defineStore('volunteer', () => {
     if (!formState.zip) errors.push('Zip Code')
     if (!formState.phoneNumber) errors.push('Phone Number')
     if (!formState.birthday) errors.push('Birthday')
-    if (formState.age === null) errors.push('Age')
+
+    let isUnder21 = false
+    if (formState.birthday) {
+      let birthDate: Date
+      if (formState.birthday.includes('-')) {
+        birthDate = new Date(`${formState.birthday}T00:00:00`)
+      } else {
+        birthDate = new Date(formState.birthday)
+      }
+
+      if (!isNaN(birthDate.getTime())) {
+        const today = new Date()
+        let calculatedAge = today.getFullYear() - birthDate.getFullYear()
+        const m = today.getMonth() - birthDate.getMonth()
+        if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
+          calculatedAge--
+        }
+        if (calculatedAge < 21) {
+          isUnder21 = true
+        }
+      }
+    }
+
+    if (isUnder21 && formState.age === null) errors.push('Age')
+
     if (!formState.emergencyContactName) errors.push('Emergency Contact Name')
     if (!formState.emergencyContactPhone) errors.push('Emergency Contact Phone')
     if (!formState.interestReason) errors.push('Interest Reason')
@@ -62,13 +87,39 @@ export const useVolunteerStore = defineStore('volunteer', () => {
 
   const isFormValid = computed(() => validationErrors.value.length === 0)
 
+  const isSubmitting = ref(false)
+
+  const clearFormData = () => {
+    formState.firstName = ''
+    formState.lastName = ''
+    formState.address = ''
+    formState.city = ''
+    formState.zip = ''
+    formState.phoneNumber = ''
+    formState.birthday = ''
+    formState.age = null
+    formState.allergies = false
+    formState.emergencyContactName = ''
+    formState.emergencyContactPhone = ''
+    formState.volunteerExperience = ''
+    formState.interestReason = ''
+    formState.positionPreferences = []
+    formState.availability = []
+    formState.nameFull = ''
+    formState.signatureData = null
+    formState.signatureDate = ''
+    formState.parentName = ''
+    formState.parentSignatureData = null
+    formState.parentSignatureDate = ''
+  }
+
   const submit = async () => {
     hasAttemptedSubmit.value = true
     apiError.value = null
 
     if (!isFormValid.value) return false
 
-    if (!isFormValid.value) return false
+    isSubmitting.value = true
 
     const payload: Partial<IVolunteerFormState> = { ...formState }
 
@@ -79,26 +130,36 @@ export const useVolunteerStore = defineStore('volunteer', () => {
     }
 
     try {
-      const response = await fetch('http://localhost:8080/applications/volunteer', {
+      const response = await fetch(API_ENDPOINTS.VOLUNTEER_APPLICATION, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload),
       })
 
       if (!response.ok) {
-        const errorData = await response.json().catch(() => ({}))
-        apiError.value = errorData.error || `Server Error (${response.status})`
+        if (response.status === 400 || response.status >= 500) {
+          apiError.value = 'There was an error on the server. Please try again later.'
+        } else {
+          const errorData = await response.json().catch(() => ({}))
+          apiError.value = errorData.error || `Server Error (${response.status})`
+        }
         return false
       }
 
       const result = await response.json()
-      console.log('Form submitted successfully:', result)
+      if (result.error) {
+        apiError.value = result.error
+        return false
+      }
       isSubmitted.value = true
+      clearFormData()
       return true
     } catch (error) {
       console.error('Network error:', error)
       apiError.value = 'Network error. Please try again later.'
       return false
+    } finally {
+      isSubmitting.value = false
     }
   }
 
@@ -106,12 +167,13 @@ export const useVolunteerStore = defineStore('volunteer', () => {
     isSubmitted.value = false
     hasAttemptedSubmit.value = false
     apiError.value = null
-    apiError.value = null
+    clearFormData()
   }
 
   return {
     formState,
     isSubmitted,
+    isSubmitting,
     hasAttemptedSubmit,
     apiError,
     validationErrors,

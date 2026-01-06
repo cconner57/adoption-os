@@ -18,12 +18,12 @@ const emit = defineEmits<{
   <div class="field" v-bind="$attrs">
     <ButtonToggle
       label="Allergies?"
-      @update:modelValue="emit('update:modelValue', $event)"
-      :options="[
-        { label: 'No', value: false },
-        { label: 'Yes', value: true },
-      ]"
-      :value="modelValue"
+      :modelValue="modelValue"
+      @update:modelValue="emit('update:modelValue', $event as boolean)"
+      :true-value="true"
+      :false-value="false"
+      true-label="Yes"
+      false-label="No"
     />
   </div>
   <div class="field spacer"></div>

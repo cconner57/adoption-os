@@ -13,6 +13,7 @@ import { reactive } from 'vue'
 import FormSubmitted from '../components/common/form-submitted/FormSubmitted.vue'
 import { storeToRefs } from 'pinia'
 import { useVolunteerStore } from '../stores/volunteer.ts'
+import { useRouter } from 'vue-router'
 
 type FormInput = string | number | null
 
@@ -42,8 +43,15 @@ const sanitizeAddress = (value: FormInput): string => {
 }
 
 const volunteerStore = useVolunteerStore()
-const { formState, isSubmitted, hasAttemptedSubmit, apiError, validationErrors, isFormValid } =
-  storeToRefs(volunteerStore)
+const {
+  formState,
+  isSubmitted,
+  isSubmitting,
+  hasAttemptedSubmit,
+  apiError,
+  validationErrors,
+  isFormValid,
+} = storeToRefs(volunteerStore)
 const { submit, resetForm } = volunteerStore
 
 const touched = reactive<Record<string, boolean>>({})
@@ -64,9 +72,11 @@ const handleSubmit = async () => {
   }
 }
 
+const router = useRouter()
+
 const handleReset = () => {
   resetForm()
-  globalThis.location.reload()
+  router.push('/')
 }
 </script>
 
@@ -178,7 +188,7 @@ const handleReset = () => {
             type="text"
             name="age"
             maxlength="3"
-            :hasError="touched.age && formState.age === null && false"
+            :hasError="touched.age && validationErrors.includes('Age')"
             @blur="handleBlur('age')"
           />
 
@@ -277,7 +287,13 @@ const handleReset = () => {
         </div>
 
         <div class="actions">
-          <Button type="submit" title="Submit Application" color="green" size="large" />
+          <Button
+            type="submit"
+            title="Submit Application"
+            color="green"
+            size="large"
+            :loading="isSubmitting"
+          />
         </div>
       </form>
     </div>

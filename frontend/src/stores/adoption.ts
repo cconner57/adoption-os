@@ -1,6 +1,7 @@
 import { defineStore } from 'pinia'
 import { ref, reactive, computed } from 'vue'
 import type { FormState } from '../models/adopt-form'
+import { API_ENDPOINTS } from '../constants/api'
 
 export const useAdoptionStore = defineStore('adoption', () => {
   const step = ref(0)
@@ -181,7 +182,7 @@ export const useAdoptionStore = defineStore('adoption', () => {
         primaryOwner,
       }
 
-      const response = await fetch('http://localhost:8080/applications/adoption', {
+      const response = await fetch(API_ENDPOINTS.ADOPTION_APPLICATION, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

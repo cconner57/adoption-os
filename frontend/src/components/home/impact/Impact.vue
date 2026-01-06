@@ -9,9 +9,11 @@ const countCurrent = ref(0)
 const countPrevious = ref(0)
 const isLoading = ref(true)
 
+import { API_ENDPOINTS } from '../../../constants/api'
+
 const fetchCount = async (year: number) => {
   try {
-    const response = await fetch(`http://localhost:8080/pets/adopted-count?year=${year}`)
+    const response = await fetch(`${API_ENDPOINTS.ADOPTED_PETS_COUNT}?year=${year}`)
     const data = await response.json()
     return data.count || 0
   } catch (error) {

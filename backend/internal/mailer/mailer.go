@@ -3,6 +3,7 @@ package mailer
 import (
 	"encoding/base64"
 	"fmt"
+	"net/mail"
 	"net/smtp"
 )
 
@@ -72,5 +73,18 @@ func (m Mailer) Send(recipient, subject, body string, attachments map[string][]b
 	auth := smtp.PlainAuth("", m.username, m.password, m.host)
 	addr := fmt.Sprintf("%s:%d", m.host, m.port)
 
-	return smtp.SendMail(addr, auth, m.sender, []string{recipient}, fullMessage)
+	// Extract just the email address for the envelope 'from'
+	// m.sender might be "Name <email@example.com>"
+	fromEmail := m.sender
+	if addr, err := mail.ParseAddress(m.sender); err == nil {
+		fromEmail = addr.Address
+	}
+
+	// Extract just the email address for the envelope 'to'
+	toEmail := recipient
+	if addr, err := mail.ParseAddress(recipient); err == nil {
+		toEmail = addr.Address
+	}
+
+	return smtp.SendMail(addr, auth, fromEmail, []string{toEmail}, fullMessage)
 }

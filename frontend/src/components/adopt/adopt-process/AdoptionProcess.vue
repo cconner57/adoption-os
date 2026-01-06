@@ -103,7 +103,7 @@ h2 {
   }
 }
 ol {
-  padding-left: 20px;
+  padding-left: 0;
   margin-bottom: 16px;
   list-style-type: decimal;
   list-style-position: inside;

@@ -84,12 +84,10 @@ export const useAdoptionStore = defineStore('adoption', () => {
     signatureData: null,
   })
 
-  // Validation Logic
   const validationErrors = computed(() => {
     const errors: string[] = []
 
     if (step.value === 0) {
-
       if (!formState.firstName) errors.push('First Name')
       if (!formState.lastName) errors.push('Last Name')
       if (!formState.age) errors.push('Age')
@@ -103,8 +101,6 @@ export const useAdoptionStore = defineStore('adoption', () => {
     }
 
     if (step.value === 1) {
-
-      // Home Section
       if (!formState.homeType) errors.push('Home Type')
       if (!formState.homeOwnership) errors.push('Own or Rent')
       if (formState.homeOwnership === 'Rent') {
@@ -113,10 +109,7 @@ export const useAdoptionStore = defineStore('adoption', () => {
       }
     }
 
-    }
-
     if (step.value === 6) {
-
       if (!formState.agreementSignature1) errors.push('Signature 1')
       if (!formState.agreementSignature2) errors.push('Signature 2')
       if (!formState.signatureData) errors.push('Final Signature')
@@ -152,17 +145,11 @@ export const useAdoptionStore = defineStore('adoption', () => {
     }
   }
 
-  // Initialize immediately
   initFromStorage()
 
   const nextStep = () => {
-  const nextStep = () => {
-
-    console.log(`[AdoptionStore] Next Step Clicked. Moving from ${step.value} to ${step.value + 1}`)
-    console.log('[AdoptionStore] Current Form State:', JSON.parse(JSON.stringify(formState)))
-
     step.value++
-    persistState() // Save state on navigation
+    persistState()
     hasAttemptedSubmit.value = false
     return true
   }
@@ -170,7 +157,7 @@ export const useAdoptionStore = defineStore('adoption', () => {
   const prevStep = () => {
     if (step.value > 0) {
       step.value--
-      persistState() // Save state on navigation
+      persistState()
     }
   }
 
@@ -179,19 +166,19 @@ export const useAdoptionStore = defineStore('adoption', () => {
     isSubmitted.value = false
     hasAttemptedSubmit.value = false
     sessionStorage.removeItem(STORAGE_KEY)
-
-    // Reset formState fields
-    sessionStorage.removeItem(STORAGE_KEY)
   }
 
   const submitApplication = async () => {
     try {
-      // Create a sanitized payload to ensure types match backend expectations
+      let primaryOwner = null
+      if (formState.primaryOwner !== null) {
+        primaryOwner = formState.primaryOwner ? 'Yes' : 'No'
+      }
+
       const payload = {
         ...formState,
         age: formState.age ? String(formState.age) : null,
-        primaryOwner:
-          formState.primaryOwner === true ? 'Yes' : formState.primaryOwner === false ? 'No' : null,
+        primaryOwner,
       }
 
       const response = await fetch('http://localhost:8080/applications/adoption', {
@@ -214,9 +201,10 @@ export const useAdoptionStore = defineStore('adoption', () => {
       isSubmitted.value = true
       sessionStorage.removeItem(STORAGE_KEY)
       return true
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('Error submitting application:', error)
-      alert(`There was an error submitting your application: ${error.message}`)
+      const message = error instanceof Error ? error.message : String(error)
+      alert(`There was an error submitting your application: ${message}`)
       return false
     }
   }

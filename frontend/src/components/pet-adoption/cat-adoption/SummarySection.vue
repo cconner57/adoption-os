@@ -53,12 +53,6 @@ defineProps<{
       :hasError="touched.agreementSignature2 && !modelValue.agreementSignature2"
       @blur="handleBlur('agreementSignature2')"
     />
-      :hasError="touched.agreementSignature2 && !modelValue.agreementSignature2"
-      @blur="handleBlur('agreementSignature2')"
-    />
-
-    <InputSignature
-
 
     <InputSignature
       label="Signature"
@@ -83,19 +77,12 @@ p {
   line-height: 1.6;
   color: var(--font-color-dark);
   font-size: 1rem;
-  color: var(--font-color-dark);
-  font-size: 1rem;
   max-width: 100%;
 }
 
-
-/* Add some emphasis to the instructions associated with inputs */
 p:has(+ .field),
-p:last-of-type {
-  font-weight: 500;
 p:last-of-type {
   font-weight: 500;
   margin-bottom: -1rem;
 }
-
 </style>

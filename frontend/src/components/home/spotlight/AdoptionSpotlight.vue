@@ -82,6 +82,12 @@ const displayedPets = computed((): IPet[] => {
     padding-bottom: 8px;
     -webkit-overflow-scrolling: touch;
     justify-content: flex-start;
+
+    /* Fix for cutoff cards: extend scroll area to edges */
+    margin-left: -50px;
+    margin-right: -50px;
+    padding-left: 50px;
+    padding-right: 50px;
   }
 
   @media (max-width: 430px) {
@@ -93,6 +99,11 @@ const displayedPets = computed((): IPet[] => {
     }
     .pet-list {
       gap: 1rem;
+      /* Adjust for mobile padding (2rem = 32px roughly, but verify padding above) */
+      margin-left: -2rem;
+      margin-right: -2rem;
+      padding-left: 2rem;
+      padding-right: 2rem;
     }
   }
   @media (min-width: 431px) and (max-width: 768px) {
@@ -114,6 +125,11 @@ const displayedPets = computed((): IPet[] => {
     }
     .pet-list {
       gap: 2rem;
+      /* Adjust for tablet landscape/desktop padding */
+      margin-left: -30px;
+      margin-right: -30px;
+      padding-left: 30px;
+      padding-right: 30px;
     }
   }
 }

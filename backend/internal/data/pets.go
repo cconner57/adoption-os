@@ -24,6 +24,104 @@ type PetModel struct {
 }
 
 func (m PetModel) GetSpotlight() ([]*SpotlightPet, error) {
+	// Guard against no DB connection (CSV fallback mode)
+	if m.DB == nil {
+		fileName := "Master Pet List - Cats Master List.csv"
+		file, err := os.Open(fileName)
+		if os.IsNotExist(err) {
+			file, err = os.Open("backend/" + fileName)
+		}
+		if err != nil {
+			fmt.Println("GetSpotlight: CSV not found, returning empty list")
+			return []*SpotlightPet{}, nil
+		}
+		defer file.Close()
+
+		reader := csv.NewReader(file)
+		reader.FieldsPerRecord = -1
+		records, err := reader.ReadAll()
+		if err != nil {
+			fmt.Println("GetSpotlight: Error reading CSV:", err)
+			return []*SpotlightPet{}, nil
+		}
+
+		pets := []*SpotlightPet{}
+		// Basic parsing looking for "Is Spotlight Featured" in the last column (index 53 roughly, or just check last)
+		// Header is row 2 (index 2 in 0-based slice if we have empty lines at top)
+		// Let's assume we iterate and look for 'TRUE' at the end
+
+		for i, row := range records {
+			if i < 3 {
+				continue
+			} // Skip header lines
+			if len(row) < 3 {
+				continue
+			}
+
+			// CSV Structure: ..., Is Spotlight Featured, Spotlight Description
+			// "Is Spotlight Featured" should be the second to last column now
+			// "Spotlight Description" should be the last column
+
+			// Determine indices based on row length to be dynamic or check strict count
+			// Let's assume the last two columns we just touched are at the end.
+			lenRow := len(row)
+			if lenRow < 2 {
+				continue
+			}
+
+			// Check "Is Spotlight Featured"
+			isFeatured := strings.TrimSpace(row[lenRow-2])
+
+			// Fallback: if user didn't update all rows to have the new column,
+			// the "TRUE" might still be at the very end for other rows (though we only marked 4).
+			// But for the target 4, we added a column.
+			// Let's safe check: if row ends with TRUE, it means no description.
+			// If row ends with description, the one before is TRUE.
+
+			description := ""
+			lastCol := strings.TrimSpace(row[lenRow-1])
+
+			// Scenario A: Row has Description. [..., "TRUE", "Desc"]
+			// Scenario B: Row has no Description (not targeted). [..., "FALSE"] or [..., ""]
+
+			if strings.EqualFold(isFeatured, "TRUE") {
+				description = lastCol
+			} else if strings.EqualFold(lastCol, "TRUE") {
+				// Old format or missing description column for this row (unlikely if we just added it to header but CSV reader handles ragged lines?)
+				// Actually CSV reader with FieldsPerRecord=-1 allows variable length.
+				isFeatured = "TRUE"
+				// Description remains empty
+			} else {
+				// Not featured
+				continue
+			}
+
+			if strings.EqualFold(isFeatured, "TRUE") {
+				// Construct a basic SpotlightPet
+				id := row[0]
+				name := row[2]
+
+				// Create JSON for description
+				// escaped description to be safe? It's just simple text.
+				// We need to marshal it to be safe JSON string value.
+				descMap := map[string]string{"spotlight": description}
+				descBytes, _ := json.Marshal(descMap)
+
+				pet := &SpotlightPet{
+					ID:           id,
+					Name:         name,
+					Descriptions: json.RawMessage(descBytes),
+					Photos:       json.RawMessage(`[]`),
+				}
+				pets = append(pets, pet)
+				if len(pets) >= 4 {
+					break
+				}
+			}
+		}
+		return pets, nil
+	}
+
 	// This query looks for the boolean column we updated
 	query := `
         SELECT id, name, COALESCE(descriptions, '{}'), COALESCE(photos, '[]')

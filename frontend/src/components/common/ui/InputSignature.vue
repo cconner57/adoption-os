@@ -19,17 +19,17 @@ let context: CanvasRenderingContext2D | null = null
 const getEventPosition = (event: MouseEvent | TouchEvent) => {
   if (canvasRef.value) {
     const rect = canvasRef.value.getBoundingClientRect()
-    const dpr = window.devicePixelRatio || 1 // Get the device pixel ratio
     if (event instanceof MouseEvent) {
       return {
-        offsetX: (event.clientX - rect.left) / dpr, // Adjust for scaling
+        offsetX: (event.clientX - rect.left) / dpr,
+
         offsetY: (event.clientY - rect.top) / dpr, // Adjust for scaling
       }
     } else {
       const touch = event.touches[0]
       return {
-        offsetX: (touch.clientX - rect.left) / dpr, // Adjust for scaling
-        offsetY: (touch.clientY - rect.top) / dpr, // Adjust for scaling
+        offsetX: (touch.clientX - rect.left) / dpr,
+        offsetY: (touch.clientY - rect.top) / dpr,
       }
     }
   }
@@ -74,7 +74,7 @@ const clearCanvas = () => {
 const scaleCanvas = () => {
   if (canvasRef.value) {
     const rect = canvasRef.value.getBoundingClientRect()
-    if (rect.width === 0 || rect.height === 0) return // Don't scale if hidden
+    if (rect.width === 0 || rect.height === 0) return
 
     const dpr = window.devicePixelRatio || 1
     canvasRef.value.width = rect.width * dpr
@@ -86,11 +86,8 @@ const scaleCanvas = () => {
       context.lineWidth = 2
       context.lineCap = 'round'
       context.strokeStyle = '#000'
-      // Fill with white initially (transparent by default in some browsers, but white ensures contrast)
-      // Note: We don't fillRect here because it might clear user data if called on resize.
-      // Ideally we should persist data, but for now let's just ensure it's writable.
-      // If we want to persist, we'd need to save the image data and put it back.
-      // For this simple fix, we just want it to work when it becomes visible.
+      context.lineCap = 'round'
+      context.strokeStyle = '#000'
     }
   }
 }
@@ -100,12 +97,6 @@ let resizeObserver: ResizeObserver | null = null
 onMounted(() => {
   if (canvasRef.value) {
     resizeObserver = new ResizeObserver(() => {
-      // Debounce or just call it?
-      // Just calling it is fine for v-show toggles.
-      // Check if context is already valid and has dimensions to avoid clearing if it's just a minor layout shift?
-      // For v-show, width goes 0 -> actual.
-      // If width goes actual -> actual (minor shift), we might clear content.
-      // Let's only scale if internal width is 0 or mismatch significantly.
       scaleCanvas()
     })
     resizeObserver.observe(canvasRef.value)
@@ -165,8 +156,9 @@ onUnmounted(() => {
   background-color: #fff;
   width: 100%;
   height: 200px;
+  height: 200px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  touch-action: none; /* Critical for mobile scrolling prevention */
+  touch-action: none;
 }
 
 .has-error .signature-canvas {

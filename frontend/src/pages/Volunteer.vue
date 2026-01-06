@@ -15,8 +15,10 @@ import FormSubmitted from '../components/common/form-submitted/FormSubmitted.vue
 import { storeToRefs } from 'pinia'
 import { useVolunteerStore } from '../stores/volunteer'
 
-// Helper functions (moved from local to here, or could be utils)
+import { useVolunteerStore } from '../stores/volunteer'
+
 type FormInput = string | number | null
+
 const formatPhoneNumber = (value: FormInput): string => {
   if (!value) return ''
   const digits = String(value).replace(/\D/g, '').substring(0, 10)
@@ -47,26 +49,31 @@ const { formState, isSubmitted, hasAttemptedSubmit, apiError, validationErrors, 
   storeToRefs(volunteerStore)
 const { submit, resetForm } = volunteerStore
 
-// Local UI state
+const { submit, resetForm } = volunteerStore
+
 const touched = reactive<Record<string, boolean>>({})
+
 
 const handleBlur = (field: string) => {
   touched[field] = true
 }
 
 const handleSubmit = async () => {
-  // Manually touch all fields on submit attempt for UI feedback
+const handleSubmit = async () => {
   if (!isFormValid.value) {
     Object.keys(formState.value).forEach((key) => (touched[key] = true))
   }
 
-  // Store handles the rest
-  const success = await submit() // submit action in store should handle isSubmitted state
+  const success = await submit()
+
   if (success) {
     window.scrollTo({ top: 0, behavior: 'smooth' })
   } else {
-    // Error handling if needed (store sets apiError)
+  if (success) {
+    window.scrollTo({ top: 0, behavior: 'smooth' })
+  } else {
   }
+
 }
 
 const handleReset = () => {

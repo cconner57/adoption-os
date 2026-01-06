@@ -9,7 +9,6 @@ export function useMediaQuery(query: string) {
   }
 
   onMounted(() => {
-    // Check if window and matchMedia are available (SSR safety)
     if (typeof window === 'undefined' || typeof window.matchMedia !== 'function') return
 
     mediaQuery = window.matchMedia(query)

@@ -53,18 +53,12 @@ defineProps<{
       :hasError="touched.agreementSignature2 && !modelValue.agreementSignature2"
       @blur="handleBlur('agreementSignature2')"
     />
-    <!-- <p>
-      Please type your name below to indicate that you have gone to our website and read our "Are
-      you Ready to Adopt" page.
-    </p>
-    <InputField
-      v-model="modelValue.agreementSignature3"
-      label="Type your name"
-      name="agreementSignature3"
-      placeholder="Type your full name to confirm read"
-      :hasError="touched.agreementSignature3 && !modelValue.agreementSignature3"
-      @blur="handleBlur('agreementSignature3')"
-    /> -->
+      :hasError="touched.agreementSignature2 && !modelValue.agreementSignature2"
+      @blur="handleBlur('agreementSignature2')"
+    />
+
+    <InputSignature
+
 
     <InputSignature
       label="Signature"
@@ -89,13 +83,19 @@ p {
   line-height: 1.6;
   color: var(--font-color-dark);
   font-size: 1rem;
-  max-width: 100%; /* Override global max-width: 75ch constraint */
+  color: var(--font-color-dark);
+  font-size: 1rem;
+  max-width: 100%;
 }
+
 
 /* Add some emphasis to the instructions associated with inputs */
 p:has(+ .field),
 p:last-of-type {
   font-weight: 500;
-  margin-bottom: -1rem; /* Pull input closer to its label text */
+p:last-of-type {
+  font-weight: 500;
+  margin-bottom: -1rem;
 }
+
 </style>

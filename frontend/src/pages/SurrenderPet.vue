@@ -15,7 +15,8 @@ import SurrenderSteps from '../components/about/surrender/SurrenderSteps.vue'
 import PetSelectSection from '../components/about/surrender/PetSelectSection.vue'
 import FormSubmitted from '../components/common/form-submitted/FormSubmitted.vue'
 
-// Local touched state
+import FormSubmitted from '../components/common/form-submitted/FormSubmitted.vue'
+
 import { reactive, computed } from 'vue'
 
 const router = useRouter()
@@ -41,15 +42,9 @@ const formError = computed(() => hasAttemptedSubmit.value && !isStepValid.value)
 
 const handleSubmit = () => {
   if (!nextStep()) {
-    // Scroll to error if nextStep returned false (invalid)
     globalThis.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' })
 
-    // Mark fields as touched for UI feedback (mapping from validation errors might be cleaner, but simple blunt approach works)
-    // Since we have validationErrors from store, we can iterate common fields if needed,
-    // but typically 'hasAttemptedSubmit' binding in UI should trigger error states if we use it in inputs.
-    // However, existing inputs use `touched`.
-    // Let's rely on hasAttemptedSubmit. Or manually touch.
-    // For now, let's leave touch logic sparse or manual if easy.
+    return
     return
   }
   globalThis.scrollTo({ top: 0, behavior: 'smooth' })

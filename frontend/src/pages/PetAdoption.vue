@@ -46,7 +46,7 @@ const handleSubmit = async () => {
   } else {
     console.log('Submitting form...')
     await adoptionStore.submitApplication()
-90 q1    petStore.clearSelectedPet()
+    petStore.clearSelectedPet()
     globalThis.scrollTo({ top: 0, behavior: 'smooth' })
   }
 }

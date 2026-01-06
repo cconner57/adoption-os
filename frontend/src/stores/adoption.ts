@@ -89,8 +89,7 @@ export const useAdoptionStore = defineStore('adoption', () => {
     const errors: string[] = []
 
     if (step.value === 0) {
-      // General Section / Applicant Info (Mapped to Step 0 in PetAdoption.vue logic)
-      // Note: Previous logic in PetAdoption.vue step 0 checked these:
+
       if (!formState.firstName) errors.push('First Name')
       if (!formState.lastName) errors.push('Last Name')
       if (!formState.age) errors.push('Age')
@@ -103,15 +102,8 @@ export const useAdoptionStore = defineStore('adoption', () => {
       if (!formState.adultMembersAgreed) errors.push('Household Agreement')
     }
 
-    // Add validation for other steps as needed, matching the sections in PetAdoption.vue
-    // Step 1: Home Section
-    // Step 2: New Cat Section
-    // Step 3: Current Pets
-    // Step 4: Past Pets
-    // Step 5: Other Section
-    // Step 6: Summary
-
     if (step.value === 1) {
+
       // Home Section
       if (!formState.homeType) errors.push('Home Type')
       if (!formState.homeOwnership) errors.push('Own or Rent')
@@ -121,13 +113,12 @@ export const useAdoptionStore = defineStore('adoption', () => {
       }
     }
 
-    // ... (Continue adding validation as previously intended but with correct keys)
+    }
 
     if (step.value === 6) {
-      // Summary
+
       if (!formState.agreementSignature1) errors.push('Signature 1')
       if (!formState.agreementSignature2) errors.push('Signature 2')
-      // if (!formState.agreementSignature3) errors.push('Signature 3')
       if (!formState.signatureData) errors.push('Final Signature')
     }
 
@@ -165,9 +156,7 @@ export const useAdoptionStore = defineStore('adoption', () => {
   initFromStorage()
 
   const nextStep = () => {
-    // Validation bypassed for testing
-    // hasAttemptedSubmit.value = true
-    // if (!isStepValid.value) return false
+  const nextStep = () => {
 
     console.log(`[AdoptionStore] Next Step Clicked. Moving from ${step.value} to ${step.value + 1}`)
     console.log('[AdoptionStore] Current Form State:', JSON.parse(JSON.stringify(formState)))
@@ -191,11 +180,8 @@ export const useAdoptionStore = defineStore('adoption', () => {
     hasAttemptedSubmit.value = false
     sessionStorage.removeItem(STORAGE_KEY)
 
-    // Reset formState fields (simplified reset for now, assuming page reload or explicit re-navigation handles full reset often)
-    // To truly reset reactive object in place without page reload:
-    // Object.keys(formState).forEach(key => formState[key] = null) // simplest approximation
-    // But specific arrays need []
-    // For now, removing from storage is the key request.
+    // Reset formState fields
+    sessionStorage.removeItem(STORAGE_KEY)
   }
 
   const submitApplication = async () => {

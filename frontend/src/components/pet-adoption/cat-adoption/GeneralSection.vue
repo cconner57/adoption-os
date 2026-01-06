@@ -300,8 +300,9 @@ function removeChild(index: number) {
   }
 
   .section-label {
-    font-size: 0.875rem; /* Matches InputField label size if possible, or adjust */
+    font-size: 0.875rem;
     font-weight: 600;
+
     color: var(--font-color-dark);
     margin-bottom: 0.25rem;
   }
@@ -322,21 +323,25 @@ function removeChild(index: number) {
     flex-shrink: 0;
   }
 
-  /* Deep selector to hide the label inside InputField for dynamic rows */
-  .dynamic-input-row :deep(.control .label) {
+    flex-shrink: 0;
+  }
+
     display: none;
   }
 
-  /* Remove any margin from the control to ensure perfect centering */
-  .dynamic-input-row :deep(.control) {
+    display: none;
+  }
+
     gap: 0;
   }
 
   .add-btn,
+  .add-btn,
   .remove-btn {
     width: 52px;
-    height: 52px; /* Match typical input height with padding/borders */
+    height: 52px;
     background: none;
+
     border: 1px solid var(--border-color);
     border-radius: 10px;
     cursor: pointer;
@@ -376,10 +381,12 @@ function removeChild(index: number) {
     /* Ensure age wrapper only takes the space remaining next to the button */
     .children .dynamic-input-row .age-wrapper {
       flex: 1;
-      min-width: 0; /* Prevent overflow */
+      min-width: 0;
     }
-    /* Let the button stick to the input, ensuring it doesn't wrap */
+
+    }
     .children .dynamic-input-row .add-btn,
+
     .children .dynamic-input-row .remove-btn {
       flex-shrink: 0;
     }

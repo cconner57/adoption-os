@@ -31,12 +31,12 @@ export const useVolunteerStore = defineStore('volunteer', () => {
     parentSignatureDate: '',
   })
 
-  // Sanitization helpers could technically be here or utility functions
+  })
 
-  // Validation Logic
+
   const validationErrors = computed(() => {
     const errors: string[] = []
-    // ... migration of validation logic from Volunteer.vue
+
     if (!formState.firstName) errors.push('First Name')
     if (!formState.lastName) errors.push('Last Name')
     if (!formState.address) errors.push('Address')
@@ -71,8 +71,10 @@ export const useVolunteerStore = defineStore('volunteer', () => {
 
     if (!isFormValid.value) return false
 
-    // API logic usually stays in the store for clean components
+    if (!isFormValid.value) return false
+
     const payload: Partial<IVolunteerFormState> = { ...formState }
+
     if (formState.age !== null && formState.age >= 21) {
       delete payload.parentName
       delete payload.parentSignatureData
@@ -107,8 +109,9 @@ export const useVolunteerStore = defineStore('volunteer', () => {
     isSubmitted.value = false
     hasAttemptedSubmit.value = false
     apiError.value = null
-    // Reset fields...
+    apiError.value = null
   }
+
 
   return {
     formState,

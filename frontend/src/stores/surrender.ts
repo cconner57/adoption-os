@@ -3,7 +3,8 @@ import { ref, reactive, computed } from 'vue'
 import type { SurrenderFormState } from '../models/surrender-form'
 
 export const useSurrenderStore = defineStore('surrender', () => {
-  const step = ref(0) // Step 0 is Pet Selection
+  const step = ref(0)
+
   const isSubmitted = ref(false)
   const hasAttemptedSubmit = ref(false)
   const selectedAnimal = ref<'dog' | 'cat' | null>(null)
@@ -27,8 +28,10 @@ export const useSurrenderStore = defineStore('surrender', () => {
     householdMembers: [{ age: '', gender: 'Female', count: 1 }],
     otherPetsInHousehold: '',
 
-    // Behavior
+    otherPetsInHousehold: '',
+
     animalsBehaviorTowardsKnownPeople: '',
+
     animalsBehaviorTowardsStrangers: '',
     animalsBehaviorTowardsKnownAnimals: '',
     commentsOnBehavior: '',
@@ -53,16 +56,20 @@ export const useSurrenderStore = defineStore('surrender', () => {
     animalEscapedBefore: '',
     animalEscapedBeforeExplanation: '',
 
-    // Aggressive Behavior
+    animalEscapedBeforeExplanation: '',
+
     animalEverAttackedPeople: '',
+
     animalEverAttackedPeopleExplanation: '',
     animalEverAttackedOtherCats: '',
     animalEverAttackedOtherCatsExplanation: '',
     animalEverAttackedOtherDogs: '',
     animalEverAttackedOtherDogsExplanation: '',
 
-    // Medical History
+    animalEverAttackedOtherDogsExplanation: '',
+
     animalVeterinarianList: '',
+
     animalVeterinarianYearlyVisits: '',
     animalSpayedNeutered: '',
     animalVaccinationHistory: '',
@@ -80,22 +87,28 @@ export const useSurrenderStore = defineStore('surrender', () => {
     animalCurrentMedications: '',
     animalCurrentMedicationsExplanation: '',
 
-    // Feeding
+    animalCurrentMedicationsExplanation: '',
+
     animalTypeOfFood: '',
+
     animalEatingFrequency: '',
     animalAmountOfFood: '',
     animalFoodTreats: '',
     animalFoodTreatsExplanation: '',
 
-    // Other
+    animalFoodTreatsExplanation: '',
+
     additionalInformation: '',
+
     fullBodyPhotoOfAnimal: '',
     closeUpPhotoOfAnimalFace: '',
     copiesOfRecords: '',
   })
 
-  // Validation Logic
+  })
+
   const validationErrors = computed(() => {
+
     const errors: string[] = []
 
     if (step.value === 1) {
@@ -139,8 +152,10 @@ export const useSurrenderStore = defineStore('surrender', () => {
     hasAttemptedSubmit.value = true
     if (!isStepValid.value) return false
 
-    // Skip logic for Dog if applicable
+    if (!isStepValid.value) return false
+
     if (step.value === 3 && selectedAnimal.value === 'dog') {
+
       step.value += 2
     } else {
       step.value++

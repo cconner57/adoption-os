@@ -53,7 +53,7 @@ defineProps<{
       :hasError="touched.agreementSignature2 && !modelValue.agreementSignature2"
       @blur="handleBlur('agreementSignature2')"
     />
-    <p>
+    <!-- <p>
       Please type your name below to indicate that you have gone to our website and read our "Are
       you Ready to Adopt" page.
     </p>
@@ -64,7 +64,7 @@ defineProps<{
       placeholder="Type your full name to confirm read"
       :hasError="touched.agreementSignature3 && !modelValue.agreementSignature3"
       @blur="handleBlur('agreementSignature3')"
-    />
+    /> -->
 
     <InputSignature
       label="Signature"

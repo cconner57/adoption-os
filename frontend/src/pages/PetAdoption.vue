@@ -1,167 +1,66 @@
 <script setup lang="ts">
-import { reactive, ref, computed, onMounted } from 'vue'
-import ApplicationHeader from '../components/volunteer/application-header/ApplicationHeader.vue'
-import Button from '../components/common/ui/Button.vue'
-import AdoptionSteps from '../components/pet-adoption/adoption-steps/AdoptionSteps.vue'
-import GeneralSection from '../components/pet-adoption/cat-adoption/GeneralSection.vue'
+import { useRouter } from 'vue-router'
+import { storeToRefs } from 'pinia'
+import { useAdoptionStore } from '../stores/adoption'
+import { usePetStore } from '../stores/pets'
+
 import HomeSection from '../components/pet-adoption/cat-adoption/HomeSection.vue'
 import NewCatSection from '../components/pet-adoption/cat-adoption/NewCatSection.vue'
+import GeneralSection from '../components/pet-adoption/cat-adoption/GeneralSection.vue'
 import CurrentPetsSection from '../components/pet-adoption/cat-adoption/CurrentPetsSection.vue'
 import PastPetsSection from '../components/pet-adoption/cat-adoption/PastPetsSection.vue'
 import OtherSection from '../components/pet-adoption/cat-adoption/OtherSection.vue'
 import SummarySection from '../components/pet-adoption/cat-adoption/SummarySection.vue'
-import type { FormState } from '../models/adopt-form.ts'
+import Button from '../components/common/ui/Button.vue'
+import AdoptionSteps from '../components/pet-adoption/adoption-steps/AdoptionSteps.vue'
+import ApplicationHeader from '../components/volunteer/application-header/ApplicationHeader.vue'
+import FormSubmitted from '../components/common/form-submitted/FormSubmitted.vue'
 
-const formState = reactive<FormState>({
-  firstName: null,
-  lastName: null,
-  age: null,
-  spouseFirstName: null,
-  spouseLastName: null,
-  roommatesNames: [''],
-  childrenNamesAges: [{ name: '', age: '' }],
-  currentPets: [
-    { name: '', speciesBreedSize: '', age: '', source: '', spayedNeutered: '', likesDogs: '' },
-  ],
-  currentlyHavePets: null,
-  pastPets: [
-    {
-      name: '',
-      speciesBreedSize: '',
-      age: '',
-      source: '',
-      spayedNeutered: '',
-      passedAwayReason: '',
-    },
-  ],
-  ownPetsBefore: null,
-  email: null,
-  address: null,
-  addressLine2: null,
-  city: null,
-  state: null,
-  zip: null,
-  phoneNumber: null,
-  cellPhoneNumber: null,
-  adultMembersAgreed: 'No',
-  homeType: null,
-  homeOwnership: null,
-  landlordName: null,
-  landlordPhoneNumber: null,
-  allowPets: null,
-  breedRestrictionsWeightLimit: null,
-  monthlyFee: null,
-  allergies: null,
-  primaryOwner: null,
-  yearsAtAddress: null,
-  previousAddress: null,
-  expectToMove: null,
-  travelPlan: null,
-  catAccess: null,
-  catIndoorOutdoor: null,
-  catPreferenceBreed: null,
-  catPreferencePhysical: null,
-  catPreferencePersonality: null,
-  catPreferenceNotWant: null,
-  whyInterested: null,
-  adoptionReason: null,
-  ownCatBefore: null,
-  ownKittenBefore: null,
-  alreadyHaveVeterinarian: null,
-  catAllowedHomeArea: null,
-  catHomeAloneHours: null,
-  catDisciplineType: null,
-  catEscapeSteps: null,
-  bredAnimalDescription: null,
-  ownedDeclawedOrDebarked: null,
-  movedWithPet: null,
-  ownedSpecialNeedsPet: null,
-  mobilityDevice: null,
-  surrenderConditions: [],
-  surrenderPlan: null,
-  foodTypeBrand: null,
-  affordVetCare: null,
-  affordEmergencyCost: null,
-  agreementSignature1: null,
-  agreementSignature2: null,
-  agreementSignature3: null,
-  signatureData: null,
-})
+const router = useRouter()
+const adoptionStore = useAdoptionStore()
+const petStore = usePetStore()
 
-const formStep = ref(0)
-const hasAttemptedSubmit = ref(false)
+const { formState, step, isSubmitted, hasAttemptedSubmit, validationErrors } =
+  storeToRefs(adoptionStore)
+const { selectedPet } = storeToRefs(petStore)
+
+const { nextStep, prevStep, resetForm } = adoptionStore
+
+import { reactive } from 'vue'
 const touched = reactive<Record<string, boolean>>({})
 
 const handleBlur = (field: string) => {
   touched[field] = true
 }
 
-const selectedPet = ref()
-
-onMounted(() => {
-  const storedPet = sessionStorage.getItem('adoption_pet')
-  if (storedPet) {
-    const pet = JSON.parse(storedPet)
-    selectedPet.value = pet
-  }
-})
-
-const validationErrors = computed(() => {
-  const errors: string[] = []
-
-  if (formStep.value === 0) {
-    const requiredFields: { key: keyof FormState; label: string }[] = [
-      { key: 'firstName', label: 'First Name' },
-      { key: 'lastName', label: 'Last Name' },
-      { key: 'age', label: 'Age' },
-      { key: 'email', label: 'Email' },
-      { key: 'address', label: 'Address' },
-      { key: 'addressLine2', label: 'Address Line 2' },
-      { key: 'city', label: 'City' },
-      { key: 'state', label: 'State' },
-      { key: 'zip', label: 'Zip Code' },
-      { key: 'phoneNumber', label: 'Phone Number' },
-      { key: 'adultMembersAgreed', label: 'Household Agreement' },
-    ]
-
-    requiredFields.forEach(({ key, label }) => {
-      const value = formState[key]
-      if (key === 'adultMembersAgreed') {
-        if (value === null) errors.push(label)
-      } else if (value === null || value === '') {
-        errors.push(label)
-      }
-    })
-  }
-
-  return errors
-})
-
-// const isFormValid = computed(() => validationErrors.value.length === 0)
-
-const handleSubmit = () => {
-  hasAttemptedSubmit.value = true
-
-  // if (!isFormValid.value) {
-  //   return
-  // }
-
-  if (formStep.value < 6) {
-    formStep.value++
-    hasAttemptedSubmit.value = false
-    window.scrollTo({ top: 0, behavior: 'smooth' })
+const handleSubmit = async () => {
+  if (!adoptionStore.isStepValid) {
+    hasAttemptedSubmit.value = true
+    globalThis.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' })
     return
   }
 
-  sessionStorage.removeItem('adoption_pet')
-  console.log('Form submitted with state:', formState)
-  // Proceed to API call
+  if (step.value < 6) {
+    adoptionStore.nextStep()
+    globalThis.scrollTo({ top: 0, behavior: 'smooth' })
+  } else {
+    console.log('Submitting form...')
+    await adoptionStore.submitApplication()
+
+    petStore.clearSelectedPet()
+    globalThis.scrollTo({ top: 0, behavior: 'smooth' })
+  }
+}
+
+const handleReset = () => {
+  resetForm()
+  router.push('/')
 }
 </script>
 
 <template>
   <section class="page-shell">
-    <section class="form-card" aria-labelledby="form-title">
+    <section v-if="!isSubmitted" class="form-card" aria-labelledby="form-title">
       <ApplicationHeader
         :header-title="selectedPet?.species === 'cat' ? 'Cat' : 'Dog'"
         :header-text="
@@ -170,49 +69,49 @@ const handleSubmit = () => {
             : 'This application is intended as a means to match the right dog with the right home. The more detail you provide, the better.  All of our adoptable pets are spayed/neutered, vaccinated, and microchipped. Typical adoption fees are $450 for puppies, $400 for adults, and $350 for seniors. Adoption fees are tax-deductible donations, not purchase prices. Thank you for considering adoption!'
         "
       />
-      <AdoptionSteps :formStep="formStep" selectedAnimal="cat" />
+      <AdoptionSteps :formStep="step" selectedAnimal="cat" />
       <div class="cat-name-display">
         <h2>Adopting Pet:</h2>
         <p>{{ selectedPet?.petName }}</p>
       </div>
       <GeneralSection
-        v-show="formStep === 0"
+        v-show="step === 0"
         v-model="formState"
         :touched="touched"
         :handleBlur="handleBlur"
       />
       <HomeSection
-        v-show="formStep === 1"
+        v-show="step === 1"
         v-model="formState"
         :touched="touched"
         :handleBlur="handleBlur"
       />
       <NewCatSection
-        v-show="formStep === 2"
+        v-show="step === 2"
         v-model="formState"
         :touched="touched"
         :handleBlur="handleBlur"
       />
       <CurrentPetsSection
-        v-show="formStep === 3"
+        v-show="step === 3"
         v-model="formState"
         :touched="touched"
         :handleBlur="handleBlur"
       />
       <PastPetsSection
-        v-show="formStep === 4"
+        v-show="step === 4"
         v-model="formState"
         :touched="touched"
         :handleBlur="handleBlur"
       />
       <OtherSection
-        v-show="formStep === 5"
+        v-show="step === 5"
         v-model="formState"
         :touched="touched"
         :handleBlur="handleBlur"
       />
       <SummarySection
-        v-show="formStep === 6"
+        v-show="step === 6"
         v-model="formState"
         :touched="touched"
         :handleBlur="handleBlur"
@@ -227,14 +126,31 @@ const handleSubmit = () => {
 
       <div class="actions">
         <Button
+          @click="prevStep"
+          title="Back"
+          color="white"
+          size="large"
+          style="border: 1px solid var(--green); color: var(--green)"
+          :disabled="step === 0 || isSubmitted"
+        />
+        <Button
           @click="handleSubmit"
           type="submit"
-          :title="formStep < 6 ? 'Next' : 'Submit Application'"
+          :title="step < 6 ? 'Next' : 'Submit Application'"
           color="green"
           size="large"
+          :disabled="isSubmitted"
         />
       </div>
     </section>
+
+    <FormSubmitted
+      v-else
+      @reset="handleReset"
+      title="Application Submitted"
+      text="Thank you for your application! We will review it as soon as possible."
+      form-type="adoption"
+    />
   </section>
 </template>
 

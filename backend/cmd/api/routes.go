@@ -18,10 +18,11 @@ func (app *application) routes() http.Handler { // <--- lowercase application
 
 	// Add the new Volunteer Route
 	mux.HandleFunc("POST /applications/volunteer", app.submitVolunteerApplication)
+	mux.HandleFunc("POST /applications/adoption", app.submitAdoptionApplication)
 
 	// Setup CORS
 	c := cors.New(cors.Options{
-		AllowedOrigins:   []string{"*"},
+		AllowedOrigins:   []string{"http://localhost:5173", "http://localhost:4173"},
 		AllowedMethods:   []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
 		AllowedHeaders:   []string{"Accept", "Authorization", "Content-Type"},
 		AllowCredentials: true,

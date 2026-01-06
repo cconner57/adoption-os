@@ -53,15 +53,7 @@ const { formStep, selectedAnimal } = defineProps<{
   align-items: center;
   position: relative;
 
-  /* The continuous line */
   & .line {
-    /* Using pseudo-element line approach is cleaner, but keeping existing structure for minimal refactor if desired.
-       However, the existing 'line' div is hardcoded width. Let's switch to ::before like SurrenderSteps or adapt the div.
-       The existing .line div is complex because of dynamic width prop in template.
-       Actually, replacing it with the SurrenderSteps CSS approach (::before) is better for responsiveness.
-       BUT the template uses a div for the line with dynamic style.
-       Let's keep the div but make it responsive.
-    */
     position: absolute;
     top: 14px;
     left: 20px;
@@ -69,7 +61,7 @@ const { formStep, selectedAnimal } = defineProps<{
     height: 2px;
     background-color: var(--green);
     z-index: 1;
-    width: auto !important; /* Override inline style for desktop responsive */
+    width: auto !important;
     max-width: none;
     min-width: 0;
   }

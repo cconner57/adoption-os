@@ -364,6 +364,26 @@ function removeChild(index: number) {
     border-color: var(--red);
     background-color: #fff5f5;
   }
+  @media (max-width: 480px) {
+    .children .dynamic-input-row {
+      flex-wrap: wrap;
+    }
+    .children .dynamic-input-row .flex-grow {
+      flex-basis: 100%;
+      width: 100%;
+      min-width: 100%;
+    }
+    /* Ensure age wrapper only takes the space remaining next to the button */
+    .children .dynamic-input-row .age-wrapper {
+      flex: 1;
+      min-width: 0; /* Prevent overflow */
+    }
+    /* Let the button stick to the input, ensuring it doesn't wrap */
+    .children .dynamic-input-row .add-btn,
+    .children .dynamic-input-row .remove-btn {
+      flex-shrink: 0;
+    }
+  }
 }
 .all-agreed {
   display: flex;

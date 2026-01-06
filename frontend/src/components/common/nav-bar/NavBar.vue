@@ -37,12 +37,20 @@ const isTablet = useIsTablet()
       <div class="nav-container">
         <section class="nav-links">
           <RouterLink to="/" class="nav-item" active-class="active"><p>Home</p></RouterLink>
-          <RouterLink to="/about" class="nav-item" active-class="active"><p>About</p></RouterLink>
+          <RouterLink
+            to="/about"
+            class="nav-item"
+            active-class="active"
+            :class="{ active: $route.path.startsWith('/surrender') }"
+            ><p>About</p></RouterLink
+          >
           <RouterLink
             to="/adopt"
             class="nav-item"
             active-class="active"
-            :class="{ active: $route.path.startsWith('/adopt') }"
+            :class="{
+              active: $route.path.startsWith('/adopt') || $route.path.startsWith('/pet-adoption'),
+            }"
             ><p>Adopt</p></RouterLink
           >
           <RouterLink to="/volunteer" class="nav-item" active-class="active"
@@ -87,30 +95,30 @@ const isTablet = useIsTablet()
       }
     }
     & .nav-links {
-        display: flex;
-        gap: 4rem;
-        & .nav-item {
-          color: var(--font-color-light);
-          text-decoration: none;
+      display: flex;
+      gap: 4rem;
+      & .nav-item {
+        color: var(--font-color-light);
+        text-decoration: none;
 
-          p {
-            font-size: 1.2rem;
-            font-weight: 500;
-          }
+        p {
+          font-size: 1.2rem;
+          font-weight: 500;
         }
-        & .nav-item.active {
-          font-weight: 600;
-          border-bottom: 2px solid var(--font-color-light);
-          padding-bottom: 4px;
-          p {
-            font-size: 1.2rem;
-          }
-          &:hover {
-            cursor: pointer;
-          }
+      }
+      & .nav-item.active {
+        font-weight: 600;
+        border-bottom: 2px solid var(--font-color-light);
+        padding-bottom: 4px;
+        p {
+          font-size: 1.2rem;
+        }
+        &:hover {
+          cursor: pointer;
         }
       }
     }
+  }
 
   .nav-blurred {
     background-color: hsl(182, 100%, 23%, 0.75);

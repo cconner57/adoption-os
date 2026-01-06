@@ -9,7 +9,7 @@ defineProps<{
 <template>
   <div class="adopt-detail__adoption-process">
     <h2>Adoption Process</h2>
-    <ol v-if="pet.profileSettings.adoptionProcess === 'cat'">
+    <ol v-if="pet.species === 'cat'">
       <li>
         <span>Submit Your Application</span> <br />
         <p>

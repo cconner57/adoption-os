@@ -140,47 +140,47 @@ onUnmounted(() => {
   align-items: center;
   position: relative;
   width: 100%;
-}
 
-.signature-label {
-  margin-bottom: 10px;
-  font-size: 16px;
-  font-weight: bold;
-  color: #333;
-}
+  .signature-label {
+    margin-bottom: 10px;
+    font-size: 16px;
+    font-weight: bold;
+    color: #333;
+  }
 
-.signature-canvas {
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  cursor: crosshair;
-  background-color: #fff;
-  width: 100%;
-  height: 200px;
-  height: 200px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  touch-action: none;
-}
+  .signature-canvas {
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    cursor: crosshair;
+    background-color: #fff;
+    width: 100%;
+    height: 200px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    touch-action: none;
+  }
 
-.has-error .signature-canvas {
-  border: 2px solid #ef4444;
-}
+  /* Nested state modifier */
+  &.has-error .signature-canvas {
+    border: 2px solid #ef4444;
+  }
 
-.signature-actions {
-  position: absolute;
-  bottom: 10px;
-  right: 10px;
-}
+  .signature-actions {
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
 
-button {
-  padding: 5px 10px;
-  background-color: #007bff;
-  color: #fff;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-}
+    button {
+      padding: 5px 10px;
+      background-color: #007bff;
+      color: #fff;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
 
-button:hover {
-  background-color: #0056b3;
+      &:hover {
+        background-color: #0056b3;
+      }
+    }
+  }
 }
 </style>

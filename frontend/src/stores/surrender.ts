@@ -28,8 +28,6 @@ export const useSurrenderStore = defineStore('surrender', () => {
     householdMembers: [{ age: '', gender: 'Female', count: 1 }],
     otherPetsInHousehold: '',
 
-    otherPetsInHousehold: '',
-
     animalsBehaviorTowardsKnownPeople: '',
 
     animalsBehaviorTowardsStrangers: '',
@@ -56,16 +54,12 @@ export const useSurrenderStore = defineStore('surrender', () => {
     animalEscapedBefore: '',
     animalEscapedBeforeExplanation: '',
 
-    animalEscapedBeforeExplanation: '',
-
     animalEverAttackedPeople: '',
 
     animalEverAttackedPeopleExplanation: '',
     animalEverAttackedOtherCats: '',
     animalEverAttackedOtherCatsExplanation: '',
     animalEverAttackedOtherDogs: '',
-    animalEverAttackedOtherDogsExplanation: '',
-
     animalEverAttackedOtherDogsExplanation: '',
 
     animalVeterinarianList: '',
@@ -87,15 +81,11 @@ export const useSurrenderStore = defineStore('surrender', () => {
     animalCurrentMedications: '',
     animalCurrentMedicationsExplanation: '',
 
-    animalCurrentMedicationsExplanation: '',
-
     animalTypeOfFood: '',
 
     animalEatingFrequency: '',
     animalAmountOfFood: '',
     animalFoodTreats: '',
-    animalFoodTreatsExplanation: '',
-
     animalFoodTreatsExplanation: '',
 
     additionalInformation: '',
@@ -105,10 +95,7 @@ export const useSurrenderStore = defineStore('surrender', () => {
     copiesOfRecords: '',
   })
 
-  })
-
   const validationErrors = computed(() => {
-
     const errors: string[] = []
 
     if (step.value === 1) {
@@ -152,10 +139,7 @@ export const useSurrenderStore = defineStore('surrender', () => {
     hasAttemptedSubmit.value = true
     if (!isStepValid.value) return false
 
-    if (!isStepValid.value) return false
-
     if (step.value === 3 && selectedAnimal.value === 'dog') {
-
       step.value += 2
     } else {
       step.value++

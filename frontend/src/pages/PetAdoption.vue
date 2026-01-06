@@ -24,7 +24,7 @@ const { formState, step, isSubmitted, hasAttemptedSubmit, validationErrors } =
   storeToRefs(adoptionStore)
 const { selectedPet } = storeToRefs(petStore)
 
-const { nextStep, prevStep, resetForm } = adoptionStore
+const { prevStep, resetForm } = adoptionStore
 
 import { reactive } from 'vue'
 const touched = reactive<Record<string, boolean>>({})
@@ -158,6 +158,14 @@ const handleReset = () => {
   min-height: 100vh;
   background-color: var(--green);
   padding: 9rem var(--layout-padding-side) 64px;
+  container-type: inline-size;
+  container-name: shell;
+
+  /* Viewport query for container's own padding */
+  @media (max-width: 440px) {
+    padding: 6rem 16px 32px;
+  }
+
   .form-card {
     max-width: 1600px;
     margin: 0 auto;
@@ -166,6 +174,12 @@ const handleReset = () => {
     border-radius: 24px;
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
     padding: 48px 48px 32px;
+
+    /* Responsive padding based on container width */
+    @container shell (max-width: 800px) {
+      padding: 32px 24px;
+    }
+
     fieldset {
       border: 0;
       margin: 24px 0;
@@ -176,69 +190,73 @@ const handleReset = () => {
         margin: 18px 0 12px;
       }
     }
+
+    .cat-name-display {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      margin-bottom: 2rem;
+
+      h2 {
+        font-size: 1.5rem;
+        font-weight: bold;
+        color: var(--font-color-dark);
+      }
+      p {
+        font-size: 1.5rem;
+        font-weight: 600;
+        color: var(--green);
+      }
+    }
+
     .actions {
       display: flex;
       justify-content: center;
       gap: 16px;
       margin-top: 20px;
     }
+
     .grid {
       display: grid;
       grid-template-columns: repeat(2, minmax(0, 1fr));
       gap: 16px;
+
+      @container shell (max-width: 650px) {
+        grid-template-columns: 1fr;
+      }
     }
-  }
-  @media (min-width: 321px) and (max-width: 430px) {
-    padding: 6rem 16px 32px;
-  }
-  @media (min-width: 431px) and (max-width: 768px) {
-  }
-}
-.cat-name-display {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.5rem;
-  margin-bottom: 2rem;
-}
-.cat-name-display h2 {
-  font-size: 1.5rem;
-  font-weight: bold;
-  color: var(--font-color-dark);
-}
-.cat-name-display p {
-  font-size: 1.5rem;
-  font-weight: 600;
-  color: var(--green);
-}
-.validation-summary {
-  background-color: #fef2f2;
-  border: 1px solid #ef4444;
-  border-radius: 12px;
-  padding: 16px;
-  margin: 24px 0;
-  text-align: center;
 
-  .summary-title {
-    color: #b91c1c;
-    font-weight: 600;
-    margin-bottom: 12px;
-  }
+    .validation-summary {
+      background-color: #fef2f2;
+      border: 1px solid #ef4444;
+      border-radius: 12px;
+      padding: 16px;
+      margin: 24px 0;
+      text-align: center;
 
-  .tags {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
-    justify-content: center;
-  }
+      .summary-title {
+        color: #b91c1c;
+        font-weight: 600;
+        margin-bottom: 12px;
+      }
 
-  .tag.is-danger {
-    background-color: #fee2e2;
-    color: #b91c1c;
-    padding: 4px 12px;
-    border-radius: 16px;
-    font-size: 0.875rem;
-    font-weight: 500;
+      .tags {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        justify-content: center;
+      }
+
+      .tag.is-danger {
+        background-color: #fee2e2;
+        color: #b91c1c;
+        padding: 4px 12px;
+        border-radius: 16px;
+        font-size: 0.875rem;
+        font-weight: 500;
+      }
+    }
   }
 }
 </style>

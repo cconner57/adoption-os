@@ -14,9 +14,6 @@ import Button from '../components/common/ui/Button.vue'
 import SurrenderSteps from '../components/about/surrender/SurrenderSteps.vue'
 import PetSelectSection from '../components/about/surrender/PetSelectSection.vue'
 import FormSubmitted from '../components/common/form-submitted/FormSubmitted.vue'
-
-import FormSubmitted from '../components/common/form-submitted/FormSubmitted.vue'
-
 import { reactive, computed } from 'vue'
 
 const router = useRouter()
@@ -30,7 +27,7 @@ const {
   validationErrors,
   isStepValid,
 } = storeToRefs(surrenderStore)
-const { nextStep, prevStep, resetForm, setSelectedAnimal } = surrenderStore
+const { nextStep, prevStep, resetForm } = surrenderStore
 
 const touched = reactive<Record<string, boolean>>({})
 
@@ -44,7 +41,6 @@ const handleSubmit = () => {
   if (!nextStep()) {
     globalThis.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' })
 
-    return
     return
   }
   globalThis.scrollTo({ top: 0, behavior: 'smooth' })
@@ -97,7 +93,7 @@ const formattedAnimal = computed(() => {
         v-if="step === 0"
         :formError="formError"
         :selectedAnimal="selectedAnimal"
-        @update:selectedAnimal="(value) => setSelectedAnimal(value)"
+        @update:selectedAnimal="(value) => (selectedAnimal = value)"
       />
       <HouseholdSection
         v-if="step === 1 && selectedAnimal"
@@ -184,6 +180,14 @@ const formattedAnimal = computed(() => {
   min-height: 100vh;
   background-color: var(--green);
   padding: 9rem var(--layout-padding-side) 64px;
+  container-type: inline-size;
+  container-name: shell;
+
+  /* Viewport query for container's own padding */
+  @media (max-width: 440px) {
+    padding: 6rem 16px 32px;
+  }
+
   .form-card {
     max-width: 1600px;
     margin: 0 auto;
@@ -192,6 +196,12 @@ const formattedAnimal = computed(() => {
     border-radius: 24px;
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
     padding: 48px 48px 32px;
+
+    /* Logic based on shell width */
+    @container shell (max-width: 800px) {
+      padding: 32px 16px;
+    }
+
     .form-header {
       display: flex;
       justify-content: center;
@@ -199,7 +209,8 @@ const formattedAnimal = computed(() => {
       gap: 16px;
       margin-bottom: 4px;
       color: var(--green);
-      & h1 {
+
+      h1 {
         font-size: 4.25rem;
         line-height: 1.2;
         letter-spacing: 0.2px;
@@ -207,24 +218,15 @@ const formattedAnimal = computed(() => {
       img {
         width: 100px;
       }
-    }
-    .actions {
-      display: flex;
-      justify-content: center;
-      gap: 16px;
-      margin-top: 20px;
-    }
-  }
-  @media (max-width: 768px) {
-    .form-card {
-      padding: 32px 16px;
-      .form-header {
+
+      /* Tablet/Mobile adjustments based on container width */
+      @container shell (max-width: 800px) {
         flex-direction: column;
         align-items: center;
         gap: 0px;
         margin-bottom: 1rem;
-        & h1 {
-          font-size: 2.25rem; /* Balanced size for tablets */
+        h1 {
+          font-size: 2.25rem;
           text-align: center;
         }
         img {
@@ -232,51 +234,55 @@ const formattedAnimal = computed(() => {
           height: 60px;
         }
       }
-    }
-  }
 
-  @media (max-width: 440px) {
-    .form-card {
-      .form-header {
-        & h1 {
-          font-size: 1.75rem; /* Matches Pet Application header size */
+      @container shell (max-width: 480px) {
+        h1 {
+          font-size: 1.75rem;
         }
       }
     }
-  }
-}
 
-.validation-summary {
-  background-color: #fef2f2;
-  border: 1px solid #ef4444;
-  border-radius: 12px;
-  padding: 16px;
-  margin: 24px 0;
-  text-align: center;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-
-  .summary-title {
-    color: #b91c1c;
-    font-weight: 600;
-    margin-bottom: 12px;
+    .actions {
+      display: flex;
+      justify-content: center;
+      gap: 16px;
+      margin-top: 20px;
+    }
   }
 
-  .tags {
+  /* Nested validation summary */
+  .validation-summary {
+    background-color: #fef2f2;
+    border: 1px solid #ef4444;
+    border-radius: 12px;
+    padding: 16px;
+    margin: 24px 0;
+    text-align: center;
     display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
-    justify-content: center;
-  }
+    flex-direction: column;
+    align-items: center;
 
-  .tag.is-danger {
-    background-color: #fee2e2;
-    color: #b91c1c;
-    padding: 4px 12px;
-    border-radius: 16px;
-    font-size: 0.875rem;
-    font-weight: 500;
+    .summary-title {
+      color: #b91c1c;
+      font-weight: 600;
+      margin-bottom: 12px;
+    }
+
+    .tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      justify-content: center;
+    }
+
+    .tag.is-danger {
+      background-color: #fee2e2;
+      color: #b91c1c;
+      padding: 4px 12px;
+      border-radius: 16px;
+      font-size: 0.875rem;
+      font-weight: 500;
+    }
   }
 }
 </style>

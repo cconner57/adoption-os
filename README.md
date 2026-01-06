@@ -10,18 +10,18 @@ The platform is designed to run on low-cost hardware (**Raspberry Pi 5**) for on
 
 This repository is a **Monorepo** containing both the API and the User Interface.
 
-### 🎨 Frontend (The Face)
+### 🎨 Frontend
 
 The frontend is a **Vue 3** application built with **TypeScript**. It provides a responsive and interactive user experience for adopters, volunteers, and staff.
 
-- **Tech Stack:** Vue 3, TypeScript, TailwindCSS.
+- **Tech Stack:** Vue 3, TypeScript.
 - **Key Features:**
   - **Public Portal:** Home, About, Adopt, and Donate pages.
   - **Adoption Process:** Interactive steps for potential adopters.
   - **Volunteer Management:** Digital applications with waiver signing and parental consent logic.
   - **Surrender Forms:** Smart forms for intake management.
 
-### 🧠 Backend (The Brain)
+### 🧠 Backend
 
 The backend is a high-performance API built with **Go 1.24** (Standard Library) and **PostgreSQL 16**.
 
@@ -83,19 +83,23 @@ Follow these instructions to get the project running on your local machine.
 
 1.  **Start the database:**
     The backend requires a running PostgreSQL database. A `docker-compose.yml` file is provided for convenience (though not listed in the initial file structure, it is a common convention). If it exists, you can start the database with:
+
     ```sh
     docker-compose up -d
     ```
+
     If not, you will need to manually run a PostgreSQL container. The `backend/Makefile` references a container named `pet_shelter_db`.
 
 2.  **Install Dependencies:**
     This command will install the necessary Go modules for the backend and npm packages for the frontend.
+
     ```sh
     make setup
     ```
 
 3.  **Run the Backend:**
     This will start the Go API server.
+
     ```sh
     make run-be
     ```
@@ -110,100 +114,116 @@ Once these steps are complete, the frontend should be accessible at `http://loca
 
 ---
 
-## 🗺️ Roadmap: Pet Adoption Platform Master Execution Plan
+## 🗺️ Roadmap: Adoption OS Master Execution Plan
 
 ### Year 1: Foundation, Revenue, and Core Operations
 
-#### Phase 1: The Foundation (MVP)
-*(Status: Code Complete / In Progress)*
-- **Public Website:** Responsive Home, About, Adopt, and Donate pages.
-- **Digital Intake:** Smart SurrenderPet forms with risk logic.
-- **Volunteer Portal:** Application with "Teen vs. Adult" logic.
-- **Backend Core:** Go server & PostgreSQL setup.
-- **Admin Shell:** Basic secure login and navigation.
+#### Phase 1: Core Infrastructure & MVP Launch
 
-#### Phase 2: Revenue & Reach
-- **Stripe Foundation:** Process Adoption Fees & One-Time Donations.
-- **Pet Record Management:** Admin CRUD for pet profiles.
-- **Manual Donation & Cash Handling:** Log offline donations (cash/check).
-- **Digital Kennel Cards (E-Ink V1):** Raspberry Pi integration.
-- **Smart QR Codes:** Auto-generate unique pet profile links.
+_(Status: In Progress)_
 
-#### Phase 3: Onboarding & Communication
-- **Social Media Share Generator:** Create "Adopt Me" graphics.
-- **Automated Adopter Onboarding:** Triggered emails with care guides.
-- **Foster-to-Adopt Fast-Track:** One-click adoption for fosters.
-- **SMS Status Integration:** Application status text alerts.
-- **Post-Adoption Surveys:** Automated 3-3-3 check-in emails.
+- [x] **Public Website:** Build the responsive marketing front-end (Home, About, Adopt, Donate) using Vue 3 and Tailwind, ensuring fast load times on mobile.
+- [x] **Digital Intake:** Create a multi-step "Surrender Pet" wizard that flags high-risk intakes (e.g., "Bite History" or "Medical Emergency") for immediate staff review.
+- [x] **Volunteer Portal:** Develop a gated portal for volunteers to apply, utilizing conditional logic to serve different waiver forms for minors (Teen) vs. Adults.
+- [x] **Adoption Application:** Implement the primary long-form adoption questionnaire with real-time validation to prevent incomplete submissions.
+- [ ] **Backend Core:** Initialize the Go/Gin server, set up the PostgreSQL schema with migrations, and configure environment-based configuration (Dev vs. Prod).
 
-#### Phase 4: Engagement Campaigns
-- **External API Sync:** Nightly export to Petfinder/RescueGroups.
-- **"Name the Litter":** Paid voting module for naming pets.
-- **Digital Raffle Manager:** Sell tickets & pick winners via Stripe.
-- **Volunteer Leaderboard:** Gamified tracking of volunteer impact.
-- **"Happy Tails":** Public success story submission form.
+#### Phase 2: Agency Administration & Workflow
 
-#### Phase 5: Mobile & Field Operations (PWA)
-- **Offline "Field Mode":** Service worker caching for intake.
-- **Push Notifications:** Browser alerts for urgent needs.
-- **"Add to Home Screen":** Native-app feel configuration.
-- **Mobile Image Compression:** Client-side resizing for faster uploads.
-- **Geolocation Intake:** GPS tagging for stray intakes.
+- [ ] **Admin Shell:** Build the secure internal layout including JWT-based authentication, role-based route guards, and a responsive sidebar navigation for staff.
+- [ ] **Admin Dashboard:** Create a "Morning Overview" widget showing pending applications, urgent medical tasks, and recent donations at a glance.
+- [ ] **Pet Record Management:** Develop full CRUD (Create, Read, Update, Delete) views for animal profiles, including status toggles (Available/Pending/Adopted).
+- [ ] **Mobile Image Compression:** Implement client-side image resizing (Canvas API) to auto-convert 10MB phone photos to optimized WebP thumbnails _before_ upload.
+- [ ] **External API Sync:** Build a nightly Cron job to export pet data into CSV/JSON formats compliant with Petfinder and RescueGroups API standards.
+- [ ] **Volunteer Hours:** Create a digital "Time Clock" for volunteers to log start/stop times, generating reports needed for grant compliance.
+- [ ] **Intake Kiosk:** Design a simplified, high-contrast "Kiosk Mode" view for tablets used at the front desk for rapid animal intake.
 
-#### Phase 6: Financial Stability
-- **Monthly Subscriptions:** Recurring donor engine.
-- **Pet Sponsorships:** Link payments to specific animals.
-- **"Gotcha Day" Engine:** Anniversary donation emails.
-- **Donor Portal:** Self-service receipt & plan management.
-- **Tribute Giving:** "In Memory Of" donation flow.
-- **Legacy Giving Portal:** Planned giving & bequests section.
+#### Phase 3: Transactions, Communication & Automation
 
-#### Phase 7: Advanced Hardware
-- **Intake Kiosk:** Tablet-optimized intake UI.
-- **Vet Dashboard:** "Airport Screen" for medical schedules.
-- **Device Health Monitor:** Admin view for IoT uptime.
-- **NFC Support:** Tap-to-view medical records on collars.
-- **Smart Supply Buttons:** IoT buttons for inventory alerts.
+- [ ] **Stripe Foundation:** Integrate Stripe PaymentIntents for handling secure credit card processing for adoption fees and one-off donations.
+- [ ] **Post-Adoption Surveys:** Set up a background worker to schedule automated "Check-in" emails at 3 days, 3 weeks, and 3 months post-adoption.
+- [ ] **Automated Adopter Onboarding:** Create a trigger system that sends specific PDF care guides (e.g., "Kitten 101" vs. "Senior Dog Care") based on the adopted animal's attributes.
+- [ ] **Vet Dashboard:** Build a "Read-Only" display mode optimized for TV screens to show the daily surgery and medication schedule in the medical room.
+- [ ] **Manual Donation & Cash Handling:** Add an administrative form to manually log cash/check donations so the financial reporting remains accurate offline.
+- [ ] **Foster-to-Adopt Fast-Track:** Build a simplified workflow that allows current fosters to finalize an adoption without re-entering their personal data.
+- [ ] **SMS Status Integration:** Connect Brevo/Twilio to send automated text alerts (e.g., "Application Approved") to reduce follow-up phone calls.
+- [ ] **Smart QR Codes:** Implement a generator that creates unique QR codes linking directly to a pet’s profile, printable for kennel cards.
+- [ ] **Digital Kennel Cards (E-Ink V1):** Develop the Go script for Raspberry Pi Zero to fetch pet details via API and render them to an e-ink display.
 
-#### Phase 8: Data & Inventory
-- **Weight Visualization:** Growth charts for neonates.
-- **Inventory System:** "Supply Closet" tracking & alerts.
-- **Medication Logs:** Strict controlled substance auditing.
-- **Volunteer Hours:** Clock-in/out tracking for grants.
-- **Incident Reporting:** Liability forms for bites/injuries.
+#### Phase 4: PWA & Mobile Capabilities
 
-#### Phase 9: Matchmaking & Discovery
-- **"Find My Match" Quiz:** Lifestyle-based pet filtering.
-- **"Pet Alerts":** Saved search notifications for users.
-- **Lifestyle Badges:** Auto-tagging (e.g., "Apartment Friendly").
-- **Compare View:** Side-by-side pet comparison tool.
-- **Video Embeds:** YouTube/TikTok support in profiles.
+- [ ] **Offline "Field Mode":** Configure Service Workers and IndexedDB to allow staff to fill out intake forms in areas with zero cell service, syncing when connection is restored.
+- [ ] **Push Notifications:** Implement the Web Push API to send browser-based alerts to volunteers for urgent needs (e.g., "Transporter needed ASAP").
+- [ ] **"Add to Home Screen":** Configure the `manifest.json` to allow users to install the website as a standalone app on iOS/Android.
+- [ ] **Geolocation Intake:** Use the browser Geolocation API to automatically tag the GPS coordinates of stray animal intakes for mapping data.
 
-#### Phase 10: Community Resources
-- **Lost & Found Generator:** Public flyer creation tool.
-- **Community Adoption Events Calendar:** Manage off-site adoption events & volunteer shifts.
-- **Community Calendar:** Public view of clinics/fundraisers.
-- **Partner Directory:** Vets & trainers listing.
-- **Newsletter Builder:** Drag-and-drop email tool.
+#### Phase 5: Gamification & Fundraising Campaigns
 
-#### Phase 11: Specialized Care & Crisis
-- **"SOS" Broadcast:** Emergency SMS to skilled volunteers.
-- **Fospice Tracker:** Quality of Life logs for hospice pets.
-- **Smart Visiting Hours:** Real-time "Open/Closed" widget.
-- **Isolation Management:** Contagion tracking workflows.
-- **Disaster Mode:** Crisis homepage takeover switch.
+- [ ] **"Name the Litter":** Build a paid voting module where donors pay $5 to submit or vote on names for a new litter of kittens.
+- [ ] **Digital Raffle Manager:** Create a compliant raffle system that sells virtual tickets via Stripe and uses a cryptographically secure random number generator to pick winners.
+- [ ] **Volunteer Leaderboard:** Gamify volunteer retention by displaying "Top Hours This Month" and awarding digital badges for milestones.
+- [ ] **"Happy Tails":** Build a public submission form allowing past adopters to upload photos and stories, which enter a moderation queue before publishing.
 
-#### Phase 12: Compliance, Security & Standards
-- **SOC2 Readiness:** Immutable Audit Logs & Centralized Security Monitoring.
-- **GDPR/CCPA Privacy Suite:** "Right to be Forgotten" engine, Data Export (JSON), & Cookie Consent.
-- **Strict RBAC Enforcement:** Granular permissioning for Staff vs. Admins (prep for SaaS).
-- **Accessibility Deep-Dive:** WCAG 2.1 AA Audit & Screen Reader optimization.
-- **Penetration Testing:** Third-party security audit & vulnerability patching.
-- **Data Retention:** Automated PII deletion policies.
+#### Phase 6: Donor Stewardship & Recurring Revenue
+
+- [ ] **Monthly Subscriptions:** Implement Stripe Subscriptions to handle recurring "Guardian Angel" monthly giving plans.
+- [ ] **Pet Sponsorships:** Create a logic flow that links a specific donation to a specific Pet ID, showing a "Sponsored by [Name]" badge on the pet's profile.
+- [ ] **"Gotcha Day" Engine:** A nightly job that checks adoption dates and sends "Happy 1 Year Anniversary" emails to past adopters with a donation prompt.
+- [ ] **Donor Portal:** A self-service dashboard where donors can download year-end tax receipts and update their credit card information.
+- [ ] **Tribute Giving:** Add a dedicated flow for "In Memory Of" / "In Honor Of" donations that sends a notification card to the honoree.
+- [ ] **Legacy Giving Portal:** Create informational pages and a lead-generation form for users interested in including the shelter in their will/estate.
+
+#### Phase 7: Enterprise Security & Governance
+
+- [ ] **Smart Visiting Hours:** A widget that auto-updates the website header based on current time and "Holiday Mode" overrides set by admins.
+- [ ] **SOC2 Readiness:** Implement immutable audit logging (who clicked what, when) and centralized security monitoring for all admin actions.
+- [ ] **GDPR/CCPA Privacy Suite:** Build tools for users to request "Export My Data" (JSON dump) or "Delete My Data" to comply with privacy laws.
+- [ ] **Strict RBAC Enforcement:** Refactor permission logic to support granular roles (e.g., "Volunteer Leader" can edit shifts but not pet medical records).
+- [ ] **Accessibility Deep-Dive:** Conduct a full audit to ensure all forms and navigation meet WCAG 2.1 AA standards for screen readers and keyboard navigation.
+- [ ] **Penetration Testing:** Coordinate a third-party security audit to stress-test the Go API against SQL injection and XSS attacks.
+- [ ] **Data Retention:** Create automated cron jobs to anonymize or delete sensitive user data (like old applications) after a set retention period (e.g., 2 years).
+
+#### Phase 8: Clinical Health & Inventory Operations
+
+- [ ] **Medication Logs:** Build a strict digital ledger for controlled substances, requiring specific user permissions to log dispensing.
+- [ ] **Weight Visualization:** Integrate Chart.js to visualize kitten weight gain over time, flagging animals that are losing weight.
+- [ ] **Incident Reporting:** Create a legal-grade form for documenting bites or accidents, generating PDFs for insurance purposes.
+- [ ] **Inventory System:** A "Supply Closet" tracker that alerts admins when critical items (like vaccines or kitten formula) drop below par levels.
+
+#### Phase 9: Adopter Matchmaking & Marketing
+
+- [ ] **"Find My Match" Quiz:** A logic-based quiz that scores available pets against user lifestyle inputs (activity level, kids, other pets).
+- [ ] **"Pet Alerts":** Allow users to subscribe to saved search criteria (e.g., "Female Golden Retriever") and receive email alerts when a match is added.
+- [ ] **Lifestyle Badges:** Auto-tag pets with badges like "Apartment Friendly" or "Good with Cats" based on their behavioral assessment data.
+- [ ] **Compare View:** A side-by-side interface allowing users to pin 2-3 pets and compare their stats (age, size, energy) on one screen.
+- [ ] **Social Media Share Generator:** A tool that generates a dynamic Open Graph image (with pet photo and stats) for beautiful link previews on Facebook/Twitter.
+- [ ] **Video Embeds:** Update the media gallery to support embedding YouTube or TikTok URLs alongside static images.
+
+#### Phase 10: Community Outreach & Event Management
+
+- [ ] **Lost & Found Generator:** A tool where the public can input details of a lost pet and instantly generate a printable PDF flyer.
+- [ ] **Community Adoption Events Calendar:** An internal scheduling tool to assign specific animals and volunteers to off-site events (e.g., "PetSmart Saturday").
+- [ ] **Community Calendar:** A public-facing calendar component displaying vaccination clinics, fundraisers, and orientation dates.
+- [ ] **Partner Directory:** A searchable directory of recommended local vets, trainers, and pet sitters managed by the shelter.
+- [ ] **Newsletter Builder:** A drag-and-drop email composition tool that pulls live pet data directly from the database into the newsletter layout.
+
+#### Phase 11: IoT & Connected Hardware
+
+- [ ] **Device Health Monitor:** A dashboard view showing the "Heartbeat" status, CPU temp, and connection quality of all deployed Raspberry Pi devices.
+- [ ] **NFC Support:** Update the mobile app to read NFC tags on kennel cards or collars to instantly pull up the medical record on a staff phone.
+- [ ] **Smart Supply Buttons:** Integration with physical IoT buttons (like AWS IoT buttons) to trigger "Restock Needed" alerts for laundry or food.
+
+#### Phase 12: Crisis Response & Specialized Protocols
+
+- [ ] **"SOS" Broadcast:** A "Break Glass" feature that instantly sends SMS/Email blasts to a pre-vetted list of emergency fosters during overcrowding.
+- [ ] **Fospice Tracker:** Specialized quality-of-life tracking logs for hospice pets, prioritizing comfort metrics over medical cure.
+- [ ] **Isolation Management:** A workflow to digitally "Lock" a pet profile if they are suspected of having a contagious disease (like Parvo), preventing accidental movement.
+- [ ] **Disaster Mode:** A master switch that replaces the homepage with critical emergency info (e.g., "Evacuation in Progress") and disables non-essential forms.
 
 ### Year 2 & Beyond: Scaling to SaaS & Advanced Intelligence
 
 #### Phase 13: SaaS Multi-Tenancy
+
 - **Tenant Logic:** Database sharding by organization_id.
 - **Usage Metering:** Track storage/SMS limits per org.
 - **Stripe Billing Portal:** SaaS subscription management.
@@ -211,6 +231,7 @@ Once these steps are complete, the frontend should be accessible at `http://loca
 - **Setup Wizard:** Automated onboarding for new shelters.
 
 #### Phase 14: Advanced Scoring Logic (Part 1 - Adopters)
+
 - **Adopter Scoring Engine:** Algorithm to score applications.
 - **Risk Flags:** Auto-highlight "Red Flags."
 - **Application Sorting:** Default sort by "Score."
@@ -218,6 +239,7 @@ Once these steps are complete, the frontend should be accessible at `http://loca
 - **Reviewer Assignment:** Auto-assign based on workload.
 
 #### Phase 15: Advanced Scoring Logic (Part 2 - Workforce)
+
 - **Volunteer Scoring System:** Rank applicants by skill/availability.
 - **Foster Scoring System:** Rate potential fosters.
 - **Reliability Index:** Track "Show-up Rate."
@@ -225,6 +247,7 @@ Once these steps are complete, the frontend should be accessible at `http://loca
 - **Skill-Gap Analysis:** Identify missing volunteer skills.
 
 #### Phase 16: Waitlist & Demand Management
+
 - **Waitlist System:** Users sign up for breeds.
 - **Auto-Notification:** Email waitlist on intake match.
 - **Priority Access:** Early access for Sponsors.
@@ -232,6 +255,7 @@ Once these steps are complete, the frontend should be accessible at `http://loca
 - **"Coming Soon" Teasers:** Blurred profiles for medical hold.
 
 #### Phase 17: Medical Intelligence
+
 - **Medical Reminder System:** Alerts for boosters/meds.
 - **Treatment Plans:** Templated medical workflows.
 - **Vet Partner Portal:** External vet upload access.
@@ -239,6 +263,7 @@ Once these steps are complete, the frontend should be accessible at `http://loca
 - **Symptom Checker:** Triage tool for fosters.
 
 #### Phase 18: Operational Automation
+
 - **Task Automation:** IFTTT logic for shelter tasks.
 - **Document Generator:** Auto-fill PDF contracts.
 - **Shift Reminders:** SMS/Email shift reminders.
@@ -246,6 +271,7 @@ Once these steps are complete, the frontend should be accessible at `http://loca
 - **Key Management:** Digital key checkout log.
 
 #### Phase 19: Social & Marketing Automation
+
 - **Social Auto-Poster:** Auto-draft posts for new pets.
 - **Story Highlight Generator:** "Weekly Recap" video creator.
 - **Ad Integration:** Boost Facebook posts from admin.
@@ -253,6 +279,7 @@ Once these steps are complete, the frontend should be accessible at `http://loca
 - **UTM Tracking:** Track adoption sources.
 
 #### Phase 20: Foster Experience 2.0
+
 - **Foster Portal Dashboard:** Central hub for fosters.
 - **Supply Request Flow:** One-click reorders.
 - **Foster-to-Foster Chat:** Secure advice channels.
@@ -260,6 +287,7 @@ Once these steps are complete, the frontend should be accessible at `http://loca
 - **Photo Uploader:** Easy mobile photo submission.
 
 #### Phase 21: Data Analytics & Reporting
+
 - **Adoption Funnel Analytics:** Applicant drop-off analysis.
 - **Length-of-Stay Reports:** Trends by breed/age.
 - **Donor Lifetime Value (LTV):** High-value supporter ID.
@@ -267,6 +295,7 @@ Once these steps are complete, the frontend should be accessible at `http://loca
 - **Heatmaps:** Geo-analysis of adopters/intakes.
 
 #### Phase 22: Integrations (The "Walled Garden")
+
 - **Microchip Registry Sync:** API integration for registration.
 - **Internal Accounting Ledger:** Track income/expenses securely.
 - **Internal Email System:** Marketing campaigns without 3rd parties.
@@ -274,6 +303,7 @@ Once these steps are complete, the frontend should be accessible at `http://loca
 - **Internal Calendar System:** Shifts/Events management.
 
 #### Phase 23: AI & Machine Learning
+
 - **AI Bio Generator:** Creative text from tags.
 - **Photo Quality Scorer:** Rate photos for adoption appeal.
 - **Churn Prediction:** Identify at-risk volunteers.
@@ -281,6 +311,7 @@ Once these steps are complete, the frontend should be accessible at `http://loca
 - **Sentiment Analysis:** Analyze feedback for issues.
 
 #### Phase 24: Enterprise Expansion
+
 - **Multi-Location Support:** Manage multiple sites.
 - **Franchise Model:** Parent/Child org structures.
 - **API Access:** Open API for enterprise tools.

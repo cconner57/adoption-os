@@ -266,25 +266,21 @@ function removeChild(index: number) {
   flex-direction: column;
   gap: 1.5rem;
   padding: 0 0.5rem;
-}
 
-.cat-adoption-form {
-  display: flex;
-  flex-direction: column;
-  gap: 1.5rem;
-  padding: 0 0.5rem;
   p {
     font-size: 1.75rem;
     font-weight: 600;
     text-align: center;
     color: var(--green);
   }
+
   .form-grid {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 16px;
 
-    @media (max-width: 768px) {
+    /* Use nearest container (likely .form-card or .page-shell) */
+    @container (max-width: 768px) {
       grid-template-columns: 1fr;
     }
   }
@@ -292,6 +288,7 @@ function removeChild(index: number) {
   .full-width {
     grid-column: 1 / -1;
   }
+
   .roommates,
   .children {
     display: flex;
@@ -302,7 +299,6 @@ function removeChild(index: number) {
   .section-label {
     font-size: 0.875rem;
     font-weight: 600;
-
     color: var(--font-color-dark);
     margin-bottom: 0.25rem;
   }
@@ -312,6 +308,15 @@ function removeChild(index: number) {
     align-items: flex-start;
     gap: 8px;
     width: 100%;
+
+    :deep(.control .label) {
+      display: none;
+    }
+
+    /* Remove any margin from the control to ensure perfect centering */
+    :deep(.control) {
+      gap: 0;
+    }
   }
 
   .flex-grow {
@@ -323,25 +328,11 @@ function removeChild(index: number) {
     flex-shrink: 0;
   }
 
-    flex-shrink: 0;
-  }
-
-    display: none;
-  }
-
-    display: none;
-  }
-
-    gap: 0;
-  }
-
-  .add-btn,
   .add-btn,
   .remove-btn {
     width: 52px;
     height: 52px;
     background: none;
-
     border: 1px solid var(--border-color);
     border-radius: 10px;
     cursor: pointer;
@@ -353,57 +344,56 @@ function removeChild(index: number) {
     flex-shrink: 0;
     margin-top: 0;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+
+    &:hover {
+      color: var(--blue-hover);
+      border-color: var(--blue-hover);
+    }
   }
 
-  .add-btn,
-  .remove-btn {
-    margin-top: 0;
-  }
-
-  .add-btn:hover {
-    color: var(--blue-hover);
-    border-color: var(--blue-hover);
-  }
   .remove-btn:hover {
     color: var(--red);
     border-color: var(--red);
     background-color: #fff5f5;
   }
-  @media (max-width: 480px) {
+
+  /* Children specific overrides */
+  @container (max-width: 480px) {
     .children .dynamic-input-row {
       flex-wrap: wrap;
-    }
-    .children .dynamic-input-row .flex-grow {
-      flex-basis: 100%;
-      width: 100%;
-      min-width: 100%;
-    }
-    /* Ensure age wrapper only takes the space remaining next to the button */
-    .children .dynamic-input-row .age-wrapper {
-      flex: 1;
-      min-width: 0;
-    }
 
-    }
-    .children .dynamic-input-row .add-btn,
+      .flex-grow {
+        flex-basis: 100%;
+        width: 100%;
+        min-width: 100%;
+      }
 
-    .children .dynamic-input-row .remove-btn {
-      flex-shrink: 0;
+      .age-wrapper {
+        flex: 1;
+        min-width: 0;
+      }
+
+      .add-btn,
+      .remove-btn {
+        flex-shrink: 0;
+      }
     }
   }
-}
-.all-agreed {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 0.5rem;
-  text-align: center;
-  margin: 1rem 0 2rem;
-  p {
-    font-size: 1.25rem;
-    font-weight: 600;
+
+  .all-agreed {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
     text-align: center;
-    color: var(--green);
+    margin: 1rem 0 2rem;
+
+    p {
+      font-size: 1.25rem;
+      font-weight: 600;
+      text-align: center;
+      color: var(--green);
+    }
   }
 }
 </style>

@@ -11,11 +11,8 @@ import InputField from '../components/common/ui/InputField.vue'
 import InputTextArea from '../components/common/ui/InputTextArea.vue'
 import { reactive } from 'vue'
 import FormSubmitted from '../components/common/form-submitted/FormSubmitted.vue'
-
 import { storeToRefs } from 'pinia'
-import { useVolunteerStore } from '../stores/volunteer'
-
-import { useVolunteerStore } from '../stores/volunteer'
+import { useVolunteerStore } from '../stores/volunteer.ts'
 
 type FormInput = string | number | null
 
@@ -49,16 +46,12 @@ const { formState, isSubmitted, hasAttemptedSubmit, apiError, validationErrors, 
   storeToRefs(volunteerStore)
 const { submit, resetForm } = volunteerStore
 
-const { submit, resetForm } = volunteerStore
-
 const touched = reactive<Record<string, boolean>>({})
-
 
 const handleBlur = (field: string) => {
   touched[field] = true
 }
 
-const handleSubmit = async () => {
 const handleSubmit = async () => {
   if (!isFormValid.value) {
     Object.keys(formState.value).forEach((key) => (touched[key] = true))
@@ -68,12 +61,7 @@ const handleSubmit = async () => {
 
   if (success) {
     window.scrollTo({ top: 0, behavior: 'smooth' })
-  } else {
-  if (success) {
-    window.scrollTo({ top: 0, behavior: 'smooth' })
-  } else {
   }
-
 }
 
 const handleReset = () => {
@@ -294,7 +282,7 @@ const handleReset = () => {
       </form>
     </div>
 
-    <FormSubmitted v-if="isSubmitted" @reset="handleReset" />
+    <FormSubmitted v-if="isSubmitted" @reset="handleReset" formType="volunteer" />
   </section>
 </template>
 
@@ -303,80 +291,100 @@ const handleReset = () => {
   min-height: 100vh;
   background-color: var(--green);
   padding: 9rem var(--layout-padding-side) 64px;
-  .form-card {
+
+  /* Viewport adjustments can remain, but simplified */
+  @media (max-width: 430px) {
+    padding: 6rem 16px 32px;
+  }
+
+  .form-container {
+    container-type: inline-size;
+    container-name: form-card;
     max-width: 1600px;
     margin: 0 auto;
+  }
+
+  .form-card {
     background: var(--white);
     color: var(--font-color-dark);
     border-radius: 24px;
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
     padding: 48px 48px 32px;
+
+    /* Responsive padding based on container width */
+    @container form-card (max-width: 768px) {
+      padding: 32px 24px;
+    }
+
     fieldset {
       border: 0;
       margin: 24px 0;
       padding: 0;
+
       .section-title {
         font-weight: 700;
         font-size: 18px;
         margin: 18px 0 12px;
       }
     }
+
     .actions {
       display: flex;
       justify-content: center;
       gap: 16px;
       margin-top: 20px;
     }
+
     .volunteer-grid {
       display: flex;
       flex-direction: column;
       gap: 16px;
 
-      @media (min-width: 768px) {
+      /* Switch to grid when container is wide enough */
+      @container form-card (min-width: 700px) {
         display: grid;
         grid-template-columns: repeat(2, minmax(0, 1fr));
       }
     }
   }
-  @media (min-width: 321px) and (max-width: 430px) {
-    padding: 6rem 16px 32px;
+
+  /* Nested components that are localized */
+  .validation-summary {
+    background-color: #fef2f2;
+    border: 1px solid #ef4444;
+    border-radius: 12px;
+    padding: 16px;
+    margin: 24px 0;
+    text-align: center;
+
+    .summary-title {
+      color: #b91c1c;
+      font-weight: 600;
+      margin-bottom: 12px;
+    }
+
+    .tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      justify-content: center;
+    }
+
+    .tag.is-danger {
+      background-color: #fee2e2;
+      color: #b91c1c;
+      padding: 4px 12px;
+      border-radius: 16px;
+      font-size: 0.875rem;
+      font-weight: 500;
+    }
   }
-}
 
-.validation-summary {
-  background-color: #fef2f2;
-  border: 1px solid #ef4444;
-  border-radius: 12px;
-  padding: 16px;
-  margin: 24px 0;
-  text-align: center;
-
-  .summary-title {
-    color: #b91c1c;
-    font-weight: 600;
-    margin-bottom: 12px;
+  /* Utility classes nested here or could be global, but scoped so kept here */
+  .has-error :deep(input),
+  .has-error :deep(textarea) {
+    border-color: #ef4444 !important;
+    outline: 2px solid #ef4444 !important;
   }
-
-  .tags {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
-    justify-content: center;
-  }
-
-  .tag.is-danger {
-    background-color: #fee2e2;
-    color: #b91c1c;
-    padding: 4px 12px;
-    border-radius: 16px;
-    font-size: 0.875rem;
-    font-weight: 500;
-  }
-}
-
-.has-error :deep(input),
-.has-error :deep(textarea) {
-  border-color: #ef4444 !important;
-  outline: 2px solid #ef4444 !important;
 }
 </style>

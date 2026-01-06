@@ -31,9 +31,6 @@ export const useVolunteerStore = defineStore('volunteer', () => {
     parentSignatureDate: '',
   })
 
-  })
-
-
   const validationErrors = computed(() => {
     const errors: string[] = []
 
@@ -111,7 +108,6 @@ export const useVolunteerStore = defineStore('volunteer', () => {
     apiError.value = null
     apiError.value = null
   }
-
 
   return {
     formState,

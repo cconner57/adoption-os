@@ -46,8 +46,7 @@ const handleSubmit = async () => {
   } else {
     console.log('Submitting form...')
     await adoptionStore.submitApplication()
-
-    petStore.clearSelectedPet()
+90 q1    petStore.clearSelectedPet()
     globalThis.scrollTo({ top: 0, behavior: 'smooth' })
   }
 }
@@ -128,7 +127,7 @@ const handleReset = () => {
         <Button
           @click="prevStep"
           title="Back"
-          color="white"
+          :color="'white'"
           size="large"
           style="border: 1px solid var(--green); color: var(--green)"
           :disabled="step === 0 || isSubmitted"

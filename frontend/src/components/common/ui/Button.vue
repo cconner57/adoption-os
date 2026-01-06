@@ -1,6 +1,6 @@
 <script setup lang="ts">
 const props = defineProps<{
-  color: 'green' | 'blue' | 'purple' | 'green-weak' | 'orange'
+  color: 'green' | 'blue' | 'purple' | 'green-weak' | 'orange' | 'white'
   onClick?: () => void
   size?: 'small' | 'medium' | 'large'
   title: string
@@ -17,6 +17,7 @@ const props = defineProps<{
       'button-color-purple': props.color === 'purple',
       'button-color-orange': props.color === 'orange',
       'button-green-weak': props.color === 'green-weak',
+      'button-color-white': props.color === 'white',
       small: props.size === 'small',
       medium: props.size === 'medium' || !props.size,
       large: props.size === 'large',
@@ -101,9 +102,9 @@ button {
 }
 
 .button-color-orange {
-  background-color: #ED8936;
+  background-color: #ed8936;
   &:hover {
-    background-color: #DD6B20;
+    background-color: #dd6b20;
   }
 }
 
@@ -111,6 +112,15 @@ button {
   background-color: var(--green-weak);
   &:hover {
     background-color: var(--green-weak-hover);
+  }
+}
+
+.button-color-white {
+  background-color: var(--white);
+  color: var(--font-color-dark);
+  border: 1px solid #e2e8f0;
+  &:hover {
+    background-color: #f8fafc;
   }
 }
 

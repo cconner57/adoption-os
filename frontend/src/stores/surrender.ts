@@ -2,6 +2,7 @@ import { defineStore } from 'pinia'
 import { ref, reactive, computed } from 'vue'
 import type { SurrenderFormState } from '../models/surrender-form'
 import { API_ENDPOINTS } from '../constants/api'
+import { useMetrics } from '../composables/useMetrics'
 
 export const useSurrenderStore = defineStore('surrender', () => {
   const step = ref(0)
@@ -136,6 +137,9 @@ export const useSurrenderStore = defineStore('surrender', () => {
     return true
   })
 
+  /* Init Metrics */
+  const { submitMetric } = useMetrics()
+
   const nextStep = () => {
     hasAttemptedSubmit.value = true
     if (!isStepValid.value) return false
@@ -145,6 +149,8 @@ export const useSurrenderStore = defineStore('surrender', () => {
     } else {
       step.value++
     }
+
+    submitMetric('form_step', { form: 'surrender', step: step.value })
 
     hasAttemptedSubmit.value = false
     return true
@@ -182,6 +188,8 @@ export const useSurrenderStore = defineStore('surrender', () => {
       if (!response.ok) {
         throw new Error('Failed to submit application')
       }
+
+      submitMetric('form_submit', { form: 'surrender' })
 
       isSubmitted.value = true
       resetForm()

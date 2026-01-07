@@ -2,6 +2,7 @@ import { defineStore } from 'pinia'
 import { ref, reactive, computed } from 'vue'
 import type { FormState } from '../models/adopt-form'
 import { API_ENDPOINTS } from '../constants/api'
+import { useMetrics } from '../composables/useMetrics'
 
 export const useAdoptionStore = defineStore('adoption', () => {
   const step = ref(0)
@@ -148,8 +149,11 @@ export const useAdoptionStore = defineStore('adoption', () => {
 
   initFromStorage()
 
+  const { submitMetric } = useMetrics()
+
   const nextStep = () => {
     step.value++
+    submitMetric('form_step', { form: 'adoption', step: step.value })
     persistState()
     hasAttemptedSubmit.value = false
     return true

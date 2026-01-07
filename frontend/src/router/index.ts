@@ -56,4 +56,10 @@ const router = createRouter({
   },
 })
 
+import { useMetrics } from '../composables/useMetrics'
+router.afterEach((to) => {
+  const { submitMetric } = useMetrics()
+  submitMetric('page_view', { path: to.fullPath })
+})
+
 export default router

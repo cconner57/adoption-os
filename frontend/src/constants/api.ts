@@ -6,4 +6,5 @@ export const API_ENDPOINTS = {
   ADOPTED_PETS_COUNT: `${API_BASE_URL}/pets/adopted-count`,
   PET_SPOTLIGHT: `${API_BASE_URL}/pets/spotlight`,
   SURRENDER_APPLICATION: `${API_BASE_URL}/applications/surrender`,
+  METRICS: `${API_BASE_URL}/metrics`,
 }

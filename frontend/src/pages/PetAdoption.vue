@@ -15,6 +15,8 @@ import Button from '../components/common/ui/Button.vue'
 import AdoptionSteps from '../components/pet-adoption/adoption-steps/AdoptionSteps.vue'
 import ApplicationHeader from '../components/volunteer/application-header/ApplicationHeader.vue'
 import FormSubmitted from '../components/common/form-submitted/FormSubmitted.vue'
+import { reactive, onMounted } from 'vue'
+import { useMetrics } from '../composables/useMetrics'
 
 const router = useRouter()
 const adoptionStore = useAdoptionStore()
@@ -26,7 +28,19 @@ const { selectedPet } = storeToRefs(petStore)
 
 const { prevStep, resetForm } = adoptionStore
 
-import { reactive } from 'vue'
+const { submitMetric } = useMetrics()
+
+onMounted(() => {
+  if (selectedPet.value) {
+    submitMetric('pet_view', {
+      petId: selectedPet.value.id,
+      petName: selectedPet.value.petName,
+      species: selectedPet.value.species,
+    })
+    submitMetric('form_start', { form: 'adoption', petId: selectedPet.value.id })
+  }
+})
+
 const touched = reactive<Record<string, boolean>>({})
 
 const handleBlur = (field: string) => {
@@ -44,6 +58,7 @@ const handleSubmit = async () => {
     adoptionStore.nextStep()
     globalThis.scrollTo({ top: 0, behavior: 'smooth' })
   } else {
+    submitMetric('form_submit', { form: 'adoption', petId: selectedPet.value?.id })
     console.log('Submitting form...')
     await adoptionStore.submitApplication()
     petStore.clearSelectedPet()

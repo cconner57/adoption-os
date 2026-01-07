@@ -2,6 +2,7 @@ import { defineStore } from 'pinia'
 import { ref, reactive, computed } from 'vue'
 import type { IVolunteerFormState } from '../models/volunteer-form'
 import { API_ENDPOINTS } from '../constants/api'
+import { useMetrics } from '../composables/useMetrics'
 
 export const useVolunteerStore = defineStore('volunteer', () => {
   const isSubmitted = ref(false)
@@ -151,6 +152,10 @@ export const useVolunteerStore = defineStore('volunteer', () => {
         apiError.value = result.error
         return false
       }
+
+      const { submitMetric } = useMetrics()
+      submitMetric('form_submit', { form: 'volunteer' })
+
       isSubmitted.value = true
       clearFormData()
       return true

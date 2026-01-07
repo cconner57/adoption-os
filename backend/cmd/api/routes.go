@@ -3,25 +3,24 @@ package main
 import (
 	"net/http"
 
-	"github.com/rs/cors" // Make sure you have this
+	"github.com/rs/cors"
 )
 
-func (app *application) routes() http.Handler { // <--- lowercase application
+func (app *application) routes() http.Handler {
 	mux := http.NewServeMux()
 
-	// Register Routes (Use the lowercase function names we just defined)
+	// Register Routes
 	mux.HandleFunc("GET /", app.home)
 	mux.HandleFunc("GET /pets", app.getAllPets)
 	mux.HandleFunc("GET /pets/spotlight", app.getSpotlightPets)
 	mux.HandleFunc("GET /pets/available", app.getAvailablePets)
 	mux.HandleFunc("GET /pets/adopted-count", app.getAdoptedPetsCount)
 
-	// Add the new Volunteer Route
 	mux.HandleFunc("POST /applications/volunteer", app.submitVolunteerApplication)
 	mux.HandleFunc("POST /applications/adoption", app.submitAdoptionApplication)
 	mux.HandleFunc("POST /applications/surrender", app.submitSurrenderApplication)
+	mux.HandleFunc("POST /metrics", app.submitMetric)
 
-	// Setup CORS
 	c := cors.New(cors.Options{
 		AllowedOrigins:   []string{"http://localhost:5173", "http://localhost:4173", "https://idohr.netlify.app"},
 		AllowedMethods:   []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},

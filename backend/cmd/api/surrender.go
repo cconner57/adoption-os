@@ -49,17 +49,11 @@ func (app *application) submitSurrenderApplication(w http.ResponseWriter, r *htt
 	body.WriteString(fmt.Sprintf("Housetrained: %s\n", input.AnimalHouseTrained))
 	body.WriteString(fmt.Sprintf("Vet/Groomer Behavior: %s\n", input.AnimalVetOrGroomerBehavior))
 
-	// Add more fields to email as needed, keeping it summary focused for now
 	body.WriteString(fmt.Sprintf("\nFull Request Data:\n%+v\n", input))
 
-	// Send Email
-	// In a real scenario, you might save to DB first. For now, we just email.
-	// Use the configured sender
 	sender := app.config.smtp.sender
 	err = app.mailer.Send(sender, "New Surrender Application - "+input.AnimalName, body.String(), nil)
 	if err != nil {
-		// Log error but maybe don't fail the written response if we want to be nice?
-		// Or fail 500. Let's fail 500 for reliability.
 		app.serverErrorResponse(w, r, err)
 		return
 	}

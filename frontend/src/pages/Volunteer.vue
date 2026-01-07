@@ -9,11 +9,18 @@ import {
 import Button from '../components/common/ui/Button.vue'
 import InputField from '../components/common/ui/InputField.vue'
 import InputTextArea from '../components/common/ui/InputTextArea.vue'
-import { reactive } from 'vue'
+import { reactive, onMounted } from 'vue'
 import FormSubmitted from '../components/common/form-submitted/FormSubmitted.vue'
 import { storeToRefs } from 'pinia'
 import { useVolunteerStore } from '../stores/volunteer.ts'
 import { useRouter } from 'vue-router'
+import { useMetrics } from '../composables/useMetrics'
+
+const { submitMetric } = useMetrics()
+
+onMounted(() => {
+  submitMetric('form_start', { form: 'volunteer' })
+})
 
 type FormInput = string | number | null
 

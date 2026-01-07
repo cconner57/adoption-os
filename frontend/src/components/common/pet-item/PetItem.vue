@@ -41,7 +41,12 @@ function onImgError() {
   imgError.value = true
 }
 
+import { useMetrics } from '../../../composables/useMetrics'
+
+const { submitMetric } = useMetrics()
+
 function handleAdopt() {
+  submitMetric('spotlight_click', { petId: props.id, petName: props.name })
   goToAdopt(router, props.id.toLowerCase())
 }
 </script>

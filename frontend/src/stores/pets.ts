@@ -2,7 +2,12 @@ import { defineStore } from 'pinia'
 import { ref } from 'vue'
 
 export const usePetStore = defineStore('pets', () => {
-  const selectedPet = ref<{ name?: string; petName?: string; species: 'cat' | 'dog' } | null>(null)
+  const selectedPet = ref<{
+    id?: string
+    name?: string
+    petName?: string
+    species: 'cat' | 'dog'
+  } | null>(null)
 
   const STORAGE_KEY = 'adoption_pet'
 
@@ -18,7 +23,12 @@ export const usePetStore = defineStore('pets', () => {
     }
   }
 
-  const selectPet = (pet: { name?: string; petName?: string; species: 'cat' | 'dog' }) => {
+  const selectPet = (pet: {
+    id?: string
+    name?: string
+    petName?: string
+    species: 'cat' | 'dog'
+  }) => {
     selectedPet.value = pet
     sessionStorage.setItem(STORAGE_KEY, JSON.stringify(selectedPet.value))
   }

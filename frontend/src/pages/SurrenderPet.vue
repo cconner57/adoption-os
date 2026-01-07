@@ -14,7 +14,14 @@ import Button from '../components/common/ui/Button.vue'
 import SurrenderSteps from '../components/about/surrender/SurrenderSteps.vue'
 import PetSelectSection from '../components/about/surrender/PetSelectSection.vue'
 import FormSubmitted from '../components/common/form-submitted/FormSubmitted.vue'
-import { reactive, computed } from 'vue'
+import { reactive, computed, onMounted } from 'vue'
+import { useMetrics } from '../composables/useMetrics'
+
+const { submitMetric } = useMetrics()
+
+onMounted(() => {
+  submitMetric('form_start', { form: 'surrender' })
+})
 
 const router = useRouter()
 const surrenderStore = useSurrenderStore()

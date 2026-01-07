@@ -4,7 +4,6 @@ import type { SurrenderFormState } from '../../../models/surrender-form.ts'
 import InputTextArea from '../../common/ui/InputTextArea.vue'
 import InputSelectGroup from '../../common/ui/InputSelectGroup.vue'
 import ButtonToggle from '../../common/ui/ButtonToggle.vue'
-
 import {
   formatPhoneNumber,
   sanitizeName,
@@ -31,7 +30,10 @@ const { formState, touched, handleBlur, hasAttemptedSubmit, selectedAnimal } = d
         placeholder="First Name"
         :modelValue="formState.firstName"
         @update:modelValue="(val) => (formState.firstName = sanitizeName(val))"
-        :hasError="(touched.firstName && !formState.firstName) || (hasAttemptedSubmit && !formState.firstName)"
+        :hasError="
+          (touched.firstName && !formState.firstName) ||
+          (hasAttemptedSubmit && !formState.firstName)
+        "
         @blur="handleBlur('firstName')"
       />
       <InputField
@@ -39,7 +41,9 @@ const { formState, touched, handleBlur, hasAttemptedSubmit, selectedAnimal } = d
         placeholder="Last Name"
         :modelValue="formState.lastName"
         @update:modelValue="(val) => (formState.lastName = sanitizeName(val))"
-        :hasError="(touched.lastName && !formState.lastName) || (hasAttemptedSubmit && !formState.lastName)"
+        :hasError="
+          (touched.lastName && !formState.lastName) || (hasAttemptedSubmit && !formState.lastName)
+        "
         @blur="handleBlur('lastName')"
       />
       <InputField
@@ -48,7 +52,10 @@ const { formState, touched, handleBlur, hasAttemptedSubmit, selectedAnimal } = d
         :modelValue="formState.phoneNumber"
         @update:modelValue="(val) => (formState.phoneNumber = formatPhoneNumber(val))"
         maxlength="13"
-        :hasError="(touched.phoneNumber && !formState.phoneNumber) || (hasAttemptedSubmit && !formState.phoneNumber)"
+        :hasError="
+          (touched.phoneNumber && !formState.phoneNumber) ||
+          (hasAttemptedSubmit && !formState.phoneNumber)
+        "
         @blur="handleBlur('phoneNumber')"
       />
       <InputField
@@ -63,7 +70,10 @@ const { formState, touched, handleBlur, hasAttemptedSubmit, selectedAnimal } = d
         placeholder="Street Address"
         :modelValue="formState.streetAddress"
         @update:modelValue="(val) => (formState.streetAddress = sanitizeAddress(val))"
-        :hasError="(touched.streetAddress && !formState.streetAddress) || (hasAttemptedSubmit && !formState.streetAddress)"
+        :hasError="
+          (touched.streetAddress && !formState.streetAddress) ||
+          (hasAttemptedSubmit && !formState.streetAddress)
+        "
         @blur="handleBlur('streetAddress')"
       />
       <InputField
@@ -88,7 +98,9 @@ const { formState, touched, handleBlur, hasAttemptedSubmit, selectedAnimal } = d
         :modelValue="formState.zipCode"
         @update:modelValue="(val) => (formState.zipCode = sanitizeZip(val))"
         maxlength="5"
-        :hasError="(touched.zipCode && !formState.zipCode) || (hasAttemptedSubmit && !formState.zipCode)"
+        :hasError="
+          (touched.zipCode && !formState.zipCode) || (hasAttemptedSubmit && !formState.zipCode)
+        "
         @blur="handleBlur('zipCode')"
       />
 
@@ -97,8 +109,11 @@ const { formState, touched, handleBlur, hasAttemptedSubmit, selectedAnimal } = d
         :label="`When do you need to surrender your ${selectedAnimal.toLowerCase()}`"
         :placeholder="`When do you need to surrender your ${selectedAnimal.toLowerCase()}`"
         :modelValue="formState.whenToSurrenderAnimal"
-        @update:modelValue="(val) => (formState.whenToSurrenderAnimal = val)"
-        :hasError="(touched.whenToSurrenderAnimal && !formState.whenToSurrenderAnimal) || (hasAttemptedSubmit && !formState.whenToSurrenderAnimal)"
+        @update:modelValue="(val) => (formState.whenToSurrenderAnimal = val ?? '')"
+        :hasError="
+          (touched.whenToSurrenderAnimal && !formState.whenToSurrenderAnimal) ||
+          (hasAttemptedSubmit && !formState.whenToSurrenderAnimal)
+        "
         @blur="handleBlur('whenToSurrenderAnimal')"
       />
       <InputField
@@ -106,7 +121,10 @@ const { formState, touched, handleBlur, hasAttemptedSubmit, selectedAnimal } = d
         :placeholder="`${selectedAnimal}'s Name`"
         :modelValue="formState.animalName"
         @update:modelValue="(val) => (formState.animalName = val as string)"
-        :hasError="(touched.animalName && !formState.animalName) || (hasAttemptedSubmit && !formState.animalName)"
+        :hasError="
+          (touched.animalName && !formState.animalName) ||
+          (hasAttemptedSubmit && !formState.animalName)
+        "
         @blur="handleBlur('animalName')"
       />
       <InputField
@@ -114,7 +132,10 @@ const { formState, touched, handleBlur, hasAttemptedSubmit, selectedAnimal } = d
         placeholder="Age"
         :modelValue="formState.animalAge"
         @update:modelValue="(val) => (formState.animalAge = val as string)"
-        :hasError="(touched.animalAge && !formState.animalAge) || (hasAttemptedSubmit && !formState.animalAge)"
+        :hasError="
+          (touched.animalAge && !formState.animalAge) ||
+          (hasAttemptedSubmit && !formState.animalAge)
+        "
         @blur="handleBlur('animalAge')"
       />
       <InputSelectGroup
@@ -122,7 +143,10 @@ const { formState, touched, handleBlur, hasAttemptedSubmit, selectedAnimal } = d
         :options="['Male', 'Female', 'Unknown']"
         :modelValue="formState.animalSex"
         @update:modelValue="(val) => (formState.animalSex = val as string)"
-        :hasError="(touched.animalSex && !formState.animalSex) || (hasAttemptedSubmit && !formState.animalSex)"
+        :hasError="
+          (touched.animalSex && !formState.animalSex) ||
+          (hasAttemptedSubmit && !formState.animalSex)
+        "
         @blur="handleBlur('animalSex')"
       />
 
@@ -131,8 +155,11 @@ const { formState, touched, handleBlur, hasAttemptedSubmit, selectedAnimal } = d
         :label="`How long have you had your ${selectedAnimal.toLowerCase()}?`"
         :placeholder="`How long have you had your ${selectedAnimal.toLowerCase()}?`"
         :modelValue="formState.animalOwnershipDuration"
-        @update:modelValue="(val) => (formState.animalOwnershipDuration = val)"
-        :hasError="(touched.animalOwnershipDuration && !formState.animalOwnershipDuration) || (hasAttemptedSubmit && !formState.animalOwnershipDuration)"
+        @update:modelValue="(val) => (formState.animalOwnershipDuration = val ?? '')"
+        :hasError="
+          (touched.animalOwnershipDuration && !formState.animalOwnershipDuration) ||
+          (hasAttemptedSubmit && !formState.animalOwnershipDuration)
+        "
         @blur="handleBlur('animalOwnershipDuration')"
       />
       <InputTextArea
@@ -140,8 +167,11 @@ const { formState, touched, handleBlur, hasAttemptedSubmit, selectedAnimal } = d
         :label="`Where did you get your ${selectedAnimal.toLowerCase()}?`"
         :placeholder="`Where did you get your ${selectedAnimal.toLowerCase()}?`"
         :modelValue="formState.animalLocationFound"
-        @update:modelValue="(val) => (formState.animalLocationFound = val)"
-        :hasError="(touched.animalLocationFound && !formState.animalLocationFound) || (hasAttemptedSubmit && !formState.animalLocationFound)"
+        @update:modelValue="(val) => (formState.animalLocationFound = val ?? '')"
+        :hasError="
+          (touched.animalLocationFound && !formState.animalLocationFound) ||
+          (hasAttemptedSubmit && !formState.animalLocationFound)
+        "
         @blur="handleBlur('animalLocationFound')"
       />
       <InputTextArea
@@ -149,8 +179,11 @@ const { formState, touched, handleBlur, hasAttemptedSubmit, selectedAnimal } = d
         :label="`Why are you surrendering your ${selectedAnimal.toLowerCase()}?`"
         :placeholder="`Why are you surrendering your ${selectedAnimal.toLowerCase()}?`"
         :modelValue="formState.animalWhySurrendered"
-        @update:modelValue="(val) => (formState.animalWhySurrendered = val)"
-        :hasError="(touched.animalWhySurrendered && !formState.animalWhySurrendered) || (hasAttemptedSubmit && !formState.animalWhySurrendered)"
+        @update:modelValue="(val) => (formState.animalWhySurrendered = val ?? '')"
+        :hasError="
+          (touched.animalWhySurrendered && !formState.animalWhySurrendered) ||
+          (hasAttemptedSubmit && !formState.animalWhySurrendered)
+        "
         @blur="handleBlur('animalWhySurrendered')"
       />
     </fieldset>
@@ -174,10 +207,14 @@ const { formState, touched, handleBlur, hasAttemptedSubmit, selectedAnimal } = d
             label="Age"
             placeholder="Age"
             :modelValue="member.age"
-            @update:modelValue="(val) => (member.age = String(val).replace(/\D/g, '').substring(0, 3))"
+            @update:modelValue="
+              (val) => (member.age = String(val).replace(/\D/g, '').substring(0, 3))
+            "
             maxlength="3"
             class="clean-input"
-            :hasError="(touched[`householdMembers[${index}].age`] || hasAttemptedSubmit) && !member.age"
+            :hasError="
+              (touched[`householdMembers[${index}].age`] || hasAttemptedSubmit) && !member.age
+            "
             @blur="handleBlur(`householdMembers[${index}].age`)"
           />
         </div>
@@ -191,7 +228,10 @@ const { formState, touched, handleBlur, hasAttemptedSubmit, selectedAnimal } = d
             @update:modelValue="(val) => (member.count = Number(val))"
             min="1"
             class="clean-input"
-            :hasError="(touched[`householdMembers[${index}].count`] || hasAttemptedSubmit) && (!member.count || member.count < 1)"
+            :hasError="
+              (touched[`householdMembers[${index}].count`] || hasAttemptedSubmit) &&
+              (!member.count || member.count < 1)
+            "
             @blur="handleBlur(`householdMembers[${index}].count`)"
           />
         </div>
@@ -203,23 +243,59 @@ const { formState, touched, handleBlur, hasAttemptedSubmit, selectedAnimal } = d
           @click="formState.householdMembers.splice(index, 1)"
           aria-label="Remove member"
         >
-          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2-2h4a2 2 0 0 1 2-2h4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="20"
+            height="20"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <polyline points="3 6 5 6 21 6"></polyline>
+            <path
+              d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2-2h4a2 2 0 0 1 2-2h4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"
+            ></path>
+          </svg>
         </button>
       </div>
 
-      <button type="button" class="add-btn" @click="formState.householdMembers.push({ age: '', gender: 'Female', count: 1 })">
-        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+      <button
+        type="button"
+        class="add-btn"
+        @click="formState.householdMembers.push({ age: '', gender: 'Female', count: 1 })"
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="20"
+          height="20"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
+          <line x1="12" y1="5" x2="12" y2="19"></line>
+          <line x1="5" y1="12" x2="19" y2="12"></line>
+        </svg>
         Add Another Person / Group
       </button>
     </div>
     <section class="full-width">
       <InputSelectGroup
-        label="What other animals did the cat live with?"
+        :label="`What other animals did the ${selectedAnimal.toLowerCase()} live with?`"
         :options="['Dogs', 'Cats', 'Other', 'No other animals']"
         :modelValue="formState.otherPetsInHousehold"
         @update:modelValue="(val) => (formState.otherPetsInHousehold = val as string)"
-        :hasError="(touched.otherPetsInHousehold && !formState.otherPetsInHousehold) || (hasAttemptedSubmit && !formState.otherPetsInHousehold)"
+        :hasError="
+          (touched.otherPetsInHousehold && !formState.otherPetsInHousehold) ||
+          (hasAttemptedSubmit && !formState.otherPetsInHousehold)
+        "
         @blur="handleBlur('otherPetsInHousehold')"
+        :multiple="true"
       />
     </section>
   </div>
@@ -259,8 +335,6 @@ const { formState, touched, handleBlur, hasAttemptedSubmit, selectedAnimal } = d
     margin-bottom: 8px;
     font-weight: 600;
   }
-
-
 
   .household-members-section {
     display: flex;
@@ -310,7 +384,7 @@ const { formState, touched, handleBlur, hasAttemptedSubmit, selectedAnimal } = d
 
     .gender-group .label {
       @media (max-width: 640px) {
-         text-align: center;
+        text-align: center;
       }
     }
 

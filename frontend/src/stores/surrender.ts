@@ -1,6 +1,7 @@
 import { defineStore } from 'pinia'
 import { ref, reactive, computed } from 'vue'
 import type { SurrenderFormState } from '../models/surrender-form'
+import { API_ENDPOINTS } from '../constants/api'
 
 export const useSurrenderStore = defineStore('surrender', () => {
   const step = ref(0)
@@ -166,6 +167,30 @@ export const useSurrenderStore = defineStore('surrender', () => {
     selectedAnimal.value = null
   }
 
+  const submitApplication = async () => {
+    try {
+      isSubmitted.value = false
+      // Import API_ENDPOINTS if not already available in scope (adding import at top of file)
+      const response = await fetch(API_ENDPOINTS.SURRENDER_APPLICATION, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formState),
+      })
+
+      if (!response.ok) {
+        throw new Error('Failed to submit application')
+      }
+
+      isSubmitted.value = true
+      resetForm()
+    } catch (error) {
+      console.error('Error submitting form:', error)
+      alert('There was an error submitting your application. Please try again.')
+    }
+  }
+
   return {
     formState,
     step,
@@ -176,6 +201,7 @@ export const useSurrenderStore = defineStore('surrender', () => {
     isStepValid,
     nextStep,
     prevStep,
+    submitApplication,
     resetForm,
   }
 })

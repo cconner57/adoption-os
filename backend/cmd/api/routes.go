@@ -19,6 +19,7 @@ func (app *application) routes() http.Handler { // <--- lowercase application
 	// Add the new Volunteer Route
 	mux.HandleFunc("POST /applications/volunteer", app.submitVolunteerApplication)
 	mux.HandleFunc("POST /applications/adoption", app.submitAdoptionApplication)
+	mux.HandleFunc("POST /applications/surrender", app.submitSurrenderApplication)
 
 	// Setup CORS
 	c := cors.New(cors.Options{

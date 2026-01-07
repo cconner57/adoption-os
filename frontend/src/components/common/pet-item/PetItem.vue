@@ -99,6 +99,7 @@ function handleAdopt() {
     width: 100%;
     height: 180px;
     background: url('/images/paw.svg') 90px 60px/100px 100px no-repeat #add8e6;
+    cursor: pointer;
   }
 
   .info-section {
@@ -106,7 +107,7 @@ function handleAdopt() {
     flex-direction: column;
     padding: 0 20px 16px;
     flex: 1;
-    overflow: hidden; /* Prevent text from pushing bounds if it really overflows */
+    overflow: hidden;
   }
 
   h5 {
@@ -116,7 +117,7 @@ function handleAdopt() {
     overflow: hidden;
     text-overflow: ellipsis;
     line-height: 1.6;
-    padding: 4px 0 4px 0; /* Reduced bottom padding */
+    padding: 4px 0 4px 0;
     flex-shrink: 0;
   }
 
@@ -129,14 +130,14 @@ function handleAdopt() {
 
   p {
     font-size: 1rem;
-    flex-grow: 0; /* Don't force grow, let margin-top: auto on button handle spacing */
-    margin-bottom: 8px; /* Reduced margin */
+    flex-grow: 0;
+    margin-bottom: 8px;
     display: -webkit-box;
     -webkit-line-clamp: 3;
     -webkit-box-orient: vertical;
     overflow: hidden;
-    line-height: 1.5; /* Ensure readability and space for descenders */
-    padding-bottom: 2px; /* Catch descenders on the last line */
+    line-height: 1.5;
+    padding-bottom: 2px;
   }
 
   .adopt-button {
@@ -154,10 +155,7 @@ function handleAdopt() {
       }
     }
   }
-  @media (min-width: 431px) and (max-width: 768px) {
-  }
-  @media (min-width: 769px) and (max-width: 1024px) {
-  }
+
   @media (min-width: 1025px) and (max-width: 1440px) {
     width: 240px;
     height: 360px;
@@ -171,6 +169,7 @@ function handleAdopt() {
       }
     }
   }
+
   @media (min-width: 1441px) {
     width: 260px;
     height: 380px;

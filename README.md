@@ -126,7 +126,7 @@ _(Status: In Progress)_
 - [x] **Digital Intake:** Create a multi-step "Surrender Pet" wizard that flags high-risk intakes (e.g., "Bite History" or "Medical Emergency") for immediate staff review.
 - [x] **Volunteer Portal:** Develop a gated portal for volunteers to apply, utilizing conditional logic to serve different waiver forms for minors (Teen) vs. Adults.
 - [x] **Adoption Application:** Implement the primary long-form adoption questionnaire with real-time validation to prevent incomplete submissions.
-- [ ] **Backend Core:** Initialize the Go/Gin server, set up the PostgreSQL schema with migrations, and configure environment-based configuration (Dev vs. Prod).
+- [ ] **Backend Core:** Initialize the Go server, set up the PostgreSQL schema with migrations, and configure environment-based configuration (Dev vs. Prod).
 
 #### Phase 2: Agency Administration & Workflow
 

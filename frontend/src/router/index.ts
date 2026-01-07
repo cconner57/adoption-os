@@ -63,6 +63,46 @@ const router = createRouter({
           name: 'admin-settings',
           component: () => import('../pages/admin/Settings.vue'),
         },
+        {
+          path: 'kiosk',
+          name: 'admin-kiosk',
+          component: () => import('../pages/admin/KioskManagement.vue'),
+        },
+        {
+          path: 'kennel-displays',
+          name: 'admin-kennel-displays',
+          component: () => import('../pages/admin/KennelDisplays.vue'),
+        },
+        {
+          path: 'event-displays',
+          name: 'admin-event-displays',
+          component: () => import('../pages/admin/EventDisplays.vue'),
+        },
+        {
+          path: 'time-logs',
+          name: 'admin-time-logs',
+          component: () => import('../pages/admin/TimeLogs.vue'),
+        },
+        {
+          path: 'donations',
+          name: 'admin-donations',
+          component: () => import('../pages/admin/Donations.vue'),
+        },
+        {
+          path: 'inventory',
+          name: 'admin-inventory',
+          component: () => import('../pages/admin/Inventory.vue'),
+        },
+        {
+          path: 'marketing',
+          name: 'admin-marketing',
+          component: () => import('../pages/admin/Marketing.vue'),
+        },
+        {
+          path: 'transport',
+          name: 'admin-transport',
+          component: () => import('../pages/admin/Transport.vue'),
+        },
       ],
     },
     {

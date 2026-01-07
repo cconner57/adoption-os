@@ -21,10 +21,18 @@ const handleLogout = () => {
 const navItems = [
   { name: 'Overview', path: '/admin', icon: '📊' },
   { name: 'Calendar', path: '/admin/calendar', icon: '📅' },
-  { name: 'Pets', path: '/admin/pets', icon: '🐾' },
-  { name: 'Pet Health', path: '/admin/pet-health', icon: '🩺' },
+  { name: 'Pet Records', path: '/admin/pets', icon: '🐾' },
+  { name: 'Medical', path: '/admin/pet-health', icon: '🩺' },
   { name: 'Volunteers', path: '/admin/volunteers', icon: '🤝' },
+  { name: 'Transport', path: '/admin/transport', icon: '🚙' },
+  { name: 'Timesheets', path: '/admin/time-logs', icon: '⏱️' },
   { name: 'Messages', path: '/admin/messages', icon: '✉️' },
+  { name: 'Donations', path: '/admin/donations', icon: '💰' },
+  { name: 'Inventory', path: '/admin/inventory', icon: '📦' },
+  { name: 'Marketing', path: '/admin/marketing', icon: '📣' },
+  { name: 'Intake Kiosk', path: '/admin/kiosk', icon: '🖥️' },
+  { name: 'Smart Kennel Cards', path: '/admin/kennel-displays', icon: '🏷️' },
+  { name: 'Event Signage', path: '/admin/event-displays', icon: '🎪' },
   { name: 'Settings', path: '/admin/settings', icon: '⚙️' },
 ]
 </script>
@@ -71,7 +79,6 @@ const navItems = [
     <div class="main-content">
       <header class="top-bar">
         <button class="menu-toggle" @click="toggleMobileMenu">☰</button>
-        <h3>Dashboard</h3>
       </header>
 
       <div class="page-content">
@@ -246,9 +253,9 @@ const navItems = [
 }
 
 .top-bar {
+  display: none; /* Hidden on desktop since it is empty now */
   height: 80px;
-  background-color: transparent; /* Cleaner look */
-  display: flex;
+  background-color: transparent;
   align-items: center;
   padding: 0 40px;
   gap: 16px;
@@ -276,7 +283,7 @@ const navItems = [
 .page-content {
   flex: 1;
   overflow-y: auto;
-  padding: 0 40px 40px 40px;
+  padding: 32px 40px 40px 40px; /* Added top padding to align with sidebar */
 }
 
 /* Mobile Responsive */
@@ -315,6 +322,7 @@ const navItems = [
   }
 
   .top-bar {
+    display: flex; /* Show on mobile for menu toggle */
     padding: 0 24px;
     height: 64px;
     background-color: var(--white);

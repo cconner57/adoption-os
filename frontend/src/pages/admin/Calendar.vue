@@ -1,12 +1,93 @@
 <script setup lang="ts">
-import { ref, computed } from 'vue'
+import { ref, computed, watch } from 'vue'
 
 type ViewMode = 'month' | 'week'
-const viewMode = ref<ViewMode>('month')
+const savedView = localStorage.getItem('adminCalendarView') as ViewMode | null
+const viewMode = ref<ViewMode>(savedView === 'week' ? 'week' : 'month')
+
+watch(viewMode, (newMode) => {
+  localStorage.setItem('adminCalendarView', newMode)
+})
 
 const today = new Date()
-const currentMonth = ref(today.getMonth())
-const currentYear = ref(today.getFullYear())
+const activeDate = ref(new Date())
+
+// Navigation Logic
+const prev = () => {
+  const d = new Date(activeDate.value)
+  if (viewMode.value === 'month') {
+    d.setMonth(d.getMonth() - 1)
+  } else {
+    d.setDate(d.getDate() - 7)
+  }
+  activeDate.value = d
+}
+
+const next = () => {
+  const d = new Date(activeDate.value)
+  if (viewMode.value === 'month') {
+    d.setMonth(d.getMonth() + 1)
+  } else {
+    d.setDate(d.getDate() + 7)
+  }
+  activeDate.value = d
+}
+
+const goToday = () => {
+  activeDate.value = new Date()
+}
+
+const currentMonth = computed(() => activeDate.value.getMonth())
+const currentYear = computed(() => activeDate.value.getFullYear())
+
+// Recurring Volunteer Schedule
+const recurringShifts: Record<number, Array<{ time: string; title: string; type: string }>> = {
+  0: [
+    // Sunday
+    { time: '10:00 AM', title: 'Allison (10AM-12PM)', type: 'volunteer' },
+    { time: '4:00 PM', title: 'Brandon (4PM-6PM)', type: 'volunteer' },
+  ],
+  1: [
+    // Monday
+    { time: '10:00 AM', title: 'Leanne (10AM-12PM)', type: 'volunteer' },
+    { time: '6:00 PM', title: 'Arianna (6PM-8PM)', type: 'volunteer' },
+  ],
+  2: [
+    // Tuesday
+    { time: '10:00 AM', title: 'Sonia (10AM-12PM)', type: 'volunteer' },
+    { time: '6:00 PM', title: 'Lynn (6PM-8PM)', type: 'volunteer' },
+  ],
+  3: [
+    // Wednesday
+    { time: '10:00 AM', title: 'Bella (10AM-12PM)', type: 'volunteer' },
+    { time: '6:00 PM', title: 'Katelyn (6PM-8PM)', type: 'volunteer' },
+  ],
+  4: [
+    // Thursday
+    { time: '10:00 AM', title: 'Alejandra (10AM-12PM)', type: 'volunteer' },
+    { time: '6:00 PM', title: 'Nathan (6PM-8PM)', type: 'volunteer' },
+  ],
+  5: [
+    // Friday
+    { time: '10:00 AM', title: 'Linda (10AM-12PM)', type: 'volunteer' },
+    { time: '6:00 PM', title: 'Katie (6PM-8PM)', type: 'volunteer' },
+  ],
+  6: [
+    // Saturday
+    { time: '10:00 AM', title: 'Lindsey & Celina (10AM-12PM)', type: 'volunteer' },
+    { time: '6:00 PM', title: 'Chris (6PM-8PM)', type: 'volunteer' },
+  ],
+}
+
+// Helper to parse time for sorting (e.g. "9:00 AM")
+const parseTime = (timeStr: string): number => {
+  if (!timeStr) return 0
+  const [time, modifier] = timeStr.split(' ')
+  let [hours, minutes] = time.split(':').map(Number)
+  if (modifier === 'PM' && hours < 12) hours += 12
+  if (modifier === 'AM' && hours === 12) hours = 0
+  return hours * 60 + minutes
+}
 
 // Mock Calendar Data Logic
 const daysInMonth = computed(() => {
@@ -22,12 +103,8 @@ const monthDays = computed(() => {
   const days = []
 
   // Padding for start of month
-  // Monday is 1, Sunday is 0 in JS. We want Monday to be first column if we follow week view?
-  // Let's stick to standard Sun-Sat for Month view for now as it's easier, or alignment with week view (Mon-Sun)
-  // Let's do Mon-Sun alignment to match our Weekly view
-
   let padding = firstDayOfMonth.value - 1
-  if (padding < 0) padding = 6 // Sunday is 0, so if Mon(1) is start, Sun is 6
+  if (padding < 0) padding = 6
 
   for (let i = 0; i < padding; i++) {
     days.push({ id: `pad-${i}`, isEmpty: true })
@@ -36,67 +113,85 @@ const monthDays = computed(() => {
   for (let i = 1; i <= daysInMonth.value; i++) {
     // Generate mock events
     const events = []
+    const currentDayDate = new Date(currentYear.value, currentMonth.value, i)
+    const dayOfWeek = currentDayDate.getDay()
 
-    // Pattern similar to dashboard
-    const dayOfWeek = (padding + i - 1) % 7 // 0=Mon, ... 6=Sun
+    // Add recurring shifts
+    const shifts = recurringShifts[dayOfWeek] || []
+    shifts.forEach((shift, idx) => {
+      events.push({ id: `v-${i}-${idx}`, ...shift })
+    })
 
-    if (i === 12 || i === 25) {
-      // Specific dates
-      events.push({ id: `evt-${i}-1`, type: 'volunteer', time: '10:00 AM', title: 'Orientation' })
+    if (i === 5) {
+      // Vet mock logic
+      events.push({
+        id: `vet-${i}-special`,
+        type: 'vet',
+        time: '9:00 AM',
+        title: 'Vet Appointments',
+      })
     }
 
-    if (dayOfWeek % 2 === 0) {
-      // Mon, Wed, Fri
-      events.push({ id: `v-${i}`, type: 'volunteer', time: '9:00 AM', title: 'Morning Shift' })
-    }
-
-    if (dayOfWeek === 1) {
-      // Tue
-      events.push({ id: `vet-${i}`, type: 'vet', time: '2:00 PM', title: 'Vet Visits' })
-    }
+    // Sort events by time
+    events.sort((a, b) => parseTime(a.time) - parseTime(b.time))
 
     days.push({
       id: `day-${i}`,
       date: i,
       events,
-      isToday: i === today.getDate() && currentMonth.value === today.getMonth(),
+      isToday:
+        i === today.getDate() &&
+        currentMonth.value === today.getMonth() &&
+        currentYear.value === today.getFullYear(),
     })
   }
 
   return days
 })
 
-// Week View Data (Reused logic effectively)
+// Week View Data
 const weekDays = computed(() => {
   const days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
 
-  // Find Monday of current week (relative to today representing the "view" week)
-  // For simplicity this mock always shows "Current Week"
-  const now = new Date()
-  const monday = new Date(now)
-  monday.setDate(now.getDate() - now.getDay() + 1)
+  // Find Monday of the ACTIVE week
+  const current = new Date(activeDate.value)
+  const day = current.getDay()
+  const diff = current.getDate() - day + (day === 0 ? -6 : 1) // adjust when day is sunday
+  const monday = new Date(current.setDate(diff))
 
   return days.map((name, index) => {
     const date = new Date(monday)
     date.setDate(monday.getDate() + index)
+    const dayOfWeek = date.getDay()
 
     // Mock events
     const events = []
-    if (index % 2 === 0)
+
+    // Add recurring shifts
+    const shifts = recurringShifts[dayOfWeek] || []
+    shifts.forEach((shift, idx) => {
+      events.push({ id: `wk-v-${index}-${idx}`, ...shift })
+    })
+
+    if (index === 0) {
+      // Monday
       events.push({
-        id: `wk-v-${index}`,
-        type: 'volunteer',
+        id: `wk-vet-special`,
+        type: 'vet',
         time: '9:00 AM',
-        title: 'Shift: Group A',
+        title: 'Vet Appointments',
+        details: ['Malachi', 'Merry', 'Ariel', 'Aragorn', 'Purina'],
       })
-    if (index === 1)
-      events.push({ id: `wk-vet-${index}`, type: 'vet', time: '2:00 PM', title: 'Dr. Smith Visit' })
+    }
+
+    // Sort events by time
+    events.sort((a, b) => parseTime(a.time) - parseTime(b.time))
 
     return {
       name,
       date: date.getDate(),
       fullDate: date,
-      isToday: date.toDateString() === now.toDateString(),
+      isToday: date.toDateString() === new Date().toDateString(),
       events,
     }
   })
@@ -105,10 +200,26 @@ const weekDays = computed(() => {
 const weekDaysHeader = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
 
 const monthName = computed(() => {
-  return new Date(currentYear.value, currentMonth.value).toLocaleString('default', {
-    month: 'long',
-    year: 'numeric',
-  })
+  if (viewMode.value === 'month') {
+    return activeDate.value.toLocaleString('default', {
+      month: 'long',
+      year: 'numeric',
+    })
+  } else {
+    // For week view, show "Jan 2026" or "Jan - Feb 2026"
+    const start = new Date(activeDate.value)
+    const day = start.getDay()
+    const diff = start.getDate() - day + (day === 0 ? -6 : 1)
+    const monday = new Date(start.setDate(diff))
+    const sunday = new Date(monday)
+    sunday.setDate(monday.getDate() + 6)
+
+    if (monday.getMonth() === sunday.getMonth()) {
+      return monday.toLocaleString('default', { month: 'long', year: 'numeric' })
+    } else {
+      return `${monday.toLocaleString('default', { month: 'long' })} - ${sunday.toLocaleString('default', { month: 'long', year: 'numeric' })}`
+    }
+  }
 })
 </script>
 
@@ -118,6 +229,12 @@ const monthName = computed(() => {
       <h1>Calendar</h1>
 
       <div class="controls">
+        <div class="nav-buttons">
+          <button class="nav-btn" @click="prev">&lt;</button>
+          <button class="nav-btn today" @click="goToday">Today</button>
+          <button class="nav-btn" @click="next">&gt;</button>
+        </div>
+
         <h2 class="current-period">{{ monthName }}</h2>
 
         <div class="view-toggle">
@@ -136,6 +253,8 @@ const monthName = computed(() => {
             Month
           </button>
         </div>
+
+        <button class="add-event-btn">Add Event +</button>
       </div>
     </div>
 
@@ -163,10 +282,16 @@ const monthName = computed(() => {
               <div
                 v-for="event in day.events"
                 :key="event.id"
-                class="event-dot"
+                class="compact-event"
                 :class="event.type"
                 :title="`${event.time} - ${event.title}`"
-              ></div>
+              >
+                <div class="dot" :class="event.type"></div>
+                <div class="content">
+                  <span class="time">{{ event.time }}</span>
+                  <span class="title">{{ event.title }}</span>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -190,6 +315,9 @@ const monthName = computed(() => {
             <div v-for="event in day.events" :key="event.id" class="event-card" :class="event.type">
               <span class="time">{{ event.time }}</span>
               <span class="title">{{ event.title }}</span>
+              <ul v-if="event.details" class="event-details-list">
+                <li v-for="detail in event.details" :key="detail">{{ detail }}</li>
+              </ul>
             </div>
           </div>
         </div>
@@ -224,6 +352,32 @@ const monthName = computed(() => {
   gap: 24px;
 }
 
+.nav-buttons {
+  display: flex;
+  gap: 8px;
+}
+
+.nav-btn {
+  background: white;
+  border: 1px solid #e5e7eb;
+  padding: 6px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 500;
+  color: var(--font-color-medium);
+  transition: all 0.2s;
+
+  &:hover {
+    background: #f9fafb;
+    border-color: #d1d5db;
+    color: var(--font-color-dark);
+  }
+
+  &.today {
+    font-size: 0.9rem;
+  }
+}
+
 .current-period {
   font-size: 1.2rem;
   font-weight: 600;
@@ -253,6 +407,25 @@ const monthName = computed(() => {
     background: white;
     color: var(--font-color-dark);
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  }
+}
+
+.add-event-btn {
+  background-color: var(--blue);
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+
+  &:hover {
+    background-color: var(--blue-hover);
   }
 }
 
@@ -338,20 +511,59 @@ const monthName = computed(() => {
 
 .events-list {
   display: flex;
-  flex-wrap: wrap;
+  flex-direction: column;
   gap: 4px;
 }
 
-.event-dot {
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
+.compact-event {
+  display: flex;
+  align-items: flex-start;
+  gap: 6px;
+  padding: 4px 6px;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  background-color: #f3f4f6;
+  cursor: pointer;
+  white-space: normal;
+  line-height: 1.3;
+
+  .dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    flex-shrink: 0;
+    margin-top: 5px; /* Align with first line of text */
+  }
+
+  .content {
+    display: block;
+  }
+
+  .time {
+    font-weight: 700;
+    opacity: 0.8;
+    margin-right: 4px;
+    display: inline;
+  }
+
+  .title {
+    display: inline;
+  }
 
   &.volunteer {
-    background-color: var(--purple);
+    background-color: #faf5ff;
+    color: var(--purple); /* Fallback or use var(--purple-hover) if defined */
+    .dot {
+      background-color: var(--purple);
+    }
   }
+
   &.vet {
-    background-color: var(--green);
+    background-color: #f0fdf4;
+    color: var(--green); /* Fallback or use var(--green-hover) if defined */
+    .dot {
+      background-color: var(--green);
+    }
   }
 }
 
@@ -439,6 +651,19 @@ const monthName = computed(() => {
     font-size: 0.9rem;
     font-weight: 500;
     line-height: 1.3;
+  }
+
+  .event-details-list {
+    margin: 4px 0 0 0;
+    padding-left: 16px;
+    font-size: 0.8rem;
+    opacity: 0.9;
+    list-style-type: disc; /* Ensure bullets show */
+
+    li {
+      margin-bottom: 2px;
+      margin-left: 4px; /* Slight indent for bullets */
+    }
   }
 }
 </style>

@@ -4,6 +4,7 @@ import { goToAdopt } from '../../../utils/navigate.ts'
 import Button from '../ui/Button.vue'
 import { ref, type PropType } from 'vue'
 import Capsules from '../ui/Capsules.vue'
+import { useMetrics } from '../../../composables/useMetrics'
 
 const props = defineProps({
   name: {
@@ -41,8 +42,6 @@ function onImgError() {
   imgError.value = true
 }
 
-import { useMetrics } from '../../../composables/useMetrics'
-
 const { submitMetric } = useMetrics()
 
 function handleAdopt() {
@@ -52,14 +51,14 @@ function handleAdopt() {
 </script>
 
 <template>
-  <div class="pet-item">
+  <div class="pet-item" :style="{ viewTransitionName: `pet-card-${props.id}` }">
     <img
       v-if="!imgError"
       :src="`/images/${props.photo ?? ''}`"
       :alt="props.name"
       height="250"
       width="240"
-      loading="lazy"
+      :style="{ viewTransitionName: 'pet-' + props.id }"
       @error="onImgError"
       @click="handleAdopt"
     />

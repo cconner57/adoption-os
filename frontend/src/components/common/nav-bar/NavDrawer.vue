@@ -105,7 +105,10 @@ onBeforeUnmount(() => {
         @keydown="onKeydown"
       >
         <header class="drawer-header">
-          <h2 class="drawer-title">Menu</h2>
+          <div class="drawer-brand">
+            <img src="/images/idohr-logo.jpg" alt="" class="drawer-logo" />
+            <span class="drawer-title">IDOHR</span>
+          </div>
           <button class="drawer-close" @click="close" aria-label="Close menu">
             <svg
               width="24"
@@ -117,21 +120,29 @@ onBeforeUnmount(() => {
               stroke-linecap="round"
               stroke-linejoin="round"
             >
+              <line x1="18" y1="6" x2="6" y2="18" />
               <line x1="6" y1="6" x2="18" y2="18" />
-              <line x1="6" y1="18" x2="18" y2="6" />
             </svg>
           </button>
         </header>
 
         <nav class="drawer-content">
-          <RouterLink to="/" class="nav-link" @click="close">Home</RouterLink>
-          <RouterLink to="/about" class="nav-link" @click="close">About</RouterLink>
-          <RouterLink to="/adopt" class="nav-link" @click="close">Adopt</RouterLink>
-          <RouterLink to="/volunteer" class="nav-link" @click="close">Volunteer</RouterLink>
+          <RouterLink to="/" class="nav-link" @click="close">
+            <span>Home</span>
+          </RouterLink>
+          <RouterLink to="/about" class="nav-link" @click="close">
+            <span>About</span>
+          </RouterLink>
+          <RouterLink to="/adopt" class="nav-link" @click="close">
+            <span>Adopt</span>
+          </RouterLink>
+          <RouterLink to="/volunteer" class="nav-link" @click="close">
+            <span>Volunteer</span>
+          </RouterLink>
         </nav>
 
         <footer class="drawer-footer">
-          <RouterLink to="/donate" class="nav-link donate" @click="close">Donate</RouterLink>
+          <RouterLink to="/donate" class="donate-btn" @click="close">Donate</RouterLink>
         </footer>
       </aside>
     </transition>
@@ -148,9 +159,13 @@ onBeforeUnmount(() => {
   border-radius: 12px;
   cursor: pointer;
   color: #fff;
+  transition: background-color 0.2s;
+}
+.hx-btn:hover {
+  background-color: rgba(255, 255, 255, 0.1);
 }
 .hx-btn:focus-visible {
-  outline: 2px solid #2f6bd8;
+  outline: 2px solid #fff;
   outline-offset: 2px;
 }
 svg {
@@ -189,12 +204,13 @@ svg[data-open='true'] .hx-bot {
 }
 .fade-enter-active,
 .fade-leave-active {
-  transition: opacity 0.18s ease;
+  transition: opacity 0.5s ease;
 }
 .drawer-backdrop {
   position: fixed;
   inset: 0;
-  background: rgba(0, 0, 0, 0.42);
+  background: rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(4px);
   z-index: 9998;
 }
 
@@ -204,7 +220,7 @@ svg[data-open='true'] .hx-bot {
 }
 .slide-in-right-enter-active,
 .slide-in-right-leave-active {
-  transition: transform 0.22s ease;
+  transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
 }
 .drawer {
   position: fixed;
@@ -212,87 +228,118 @@ svg[data-open='true'] .hx-bot {
   right: 0;
   height: 100dvh;
   z-index: 9999;
-  background: var(--green);
-  color: var(--font-color-light);
-  box-shadow: -24px 0 48px rgba(0, 0, 0, 0.16);
-  border-top-left-radius: 14px;
-  border-bottom-left-radius: 14px;
+  background: var(--white);
+  color: var(--font-color-dark);
+  box-shadow: -8px 0 32px rgba(0, 0, 0, 0.12);
   display: grid;
   grid-template-rows: auto 1fr auto;
   outline: none;
+
   @media (min-width: 431px) and (max-width: 768px) {
-    max-width: 450px;
-  }
-  @media (min-width: 769px) and (max-width: 1024px) {
+    max-width: 400px;
+    border-top-left-radius: 20px;
+    border-bottom-left-radius: 20px;
   }
 }
 .drawer-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  padding: 20px 24px;
+}
+.drawer-brand {
+  display: flex;
+  align-items: center;
   gap: 12px;
-  padding: 14px 16px;
-  border-bottom: 1px solid #ececec;
+}
+.drawer-logo {
+  height: 40px;
+  width: auto;
+  border-radius: 8px;
 }
 .drawer-title {
-  margin: 0;
-  font-size: 18px;
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--font-color-dark);
+  letter-spacing: -0.02em;
 }
 .drawer-close {
   all: unset;
   cursor: pointer;
   padding: 8px;
-  border-radius: 10px;
+  border-radius: 50%;
+  color: var(--font-color-dark);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.2s;
+}
+.drawer-close:hover {
+  background-color: #f3f4f6;
 }
 .drawer-close:focus-visible {
-  outline: 2px solid #2f6bd8;
+  outline: 2px solid var(--green);
   outline-offset: 2px;
 }
+
 .drawer-content {
-  padding: 12px 16px;
+  padding: 8px 16px;
   overflow: auto;
   display: flex;
   flex-direction: column;
-  gap: 8px;
-  a {
-    color: var(--font-color-light);
-  }
-}
-.drawer-footer {
-  padding: 12px 16px calc(12px + var(--safe-bottom));
-  border-top: 1px solid #ececec;
-  display: flex;
-  justify-content: center;
-  width: 100%;
-  box-sizing: border-box;
-  margin-bottom: 12px;
-  a {
-    width: 100%;
-  }
+  gap: 4px;
 }
 
 .nav-link {
-  padding: 12px 10px;
+  display: flex;
+  align-items: center;
+  padding: 16px 20px;
   border-radius: 12px;
   text-decoration: none;
-  color: #16333a;
+  color: var(--font-color-dark);
   font-weight: 600;
+  font-size: 1.1rem;
+  transition: all 0.2s ease;
 }
-.nav-link:hover {
-  background: var(--green-hover);
+.nav-link:hover,
+.nav-link:active {
+  background-color: #f3f4f6;
+  color: var(--green);
+  transform: translateX(4px);
 }
-.nav-link.donate {
-  background: var(--blue);
-  color: #fff;
-  text-align: center;
+.nav-link.router-link-active {
+  background-color: #e6f7f4; /* Light green tint */
+  color: var(--green);
 }
-.btn.primary {
-  display: inline-block;
-  padding: 12px 16px;
-  border-radius: 12px;
-  background: #2f6bd8;
+
+.drawer-footer {
+  padding: 24px;
+  padding-bottom: calc(24px + var(--safe-bottom, 0px));
+}
+
+.donate-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  padding: 16px;
+  border-radius: 16px;
+  background: var(--green);
   color: #fff;
   text-decoration: none;
   font-weight: 700;
+  font-size: 1.1rem;
+  box-shadow: 0 4px 12px rgba(22, 51, 58, 0.15);
+  transition:
+    transform 0.2s,
+    box-shadow 0.2s;
+}
+.donate-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(22, 51, 58, 0.2);
+  background: var(--green-hover, #0e2b32);
+}
+.donate-btn:active {
+  transform: translateY(0);
 }
 </style>

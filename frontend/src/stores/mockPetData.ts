@@ -269,7 +269,7 @@ export const mockPetsData: IPet[] = [
   },
   {
     id: '4',
-    name: 'Aragon',
+    name: 'Aragorn',
     species: 'cat',
     sex: 'male',
     physical: {

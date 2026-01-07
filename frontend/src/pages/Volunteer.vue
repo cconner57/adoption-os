@@ -15,8 +15,10 @@ import { storeToRefs } from 'pinia'
 import { useVolunteerStore } from '../stores/volunteer.ts'
 import { useRouter } from 'vue-router'
 import { useMetrics } from '../composables/useMetrics'
+import { useScrollReveal } from '../composables/useScrollReveal.ts'
 
 const { submitMetric } = useMetrics()
+const { vScrollReveal } = useScrollReveal()
 
 onMounted(() => {
   submitMetric('form_start', { form: 'volunteer' })
@@ -91,16 +93,18 @@ const handleReset = () => {
   <section class="page-shell">
     <div v-if="!isSubmitted" class="form-container">
       <form class="form-card" aria-labelledby="form-title" @submit.prevent="handleSubmit">
-        <ApplicationHeader
-          header-title="Volunteer"
-          header-text="I Dream of Home Rescue (IDOHR) is an all-volunteer, nonprofit dedicated to helping homeless cats
+        <div v-scroll-reveal>
+          <ApplicationHeader
+            header-title="Volunteer"
+            header-text="I Dream of Home Rescue (IDOHR) is an all-volunteer, nonprofit dedicated to helping homeless cats
     and kittens find loving, permanent homes. We’re looking for responsible volunteers to help with
     feeding and cleaning, socializing cats and kittens, supporting adoptions, and light
     administrative tasks. Volunteers must be 21 or older. If under 21, a parent or guardian must
     sign the waiver below. Join us and help change a life. You’ll connect with amazing animals, work
     alongside caring volunteers, and make a meaningful impact."
-        />
-        <fieldset class="volunteer-grid" aria-labelledby="pi">
+          />
+        </div>
+        <fieldset class="volunteer-grid" aria-labelledby="pi" v-scroll-reveal>
           <legend id="pi" class="section-title">Personal Information</legend>
 
           <InputField
@@ -229,7 +233,7 @@ const handleReset = () => {
           />
         </fieldset>
 
-        <fieldset aria-labelledby="exp">
+        <fieldset aria-labelledby="exp" v-scroll-reveal>
           <legend id="exp" class="section-title">Experience & Interests</legend>
 
           <InputTextArea
@@ -256,51 +260,55 @@ const handleReset = () => {
           />
         </fieldset>
 
-        <Availability
-          v-model="formState.availability"
-          :hasError="touched.availability && formState.availability.length === 0"
-        />
-
-        <Agreement
-          :name="formState.firstName + ' ' + formState.lastName"
-          v-model:fullName="formState.nameFull"
-          :age="formState.age!"
-          v-model:signature="formState.signatureData"
-          v-model:signatureDate="formState.signatureDate"
-          v-model:parentName="formState.parentName"
-          v-model:parentSignature="formState.parentSignatureData"
-          v-model:parentDate="formState.parentSignatureDate"
-          :hasNameError="touched.nameFull && !formState.nameFull"
-          :hasDateError="touched.signatureDate && !formState.signatureDate"
-          :hasSignatureError="touched.signatureData && !formState.signatureData"
-          :hasParentNameError="touched.parentName && !formState.parentName"
-          :hasParentDateError="touched.parentSignatureDate && !formState.parentSignatureDate"
-          :hasParentSignatureError="touched.parentSignatureData && !formState.parentSignatureData"
-        />
-
-        <div v-if="apiError" class="validation-summary error-alert">
-          <p class="summary-title">Submission Error</p>
-          <p>{{ apiError }}</p>
-        </div>
-
-        <div
-          v-if="hasAttemptedSubmit && !isFormValid && validationErrors.length > 0"
-          class="validation-summary"
-        >
-          <p class="summary-title">Please complete the following required fields:</p>
-          <div class="tags">
-            <span v-for="err in validationErrors" :key="err" class="tag is-danger">{{ err }}</span>
-          </div>
-        </div>
-
-        <div class="actions">
-          <Button
-            type="submit"
-            title="Submit Application"
-            color="green"
-            size="large"
-            :loading="isSubmitting"
+        <div v-scroll-reveal>
+          <Availability
+            v-model="formState.availability"
+            :hasError="touched.availability && formState.availability.length === 0"
           />
+
+          <Agreement
+            :name="formState.firstName + ' ' + formState.lastName"
+            v-model:fullName="formState.nameFull"
+            :age="formState.age!"
+            v-model:signature="formState.signatureData"
+            v-model:signatureDate="formState.signatureDate"
+            v-model:parentName="formState.parentName"
+            v-model:parentSignature="formState.parentSignatureData"
+            v-model:parentDate="formState.parentSignatureDate"
+            :hasNameError="touched.nameFull && !formState.nameFull"
+            :hasDateError="touched.signatureDate && !formState.signatureDate"
+            :hasSignatureError="touched.signatureData && !formState.signatureData"
+            :hasParentNameError="touched.parentName && !formState.parentName"
+            :hasParentDateError="touched.parentSignatureDate && !formState.parentSignatureDate"
+            :hasParentSignatureError="touched.parentSignatureData && !formState.parentSignatureData"
+          />
+
+          <div v-if="apiError" class="validation-summary error-alert">
+            <p class="summary-title">Submission Error</p>
+            <p>{{ apiError }}</p>
+          </div>
+
+          <div
+            v-if="hasAttemptedSubmit && !isFormValid && validationErrors.length > 0"
+            class="validation-summary"
+          >
+            <p class="summary-title">Please complete the following required fields:</p>
+            <div class="tags">
+              <span v-for="err in validationErrors" :key="err" class="tag is-danger">{{
+                err
+              }}</span>
+            </div>
+          </div>
+
+          <div class="actions">
+            <Button
+              type="submit"
+              title="Submit Application"
+              color="green"
+              size="large"
+              :loading="isSubmitting"
+            />
+          </div>
         </div>
       </form>
     </div>
@@ -408,6 +416,33 @@ const handleReset = () => {
   .has-error :deep(textarea) {
     border-color: #ef4444 !important;
     outline: 2px solid #ef4444 !important;
+  }
+
+  /* Reveal Animations */
+  :deep(.reveal) {
+    opacity: 0;
+    transform: translateY(20px); /* Smaller movement for form */
+    transition: all 0.6s cubic-bezier(0.2, 0.8, 0.2, 1);
+  }
+
+  :deep(.reveal.active) {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* Smooth Focus Transition */
+  :deep(input),
+  :deep(textarea),
+  :deep(select) {
+    transition:
+      border-color 0.2s ease,
+      box-shadow 0.2s ease;
+  }
+
+  :deep(input:focus),
+  :deep(textarea:focus),
+  :deep(select:focus) {
+    /* These styles rely on the component implementation, but transition property is added above */
   }
 }
 </style>

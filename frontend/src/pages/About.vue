@@ -1,11 +1,14 @@
 <script setup lang="ts">
 import SurrenderCat from '../components/about/surrender/SurrenderCat.vue'
 import Candid from '../components/common/candid-award/Candid.vue'
+import { useScrollReveal } from '../composables/useScrollReveal.ts'
+
+const { vScrollReveal } = useScrollReveal()
 </script>
 
 <template>
   <main class="about">
-    <section class="hero">
+    <section class="hero" v-scroll-reveal>
       <div class="content-wrapper">
         <h1>About IDOHR</h1>
         <p class="lead">
@@ -17,14 +20,14 @@ import Candid from '../components/common/candid-award/Candid.vue'
 
     <section class="story">
       <div class="content-wrapper">
-        <content>
+        <content v-scroll-reveal class="reveal-left">
           <img src="/images/watercolor.jpeg" alt="IDOHR watercolor inspiration" />
         </content>
-        <div class="story-text">
+        <div class="story-text reveal-right" v-scroll-reveal>
           <h2>Our Story</h2>
           <p>
-            IDOHR began with a simple dream: to give every abandoned, neglected, and unwanted animal a
-            safe place to call home. What started as a small circle of fosters has grown into a
+            IDOHR began with a simple dream: to give every abandoned, neglected, and unwanted animal
+            a safe place to call home. What started as a small circle of fosters has grown into a
             community of adopters, volunteers, and supporters who believe compassion changes
             lives—both animal and human.
           </p>
@@ -34,7 +37,7 @@ import Candid from '../components/common/candid-award/Candid.vue'
 
     <section class="mission">
       <div class="content-wrapper">
-        <content>
+        <content v-scroll-reveal>
           <h2 class="text-on-teal">Our Mission</h2>
           <p class="text-on-teal">
             We rescue, rehabilitate, and rehome animals in need—one tail, one paw, one heart at a
@@ -47,24 +50,24 @@ import Candid from '../components/common/candid-award/Candid.vue'
             <li>Adopter education and lifetime support</li>
           </ul>
         </content>
-        <div class="image-wrapper">
-            <img class="mission-image" src="/images/mission.png" alt="Happy adopted dog and cat" />
+        <div class="image-wrapper reveal-delay-200" v-scroll-reveal>
+          <img class="mission-image" src="/images/mission.png" alt="Happy adopted dog and cat" />
         </div>
       </div>
     </section>
 
     <section class="transparency">
       <div class="content-wrapper">
-        <div class="awards">
-          <Candid type="Gold" year="2024" />
-          <Candid type="Gold" year="2023" />
-          <Candid type="Silver" year="2022" />
+        <div class="awards" v-scroll-reveal>
+          <Candid type="Gold" year="2024" class="award-item" />
+          <Candid type="Gold" year="2023" class="award-item" style="transition-delay: 0.1s" />
+          <Candid type="Silver" year="2022" class="award-item" style="transition-delay: 0.2s" />
         </div>
-        <div class="notice">
+        <div class="notice reveal-left" v-scroll-reveal>
           <h2>Transparency</h2>
           <p>
-            IDOHR is a 501(c)(3) nonprofit. Donations are tax-deductible as allowed by law. We publish
-            annual updates and operate with financial transparency.
+            IDOHR is a 501(c)(3) nonprofit. Donations are tax-deductible as allowed by law. We
+            publish annual updates and operate with financial transparency.
           </p>
           <p class="small">EIN: 81-0780050 • PO Box 7612, La Verne, CA 91750</p>
         </div>
@@ -75,6 +78,44 @@ import Candid from '../components/common/candid-award/Candid.vue'
 </template>
 
 <style scoped lang="css">
+/* Reveal Animations */
+:deep(.reveal) {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: all 0.8s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+:deep(.reveal.active) {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+:deep(.reveal-left) {
+  transform: translateX(-30px);
+}
+:deep(.reveal-right) {
+  transform: translateX(30px);
+}
+:deep(.reveal-left.active),
+:deep(.reveal-right.active) {
+  transform: translateX(0);
+}
+
+:deep(.reveal-delay-200.active) {
+  transition-delay: 0.2s;
+}
+
+/* Stagger awards */
+:deep(.award-item) {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: all 0.6s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+:deep(.reveal.active .award-item) {
+  opacity: 1;
+  transform: translateY(0);
+}
+
 .about {
   width: 100%;
   overflow: hidden;
@@ -121,30 +162,29 @@ import Candid from '../components/common/candid-award/Candid.vue'
     padding: 80px var(--layout-padding-side);
 
     .content-wrapper {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        gap: 4rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 4rem;
     }
 
     img {
-        width: 100%;
-        max-width: 450px;
-        height: auto;
+      width: 100%;
+      max-width: 450px;
+      height: auto;
     }
 
     .story-text {
-        max-width: 600px;
-        p {
-            font-size: 1.15rem;
-            margin-top: 12px;
-        }
-        h2 {
-            font-size: 2.5rem;
-        }
+      max-width: 600px;
+      p {
+        font-size: 1.15rem;
+        margin-top: 12px;
+      }
+      h2 {
+        font-size: 2.5rem;
+      }
     }
   }
-
 
   .mission {
     background-color: var(--green);
@@ -154,21 +194,21 @@ import Candid from '../components/common/candid-award/Candid.vue'
     padding: 80px var(--layout-padding-side);
 
     .content-wrapper {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        gap: 4rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 4rem;
     }
 
     .image-wrapper {
-        display: flex;
-        justify-content: flex-end;
-        width: 100%;
-        max-width: 450px;
+      display: flex;
+      justify-content: flex-end;
+      width: 100%;
+      max-width: 450px;
     }
 
     h2 {
-        font-size: 2.5rem;
+      font-size: 2.5rem;
     }
 
     p {
@@ -217,10 +257,10 @@ import Candid from '../components/common/candid-award/Candid.vue'
     padding: 80px var(--layout-padding-side);
 
     .content-wrapper {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        gap: 4rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 4rem;
     }
 
     p {
@@ -255,45 +295,48 @@ import Candid from '../components/common/candid-award/Candid.vue'
     .story .content-wrapper,
     .mission .content-wrapper,
     .transparency .content-wrapper {
-        flex-direction: column;
-        gap: 40px;
-        text-align: center;
+      flex-direction: column;
+      gap: 40px;
+      text-align: center;
     }
 
-    .story img, .mission .image-wrapper {
-        justify-content: center;
-        margin: 0 auto;
+    .story img,
+    .mission .image-wrapper {
+      justify-content: center;
+      margin: 0 auto;
     }
 
-    .story-text, .mission content, .transparency .notice {
-        max-width: 100%;
-        align-items: center; /* Reset alignments for center text */
+    .story-text,
+    .mission content,
+    .transparency .notice {
+      max-width: 100%;
+      align-items: center; /* Reset alignments for center text */
     }
 
     .story-text p,
     .mission p,
     .transparency p,
     .mission .ticks {
-        margin-left: auto;
-        margin-right: auto;
-        text-align: left; /* Keep text readable */
+      margin-left: auto;
+      margin-right: auto;
+      text-align: left; /* Keep text readable */
     }
 
     /* Re-center lists/paragraphs if desired, or keep left aligned within a centered block */
     .mission .ticks {
-        display: inline-block;
-        text-align: left;
+      display: inline-block;
+      text-align: left;
     }
 
     .transparency .awards {
-        order: -1; /* Awards on top on mobile? matching previous layout logic roughly */
-        margin-bottom: 2rem;
+      order: -1; /* Awards on top on mobile? matching previous layout logic roughly */
+      margin-bottom: 2rem;
     }
 
     /* Reset transparency alignment for mobile */
     .transparency .notice {
-        text-align: center;
-        align-items: center;
+      text-align: center;
+      align-items: center;
     }
   }
 
@@ -310,8 +353,10 @@ import Candid from '../components/common/candid-award/Candid.vue'
 
     /* Further specific mobile adjustments can go here if generic max-width: 1024 isn't enough */
     .transparency .awards {
-        flex-direction: column;
-        gap: 1.5rem;
+      flex-direction: column;
+      gap: 3.5rem;
+      padding-top: 1rem;
+      padding-bottom: 1rem;
     }
   }
 }

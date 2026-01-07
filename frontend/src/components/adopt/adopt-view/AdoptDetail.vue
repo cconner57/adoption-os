@@ -22,7 +22,7 @@ const handleStartAdoption = () => {
   )
   globalThis.location.href = `/pet-adoption/${props.pet.id}`
 }
-console.log('pet', props.pet)
+
 // const handleScheduleMeet = () => {
 //   isDrawerOpen.value = true
 // }
@@ -59,8 +59,9 @@ function onImgError() {
     <div class="adopt-detail__main">
       <img
         v-if="!imgError"
-        :src="pet.photos?.find((p) => p.isPrimary)?.url ?? ''"
+        :src="`/images/${pet.photos?.find((p) => p.isPrimary)?.url ?? ''}`"
         :alt="pet.name"
+        :style="{ viewTransitionName: 'pet-' + pet.id }"
         @error="onImgError"
       />
       <div v-else class="img-fallback" aria-hidden="true"></div>

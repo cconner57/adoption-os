@@ -2,6 +2,7 @@
 import { useRouter } from 'vue-router'
 import { onMounted } from 'vue'
 import { usePets } from '../composables/usePets.ts'
+import { useScrollReveal } from '../composables/useScrollReveal.ts'
 
 import BannerButton from '../components/common/ui/BannerButton.vue'
 import Footer from '../components/common/footer/Footer.vue'
@@ -13,6 +14,7 @@ import Impact from '../components/home/impact/Impact.vue'
 const router = useRouter()
 
 const { spotlightPets, loading, error, fetchSpotlight } = usePets()
+const { vScrollReveal } = useScrollReveal()
 
 onMounted(() => {
   fetchSpotlight()
@@ -21,24 +23,32 @@ onMounted(() => {
 
 <template>
   <div class="container">
-
-    <HeroSection />
+    <div v-scroll-reveal>
+      <HeroSection />
+    </div>
     <main class="section-1">
       <div class="content-wrapper">
-        <AdoptionSpotlight :pets="spotlightPets" :loading="loading" :error="error" />
-        <Mission />
+        <div v-scroll-reveal class="reveal-delay-100">
+          <AdoptionSpotlight :pets="spotlightPets" :loading="loading" :error="error" />
+        </div>
+        <div v-scroll-reveal class="reveal-delay-200">
+          <Mission />
+        </div>
       </div>
     </main>
     <main class="section-2">
       <div class="content-wrapper">
-        <Impact />
-        <section class="call-to-action">
+        <div v-scroll-reveal>
+          <Impact />
+        </div>
+        <section class="call-to-action" v-scroll-reveal>
           <BannerButton
             imgSrc="/images/paw.svg"
             title="Adopt a Pet"
             subtitle="Find your perfect companion"
             color="blue"
             @click="() => router.push('/adopt')"
+            class="hover-scale"
           />
           <BannerButton
             imgSrc="/images/hand.svg"
@@ -46,6 +56,7 @@ onMounted(() => {
             subtitle="Volunteer, foster, or support us"
             color="purple"
             @click="() => router.push('/volunteer')"
+            class="hover-scale"
           />
           <BannerButton
             imgSrc="/images/heart.svg"
@@ -53,6 +64,7 @@ onMounted(() => {
             subtitle="Help us save more lives"
             color="green"
             @click="() => router.push('/donate')"
+            class="hover-scale"
           />
         </section>
       </div>
@@ -67,6 +79,35 @@ onMounted(() => {
   width: 100%;
 }
 
+/* Scroll Reveal Base Styles */
+:deep(.reveal) {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: all 0.8s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+:deep(.reveal.active) {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+:deep(.reveal-delay-100.active) {
+  transition-delay: 0.1s;
+}
+
+:deep(.reveal-delay-200.active) {
+  transition-delay: 0.2s;
+}
+
+/* Hover Scale Effect */
+:deep(.hover-scale) {
+  transition: transform 0.3s ease;
+}
+
+:deep(.hover-scale:hover) {
+  transform: scale(1.05);
+}
+
 .content-wrapper {
   width: 100%;
   max-width: 1600px;
@@ -74,22 +115,17 @@ onMounted(() => {
   display: flex;
   flex-direction: column;
   gap: 64px;
-
-  /* Media query gap adjustments... we can move them here or keep them on main */
-  /* Actually main had the gap. Let's move gap logic to content-wrapper if we are wrapping EVERYTHING inside main */
 }
 
 main {
   display: flex;
   flex-direction: column;
-  align-items: center; /* Center the wrapper */
-  /* gap: 64px;  <-- This gap was between AdoptionSpotlight and Mission. moving to content-wrapper */
+  align-items: center;
   width: 100%;
 }
 
 /* Move gap media queries to content-wrapper */
 .content-wrapper {
-  /* ... base styles ... */
   display: flex;
   flex-direction: column;
   gap: 64px;
@@ -138,14 +174,14 @@ main {
   padding: 60px var(--layout-padding-side) 80px;
   height: auto;
 
-   /* Media queries for padding/margin */
+  /* Media queries for padding/margin */
   @media (min-width: 0px) and (max-width: 320px) {
     padding-top: 40px;
-    padding-bottom: 60px;
+    padding-bottom: 24px;
   }
   @media (min-width: 321px) and (max-width: 430px) {
     padding-top: 60px;
-    padding-bottom: 80px;
+    padding-bottom: 32px;
   }
   @media (min-width: 431px) and (max-width: 768px) {
     padding-top: 80px;
@@ -172,14 +208,14 @@ main {
   @media (min-width: 0px) and (max-width: 320px) {
     flex-direction: column;
     gap: 16px;
-    margin: 20px 0 40px;
+    margin: 20px 0 0;
   }
 
   /* 321px - 430px */
   @media (min-width: 321px) and (max-width: 430px) {
     flex-direction: column;
     gap: 20px;
-    margin: 20px 0 40px;
+    margin: 20px 0 0;
   }
 
   /* 431px - 768px */

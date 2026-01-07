@@ -152,7 +152,8 @@ onMounted(async () => {
     }
   }
 
-  @container impact (max-width: 900px) {
+  /* Media Queries */
+  @media (max-width: 900px) {
     margin-top: -80px;
     padding: 30px;
     height: auto;
@@ -200,7 +201,8 @@ onMounted(async () => {
     }
   }
 
-  @container impact (max-width: 480px) {
+  @media (max-width: 480px) {
+    margin-top: -30px; /* Reduced overlap for mobile */
     padding: 24px;
 
     .stats {

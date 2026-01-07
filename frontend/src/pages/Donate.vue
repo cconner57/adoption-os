@@ -159,11 +159,12 @@ import Footer from '../components/common/footer/Footer.vue'
   flex-direction: column;
   align-items: center;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-  transition: transform 0.3s ease;
+  transition: all 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
 }
 
 .donate-card:hover {
-  transform: translateY(-5px);
+  transform: translateY(-8px);
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.12);
 }
 
 .donate-card h2 {
@@ -180,6 +181,11 @@ import Footer from '../components/common/footer/Footer.vue'
   border-radius: 50%;
   margin-bottom: 32px;
   border: 6px solid;
+  transition: transform 0.3s ease;
+}
+
+.donate-card:hover .illustration img {
+  transform: scale(1.05);
 }
 
 .payment-methods {
@@ -198,7 +204,7 @@ import Footer from '../components/common/footer/Footer.vue'
   text-decoration: none;
   font-weight: 600;
   font-size: 1.1rem;
-  transition: all 0.2s ease;
+  transition: all 0.2s cubic-bezier(0.2, 0.8, 0.2, 1);
   color: white;
   box-shadow:
     0 4px 6px rgba(50, 50, 93, 0.11),
@@ -212,6 +218,11 @@ import Footer from '../components/common/footer/Footer.vue'
     0 7px 14px rgba(50, 50, 93, 0.1),
     0 3px 6px rgba(0, 0, 0, 0.08);
   filter: brightness(1.1);
+}
+
+.donate-btn:active {
+  transform: translateY(1px);
+  box-shadow: none;
 }
 
 .qr-section {

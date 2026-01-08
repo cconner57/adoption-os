@@ -146,12 +146,14 @@ const { vScrollReveal } = useScrollReveal()
 
     h1 {
       font-size: 2.5rem;
+      color: var(--font-color-light);
     }
     p {
       font-size: 1.25rem;
       max-width: 600px;
       margin-top: 12px;
       font-weight: 400; /* Increased contrast */
+      color: var(--font-color-light);
     }
   }
 
@@ -209,6 +211,7 @@ const { vScrollReveal } = useScrollReveal()
 
     h2 {
       font-size: 2.5rem;
+      color: var(--font-color-light);
     }
 
     p {
@@ -216,6 +219,7 @@ const { vScrollReveal } = useScrollReveal()
       max-width: 600px;
       margin-top: 12px;
       font-weight: 400; /* Increased contrast */
+      color: var(--font-color-light);
     }
 
     img {
@@ -229,6 +233,7 @@ const { vScrollReveal } = useScrollReveal()
       padding: 0;
       margin: 12px 0 0;
       font-weight: 400; /* Increased contrast */
+      color: var(--font-color-light);
     }
     & .ticks li {
       position: relative;

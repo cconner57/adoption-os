@@ -60,7 +60,7 @@
       width: 100%;
       max-width: 650px;
       font-size: 1.2rem;
-      color: var(--font-color-medium);
+      color: var(--font-color-light);
       line-height: 1.6;
       line-height: 1.6;
       font-weight: 400;

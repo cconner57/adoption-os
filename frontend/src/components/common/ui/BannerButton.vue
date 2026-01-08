@@ -75,9 +75,11 @@ h5 {
   margin: 0;
   font-size: 1.5rem;
   font-weight: 600;
+  color: inherit;
 }
 p {
   margin: 0;
   font-size: 1rem;
+  color: inherit;
 }
 </style>

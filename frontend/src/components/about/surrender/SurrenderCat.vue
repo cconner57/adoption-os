@@ -31,7 +31,7 @@ const goToSurrenderForm = () => {
 <style scoped lang="css">
 h2 {
   font-size: 2.5rem;
-  color: var(--green-dark);
+  color: var(--font-color-light);
   text-align: center;
   margin: 50px 0 10px;
 }
@@ -46,7 +46,7 @@ h2 {
 
 .description {
   font-size: 1.2rem;
-  color: var(--gray-dark);
+  color: var(--font-color-light);
   margin-bottom: 50px;
   text-align: center;
   font-weight: 400;

@@ -1,4 +1,8 @@
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import { computed } from 'vue'
+
+const currentYear = computed(() => new Date().getFullYear())
+</script>
 
 <template>
   <footer class="footer">
@@ -12,7 +16,7 @@
       <p>I Dream of Home Rescue PO Box 7612, La Verne, California 91750</p>
     </div>
     <div class="footer__copyright">
-      <p>&copy; 2025 I Dream of Home Rescue. All rights reserved.</p>
+      <p>&copy; {{ currentYear }} I Dream of Home Rescue. All rights reserved.</p>
     </div>
   </footer>
 </template>
@@ -20,7 +24,7 @@
 <style scoped lang="css">
 .footer {
   background-color: var(--green);
-  color: var(--font-text-light);
+  color: var(--font-color-light);
   padding: 40px 20px;
   text-align: center;
   border-top: 1px solid #ddd;
@@ -41,7 +45,7 @@
   align-items: center;
   a {
     margin: 0 10px;
-    color: var(--font-text-light);
+    color: var(--font-color-light) !important;
     text-decoration: none;
     font-weight: 500;
     padding-bottom: 5px;
@@ -55,19 +59,12 @@
   font-size: 20px;
   font-weight: 800;
   margin-bottom: 10px;
+  color: var(--font-color-light) !important;
 
   @media (max-width: 440px) {
     font-size: 16px;
     margin-bottom: 5px;
   }
-}
-
-.footer__links {
-  list-style: none;
-  padding: 0;
-  display: flex;
-  justify-content: center;
-  gap: 15px;
 }
 
 .footer__info {
@@ -76,6 +73,7 @@
     line-height: 1.5;
     font-weight: 400;
     margin: 4px 0;
+    color: var(--font-color-light) !important;
   }
 
   @media (max-width: 440px) {
@@ -91,10 +89,11 @@
 
 .footer__copyright {
   font-size: 12px;
-  color: var(--font-text-light);
+  color: var(--font-color-light);
   p {
     line-height: 1.5;
     font-weight: 400;
+    color: var(--font-color-light) !important;
   }
 
   @media (max-width: 440px) {

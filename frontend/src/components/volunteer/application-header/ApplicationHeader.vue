@@ -50,6 +50,7 @@ const { headerTitle, headerText } = defineProps<{
     font-size: 4.25rem;
     line-height: 1.2;
     letter-spacing: 0.2px;
+    color: var(--green);
   }
   & img {
     width: 80px;

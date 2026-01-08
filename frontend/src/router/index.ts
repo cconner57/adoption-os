@@ -103,6 +103,16 @@ const router = createRouter({
           name: 'admin-transport',
           component: () => import('../pages/admin/Transport.vue'),
         },
+        {
+          path: 'transport',
+          name: 'admin-transport',
+          component: () => import('../pages/admin/Transport.vue'),
+        },
+        {
+          path: 'applications',
+          name: 'admin-applications',
+          component: () => import('../pages/admin/Applications.vue'),
+        },
       ],
     },
     {

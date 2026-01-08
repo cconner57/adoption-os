@@ -3,6 +3,7 @@ import { ref, computed, onMounted, watch } from 'vue'
 import { mockPetsData } from '../../stores/mockPetData'
 import type { IPet } from '../../models/common'
 import PetEditor from '../../components/admin/pets/PetEditor.vue'
+import PetRow from '../../components/admin/pets/PetRow.vue'
 
 // State
 const pets = ref<IPet[]>([...mockPetsData])
@@ -12,6 +13,7 @@ const searchQuery = ref('')
 const statusFilter = ref('all')
 const speciesFilter = ref('all')
 const isSettingsOpen = ref(false)
+const expandedPetId = ref<string | null>(null)
 
 // Configurable Columns
 const visibleColumns = ref({
@@ -118,53 +120,12 @@ function handleArchivePet(pet: IPet) {
   }
 }
 
-function getStatusColor(status: string) {
-  const map: Record<string, string> = {
-    available: 'green',
-    'adoption-pending': 'orange',
-    adopted: 'blue',
-    foster: 'purple',
-    hold: 'red',
-    intake: 'gray',
-    archived: 'gray',
+function handleToggleExpand(pet: IPet) {
+  if (expandedPetId.value === pet.id) {
+    expandedPetId.value = null
+  } else {
+    expandedPetId.value = pet.id
   }
-  return map[status] || 'gray'
-}
-
-function formatDoB(dateString: string) {
-  if (!dateString) return '-'
-  const date = new Date(dateString)
-  return date.toLocaleDateString('en-US', {
-    month: '2-digit',
-    day: '2-digit',
-    year: 'numeric',
-  })
-}
-
-function calculateAge(dateOfBirth?: string | null) {
-  if (!dateOfBirth) return '-'
-
-  const birthDate = new Date(dateOfBirth)
-  const today = new Date()
-
-  let years = today.getFullYear() - birthDate.getFullYear()
-  let months = today.getMonth() - birthDate.getMonth()
-
-  if (months < 0 || (months === 0 && today.getDate() < birthDate.getDate())) {
-    years--
-    months += 12
-  }
-
-  // Adjust months if days are less
-  if (today.getDate() < birthDate.getDate()) {
-    months--
-  }
-
-  if (years === 0 && months === 0) return '< 1 month'
-  if (years === 0) return `${months} mo`
-  if (months === 0) return `${years} yr`
-
-  return `${years} yr ${months} mo`
 }
 </script>
 
@@ -172,7 +133,7 @@ function calculateAge(dateOfBirth?: string | null) {
   <div class="admin-page" @click="isSettingsOpen = false">
     <div class="page-header">
       <div class="header-left">
-        <h1>Pets Management</h1>
+        <h1>Pet Records</h1>
         <span class="count-badge">{{ filteredPets.length }} Pets</span>
       </div>
       <div class="header-actions" @click.stop>
@@ -253,7 +214,9 @@ function calculateAge(dateOfBirth?: string | null) {
       <table class="pets-table">
         <thead>
           <tr>
-            <th v-if="visibleColumns.photo" width="80">Photo</th>
+            <th class="expand-col"></th>
+            <!-- Expand Arrow Column -->
+            <th v-if="visibleColumns.photo">Photo</th>
             <th v-if="visibleColumns.name">Name</th>
             <th v-if="visibleColumns.breed">Breed</th>
             <th v-if="visibleColumns.sex">Sex</th>
@@ -267,96 +230,22 @@ function calculateAge(dateOfBirth?: string | null) {
             <th v-if="statusFilter === 'foster'">Foster Start</th>
 
             <th v-if="visibleColumns.status">Status</th>
-            <th v-if="visibleColumns.actions" align="right">Actions</th>
+            <th v-if="visibleColumns.actions">Actions</th>
           </tr>
         </thead>
         <tbody>
-          <tr v-for="pet in filteredPets" :key="pet.id">
-            <td v-if="visibleColumns.photo">
-              <div class="pet-avatar">
-                <img
-                  v-if="pet.photos && pet.photos.length > 0"
-                  :src="pet.photos[0].thumbnailUrl || pet.photos[0].url"
-                  alt="Pet"
-                />
-                <div v-else class="avatar-placeholder">
-                  {{ pet.species === 'cat' ? '🐱' : '🐶' }}
-                </div>
-              </div>
-            </td>
-            <td v-if="visibleColumns.name" class="font-bold">
-              <router-link :to="`/adopt/${pet.id}`" target="_blank" class="pet-link">
-                {{ pet.name }}
-              </router-link>
-            </td>
-            <td v-if="visibleColumns.breed">{{ pet.physical.breed || 'Unknown' }}</td>
-            <td v-if="visibleColumns.sex" class="capitalize">{{ pet.sex }}</td>
-            <td v-if="visibleColumns.sn" class="text-center">
-              <span v-if="pet.medical?.spayedOrNeutered" title="Spayed/Neutered">✅</span>
-              <span v-else class="text-muted" title="Not Spayed/Neutered">❌</span>
-            </td>
-            <td v-if="visibleColumns.microchip">
-              <span v-if="pet.medical?.microchip?.microchipID" class="mono-text">
-                {{ pet.medical.microchip.microchipID }}
-              </span>
-              <span v-else class="text-muted">-</span>
-            </td>
-            <td v-if="visibleColumns.age">
-              {{ calculateAge(pet.physical.dateOfBirth) }}
-            </td>
-            <td v-if="visibleColumns.dob">
-              <span v-if="pet.physical.dateOfBirth">
-                {{ formatDoB(pet.physical.dateOfBirth) }}
-              </span>
-              <span v-else class="text-muted">-</span>
-            </td>
-            <td v-if="visibleColumns.intake">
-              <span v-if="pet.details?.intakeDate">
-                {{ formatDoB(pet.details.intakeDate) }}
-              </span>
-              <span v-else class="text-muted">-</span>
-            </td>
-
-            <!-- Dynamic Data -->
-            <td v-if="statusFilter === 'adopted'">
-              <span v-if="pet.adoption?.date">{{ formatDoB(pet.adoption.date) }}</span>
-              <span v-else class="text-muted">-</span>
-            </td>
-            <td v-if="statusFilter === 'foster'">
-              <span v-if="pet.foster?.startDate">{{ formatDoB(pet.foster.startDate) }}</span>
-              <span v-else class="text-muted">-</span>
-            </td>
-
-            <td v-if="visibleColumns.status">
-              <span class="status-badge" :class="getStatusColor(pet.details.status)">
-                {{ pet.details.status.replace('-', ' ') }}
-              </span>
-            </td>
-            <td v-if="visibleColumns.actions" align="right">
-              <div class="row-actions">
-                <button class="icon-btn edit" @click="handleEditPet(pet)" title="Edit">✎</button>
-                <button class="icon-btn archive" @click="handleArchivePet(pet)" title="Archive">
-                  <!-- Archive Box Icon -->
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="18"
-                    height="18"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-width="2"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    class="lucide lucide-archive"
-                  >
-                    <rect width="20" height="5" x="2" y="3" rx="1" />
-                    <path d="M4 8v11a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8" />
-                    <path d="M10 12h4" />
-                  </svg>
-                </button>
-              </div>
-            </td>
-          </tr>
+          <template v-for="(pet, index) in filteredPets" :key="pet.id">
+            <PetRow
+              :pet="pet"
+              :index="index"
+              :visible-columns="visibleColumns"
+              :is-expanded="expandedPetId === pet.id"
+              :status-filter="statusFilter"
+              @toggle-expand="handleToggleExpand"
+              @edit="handleEditPet"
+              @archive="handleArchivePet"
+            />
+          </template>
         </tbody>
       </table>
     </div>
@@ -423,6 +312,8 @@ function calculateAge(dateOfBirth?: string | null) {
   width: 42px; /* Match height of inputs/selects approx */
   height: 42px;
   font-size: 1.2rem;
+  border-radius: 6px;
+  cursor: pointer;
 
   &:hover {
     background: #f9fafb;
@@ -479,9 +370,15 @@ function calculateAge(dateOfBirth?: string | null) {
   width: 250px;
   outline: none;
   font-size: 0.95rem;
+  background-color: white;
+  color: var(--font-color-dark);
 
   &:focus {
     border-color: var(--blue);
+  }
+
+  &::placeholder {
+    color: #9ca3af;
   }
 }
 
@@ -522,6 +419,27 @@ function calculateAge(dateOfBirth?: string | null) {
   overflow: hidden;
   flex: 1;
   overflow-y: auto;
+
+  /* Custom Scrollbar */
+  &::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: #f1f5f9;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: #cbd5e1; /* Using a neutral gray that fits */
+    border-radius: 4px;
+
+    /* If we want branded: background: var(--green-weak); */
+  }
+
+  &::-webkit-scrollbar-thumb:hover {
+    background: #94a3b8;
+  }
 }
 
 .pets-table {
@@ -541,137 +459,11 @@ function calculateAge(dateOfBirth?: string | null) {
     z-index: 10;
   }
 
-  td {
-    padding: 12px 24px;
-    border-bottom: 1px solid #f3f4f6;
-    color: var(--font-color-dark);
-    vertical-align: middle;
-  }
-
-  tbody tr:nth-child(even) {
-    background-color: #fafafa;
-  }
-
-  tbody tr:hover {
-    background-color: #f1f5f9;
-  }
+  /* Note: tr/td hover styles handled by PetRow.vue but we might want global header styling */
 }
 
-.pet-avatar {
-  width: 48px;
-  height: 48px;
-  border-radius: 8px;
-  overflow: hidden;
-  background: #f3f4f6;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-  }
-}
-
-.avatar-placeholder {
-  font-size: 1.5rem;
-}
-
-.font-bold {
-  font-weight: 600;
-}
-
-.capitalize {
-  text-transform: capitalize;
-}
-
-.status-badge {
-  padding: 4px 10px;
-  border-radius: 12px;
-  font-size: 0.8rem;
-  font-weight: 600;
-  text-transform: uppercase;
-  white-space: nowrap;
-
-  &.green {
-    background-color: rgba(0, 165, 173, 0.1);
-    color: var(--green);
-  }
-  &.orange {
-    background-color: rgba(222, 176, 36, 0.1);
-    color: var(--yellow);
-  }
-  &.blue {
-    background-color: rgba(25, 118, 210, 0.1);
-    color: var(--blue);
-  }
-  &.purple {
-    background-color: rgba(107, 91, 149, 0.1);
-    color: var(--purple);
-  }
-  &.red {
-    background-color: rgba(199, 58, 103, 0.1);
-    color: var(--red);
-  }
-  &.gray {
-    background-color: #f3f4f6;
-    color: var(--font-color-medium);
-  }
-}
-
+/* Helper class for alignment */
 .text-center {
   text-align: center;
-}
-
-.text-muted {
-  opacity: 0.3;
-}
-
-.row-actions {
-  display: flex;
-  gap: 8px;
-  justify-content: flex-end;
-}
-
-.icon-btn {
-  width: 32px;
-  height: 32px;
-  border-radius: 6px;
-  border: 1px solid transparent;
-  background: transparent;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 1.1rem;
-  transition: all 0.2s;
-
-  &.edit:hover {
-    background: #eff6ff;
-    color: var(--blue);
-  }
-  &.archive:hover {
-    background: #fef2f2;
-    color: #ef4444;
-  }
-}
-
-.pet-link {
-  color: var(--font-color-dark);
-  text-decoration: none;
-  &:hover {
-    color: var(--blue);
-    text-decoration: underline;
-  }
-}
-
-.mono-text {
-  font-family: monospace;
-  font-size: 0.9em;
-  color: var(--font-color-dark);
-  background: #f9fafb;
-  padding: 2px 6px;
-  border-radius: 4px;
 }
 </style>

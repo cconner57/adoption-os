@@ -1,3 +1,4 @@
+import Applications from './admin/Applications.vue'
 export { default as About } from './About.vue'
 export { default as Adopt } from './Adopt.vue'
 export { default as Home } from './Home.vue'
@@ -7,3 +8,16 @@ export { default as PetAdoption } from './PetAdoption.vue'
 export { default as SurrenderPet } from './SurrenderPet.vue'
 export { default as NotFound } from './NotFound.vue'
 export { default as Login } from './Login.vue'
+
+export {
+  Home,
+  About,
+  Adopt,
+  Donate,
+  Volunteer,
+  SurrenderPet,
+  PetAdoption,
+  NotFound,
+  Login,
+  Applications,
+}

@@ -22,6 +22,7 @@ const navItems = [
   { name: 'Overview', path: '/admin', icon: '📊' },
   { name: 'Calendar', path: '/admin/calendar', icon: '📅' },
   { name: 'Pet Records', path: '/admin/pets', icon: '🐾' },
+  { name: 'Applications', path: '/admin/applications', icon: '📝' },
   { name: 'Medical', path: '/admin/pet-health', icon: '🩺' },
   { name: 'Volunteers', path: '/admin/volunteers', icon: '🤝' },
   { name: 'Transport', path: '/admin/transport', icon: '🚙' },

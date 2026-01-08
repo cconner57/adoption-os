@@ -10,6 +10,13 @@ import {
   NotFound,
   Login,
 } from '../pages/index.ts'
+// Kiosk Pages (Lazy load to keep bundle small)
+const KioskLayout = () => import('../layouts/KioskLayout.vue')
+const KioskHome = () => import('../pages/kiosk/KioskHome.vue')
+const KioskDailyCare = () => import('../pages/kiosk/KioskDailyCare.vue')
+const KioskPetList = () => import('../pages/kiosk/KioskPetList.vue')
+const KioskVetSchedule = () => import('../pages/kiosk/KioskVetSchedule.vue')
+
 import { useMetrics } from '../composables/useMetrics'
 import { nextTick } from 'vue'
 
@@ -23,6 +30,16 @@ const router = createRouter({
     {
       path: '/login',
       component: Login,
+    },
+    {
+      path: '/kiosk',
+      component: KioskLayout,
+      children: [
+        { path: '', name: 'kiosk-home', component: KioskHome },
+        { path: 'daily-care', name: 'kiosk-daily-care', component: KioskDailyCare },
+        { path: 'pets', name: 'kiosk-pets', component: KioskPetList },
+        { path: 'vet', name: 'kiosk-vet', component: KioskVetSchedule },
+      ],
     },
     {
       path: '/admin',

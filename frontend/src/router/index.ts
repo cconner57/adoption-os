@@ -179,26 +179,34 @@ interface ViewTransitionDocument extends Document {
 
 import { useAuthStore } from '../stores/auth'
 
-router.beforeEach((to, from, next) => {
+router.beforeEach(async (to, from, next) => {
   const authStore = useAuthStore()
 
-  // 1. Check if route requires admin access (path starts with /admin)
+  // Ensure we have the latest auth state (optional, but good for refresh)
+  if (!authStore.user && authStore.isAuthenticated) {
+    // If pinia persistence was used this would be different,
+    // but currently we rely on `checkAuth` on app mount usually.
+    // For now, assume state is correct.
+  }
+
+  // 1. Prevent logged-in users from seeing Login page
+  if (to.path === '/login' && authStore.isAuthenticated) {
+    next('/admin')
+    return
+  }
+
+  // 2. Check if route requires admin access
   if (to.path.startsWith('/admin')) {
     if (!authStore.isAuthenticated) {
       // Not logged in -> Redirect to login
       next('/login')
       return
     }
-
-    // Optional: Check role if we had strict RBAC
-    if (authStore.user?.role !== 'admin') {
-      // logged in but not admin -> home
-      next('/')
-      return
-    }
+    // We removed the role check redirect to '/' as requested.
+    // Authorized users stay here.
   }
 
-  // 2. Allow navigation
+  // 3. Allow navigation
   next()
 })
 

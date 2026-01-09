@@ -22,7 +22,7 @@ run-be:
 .PHONY: run-fe
 run-fe:
 	@echo 'Starting Frontend...'
-	cd frontend && npm run dev
+	cd frontend && npm run dev -- --host
 
 ## db/psql: connect to the database
 .PHONY: db/psql

@@ -23,7 +23,7 @@ The frontend is a **Vue 3** application built with **TypeScript**. It provides a
 
 ### 🧠 Backend
 
-The backend is a high-performance API built with **Go 1.24** (Standard Library) and **PostgreSQL 16**.
+The backend is a high-performance API built with **Go (Latest Stable)** (Standard Library) and **PostgreSQL (Latest Stable)**.
 
 - **Tech Stack:** Go, PostgreSQL.
 - **Key Features:**
@@ -74,8 +74,8 @@ Follow these instructions to get the project running on your local machine.
 
 ### Prerequisites
 
-- **Go:** Version 1.24 or higher
-- **Node.js:** Version 20.x or higher
+- **Go:** Latest Stable Version
+- **Node.js:** Latest Stable Version
 - **Docker:** For running the PostgreSQL database
 - **Make:** To use the simplified commands in the `Makefile`
 
@@ -112,9 +112,18 @@ Follow these instructions to get the project running on your local machine.
 
 Once these steps are complete, the frontend should be accessible at `http://localhost:5173` (or another port specified by Vite) and the backend at `http://localhost:4000`.
 
+> [!CAUTION]
+> **Security Warning**: Ensure you create a `.env` file for local configuration. **NEVER** commit secrets or API keys to the repository.
+
 ---
 
-## 🗺️ Roadmap: Adoption OS Master Execution Plan
+## �️ Security
+
+If you discover a security vulnerability, please do not open a public issue. Email security@adoption-os.org (placeholder) instead.
+
+---
+
+## �🗺️ Roadmap: Adoption OS Master Execution Plan
 
 ### Year 1: Foundation, Revenue, and Core Operations
 
@@ -130,7 +139,7 @@ _(Status: In Progress)_
 
 #### Phase 2: Agency Administration & Workflow
 
-- [ ] **Admin Shell:** Build the secure internal layout including JWT-based authentication, role-based route guards, and a responsive sidebar navigation for staff.
+- [ ] **Admin Shell:** Build the secure internal layout including secure token-based authentication, role-based route guards, and a responsive sidebar navigation for staff.
 - [ ] **Admin Dashboard:** Create a "Morning Overview" widget showing pending applications, urgent medical tasks, and recent donations at a glance.
 - [ ] **Pet Record Management:** Develop full CRUD (Create, Read, Update, Delete) views for animal profiles, including status toggles (Available/Pending/Adopted).
 - [ ] **Mobile Image Compression:** Implement client-side image resizing (Canvas API) to auto-convert 10MB phone photos to optimized WebP thumbnails _before_ upload.
@@ -240,9 +249,9 @@ _(Status: In Progress)_
 
 #### Phase 15: Advanced Scoring Logic (Part 2 - Workforce)
 
-- **Volunteer Scoring System:** Rank applicants by skill/availability.
-- **Foster Scoring System:** Rate potential fosters.
-- **Reliability Index:** Track "Show-up Rate."
+- **Volunteer Matching Logic:** Rank applicants by skill/availability.
+- **Foster Matching Logic:** Rate potential fosters.
+- **Engagement Metrics:** Track "Show-up Rate."
 - **Capacity Planning:** Forecast volunteer needs.
 - **Skill-Gap Analysis:** Identify missing volunteer skills.
 
@@ -306,7 +315,7 @@ _(Status: In Progress)_
 
 - **AI Bio Generator:** Creative text from tags.
 - **Photo Quality Scorer:** Rate photos for adoption appeal.
-- **Churn Prediction:** Identify at-risk volunteers.
+- **Retention Analytics:** Identify at-risk volunteers.
 - **Breed Identification:** Computer vision breed estimates.
 - **Sentiment Analysis:** Analyze feedback for issues.
 

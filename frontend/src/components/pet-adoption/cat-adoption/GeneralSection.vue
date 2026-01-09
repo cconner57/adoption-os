@@ -44,6 +44,10 @@ function addChild() {
 function removeChild(index: number) {
   modelValue.childrenNamesAges.splice(index, 1)
 }
+
+function handleAgreementUpdate(val: string) {
+  modelValue.adultMembersAgreed = val as 'Yes' | 'No'
+}
 </script>
 
 <template>
@@ -270,7 +274,7 @@ function removeChild(index: number) {
         <ButtonToggle
           label="Have all adult members of the household agreed to this adoption?"
           :modelValue="modelValue.adultMembersAgreed"
-          @update:modelValue="(val) => (modelValue.adultMembersAgreed = val as 'Yes' | 'No')"
+          @update:modelValue="handleAgreementUpdate"
           :hasError="hasAttemptedSubmit && !modelValue.adultMembersAgreed"
         />
       </div>
@@ -284,6 +288,16 @@ function removeChild(index: number) {
   flex-direction: column;
   gap: 1.5rem;
   padding: 0 0.5rem;
+
+  .fax-field {
+    opacity: 0;
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 0;
+    width: 0;
+    z-index: -1;
+  }
 
   p {
     font-size: 1.75rem;
@@ -420,4 +434,5 @@ function removeChild(index: number) {
       color: var(--color-primary);
     }
   }
-
+}
+</style>

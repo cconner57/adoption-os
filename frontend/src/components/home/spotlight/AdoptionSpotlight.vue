@@ -81,7 +81,7 @@ const displayedPets = computed((): IPet[] => {
     overflow-x: auto;
     padding-bottom: 8px;
     -webkit-overflow-scrolling: touch;
-    justify-content: flex-start;
+    justify-content: center; /* Center by default on larger screens */
 
     /* Fix for cutoff cards: extend scroll area to edges */
     margin-left: -50px;
@@ -104,6 +104,7 @@ const displayedPets = computed((): IPet[] => {
       margin-right: -2rem;
       padding-left: 2rem;
       padding-right: 2rem;
+      justify-content: flex-start; /* Keep left alignment for scrolling on mobile */
     }
   }
   @media (min-width: 431px) and (max-width: 768px) {

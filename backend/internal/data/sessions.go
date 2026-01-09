@@ -21,7 +21,7 @@ type SessionModel struct {
 	DB *sql.DB
 }
 
-func (m SessionModel) Insert(userID int64, ttl time.Duration, ip, userAgent string) (string, error) {
+func (m SessionModel) Insert(userID string, ttl time.Duration, ip, userAgent string) (string, error) {
 	token, err := generateToken()
 	if err != nil {
 		return "", err

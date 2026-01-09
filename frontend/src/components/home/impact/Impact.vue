@@ -14,8 +14,13 @@ import { API_ENDPOINTS } from '../../../constants/api'
 const fetchCount = async (year: number) => {
   try {
     const response = await fetch(`${API_ENDPOINTS.ADOPTED_PETS_COUNT}?year=${year}`)
-    const data = await response.json()
-    return data.count || 0
+    const json = await response.json()
+    // Handle standard envelope { data: { count: N } }
+    if (json.data && typeof json.data.count === 'number') {
+      return json.data.count
+    }
+    // Fallback if structure is different
+    return json.count || 0
   } catch (error) {
     console.error(`Error fetching count for ${year}:`, error)
     return 0

@@ -2,54 +2,70 @@ import { defineStore } from 'pinia'
 import { ref, computed } from 'vue'
 
 export const useAuthStore = defineStore('auth', () => {
-  const user = ref<{ email: string; name: string; role: 'admin' | 'volunteer' } | null>(null)
+  const user = ref<{
+    ID: number
+    Name: string
+    Email: string
+    Role: string
+  } | null>(null)
 
-  // Mock function to check if user is logged in (persisted state could be added later)
   const isAuthenticated = computed(() => !!user.value)
 
   const login = async (email: string, password: string): Promise<boolean> => {
-    // Simulate API delay
-    await new Promise((resolve) => setTimeout(resolve, 800))
+    try {
+      const response = await fetch('/api/users/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email, password }),
+      })
 
-    // Mock verification
-    if (email === 'admin@idohr.org' && password === 'admin123') {
-      user.value = {
-        email,
-        name: 'Test-User',
-        role: 'admin',
+      if (response.ok) {
+        // Login successful, now fetch user details
+        await checkAuth()
+        return true
       }
-      return true
-    }
-
-    if (password === 'volunteer123') {
-      user.value = {
-        email,
-        name: 'Volunteer User',
-        role: 'volunteer',
-      }
-      return true
-    }
-
-    return false
-  }
-
-  const devLogin = () => {
-    user.value = {
-      email: 'admin@idohr.org',
-      name: 'John',
-      role: 'admin',
+      return false
+    } catch (error) {
+      console.error('Login error:', error)
+      return false
     }
   }
 
-  const logout = () => {
+  const checkAuth = async () => {
+    try {
+      const response = await fetch('/api/users/me')
+      if (response.ok) {
+        const data = await response.json()
+        if (data && data.data) {
+          user.value = data.data
+          // Temporary Role mapping until backend sends role
+          // Defaulting Admin for now since we only seeded Admin
+          user.value!.Role = 'admin'
+        }
+      } else {
+        user.value = null
+      }
+    } catch (error) {
+      console.error('Check auth error:', error)
+      user.value = null
+    }
+  }
+
+  const logout = async () => {
+    // Ideally call backend logout endpoint if we had one to clear cookie
+    // For now just clear local state, but cookie will persist until expiry or cleared
+    // Note: To do this properly, we need a POST /users/logout endpoint that clears the cookie.
     user.value = null
+    window.location.reload() // Force reload to clear any memory/state
   }
 
   return {
     user,
     isAuthenticated,
     login,
-    devLogin,
+    checkAuth,
     logout,
   }
 })

@@ -72,3 +72,15 @@ func (app *application) loginUserHandler(w http.ResponseWriter, r *http.Request)
 		app.serverErrorResponse(w, r, err)
 	}
 }
+
+func (app *application) profileUserHandler(w http.ResponseWriter, r *http.Request) {
+	id := app.contextGetUser(r)
+
+	user, err := app.models.Users.Get(id)
+	if err != nil {
+		app.serverErrorResponse(w, r, err)
+		return
+	}
+
+	app.JSONResponse(w, http.StatusOK, user)
+}

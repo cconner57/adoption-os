@@ -11,7 +11,7 @@ import (
 
 type Session struct {
 	Token     string
-	UserID    int64
+	UserID    string
 	Expiry    time.Time
 	IP        string
 	UserAgent string

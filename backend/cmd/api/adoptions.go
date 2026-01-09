@@ -25,9 +25,9 @@ func (app *application) submitAdoptionApplication(w http.ResponseWriter, r *http
 
 	// Honeypot Check
 	if input.FaxNumber != "" {
-		app.logger.Println("Bot detected: honeypot field 'fax_number' was populated")
+		app.logger.Warn("Bot detected: honeypot populated", "field", "fax_number", "ip", r.RemoteAddr)
 		// Fake success
-		err = app.writeJSON(w, http.StatusOK, envelope{"status": "success", "message": "Adoption application received"}, nil)
+		err = app.JSONResponse(w, http.StatusOK, map[string]string{"message": "Adoption application received"})
 		if err != nil {
 			app.serverErrorResponse(w, r, err)
 		}
@@ -49,7 +49,7 @@ func (app *application) submitAdoptionApplication(w http.ResponseWriter, r *http
 	go func() {
 		defer func() {
 			if err := recover(); err != nil {
-				app.logger.Println("Panic in adoption email goroutine:", err)
+				app.logger.Error("Panic in adoption email goroutine", "error", err)
 			}
 		}()
 
@@ -68,7 +68,7 @@ func (app *application) submitAdoptionApplication(w http.ResponseWriter, r *http
 			// Path relative to backend root where binary runs
 			data, err := os.ReadFile("../frontend/public/images/idohr-logo.jpg")
 			if err != nil {
-				app.logger.Println("Failed to read logo:", err)
+				app.logger.Error("Failed to read logo", "error", err)
 				return nil
 			}
 			return data
@@ -259,22 +259,22 @@ func (app *application) submitAdoptionApplication(w http.ResponseWriter, r *http
 				if err == nil {
 					attachments["signature.png"] = sigBytes
 				} else {
-					app.logger.Println("Failed to decode adoption signature:", err)
+					app.logger.Error("Failed to decode adoption signature", "error", err)
 				}
 			}
 		}
 
-		app.logger.Println("DEBUG: Attempting to send adoption email to", recipient)
+		app.logger.Info("Attempting to send adoption email", "recipient", recipient)
 		err = app.mailer.Send(recipient, subject, body, attachments)
 		if err != nil {
-			app.logger.Println("Failed to send adoption email notification:", err)
+			app.logger.Error("Failed to send adoption email notification", "error", err)
 		} else {
-			app.logger.Println("Adoption email notification sent successfully to", recipient)
+			app.logger.Info("Adoption email notification sent successfully", "recipient", recipient)
 		}
 	}()
 
 	// Send back success
-	err = app.writeJSON(w, http.StatusOK, envelope{"status": "success", "message": "Adoption application received and validated"}, nil)
+	err = app.JSONResponse(w, http.StatusOK, map[string]string{"message": "Adoption application received and validated"})
 	if err != nil {
 		app.serverErrorResponse(w, r, err)
 	}

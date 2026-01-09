@@ -16,24 +16,22 @@ func (app *application) healthcheckHandler(w http.ResponseWriter, r *http.Reques
 	err := app.db.PingContext(ctx)
 	if err != nil {
 		data := envelope{
-			"status": "error",
-			"db":     "down",
+			"db": "down",
 		}
 		// Return 503 Service Unavailable
-		app.writeJSON(w, http.StatusServiceUnavailable, data, nil)
+		app.JSONError(w, http.StatusServiceUnavailable, data)
 		return
 	}
 
 	data := envelope{
-		"status": "ok",
-		"uptime": time.Since(time.Now()).String(), // Placeholder, realistically start time should be stored in app struct
+		"uptime": time.Since(time.Now()).String(), // Placeholder
 		"system_info": map[string]string{
 			"environment": app.config.env,
 			"version":     "1.0.0",
 		},
 	}
 
-	err = app.writeJSON(w, http.StatusOK, data, nil)
+	err = app.JSONResponse(w, http.StatusOK, data)
 	if err != nil {
 		app.serverErrorResponse(w, r, err)
 	}

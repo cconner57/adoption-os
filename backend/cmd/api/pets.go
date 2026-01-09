@@ -1,7 +1,6 @@
 package main
 
 import (
-	"encoding/json"
 	"fmt"
 	"net/http"
 )
@@ -14,20 +13,15 @@ func (app *application) getSpotlightPets(w http.ResponseWriter, r *http.Request)
 		return
 	}
 
-	w.Header().Set("Content-Type", "application/json")
-	if err := json.NewEncoder(w).Encode(pet); err != nil {
-		app.serverErrorResponse(w, r, err)
-	}
+	app.JSONResponse(w, http.StatusOK, pet)
 }
 
 func (app *application) getAllPets(w http.ResponseWriter, r *http.Request) {
-	data := envelope{"message": "GetAllPets coming soon"}
-	app.writeJSON(w, http.StatusOK, data, nil)
+	app.JSONResponse(w, http.StatusOK, map[string]string{"message": "GetAllPets coming soon"})
 }
 
 func (app *application) getAvailablePets(w http.ResponseWriter, r *http.Request) {
-	data := envelope{"message": "GetAvailablePets coming soon"}
-	app.writeJSON(w, http.StatusOK, data, nil)
+	app.JSONResponse(w, http.StatusOK, map[string]string{"message": "GetAvailablePets coming soon"})
 }
 
 func (app *application) getAdoptedPetsCount(w http.ResponseWriter, r *http.Request) {
@@ -44,5 +38,5 @@ func (app *application) getAdoptedPetsCount(w http.ResponseWriter, r *http.Reque
 		return
 	}
 
-	app.writeJSON(w, http.StatusOK, envelope{"count": count}, nil)
+	app.JSONResponse(w, http.StatusOK, map[string]int{"count": count})
 }

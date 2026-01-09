@@ -26,5 +26,8 @@ func (m MetricModel) Insert(metric *Metric) error {
 
 	args := []any{metric.EventType, metric.EventData}
 
-	return m.DB.QueryRowContext(context.Background(), query, args...).Scan(&metric.ID, &metric.CreatedAt)
+	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
+	defer cancel()
+
+	return m.DB.QueryRowContext(ctx, query, args...).Scan(&metric.ID, &metric.CreatedAt)
 }

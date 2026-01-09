@@ -34,6 +34,8 @@ type VolunteerApplication struct {
 	ParentSignatureData   *string   `json:"parentSignatureData"`
 	ParentSignatureDate   string    `json:"parentSignatureDate"`
 	Status                string    `json:"status"`
+	// Honeypot
+	FaxNumber string `json:"fax_number"`
 }
 
 type VolunteerModel struct {
@@ -60,7 +62,10 @@ func (m VolunteerModel) Insert(application *VolunteerApplication) error {
 		application.ParentName, application.ParentSignatureData, application.ParentSignatureDate,
 	}
 
-	return m.DB.QueryRowContext(context.Background(), query, args...).Scan(&application.ID, &application.CreatedAt, &application.Status)
+	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
+	defer cancel()
+
+	return m.DB.QueryRowContext(ctx, query, args...).Scan(&application.ID, &application.CreatedAt, &application.Status)
 }
 
 func ValidateVolunteerApplication(v *validator.Validator, application *VolunteerApplication) {

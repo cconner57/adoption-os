@@ -5,7 +5,7 @@ import (
 	"database/sql"
 	"flag"
 	"fmt"
-	"log"
+	"log/slog"
 	"net/http"
 	"os"
 	"os/signal"
@@ -41,7 +41,7 @@ type config struct {
 
 type application struct {
 	config config
-	logger *log.Logger
+	logger *slog.Logger
 	models data.Models
 	mailer mailer.Mailer // Add Mailer dependency
 	db     *sql.DB       // Add DB connection for HealthCheck
@@ -50,7 +50,8 @@ type application struct {
 func main() {
 	err := godotenv.Load()
 	if err != nil {
-		log.Println("Note: .env file not found (relying on system env vars)")
+		// keeping standard log here for pre-setup, or could use fmt
+		fmt.Println("Note: .env file not found (relying on system env vars)")
 	}
 
 	var cfg config
@@ -72,17 +73,39 @@ func main() {
 
 	flag.Parse()
 
-	// Initialize the logger
-	logger := log.New(os.Stdout, "", log.Ldate|log.Ltime)
+	// Initialize the structured logger
+	logger := slog.New(slog.NewJSONHandler(os.Stdout, &slog.HandlerOptions{
+		Level: slog.LevelInfo,
+		ReplaceAttr: func(_ []string, a slog.Attr) slog.Attr {
+			// Ensure timestamp is RFC3339
+			if a.Key == slog.TimeKey {
+				if t, ok := a.Value.Any().(time.Time); ok {
+					return slog.String(slog.TimeKey, t.Format(time.RFC3339))
+				}
+			}
+			return a
+		},
+	}))
+
+	// Set as global logger (optional, but good practice)
+	slog.SetDefault(logger)
 
 	// Create the DB connection pool
 	db, err := openDB(cfg)
 	if err != nil {
-		logger.Printf("WARNING: Could not connect to database: %v. Running in CSV-fallback mode.", err)
+		logger.Error("Could not connect to database. Running in CSV-fallback mode.", "error", err)
 		// db will be nil or unusable, handled in models
 	} else {
 		defer db.Close()
-		logger.Printf("database connection pool established")
+		logger.Info("database connection pool established")
+
+		// Run Migrations
+		if err := RunMigrations(db); err != nil {
+			// If migrations fail, we should probably stop the server
+			logger.Error("migration failure", "error", err)
+			os.Exit(1)
+		}
+		logger.Info("migrations completed")
 	}
 
 	// 👇 INITIALIZE THE APP INSTANCE
@@ -101,14 +124,16 @@ func main() {
 		IdleTimeout:  time.Minute,
 		ReadTimeout:  10 * time.Second,
 		WriteTimeout: 30 * time.Second,
+		ErrorLog:     slog.NewLogLogger(logger.Handler(), slog.LevelError), // Adapter for http.Server
 	}
 
-	logger.Printf("starting %s server on %s", cfg.env, srv.Addr)
+	logger.Info("starting server", "env", cfg.env, "addr", srv.Addr)
 
 	// Run the server in a goroutine so that it doesn't block.
 	go func() {
 		if err := srv.ListenAndServe(); err != nil && err != http.ErrServerClosed {
-			logger.Fatalf("listen: %s\n", err)
+			logger.Error("listen", "error", err)
+			os.Exit(1) // Fatal equivalent
 		}
 	}()
 
@@ -120,17 +145,18 @@ func main() {
 	// kill -9 is syscall.SIGKILL but can't be caught, so don't need to add it
 	signal.Notify(quit, syscall.SIGINT, syscall.SIGTERM)
 	<-quit
-	logger.Println("Shutdown Signal Received...")
+	logger.Info("Shutdown Signal Received...")
 
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
 
 	if err := srv.Shutdown(ctx); err != nil {
-		logger.Fatal("Server Shutdown:", err)
+		logger.Error("Server Shutdown", "error", err)
+		os.Exit(1)
 	}
 
 	// db.Close() will be called by defer at top of main()
-	logger.Println("Server exiting")
+	logger.Info("Server exiting")
 }
 
 func openDB(cfg config) (*sql.DB, error) {

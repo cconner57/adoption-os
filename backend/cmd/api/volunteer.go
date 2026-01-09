@@ -20,11 +20,13 @@ func (app *application) submitVolunteerApplication(w http.ResponseWriter, r *htt
 	if err != nil {
 		app.badRequestResponse(w, r, err)
 		return
+	}
+
 	// Honeypot Check
 	if input.FaxNumber != "" {
-		app.logger.Println("Bot detected: honeypot field 'fax_number' was populated")
+		app.logger.Warn("Bot detected: honeypot populated", "field", "fax_number", "ip", r.RemoteAddr)
 		// Fake success
-		err = app.writeJSON(w, http.StatusOK, envelope{"status": "success", "message": "Application received and validated"}, nil)
+		err = app.JSONResponse(w, http.StatusOK, map[string]string{"message": "Application received and validated"})
 		if err != nil {
 			app.serverErrorResponse(w, r, err)
 		}
@@ -76,7 +78,7 @@ func (app *application) submitVolunteerApplication(w http.ResponseWriter, r *htt
 		// Path relative to backend root where binary runs
 		data, err := os.ReadFile("../frontend/public/images/idohr-logo.jpg")
 		if err != nil {
-			app.logger.Println("Failed to read logo:", err)
+			app.logger.Error("Failed to read logo", "error", err)
 			return nil
 		}
 		return data
@@ -174,29 +176,29 @@ func (app *application) submitVolunteerApplication(w http.ResponseWriter, r *htt
 			if err == nil {
 				attachments["signature.png"] = sigBytes
 			} else {
-				app.logger.Println("Failed to decode signature:", err)
+				app.logger.Error("Failed to decode signature", "error", err)
 			}
 		}
 	}
 
 	// Check if we have credentials; if not, simulate sending
 	if app.config.smtp.password == "" || app.config.smtp.username == "" {
-		app.logger.Printf("Development Mode: Simulating sending email to %s (Subject: %s)\n", recipient, subject)
+		app.logger.Info("Development Mode: Simulating sending email", "recipient", recipient, "subject", subject)
 	} else {
 		// Attempt to send email
 		err := app.mailer.Send(recipient, subject, body, attachments)
 		if err != nil {
-			app.logger.Println("Failed to send email notification:", err)
+			app.logger.Error("Failed to send email notification", "error", err)
 
 			// In development, don't block the application if email fails (common with bad/missing creds)
 			if app.config.env == "development" {
-				app.logger.Println("Development Mode: Ignoring email usage error, proceeding with success.")
+				app.logger.Warn("Development Mode: Ignoring email usage error, proceeding with success.")
 			} else {
 				app.serverErrorResponse(w, r, fmt.Errorf("failed to send email notification: %w", err))
 				return
 			}
 		} else {
-			app.logger.Println("Email notification sent successfully to", recipient)
+			app.logger.Info("Email notification sent successfully", "recipient", recipient)
 		}
 	}
 
@@ -208,7 +210,7 @@ func (app *application) submitVolunteerApplication(w http.ResponseWriter, r *htt
 	// }
 
 	// Send back a success response
-	err = app.writeJSON(w, http.StatusOK, envelope{"status": "success", "message": "Application received and validated"}, nil)
+	err = app.JSONResponse(w, http.StatusOK, map[string]string{"message": "Application received and validated"})
 	if err != nil {
 		app.serverErrorResponse(w, r, err)
 	}

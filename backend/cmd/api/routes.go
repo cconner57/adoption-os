@@ -10,6 +10,7 @@ func (app *application) routes() http.Handler {
 	mux := http.NewServeMux()
 
 	// Register Routes
+	// Public Routes
 	mux.HandleFunc("GET /", app.healthcheckHandler)
 	mux.HandleFunc("GET /healthz", app.healthcheckHandler)
 	mux.HandleFunc("GET /sitemap.xml", app.sitemapHandler)
@@ -18,10 +19,16 @@ func (app *application) routes() http.Handler {
 	mux.HandleFunc("GET /pets/available", app.getAvailablePets)
 	mux.HandleFunc("GET /pets/adopted-count", app.getAdoptedPetsCount)
 
-	mux.HandleFunc("POST /applications/volunteer", app.submitVolunteerApplication)
-	mux.HandleFunc("POST /applications/adoption", app.submitAdoptionApplication)
-	mux.HandleFunc("POST /applications/surrender", app.submitSurrenderApplication)
-	mux.HandleFunc("POST /metrics", app.submitMetric)
+	// Protected Routes (Applications & Metrics)
+	// We create a protected mux or just wrap handlers inline. Inline is easier for mixed usage here.
+	mux.Handle("POST /applications/volunteer", app.requireAuthentication(http.HandlerFunc(app.submitVolunteerApplication)))
+	mux.Handle("POST /applications/adoption", app.requireAuthentication(http.HandlerFunc(app.submitAdoptionApplication)))
+	mux.Handle("POST /applications/surrender", app.requireAuthentication(http.HandlerFunc(app.submitSurrenderApplication)))
+	mux.Handle("POST /metrics", app.requireAuthentication(http.HandlerFunc(app.submitMetric)))
+
+	// Static Files (Uploads)
+	fileServer := http.FileServer(http.Dir("./uploads"))
+	mux.Handle("GET /uploads/", http.StripPrefix("/uploads", app.cacheControl(fileServer)))
 
 	c := cors.New(cors.Options{
 		AllowedOrigins:   []string{"http://localhost:5173", "http://localhost:4173", "https://idohr.netlify.app"},
@@ -30,5 +37,5 @@ func (app *application) routes() http.Handler {
 		AllowCredentials: true,
 	})
 
-	return app.recoverPanic(app.rateLimit(c.Handler(mux)))
+	return app.removeIdentity(app.securityHeaders(app.enableRequestID(app.recoverPanic(app.rateLimit(app.bodyLimit(c.Handler(mux)))))))
 }

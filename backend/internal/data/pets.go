@@ -1,6 +1,7 @@
 package data // <--- Must be 'data'
 
 import (
+	"context"
 	"database/sql"
 	"encoding/csv"
 	"encoding/json"
@@ -130,7 +131,10 @@ func (m PetModel) GetSpotlight() ([]*SpotlightPet, error) {
            OR profile_settings->>'isSpotlightFeatured' = 'true'
         LIMIT 4`
 
-	rows, err := m.DB.Query(query)
+	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
+	defer cancel()
+
+	rows, err := m.DB.QueryContext(ctx, query)
 	if err != nil {
 		fmt.Println("Query Error:", err)
 		return nil, err
@@ -184,7 +188,11 @@ func (m PetModel) GetAdoptedCount(year int) (int, error) {
 			`
 			yearPrefix := fmt.Sprintf("%d%%", year)
 			var count int
-			err := m.DB.QueryRow(query, yearPrefix).Scan(&count)
+
+			ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
+			defer cancel()
+
+			err := m.DB.QueryRowContext(ctx, query, yearPrefix).Scan(&count)
 			if err == nil {
 				return count, nil
 			}
@@ -260,7 +268,10 @@ func (m PetModel) GetAllAvailablePets() ([]*SitemapPet, error) {
 		WHERE status = 'available'
 	`
 
-	rows, err := m.DB.Query(query)
+	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
+	defer cancel()
+
+	rows, err := m.DB.QueryContext(ctx, query)
 	if err != nil {
 		return nil, err
 	}

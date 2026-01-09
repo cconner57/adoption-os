@@ -20,9 +20,9 @@ func (app *application) submitSurrenderApplication(w http.ResponseWriter, r *htt
 
 	// Honeypot Check
 	if input.FaxNumber != "" {
-		app.logger.Println("Bot detected: honeypot field 'fax_number' was populated")
+		app.logger.Warn("Bot detected: honeypot populated", "field", "fax_number", "ip", r.RemoteAddr)
 		// Fake success
-		err = app.writeJSON(w, http.StatusOK, envelope{"message": "Surrender application submitted successfully"}, nil)
+		err = app.JSONResponse(w, http.StatusOK, map[string]string{"message": "Surrender application submitted successfully"})
 		if err != nil {
 			app.serverErrorResponse(w, r, err)
 		}
@@ -69,5 +69,5 @@ func (app *application) submitSurrenderApplication(w http.ResponseWriter, r *htt
 		return
 	}
 
-	app.writeJSON(w, http.StatusCreated, envelope{"message": "Surrender application submitted successfully"}, nil)
+	app.JSONResponse(w, http.StatusCreated, map[string]string{"message": "Surrender application submitted successfully"})
 }

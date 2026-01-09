@@ -30,10 +30,10 @@ func (app *application) contextSetUser(r *http.Request, userID string) *http.Req
 	return r.WithContext(ctx)
 }
 
-func (app *application) contextGetUser(r *http.Request) int64 {
-	userID, ok := r.Context().Value(userIDKey).(int64)
+func (app *application) contextGetUser(r *http.Request) string {
+	userID, ok := r.Context().Value(userIDKey).(string)
 	if !ok {
-		return 0
+		return ""
 	}
 	return userID
 }

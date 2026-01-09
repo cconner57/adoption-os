@@ -9,6 +9,49 @@ import (
 	"github.com/cconner57/adoption-os/backend/internal/password"
 )
 
+func (app *application) registerUserHandler(w http.ResponseWriter, r *http.Request) {
+	var input struct {
+		Name     string `json:"name"`
+		Email    string `json:"email"`
+		Password string `json:"password"`
+	}
+
+	err := app.readJSON(w, r, &input)
+	if err != nil {
+		app.badRequestResponse(w, r, err)
+		return
+	}
+
+	// Validate input (basic)
+	if input.Name == "" || input.Email == "" || input.Password == "" {
+		app.badRequestResponse(w, r, errors.New("name, email, and password are required"))
+		return
+	}
+
+	// Hash password
+	hash, err := password.HashPassword(input.Password)
+	if err != nil {
+		app.serverErrorResponse(w, r, err)
+		return
+	}
+
+	user := &data.User{
+		Name:         input.Name,
+		Email:        input.Email,
+		PasswordHash: hash,
+		Activated:    true, // Auto-activate for now
+	}
+
+	err = app.models.Users.Insert(user)
+	if err != nil {
+		// Checks for duplicate email could happen here
+		app.serverErrorResponse(w, r, err)
+		return
+	}
+
+	app.writeJSON(w, http.StatusCreated, envelope{"user": user}, nil)
+}
+
 func (app *application) loginUserHandler(w http.ResponseWriter, r *http.Request) {
 	var input struct {
 		Email    string `json:"email"`

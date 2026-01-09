@@ -3,7 +3,7 @@ DROP TABLE IF EXISTS sessions;
 
 CREATE TABLE sessions (
     token text PRIMARY KEY,
-    user_id bigint NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    user_id text NOT NULL REFERENCES users(id) ON DELETE CASCADE,
     ip inet NOT NULL,
     user_agent text NOT NULL,
     expiry timestamptz NOT NULL

@@ -27,6 +27,7 @@ func (app *application) routes() http.Handler {
 	mux.Handle("POST /metrics", app.requireAuthentication(http.HandlerFunc(app.submitMetric)))
 
 	// User Authentication
+	mux.HandleFunc("POST /api/users", app.registerUserHandler)
 	mux.HandleFunc("POST /api/login", app.loginUserHandler)
 	mux.Handle("GET /users/me", app.requireLogin(http.HandlerFunc(app.profileUserHandler)))
 

@@ -13,7 +13,12 @@ export function usePets() {
       const response = await fetch(API_ENDPOINTS.PET_SPOTLIGHT)
       if (!response.ok) throw new Error('Failed to fetch spotlight pets')
 
-      spotlightPets.value = await response.json()
+      const json = await response.json()
+      if (json.data && Array.isArray(json.data)) {
+        spotlightPets.value = json.data
+      } else {
+        spotlightPets.value = Array.isArray(json) ? json : []
+      }
     } catch (err: unknown) {
       if (err instanceof Error) {
         error.value = err.message

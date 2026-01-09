@@ -19,7 +19,7 @@ BEGIN
         -- We use gen_random_uuid() which is built-in for PG 13+. 
         -- If older PG, this might fail, but it's standard now.
         INSERT INTO pets (
-            id, name, date_of_birth, breed, sex, status, descriptions, profile_settings, photos
+            id, name, date_of_birth, breed, sex, status, descriptions, profile_settings, photos, species
         ) 
         VALUES (
             gen_random_uuid(), 
@@ -30,7 +30,8 @@ BEGIN
             'available',
             '{"spotlight": "Sweet Torti. A total lovebug who thrives as the only pet."}', 
             '{"isSpotlightFeatured": "true"}',
-            '[]'
+            '[]',
+            'Cat'
         );
     END IF;
 END $$;

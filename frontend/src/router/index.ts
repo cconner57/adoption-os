@@ -177,6 +177,31 @@ interface ViewTransitionDocument extends Document {
   ): ViewTransition
 }
 
+import { useAuthStore } from '../stores/auth'
+
+router.beforeEach((to, from, next) => {
+  const authStore = useAuthStore()
+
+  // 1. Check if route requires admin access (path starts with /admin)
+  if (to.path.startsWith('/admin')) {
+    if (!authStore.isAuthenticated) {
+      // Not logged in -> Redirect to login
+      next('/login')
+      return
+    }
+
+    // Optional: Check role if we had strict RBAC
+    if (authStore.user?.role !== 'admin') {
+      // logged in but not admin -> home
+      next('/')
+      return
+    }
+  }
+
+  // 2. Allow navigation
+  next()
+})
+
 router.beforeResolve((to, from, next) => {
   const doc = document as unknown as ViewTransitionDocument
 

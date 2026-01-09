@@ -112,3 +112,8 @@ func (app *application) ValidateImageFile(fileHeader *multipart.FileHeader) erro
 		return fmt.Errorf("invalid file type: %s. Only jpeg, png, and webp are allowed", contentType)
 	}
 }
+
+func (app *application) invalidCredentialsResponse(w http.ResponseWriter, r *http.Request) {
+	message := "invalid authentication credentials"
+	app.JSONError(w, http.StatusUnauthorized, message)
+}

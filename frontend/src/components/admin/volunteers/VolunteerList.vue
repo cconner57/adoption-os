@@ -15,8 +15,8 @@ const filterType = ref<'active' | 'archived'>('active')
 const sortType = ref<'alphabetical' | 'level'>('level')
 
 const filteredVolunteers = computed(() => {
-  let filtered = mockVolunteers.filter((v) => {
-    const matchesSearch = (v.firstName + ' ' + v.lastName)
+  const filtered = mockVolunteers.filter((v) => {
+    const matchesSearch = (`${v.firstName  } ${  v.lastName}`)
       .toLowerCase()
       .includes(searchQuery.value.toLowerCase())
 

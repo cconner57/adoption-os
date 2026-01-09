@@ -126,3 +126,41 @@ func (app *application) securityHeaders(next http.Handler) http.Handler {
 		next.ServeHTTP(w, r)
 	})
 }
+
+// Session Auth Middleware
+func (app *application) requireLogin(next http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		cookie, err := r.Cookie("session_token")
+		if err != nil {
+			// No cookie provided
+			http.Redirect(w, r, "/login", http.StatusSeeOther)
+			return
+		}
+
+		session, err := app.models.Sessions.Get(cookie.Value)
+		if err != nil {
+			// Database error
+			app.serverErrorResponse(w, r, err)
+			return
+		}
+
+		if session == nil {
+			// Invalid or expired token
+			// Clear the cookie
+			http.SetCookie(w, &http.Cookie{
+				Name:     "session_token",
+				Value:    "",
+				Path:     "/",
+				MaxAge:   -1,
+				HttpOnly: true,
+			})
+			http.Redirect(w, r, "/login", http.StatusSeeOther)
+			return
+		}
+
+		// Valid session -> Add user to context
+		r = app.contextSetUser(r, session.UserID)
+
+		next.ServeHTTP(w, r)
+	})
+}

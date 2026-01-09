@@ -26,6 +26,9 @@ func (app *application) routes() http.Handler {
 	mux.Handle("POST /applications/surrender", app.requireAuthentication(http.HandlerFunc(app.submitSurrenderApplication)))
 	mux.Handle("POST /metrics", app.requireAuthentication(http.HandlerFunc(app.submitMetric)))
 
+	// User Authentication
+	mux.HandleFunc("POST /users/login", app.loginUserHandler)
+
 	// Static Files (Uploads)
 	fileServer := http.FileServer(http.Dir("./uploads"))
 	mux.Handle("GET /uploads/", http.StripPrefix("/uploads", app.cacheControl(fileServer)))

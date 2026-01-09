@@ -48,7 +48,7 @@ const getStockWidth = (item: IInventoryItem) => {
   // Visual percentage for progress bar, capped at 100%
   // Assuming 2x threshold is "full" enough for visualization
   const max = item.minThreshold * 2
-  return Math.min((item.quantity / max) * 100, 100) + '%'
+  return `${Math.min((item.quantity / max) * 100, 100)  }%`
 }
 
 // Actions

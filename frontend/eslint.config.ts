@@ -50,6 +50,7 @@ export default defineConfigWithVueTs(
       'prefer-spread': 'error',
       'prefer-template': 'error',
       'quote-props': ['error', 'as-needed'],
+      'vue/no-v-html': 'error',
     },
   },
 )

@@ -137,3 +137,54 @@ func (app *application) profileUserHandler(w http.ResponseWriter, r *http.Reques
 
 	app.JSONResponse(w, http.StatusOK, user)
 }
+
+func (app *application) updateUserHandler(w http.ResponseWriter, r *http.Request) {
+	userId := app.contextGetUser(r)
+
+	user, err := app.models.Users.Get(userId)
+	if err != nil {
+		app.serverErrorResponse(w, r, err)
+		return
+	}
+
+	var input struct {
+		Name     *string `json:"name"`
+		Email    *string `json:"email"`
+		Password *string `json:"password"`
+	}
+
+	err = app.readJSON(w, r, &input)
+	if err != nil {
+		app.badRequestResponse(w, r, err)
+		return
+	}
+
+	if input.Name != nil {
+		user.Name = *input.Name
+	}
+
+	if input.Email != nil {
+		user.Email = *input.Email
+	}
+
+	if input.Password != nil && *input.Password != "" {
+		hash, err := password.HashPassword(*input.Password)
+		if err != nil {
+			app.serverErrorResponse(w, r, err)
+			return
+		}
+		user.PasswordHash = hash
+	}
+
+	err = app.models.Users.Update(user)
+	if err != nil {
+		if errors.Is(err, data.ErrEditConflict) {
+			app.editConflictResponse(w, r)
+		} else {
+			app.serverErrorResponse(w, r, err)
+		}
+		return
+	}
+
+	app.writeJSON(w, http.StatusOK, envelope{"user": user}, nil)
+}

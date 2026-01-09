@@ -5,7 +5,7 @@ import { useAuthStore } from '../../stores/auth'
 import { mockPetsData } from '../../stores/mockPetData'
 
 const authStore = useAuthStore()
-const userName = computed(() => authStore.user?.name || 'Admin')
+const userName = computed(() => authStore.user?.Name || 'Admin')
 
 const adoptablePetsCount = computed(() => {
   return mockPetsData.filter((pet) => pet.details.status === 'available').length

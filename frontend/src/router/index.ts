@@ -182,6 +182,11 @@ import { useAuthStore } from '../stores/auth'
 router.beforeEach(async (to, from, next) => {
   const authStore = useAuthStore()
 
+  // Ensure auth is initialized explicitly
+  if (!authStore.initialized) {
+    await authStore.initialize()
+  }
+
   // Ensure we have the latest auth state (optional, but good for refresh)
   if (!authStore.user && authStore.isAuthenticated) {
     // If pinia persistence was used this would be different,

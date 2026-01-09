@@ -30,6 +30,7 @@ func (app *application) routes() http.Handler {
 	mux.HandleFunc("POST /api/users", app.registerUserHandler)
 	mux.HandleFunc("POST /api/login", app.loginUserHandler)
 	mux.Handle("GET /users/me", app.requireLogin(http.HandlerFunc(app.profileUserHandler)))
+	mux.Handle("PUT /api/users", app.requireLogin(http.HandlerFunc(app.updateUserHandler)))
 
 	// Static Files (Uploads)
 	fileServer := http.FileServer(http.Dir("./uploads"))

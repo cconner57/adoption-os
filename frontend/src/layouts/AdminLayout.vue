@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import { useAuthStore } from '../stores/auth'
 
@@ -36,6 +36,17 @@ const navItems = [
   { name: 'Event Signage', path: '/admin/event-displays', icon: '🎪' },
   { name: 'Settings', path: '/admin/settings', icon: '⚙️' },
 ]
+
+const userName = computed(() => authStore.user?.Name || 'Admin User')
+const userInitials = computed(() => {
+  const name = authStore.user?.Name || 'AD'
+  return name
+    .split(' ')
+    .map((n) => n[0])
+    .join('')
+    .substring(0, 2)
+    .toUpperCase()
+})
 </script>
 
 <template>
@@ -63,9 +74,9 @@ const navItems = [
 
       <div class="sidebar-footer">
         <div class="user-info">
-          <div class="avatar">AD</div>
+          <div class="avatar">{{ userInitials }}</div>
           <div class="details">
-            <span class="name">Admin User</span>
+            <span class="name">{{ userName }}</span>
             <span class="role">Administrator</span>
           </div>
         </div>

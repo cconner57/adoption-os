@@ -133,7 +133,7 @@ func (app *application) requireLogin(next http.Handler) http.Handler {
 		cookie, err := r.Cookie("session_token")
 		if err != nil {
 			// No cookie provided
-			http.Redirect(w, r, "/login", http.StatusSeeOther)
+			app.JSONError(w, http.StatusUnauthorized, "Authentication required")
 			return
 		}
 
@@ -154,7 +154,7 @@ func (app *application) requireLogin(next http.Handler) http.Handler {
 				MaxAge:   -1,
 				HttpOnly: true,
 			})
-			http.Redirect(w, r, "/login", http.StatusSeeOther)
+			app.JSONError(w, http.StatusUnauthorized, "Invalid or expired session")
 			return
 		}
 

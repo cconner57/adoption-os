@@ -40,9 +40,6 @@ export const useAuthStore = defineStore('auth', () => {
         const data = await response.json()
         if (data && data.data) {
           user.value = data.data
-          // Temporary Role mapping until backend sends role
-          // Defaulting Admin for now since we only seeded Admin
-          user.value!.Role = 'admin'
         }
       } else {
         user.value = null
@@ -61,11 +58,20 @@ export const useAuthStore = defineStore('auth', () => {
     window.location.reload() // Force reload to clear any memory/state
   }
 
+  const initialized = ref(false)
+  const initialize = async () => {
+    if (initialized.value) return
+    await checkAuth()
+    initialized.value = true
+  }
+
   return {
     user,
     isAuthenticated,
     login,
     checkAuth,
     logout,
+    initialize,
+    initialized,
   }
 })

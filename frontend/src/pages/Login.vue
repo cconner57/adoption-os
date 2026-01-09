@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
-// import { useAuthStore } from '../stores/auth'
+import { useAuthStore } from '../stores/auth'
 import InputField from '../components/common/ui/InputField.vue'
 import Button from '../components/common/ui/Button.vue'
 
@@ -11,17 +11,20 @@ const error = ref('')
 const isLoading = ref(false)
 
 const router = useRouter()
-// const authStore = useAuthStore()
+const authStore = useAuthStore()
 
 const handleLogin = async () => {
-  // validation disabled for development
+  error.value = ''
   isLoading.value = true
 
-  // Simulate API delay for effect
-  await new Promise((resolve) => setTimeout(resolve, 500))
+  const success = await authStore.login(email.value, password.value)
 
-  // Bypass auth checks for now
-  router.push('/admin')
+  if (success) {
+    router.push('/admin')
+  } else {
+    error.value = 'Invalid email or password'
+  }
+
   isLoading.value = false
 }
 </script>

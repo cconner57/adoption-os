@@ -25,7 +25,7 @@ func (app *application) contextGetRequestID(r *http.Request) string {
 	return id
 }
 
-func (app *application) contextSetUser(r *http.Request, userID int64) *http.Request {
+func (app *application) contextSetUser(r *http.Request, userID string) *http.Request {
 	ctx := context.WithValue(r.Context(), userIDKey, userID)
 	return r.WithContext(ctx)
 }

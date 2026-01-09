@@ -2,38 +2,30 @@
   font-family: 'Roboto-V';
   src: url('../assets/fonts/Roboto-Variable.ttf') format('truetype-variations');
   font-weight: 1 999;
+  font-display: swap;
 }
 
 :root {
-  --green: #00a5ad;
-  --green-hover: #006f73;
-  --green-weak: #7fd1c9;
-  --green-weak-hover: #5ea5a9;
+  /* ========================================================================
+     Strict 8-Color Palette
+     ======================================================================== */
+  --color-primary: #00a5ad; /* Green/Teal - Theme 1 */
+  --color-secondary: #1976d2; /* Blue - Theme 2 */
+  --color-tertiary: #6b5b95; /* Purple - Theme 3 */
 
-  --blue: #1976d2;
-  --blue-hover: #1565c0;
-  --blue-weak: #aed9ff;
+  --color-danger: #c73a67; /* Red - Alerts/Error */
+  --color-warning: #deb024; /* Yellow - Warning */
+  --color-neutral: #1f2121; /* Dark Grey - Neutral/Text */
 
-  --purple: #6b5b95;
-  --purple-hover: #5a4d7a;
-  --purple-weak: #cdbaf0;
+  --text-primary: var(--color-neutral); /* Main text color */
+  --text-secondary: #374151; /* Secondary text color - Darkened for AA compliance */
+  --text-inverse: #f8f8f3; /* White - Inverse text/Background */
 
-  --white: #f8f8f3;
-  --red: #c73a67;
-  --yellow: #deb024;
+  /* Legacy Aliases Removed */
+  --border-color: #e0e0e0; /* Exception: Common border */
 
-  --background: #00a5ad;
-
-  --font-color-light: #fefeff;
-  --font-color-medium: #6b7280;
-  --font-color-dark: #1f2121;
-
-  --tertiary: #1f2121;
-
+  /* Layout Variables */
   --font-regular: 'Roboto-V';
-
-  --border-color: #e0e0e0;
-
   --mobile-breakpoint: 440px;
   --tablet-breakpoint: 1024px;
   --desktop-breakpoint: 1440px;
@@ -47,9 +39,31 @@
   --viewport-landscape-tablet: 1024px;
   --viewport-desktop: 1280px;
   --viewport-large-desktop: 1440px;
+
   /* Global Layout Padding matching Hero Section */
   --layout-padding-side: clamp(16px, 10dvw, 170px);
+
+  /* Typography Scale */
+  --font-size-h1: clamp(2rem, 5vw, 4.25rem);
+  --font-size-h2: clamp(1.75rem, 4vw, 3rem);
+  --font-size-h3: clamp(1.5rem, 3vw, 2.25rem);
+  --font-size-h4: clamp(1.25rem, 2vw, 1.75rem);
+  --font-size-h5: clamp(1.1rem, 1.5vw, 1.5rem);
+  --font-size-h6: 1rem;
 }
+
+/* Dark mode disabled for now
+@media (prefers-color-scheme: dark) {
+  :root {
+    --color-primary: #008991;
+    --color-neutral: #f3f4f6;
+    --text-primary: #f3f4f6;
+    --text-secondary: #9ca3af;
+    --text-inverse: #1f2121;
+    --border-color: #374151;
+  }
+}
+*/
 
 @media (min-width: 321px) and (max-width: 430px) {
   :root {
@@ -83,7 +97,7 @@
 }
 
 html {
-  color-scheme: dark light;
+  color-scheme: light;
   hanging-punctuation: first last;
 }
 
@@ -93,8 +107,8 @@ body {
 
 html,
 body {
-  background: var(--green, #00a5ad);
-  color: var(--font-color-dark);
+  background: var(--text-inverse);
+  color: var(--text-primary);
   min-height: 100%;
 }
 
@@ -132,8 +146,28 @@ h5,
 h6 {
   text-wrap: balance;
   font-family: var(--font-regular);
-  color: var(--tertiary);
+  color: var(--text-primary);
   font-weight: 700;
+  line-height: 1.2;
+}
+
+h1 {
+  font-size: var(--font-size-h1);
+}
+h2 {
+  font-size: var(--font-size-h2);
+}
+h3 {
+  font-size: var(--font-size-h3);
+}
+h4 {
+  font-size: var(--font-size-h4);
+}
+h5 {
+  font-size: var(--font-size-h5);
+}
+h6 {
+  font-size: var(--font-size-h6);
 }
 
 p {

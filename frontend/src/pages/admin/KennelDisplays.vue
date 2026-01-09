@@ -268,7 +268,7 @@ const confirmAssignment = () => {
   h1 {
     margin: 0;
     font-size: 1.8rem;
-    color: var(--font-color-dark);
+    color: var(--text-primary);
   }
 }
 
@@ -289,9 +289,9 @@ const confirmAssignment = () => {
   gap: 8px;
 
   &.warning {
-    background: #fef2f2;
-    border-color: #fee2e2;
-    color: #b91c1c;
+    background: hsl(from var(--color-danger) h s 95%);
+    border-color: hsl(from var(--color-danger) h s 80%);
+    color: var(--color-danger);
   }
 }
 
@@ -300,10 +300,10 @@ const confirmAssignment = () => {
   height: 8px;
   border-radius: 50%;
   &.green {
-    background: #10b981;
+    background: var(--color-primary);
   }
   &.red {
-    background: #ef4444;
+    background: var(--color-danger);
   }
 }
 
@@ -344,7 +344,7 @@ const confirmAssignment = () => {
 
 .device-item {
   padding: 16px;
-  border-bottom: 1px solid #f3f4f6;
+  border-bottom: 1px solid var(--border-color);
   display: flex;
   gap: 12px;
   cursor: pointer;
@@ -354,8 +354,8 @@ const confirmAssignment = () => {
     background: #f8fafc;
   }
   &.active {
-    background: #f1f5f9;
-    border-left: 4px solid var(--purple);
+    background: hsl(from var(--color-neutral) h s 95%);
+    border-left: 4px solid var(--color-secondary);
   }
 }
 
@@ -374,11 +374,11 @@ const confirmAssignment = () => {
 }
 .pet-name-lbl {
   font-weight: 600;
-  color: var(--font-color-dark);
+  color: var(--text-primary);
 }
 .mac {
   font-family: monospace;
-  color: var(--font-color-medium);
+  color: hsl(from var(--color-neutral) h s 50%);
   font-size: 0.8rem;
 }
 
@@ -388,7 +388,7 @@ const confirmAssignment = () => {
   flex-direction: column;
   align-items: flex-end;
   gap: 2px;
-  color: var(--font-color-medium);
+  color: hsl(from var(--color-neutral) h s 50%);
 }
 
 /* DETAILS PANEL */
@@ -434,7 +434,7 @@ const confirmAssignment = () => {
   label {
     font-size: 0.75rem;
     text-transform: uppercase;
-    color: var(--font-color-medium);
+    color: hsl(from var(--color-neutral) h s 50%);
     font-weight: 600;
   }
   span,
@@ -451,7 +451,7 @@ const confirmAssignment = () => {
 .change-link {
   background: none;
   border: none;
-  color: var(--purple);
+  color: var(--color-secondary);
   font-weight: 600;
   cursor: pointer;
   font-size: 0.85rem;
@@ -474,7 +474,7 @@ const confirmAssignment = () => {
   h3 {
     margin-top: 0;
     font-size: 1.1rem;
-    color: var(--font-color-dark);
+    color: var(--text-primary);
   }
 }
 
@@ -584,13 +584,13 @@ const confirmAssignment = () => {
 
 .helper-text {
   font-size: 0.85rem;
-  color: var(--font-color-medium);
+  color: hsl(from var(--color-neutral) h s 50%);
 }
 
 .empty-selection {
   padding: 40px;
   text-align: center;
-  color: var(--font-color-medium);
+  color: hsl(from var(--color-neutral) h s 50%);
   background: white;
   border-radius: 12px;
   border: 1px dashed #e2e8f0;
@@ -633,8 +633,8 @@ const confirmAssignment = () => {
     background: #f8fafc;
   }
   &.selected {
-    background: #e0e7ff;
-    color: var(--purple);
+    background: hsl(from var(--color-secondary) h s 95%);
+    color: var(--color-secondary);
     font-weight: 600;
   }
 }

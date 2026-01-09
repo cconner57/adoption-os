@@ -12,7 +12,7 @@ const props = withDefaults(
     imgSrc: '',
     title: 'Adopt a Pet',
     subtitle: 'Find your perfect companion',
-    color: '#2563EB',
+    color: 'blue',
     type: 'button',
   },
 )
@@ -55,7 +55,7 @@ const imgSrcComputed = computed(() => (props.imgSrc && props.imgSrc.length ? pro
   transition:
     background-color 0.2s,
     border-color 0.2s;
-  color: var(--font-color-light);
+  color: var(--text-inverse);
   overflow: hidden;
 
   @media (max-width: 440px) {

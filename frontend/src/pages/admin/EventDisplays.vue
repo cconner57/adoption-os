@@ -201,7 +201,7 @@ const directionOptions = [
 .page-header {
   h1 {
     margin: 0 0 24px 0;
-    color: var(--font-color-dark);
+    color: var(--text-primary);
     font-size: 1.8rem;
   }
 }
@@ -247,7 +247,7 @@ const directionOptions = [
 
     &.active {
       background: #f1f5f9;
-      border-left: 4px solid var(--purple);
+      border-left: 4px solid var(--color-secondary);
     }
 
     .d-icon {
@@ -260,7 +260,7 @@ const directionOptions = [
 
       .d-name {
         font-weight: 600;
-        color: var(--font-color-dark);
+        color: var(--text-primary);
       }
 
       .d-meta {
@@ -318,7 +318,11 @@ const directionOptions = [
       label {
         font-size: 0.85rem;
         font-weight: 600;
-        color: var(--font-color-medium);
+      label {
+        font-size: 0.85rem;
+        font-weight: 600;
+        color: var(--text-secondary);
+      }
       }
     }
 
@@ -339,9 +343,9 @@ const directionOptions = [
         border: 1px solid transparent;
 
         &.selected {
-          background: var(--purple-light);
-          color: var(--purple);
-          border-color: var(--purple);
+          background: hsl(from var(--color-secondary) h s 95%);
+          color: var(--color-secondary);
+          border-color: var(--color-secondary);
           font-weight: 600;
         }
       }
@@ -511,7 +515,12 @@ const directionOptions = [
   display: flex;
   align-items: center;
   justify-content: center;
-  color: var(--font-color-medium);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-secondary);
+  font-size: 1.1rem;
+}
   font-size: 1.1rem;
 }
 </style>

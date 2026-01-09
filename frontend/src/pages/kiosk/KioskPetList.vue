@@ -70,7 +70,11 @@ const goHome = () => router.push('/kiosk')
         <div class="pet-info">
           <div class="top-row">
             <h2>{{ pet.name }}</h2>
-            <Capsules :label="pet.status" color="#d1fae5" size="sm" />
+            <Capsules
+              :label="pet.status"
+              color="hsl(from var(--color-primary) h s 95%)"
+              size="sm"
+            />
           </div>
           <p class="breed">{{ pet.breed || 'Unknown Breed' }} • {{ pet.age }}</p>
           <div class="details">
@@ -100,7 +104,7 @@ const goHome = () => router.push('/kiosk')
   h1 {
     margin: 0;
     font-size: 2rem;
-    color: var(--font-color-dark);
+    color: var(--text-primary);
   }
 }
 
@@ -108,7 +112,7 @@ const goHome = () => router.push('/kiosk')
   background: none;
   border: none;
   font-size: 1.2rem;
-  color: var(--font-color-medium);
+  color: hsl(from var(--color-neutral) h s 50%);
   cursor: pointer;
   font-weight: 600;
 }
@@ -132,7 +136,7 @@ const goHome = () => router.push('/kiosk')
     outline: none;
     font-size: 1.1rem;
     width: 100%;
-    color: var(--font-color-dark);
+    color: var(--text-primary);
   }
 }
 
@@ -176,12 +180,12 @@ const goHome = () => router.push('/kiosk')
   h2 {
     margin: 0;
     font-size: 1.4rem;
-    color: var(--font-color-dark);
+    color: var(--text-primary);
   }
 }
 
 .breed {
-  color: var(--font-color-medium);
+  color: hsl(from var(--color-neutral) h s 50%);
   margin: 0 0 16px 0;
   font-size: 1rem;
 }

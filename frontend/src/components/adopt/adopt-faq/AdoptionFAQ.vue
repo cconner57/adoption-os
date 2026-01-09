@@ -90,12 +90,12 @@ const toggleFaq = (faqIndex: number) => {
     align-items: center;
     gap: 8px;
     &:hover {
-      color: var(--blue);
+      color: var(--color-secondary);
     }
   }
   .faq-answer {
     margin: 8px 0 16px 34px;
-    color: var(--font-color-dark);
+    color: var(--text-primary);
     line-height: 1.4;
     font-weight: 400;
   }

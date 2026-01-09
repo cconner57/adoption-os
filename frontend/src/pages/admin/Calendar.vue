@@ -176,7 +176,7 @@ const monthName = computed(() => {
 
   h1 {
     font-size: 1.8rem;
-    color: var(--font-color-dark);
+    color: var(--text-primary);
     margin: 0;
   }
 }
@@ -199,13 +199,13 @@ const monthName = computed(() => {
   border-radius: 6px;
   cursor: pointer;
   font-weight: 500;
-  color: var(--font-color-medium);
+  color: hsl(from var(--color-neutral) h s 50%);
   transition: all 0.2s;
 
   &:hover {
-    background: #f9fafb;
-    border-color: #d1d5db;
-    color: var(--font-color-dark);
+    background: hsl(from var(--color-neutral) h s 98%);
+    border-color: var(--border-color);
+    color: var(--text-primary);
   }
 
   &.today {
@@ -216,7 +216,9 @@ const monthName = computed(() => {
 .current-period {
   font-size: 1.2rem;
   font-weight: 600;
-  color: var(--font-color-medium);
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: hsl(from var(--color-neutral) h s 50%);
   margin: 0;
   min-width: 200px;
   text-align: center;
@@ -237,18 +239,20 @@ const monthName = computed(() => {
   border-radius: 6px;
   font-size: 0.9rem;
   font-weight: 500;
-  color: var(--font-color-medium);
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: hsl(from var(--color-neutral) h s 50%);
   cursor: pointer;
 
   &.active {
-    background: white;
-    color: var(--font-color-dark);
+    background: var(--text-inverse);
+    color: var(--text-primary);
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
   }
 }
 
 .add-event-btn {
-  background-color: var(--blue);
+  background-color: var(--color-secondary);
   color: white;
   border: none;
   padding: 8px 16px;
@@ -262,7 +266,7 @@ const monthName = computed(() => {
   gap: 6px;
 
   &:hover {
-    background-color: var(--blue-hover);
+    background-color: hsl(from var(--color-secondary) h s 40%);
   }
 }
 
@@ -276,7 +280,9 @@ const monthName = computed(() => {
   align-items: center;
   gap: 8px;
   font-size: 0.9rem;
-  color: var(--font-color-medium);
+  gap: 8px;
+  font-size: 0.9rem;
+  color: hsl(from var(--color-neutral) h s 50%);
 }
 .dot {
   width: 10px;
@@ -284,9 +290,9 @@ const monthName = computed(() => {
   border-radius: 50%;
 }
 .dot.volunteer {
-  background-color: var(--purple);
+  background-color: var(--color-secondary);
 }
 .dot.vet {
-  background-color: var(--green);
+  background-color: var(--color-primary);
 }
 </style>

@@ -4,7 +4,10 @@ import type { SurrenderFormState } from '../models/surrender-form'
 import { API_ENDPOINTS } from '../constants/api'
 import { useMetrics } from '../composables/useMetrics'
 
+import { useDemoMode } from '../composables/useDemoMode'
+
 export const useSurrenderStore = defineStore('surrender', () => {
+  const { isDemoMode } = useDemoMode()
   const step = ref(0)
 
   const isSubmitted = ref(false)
@@ -100,6 +103,10 @@ export const useSurrenderStore = defineStore('surrender', () => {
   const validationErrors = computed(() => {
     const errors: string[] = []
 
+    if (step.value === 0 && !selectedAnimal.value) {
+      errors.push('Animal Type (Dog or Cat)')
+    }
+
     if (step.value === 1) {
       if (!formState.firstName) errors.push('First Name')
       if (!formState.lastName) errors.push('Last Name')
@@ -132,6 +139,7 @@ export const useSurrenderStore = defineStore('surrender', () => {
   })
 
   const isStepValid = computed(() => {
+    if (isDemoMode.value) return true
     if (step.value === 0) return !!selectedAnimal.value
     if (step.value === 1) return validationErrors.value.length === 0
     return true
@@ -175,6 +183,14 @@ export const useSurrenderStore = defineStore('surrender', () => {
 
   const submitApplication = async () => {
     try {
+      if (isDemoMode.value) {
+        console.log('Demo Mode: Simulating submission success')
+        await new Promise((resolve) => setTimeout(resolve, 1000))
+        isSubmitted.value = true
+        resetForm()
+        return
+      }
+
       isSubmitted.value = false
       // Import API_ENDPOINTS if not already available in scope (adding import at top of file)
       const response = await fetch(API_ENDPOINTS.SURRENDER_APPLICATION, {

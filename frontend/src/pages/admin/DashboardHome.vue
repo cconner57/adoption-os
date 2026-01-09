@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue'
+import { Capsules, Button } from '../../components/common/ui'
 import { useAuthStore } from '../../stores/auth'
 import { mockPetsData } from '../../stores/mockPetData'
 
@@ -197,10 +198,12 @@ const newIntakes = [
       <div class="widget quick-actions">
         <h3>Quick Actions</h3>
         <div class="action-buttons">
-          <button class="action-btn">New Pet Profile</button>
-          <button class="action-btn">Review Applications</button>
-          <button class="action-btn">Send Newsletter</button>
-          <button class="action-btn">Log Incident</button>
+          <Button color="white" fullWidth align="between"> New Pet Profile <span>→</span> </Button>
+          <Button color="white" fullWidth align="between">
+            Review Applications <span>→</span>
+          </Button>
+          <Button color="white" fullWidth align="between"> Send Newsletter <span>→</span> </Button>
+          <Button color="white" fullWidth align="between"> Log Incident <span>→</span> </Button>
         </div>
       </div>
     </div>
@@ -218,7 +221,24 @@ const newIntakes = [
               <span class="item-title">{{ item.pet }}</span>
               <span class="item-subtitle">{{ item.issue }}</span>
             </div>
-            <span class="status-tag" :class="item.status">{{ item.date }}</span>
+            <Capsules
+              size="sm"
+              :label="item.date"
+              :color="
+                item.status === 'critical'
+                  ? 'hsl(from var(--color-danger) h s 95%)'
+                  : item.status === 'urgent'
+                    ? 'hsl(from var(--color-warning) h s 90%)'
+                    : 'hsl(from var(--color-warning) h s 95%)'
+              "
+              :textColor="
+                item.status === 'critical'
+                  ? 'var(--color-danger)'
+                  : item.status === 'urgent'
+                    ? 'hsl(from var(--color-warning) h s 40%)'
+                    : 'var(--color-warning)'
+              "
+            />
           </li>
         </ul>
       </div>
@@ -234,8 +254,20 @@ const newIntakes = [
               <span class="item-title">{{ item.item }}</span>
               <span class="item-subtitle">{{ item.quantity }} remaining</span>
             </div>
-            <span class="status-tag critical" v-if="item.level === 'Critical'">Critical</span>
-            <span class="status-tag warning" v-else>Low</span>
+            <Capsules
+              v-if="item.level === 'Critical'"
+              size="sm"
+              label="Critical"
+              color="hsl(from var(--color-danger) h s 95%)"
+              textColor="var(--color-danger)"
+            />
+            <Capsules
+              v-else
+              size="sm"
+              label="Low"
+              color="hsl(from var(--color-warning) h s 95%)"
+              textColor="var(--color-warning)"
+            />
           </li>
         </ul>
       </div>
@@ -251,7 +283,7 @@ const newIntakes = [
               <span class="item-title">{{ vol.name }}</span>
               <span class="item-subtitle">{{ vol.role }}</span>
             </div>
-            <span class="time-tag">{{ vol.time }}</span>
+            <Capsules size="sm" :label="vol.time" />
           </li>
         </ul>
       </div>
@@ -270,7 +302,24 @@ const newIntakes = [
               <span class="item-title">{{ app.applicant }}</span>
               <span class="item-subtitle">for {{ app.pet }}</span>
             </div>
-            <span class="status-tag" :class="app.status">{{ app.status }}</span>
+            <Capsules
+              size="sm"
+              :label="app.status"
+              :color="
+                app.status === 'new'
+                  ? 'hsl(from var(--color-secondary) h s 95%)'
+                  : app.status === 'review'
+                    ? 'hsl(from var(--color-tertiary) h s 95%)'
+                    : 'hsl(from var(--color-warning) h s 95%)'
+              "
+              :textColor="
+                app.status === 'new'
+                  ? 'var(--color-secondary)'
+                  : app.status === 'review'
+                    ? 'var(--color-tertiary)'
+                    : 'var(--color-warning)'
+              "
+            />
           </li>
         </ul>
       </div>
@@ -286,7 +335,7 @@ const newIntakes = [
               <span class="item-title">{{ donation.amount }}</span>
               <span class="item-subtitle">{{ donation.donor }}</span>
             </div>
-            <span class="time-tag">{{ donation.time }}</span>
+            <Capsules size="sm" :label="donation.time" />
           </li>
         </ul>
       </div>
@@ -302,7 +351,12 @@ const newIntakes = [
               <span class="item-title">{{ intake.pet }}</span>
               <span class="item-subtitle">{{ intake.breed }}</span>
             </div>
-            <span class="status-tag urgent">{{ intake.status }}</span>
+            <Capsules
+              size="sm"
+              :label="intake.status"
+              color="hsl(from var(--color-warning) h s 90%)"
+              textColor="hsl(from var(--color-warning) h s 40%)"
+            />
           </li>
         </ul>
       </div>
@@ -321,12 +375,12 @@ const newIntakes = [
 
 .welcome-section h1 {
   font-size: 2rem;
-  color: var(--font-color-dark);
+  color: var(--text-primary);
   margin-bottom: 8px;
 }
 
 .welcome-section p {
-  color: var(--font-color-medium);
+  color: var(--text-secondary);
   font-size: 1.1rem;
 }
 
@@ -337,7 +391,7 @@ const newIntakes = [
 }
 
 .stat-card {
-  background: var(--white);
+  background: var(--text-inverse);
   padding: 24px;
   border-radius: 16px;
   display: flex;
@@ -359,7 +413,7 @@ const newIntakes = [
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: #f3f4f6;
+  background-color: hsl(from var(--color-neutral) h s 95%);
 }
 
 .stat-info {
@@ -370,30 +424,32 @@ const newIntakes = [
 .stat-value {
   font-size: 1.5rem;
   font-weight: 700;
-  color: var(--font-color-dark);
+  color: var(--text-primary);
 }
 
 .stat-label {
-  color: var(--font-color-medium);
+  color: var(--text-secondary);
   font-size: 0.9rem;
 }
 
 /* Color variants */
 .stat-card.color-orange .stat-icon {
-  background-color: #fff7ed;
-  color: #ed8936;
+  background-color: hsl(from var(--color-warning) h s 95%);
+  color: var(--color-warning);
 }
 .stat-card.color-green .stat-icon {
-  background-color: #f0fdf4;
-  color: var(--green);
+  background-color: hsl(from var(--color-primary) h s 95%);
+  color: var(--color-primary);
 }
 .stat-card.color-purple .stat-icon {
-  background-color: #faf5ff;
-  color: var(--purple);
+  background-color: hsl(from var(--color-secondary) h s 95%); /* Purple mapped to secondary */
+  color: var(--color-secondary);
 }
 .stat-card.color-blue .stat-icon {
-  background-color: #eff6ff;
-  color: var(--blue);
+  background-color: hsl(
+    from var(--color-secondary) h s 90%
+  ); /* Blue also secondary, slightly darker tint for differentiation if needed, or same */
+  color: var(--color-secondary);
 }
 
 .dashboard-widgets {
@@ -417,7 +473,7 @@ const newIntakes = [
 }
 
 .widget {
-  background: var(--white);
+  background: var(--text-inverse);
   padding: 24px;
   border-radius: 16px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
@@ -429,7 +485,7 @@ const newIntakes = [
   font-size: 1.1rem;
   margin: 0;
   font-weight: 700;
-  color: var(--font-color-dark);
+  color: var(--text-primary);
 }
 
 /* Updated Widget Header */
@@ -438,7 +494,7 @@ const newIntakes = [
   justify-content: space-between;
   align-items: center;
   margin-bottom: 16px;
-  border-bottom: 1px solid #f3f4f6;
+  border-bottom: 1px solid var(--border-color);
   padding-bottom: 12px;
 }
 
@@ -457,7 +513,7 @@ const newIntakes = [
   align-items: center;
   gap: 6px;
   font-size: 0.85rem;
-  color: var(--font-color-medium);
+  color: var(--text-secondary);
 }
 
 .dot {
@@ -467,10 +523,10 @@ const newIntakes = [
 }
 
 .dot.volunteer {
-  background-color: var(--purple);
+  background-color: var(--color-secondary);
 }
 .dot.vet {
-  background-color: var(--green);
+  background-color: var(--color-primary);
 }
 
 .calendar-grid {
@@ -483,7 +539,7 @@ const newIntakes = [
 }
 
 .calendar-day {
-  background-color: #fcfcfc;
+  background-color: hsl(from var(--color-neutral) h s 98%);
   border-radius: 8px;
   padding: 8px;
   min-height: 120px;
@@ -493,12 +549,12 @@ const newIntakes = [
   gap: 8px;
 
   &.today {
-    background-color: #fff;
-    border-color: var(--blue-weak);
-    box-shadow: 0 0 0 2px rgba(25, 118, 210, 0.1);
+    background-color: var(--text-inverse);
+    border-color: hsl(from var(--color-secondary) h s 70%);
+    box-shadow: 0 0 0 2px hsla(from var(--color-secondary) h s l / 0.1);
 
     .day-header {
-      color: var(--blue);
+      color: var(--color-secondary);
     }
   }
 }
@@ -507,7 +563,7 @@ const newIntakes = [
   text-align: center;
   display: flex;
   flex-direction: column;
-  color: var(--font-color-medium);
+  color: var(--text-secondary);
   font-size: 0.8rem;
   font-weight: 600;
   padding-bottom: 6px;
@@ -515,7 +571,7 @@ const newIntakes = [
 
   .day-date {
     font-size: 1rem;
-    color: var(--font-color-dark);
+    color: var(--text-primary);
     margin-top: 2px;
   }
 }
@@ -536,15 +592,15 @@ const newIntakes = [
   border-left: 2px solid transparent;
 
   &.volunteer {
-    background-color: #faf5ff;
-    color: var(--purple);
-    border-left-color: var(--purple);
+    background-color: hsl(from var(--color-secondary) h s 95%);
+    color: var(--color-secondary);
+    border-left-color: var(--color-secondary);
   }
 
   &.vet {
-    background-color: #f0fdf4;
-    color: var(--green);
-    border-left-color: var(--green);
+    background-color: hsl(from var(--color-primary) h s 95%);
+    color: var(--color-primary);
+    border-left-color: var(--color-primary);
   }
 
   .event-time {
@@ -576,39 +632,6 @@ const newIntakes = [
   flex: 1;
 }
 
-.action-btn {
-  padding: 14px;
-  border-radius: 10px;
-  border: 1px solid #e5e7eb;
-  background-color: var(--white);
-  color: var(--font-color-dark);
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.2s;
-  text-align: left;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-
-  &:after {
-    content: '→';
-    opacity: 0;
-    transform: translateX(-5px);
-    transition: all 0.2s;
-  }
-
-  &:hover {
-    background-color: #f9fafb;
-    border-color: var(--green);
-    color: var(--green-hover);
-
-    &:after {
-      opacity: 1;
-      transform: translateX(0);
-    }
-  }
-}
-
 /* List Widgets (Medical, Inventory, Volunteers) */
 .list-widget {
   list-style: none;
@@ -624,7 +647,7 @@ const newIntakes = [
   justify-content: space-between;
   align-items: center;
   padding-bottom: 12px;
-  border-bottom: 1px solid #f3f4f6;
+  border-bottom: 1px solid var(--border-color);
 
   &:last-child {
     border-bottom: none;
@@ -638,60 +661,13 @@ const newIntakes = [
 }
 
 .item-title {
-  font-weight: 600;
+  font-family: 600;
   font-size: 0.95rem;
-  color: var(--font-color-dark);
+  color: var(--text-primary);
 }
 
 .item-subtitle {
   font-size: 0.85rem;
-  color: var(--font-color-medium);
-}
-
-.status-tag {
-  font-size: 0.75rem;
-  font-weight: 700;
-  padding: 4px 8px;
-  border-radius: 12px;
-  text-transform: uppercase;
-}
-
-.status-tag.critical {
-  background-color: #fef2f2;
-  color: #ef4444;
-}
-
-.status-tag.urgent {
-  background-color: #fff7ed;
-  color: #f97316;
-}
-
-.status-tag.warning {
-  background-color: #fffbeb;
-  color: #d97706;
-}
-
-.status-tag.new {
-  background-color: #eff6ff;
-  color: #3b82f6;
-}
-
-.status-tag.review {
-  background-color: #faf5ff;
-  color: #8b5cf6;
-}
-
-.status-tag.pending {
-  background-color: #fff7ed;
-  color: #f97316;
-}
-
-.time-tag {
-  font-size: 0.85rem;
-  font-weight: 600;
-  color: var(--green);
-  background-color: #f0fdf4;
-  padding: 4px 8px;
-  border-radius: 6px;
+  color: var(--text-secondary);
 }
 </style>

@@ -41,7 +41,7 @@ const exitKiosk = () => {
 .kiosk-layout {
   width: 100vw;
   height: 100vh;
-  background: #f8fafc;
+  background: hsl(from var(--color-neutral) h s 98%);
   display: flex;
   flex-direction: column;
   overflow: hidden;
@@ -50,8 +50,8 @@ const exitKiosk = () => {
 
 .kiosk-header {
   height: 80px;
-  background: white;
-  border-bottom: 1px solid #e2e8f0;
+  background: var(--text-inverse);
+  border-bottom: 1px solid var(--border-color);
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -66,23 +66,23 @@ const exitKiosk = () => {
   gap: 12px;
   font-size: 1.5rem;
   font-weight: 800;
-  color: var(--font-color-dark);
+  color: var(--text-primary);
 }
 
 .clock-display {
   font-size: 1.25rem;
   font-weight: 600;
-  color: var(--font-color-medium);
+  color: hsl(from var(--color-neutral) h s 50%);
   font-variant-numeric: tabular-nums;
 }
 
 .exit-btn {
-  background: #f1f5f9;
+  background: hsl(from var(--color-neutral) h s 95%);
   border: none;
   padding: 8px 16px;
   border-radius: 8px;
   font-weight: 600;
-  color: #64748b;
+  color: hsl(from var(--color-neutral) h s 40%);
   cursor: pointer;
 }
 

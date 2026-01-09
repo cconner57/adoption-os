@@ -157,7 +157,7 @@ const removePet = (index: number) => {
 .pet-header h4 {
   font-size: 1.1rem;
   font-weight: 700;
-  color: var(--font-color-dark);
+  color: var(--text-primary);
 }
 
 .pet-fields {
@@ -194,25 +194,25 @@ const removePet = (index: number) => {
   display: flex;
   align-items: center;
   justify-content: center;
-  color: var(--green);
+  color: var(--color-primary);
   transition: all 0.2s;
 }
 
 .add-btn:hover {
-  color: var(--blue-hover);
-  border-color: var(--blue-hover);
+  color: var(--color-secondary);
+  border-color: var(--color-secondary);
   background: #f0f9ff;
 }
 
 .remove-btn:hover {
-  color: var(--red);
-  border-color: var(--red);
+  color: var(--color-danger);
+  border-color: var(--color-danger);
   background: #fff5f5;
 }
 
 .add-btn-large {
   padding: 12px 24px;
-  background-color: var(--green);
+  background-color: var(--color-primary);
   color: white;
   border: none;
   border-radius: 8px;

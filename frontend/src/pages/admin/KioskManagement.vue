@@ -192,7 +192,7 @@ watch(
   h1 {
     margin: 0;
     font-size: 1.8rem;
-    color: var(--font-color-dark);
+    color: var(--text-primary);
   }
 }
 
@@ -247,7 +247,7 @@ watch(
   label {
     font-weight: 500;
     font-size: 0.9rem;
-    color: var(--font-color-medium);
+    color: hsl(from var(--color-neutral) h s 50%);
   }
 }
 
@@ -299,7 +299,7 @@ watch(
   transition: background 0.3s;
 
   &:checked {
-    background: var(--purple);
+    background: var(--color-secondary);
   }
 
   &::after {
@@ -412,7 +412,7 @@ watch(
 
 .preview-label {
   margin-top: 16px;
-  color: var(--font-color-medium);
+  color: hsl(from var(--color-neutral) h s 50%);
   font-size: 0.9rem;
 }
 

@@ -1,24 +1,30 @@
 <script setup lang="ts">
-const props = withDefaults(defineProps<{
-  label: string
-  placeholder: string
-  modelValue: string | null
-  hasError?: boolean
-  spanFull?: boolean
-}>(), {
-  spanFull: true
-})
+const props = withDefaults(
+  defineProps<{
+    label: string
+    placeholder: string
+    modelValue: string | null
+    hasError?: boolean
+    spanFull?: boolean
+  }>(),
+  {
+    spanFull: true,
+  },
+)
 
 const emit = defineEmits<{
   'update:modelValue': [value: string | null]
 }>()
+const inputId = `textarea-${Math.random().toString(36).slice(2, 9)}`
 </script>
 
 <template>
   <div class="field" :class="{ 'col-span-2': props.spanFull, 'has-error': props.hasError }">
-    <label class="label">{{ props.label }}</label>
+    <label :for="inputId" class="label">{{ props.label }}</label>
     <div class="control">
       <textarea
+        :id="inputId"
+        :aria-invalid="props.hasError"
         class="textarea"
         rows="3"
         :placeholder="props.placeholder"
@@ -32,7 +38,7 @@ const emit = defineEmits<{
 
 <style scoped lang="css">
 .label {
-  color: var(--font-color-dark);
+  color: var(--text-primary);
   font-weight: 600;
   margin-bottom: 0.5em;
   display: block;
@@ -44,7 +50,7 @@ const emit = defineEmits<{
   grid-column: 1 / -1;
 }
 .has-error .textarea {
-  border-color: #ef4444 !important;
-  outline: 2px solid #ef4444 !important;
+  border-color: var(--color-danger) !important;
+  outline: 2px solid var(--color-danger) !important;
 }
 </style>

@@ -4,7 +4,10 @@ import type { FormState } from '../models/adopt-form'
 import { API_ENDPOINTS } from '../constants/api'
 import { useMetrics } from '../composables/useMetrics'
 
+import { useDemoMode } from '../composables/useDemoMode'
+
 export const useAdoptionStore = defineStore('adoption', () => {
+  const { isDemoMode } = useDemoMode()
   const step = ref(0)
   const isSubmitted = ref(false)
   const hasAttemptedSubmit = ref(false)
@@ -41,7 +44,7 @@ export const useAdoptionStore = defineStore('adoption', () => {
     zip: null,
     phoneNumber: null,
     cellPhoneNumber: null,
-    adultMembersAgreed: 'No',
+    adultMembersAgreed: null,
     homeType: null,
     homeOwnership: null,
     landlordName: null,
@@ -120,7 +123,10 @@ export const useAdoptionStore = defineStore('adoption', () => {
     return errors
   })
 
-  const isStepValid = computed(() => validationErrors.value.length === 0)
+  const isStepValid = computed(() => {
+    if (isDemoMode.value) return true
+    return validationErrors.value.length === 0
+  })
 
   const STORAGE_KEY = 'adoption_form_state'
 
@@ -175,6 +181,14 @@ export const useAdoptionStore = defineStore('adoption', () => {
 
   const submitApplication = async () => {
     try {
+      if (isDemoMode.value) {
+        console.log('Demo Mode: Simulating submission success')
+        await new Promise((resolve) => setTimeout(resolve, 1000))
+        isSubmitted.value = true
+        sessionStorage.removeItem(STORAGE_KEY)
+        return true
+      }
+
       let primaryOwner = null
       if (formState.primaryOwner !== null) {
         primaryOwner = formState.primaryOwner ? 'Yes' : 'No'

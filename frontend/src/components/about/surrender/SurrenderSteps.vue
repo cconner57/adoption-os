@@ -6,44 +6,65 @@ const { formStep, selectedAnimal } = defineProps<{
 </script>
 
 <template>
-  <div class="steps-container">
-    <div class="step" :class="{ active: formStep >= 1 }">
+  <ol class="steps-container">
+    <li
+      class="step"
+      :class="{ active: formStep >= 1 }"
+      :aria-current="formStep === 1 ? 'step' : undefined"
+    >
       <div class="step-number">1</div>
       <div class="step-label">Household</div>
-    </div>
-    <div class="step" :class="{ active: formStep >= 2 }">
+    </li>
+    <li
+      class="step"
+      :class="{ active: formStep >= 2 }"
+      :aria-current="formStep === 2 ? 'step' : undefined"
+    >
       <div class="step-number">2</div>
       <div class="step-label">Behavior</div>
-    </div>
-    <div class="step" :class="{ active: formStep >= 3 }">
+    </li>
+    <li
+      class="step"
+      :class="{ active: formStep >= 3 }"
+      :aria-current="formStep === 3 ? 'step' : undefined"
+    >
       <div class="step-number">3</div>
       <div class="step-label">Aggression</div>
-    </div>
-    <div class="step" v-if="selectedAnimal === 'cat'" :class="{ active: formStep >= 4 }">
+    </li>
+    <li
+      class="step"
+      v-if="selectedAnimal === 'cat'"
+      :class="{ active: formStep >= 4 }"
+      :aria-current="formStep === 4 ? 'step' : undefined"
+    >
       <div class="step-number">4</div>
       <div class="step-label">Medical</div>
-    </div>
-    <div
+    </li>
+    <li
       class="step"
       :class="{ active: formStep >= 5 }"
+      :aria-current="formStep === (selectedAnimal === 'cat' ? 5 : 4) ? 'step' : undefined"
     >
       <div class="step-number">{{ selectedAnimal === 'cat' ? 5 : 4 }}</div>
       <div class="step-label">Feeding</div>
-    </div>
-    <div
+    </li>
+    <li
       class="step"
       :class="{ active: formStep >= 6 }"
+      :aria-current="formStep === (selectedAnimal === 'cat' ? 6 : 5) ? 'step' : undefined"
     >
       <div class="step-number">{{ selectedAnimal === 'cat' ? 6 : 5 }}</div>
       <div class="step-label">Other</div>
-    </div>
-  </div>
+    </li>
+  </ol>
 </template>
 
 <style scoped lang="css">
 .steps-container {
   display: flex;
   justify-content: space-between;
+  list-style: none;
+  padding: 0;
   width: 100%;
   max-width: 600px;
   margin: 0 auto 20px;
@@ -58,7 +79,7 @@ const { formStep, selectedAnimal } = defineProps<{
     left: 27px; /* 12px margin + 15px half circle */
     right: 27px; /* Match left offset */
     height: 2px;
-    background-color: var(--green);
+    background-color: var(--color-primary);
     z-index: 0; /* Behind step numbers */
   }
 
@@ -100,9 +121,9 @@ const { formStep, selectedAnimal } = defineProps<{
       width: 30px;
       height: 30px;
       border-radius: 50%;
-      background-color: var(--white);
-      border: 1px solid var(--green);
-      color: var(--font-color-dark);
+      background-color: var(--text-inverse);
+      border: 1px solid var(--color-primary);
+      color: var(--text-primary);
       display: flex;
       justify-content: center;
       align-items: center;
@@ -127,8 +148,8 @@ const { formStep, selectedAnimal } = defineProps<{
 
     &.active {
       .step-number {
-        background-color: var(--green);
-        color: var(--white);
+        background-color: var(--color-primary);
+        color: var(--text-inverse);
       }
     }
   }

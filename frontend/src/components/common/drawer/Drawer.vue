@@ -27,37 +27,37 @@ function closeDrawer() {
 <template>
   <Transition name="drawer-fade">
     <div v-if="open" class="overlay" @click="closeDrawer">
-    <div class="drawer" @click.stop>
-      <div class="drawer-header">
-        <h2>{{ props.header }}</h2>
-        <button
-          class="hx-btn"
-          type="button"
-          :aria-expanded="open"
-          :aria-label="'Close menu'"
-          @click="closeDrawer"
-        >
-          <svg
-            :width="24"
-            :height="24"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="black"
-            stroke-linecap="round"
-            stroke-width="2.2"
-            :data-open="open"
-            aria-hidden="true"
-            role="img"
+      <div class="drawer" @click.stop>
+        <div class="drawer-header">
+          <h2>{{ props.header }}</h2>
+          <button
+            class="hx-btn"
+            type="button"
+            :aria-expanded="open"
+            :aria-label="'Close menu'"
+            @click="closeDrawer"
           >
-            <line class="hx-top" x1="3" y1="6" x2="21" y2="6" />
-            <line class="hx-mid" x1="3" y1="12" x2="21" y2="12" />
-            <line class="hx-bot" x1="3" y1="18" x2="21" y2="18" />
-          </svg>
-        </button>
+            <svg
+              :width="24"
+              :height="24"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="black"
+              stroke-linecap="round"
+              stroke-width="2.2"
+              :data-open="open"
+              aria-hidden="true"
+              role="img"
+            >
+              <line class="hx-top" x1="3" y1="6" x2="21" y2="6" />
+              <line class="hx-mid" x1="3" y1="12" x2="21" y2="12" />
+              <line class="hx-bot" x1="3" y1="18" x2="21" y2="18" />
+            </svg>
+          </button>
+        </div>
+        <div class="drawer-body"><slot></slot></div>
       </div>
-      <div class="drawer-body"><slot></slot></div>
     </div>
-  </div>
   </Transition>
 </template>
 
@@ -78,7 +78,7 @@ function closeDrawer() {
     max-width: 500px;
     height: 100dvh;
     z-index: 1005;
-    background-color: var(--font-color-light);
+    background-color: var(--text-inverse);
     box-shadow: -2px 0 10px rgba(0, 0, 0, 0.1);
     border-top-left-radius: 1rem;
     border-bottom-left-radius: 1rem;
@@ -94,7 +94,7 @@ function closeDrawer() {
       & h2 {
         margin: 0 0 0 4rem;
         font-size: 1.5rem;
-        color: black;
+        color: var(--text-primary);
       }
       .hx-btn {
         all: unset;
@@ -104,10 +104,10 @@ function closeDrawer() {
         padding: 8px;
         border-radius: 12px;
         cursor: pointer;
-        color: #fff;
+        color: var(--text-inverse);
       }
       .hx-btn:focus-visible {
-        outline: 2px solid #2f6bd8;
+        outline: 2px solid var(--color-secondary);
         outline-offset: 2px;
       }
       svg {

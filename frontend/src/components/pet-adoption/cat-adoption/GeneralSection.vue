@@ -24,6 +24,7 @@ const { modelValue } = defineProps<{
   touched?: Record<string, boolean>
   // eslint-disable-next-line no-unused-vars
   handleBlur: (_field: string) => void
+  hasAttemptedSubmit?: boolean
 }>()
 
 function addRoommate() {
@@ -54,7 +55,7 @@ function removeChild(index: number) {
           name="firstName"
           placeholder="First Name"
           required
-          :hasError="touched?.firstName && !modelValue.firstName"
+          :hasError="(touched?.firstName || hasAttemptedSubmit) && !modelValue.firstName"
           @blur="handleBlur?.('firstName')"
         />
         <InputField
@@ -63,7 +64,7 @@ function removeChild(index: number) {
           name="lastName"
           placeholder="Last Name"
           required
-          :hasError="touched?.lastName && !modelValue.lastName"
+          :hasError="(touched?.lastName || hasAttemptedSubmit) && !modelValue.lastName"
           @blur="handleBlur?.('lastName')"
         />
         <InputField
@@ -72,7 +73,7 @@ function removeChild(index: number) {
           name="age"
           placeholder="Age"
           required
-          :hasError="touched?.age && !modelValue.age"
+          :hasError="(touched?.age || hasAttemptedSubmit) && !modelValue.age"
           @blur="handleBlur?.('age')"
         />
         <InputField
@@ -81,7 +82,7 @@ function removeChild(index: number) {
           name="email"
           placeholder="Email"
           required
-          :hasError="touched?.email && !modelValue.email"
+          :hasError="(touched?.email || hasAttemptedSubmit) && !modelValue.email"
           @blur="handleBlur?.('email')"
         />
         <InputField
@@ -91,7 +92,7 @@ function removeChild(index: number) {
           name="address"
           placeholder="Street Address"
           required
-          :hasError="touched?.address && !modelValue.address"
+          :hasError="(touched?.address || hasAttemptedSubmit) && !modelValue.address"
           @blur="handleBlur?.('address')"
         />
         <InputField
@@ -101,7 +102,7 @@ function removeChild(index: number) {
           name="addressLine2"
           placeholder="Address Line 2"
           required
-          :hasError="touched?.addressLine2 && !modelValue.addressLine2"
+          :hasError="(touched?.addressLine2 || hasAttemptedSubmit) && !modelValue.addressLine2"
           @blur="handleBlur?.('addressLine2')"
         />
         <InputField
@@ -110,7 +111,7 @@ function removeChild(index: number) {
           name="city"
           placeholder="City"
           required
-          :hasError="touched?.city && !modelValue.city"
+          :hasError="(touched?.city || hasAttemptedSubmit) && !modelValue.city"
           @blur="handleBlur?.('city')"
         />
         <InputField
@@ -119,7 +120,7 @@ function removeChild(index: number) {
           name="state"
           placeholder="State"
           required
-          :hasError="touched?.state && !modelValue.state"
+          :hasError="(touched?.state || hasAttemptedSubmit) && !modelValue.state"
           @blur="handleBlur?.('state')"
         />
         <InputField
@@ -128,7 +129,7 @@ function removeChild(index: number) {
           name="zip"
           placeholder="Zip Code"
           required
-          :hasError="touched?.zip && !modelValue.zip"
+          :hasError="(touched?.zip || hasAttemptedSubmit) && !modelValue.zip"
           @blur="handleBlur?.('zip')"
         />
         <InputField
@@ -137,7 +138,7 @@ function removeChild(index: number) {
           name="phoneNumber"
           placeholder="Phone Number"
           required
-          :hasError="touched?.phoneNumber && !modelValue.phoneNumber"
+          :hasError="(touched?.phoneNumber || hasAttemptedSubmit) && !modelValue.phoneNumber"
           @blur="handleBlur?.('phoneNumber')"
         />
         <InputField
@@ -254,6 +255,7 @@ function removeChild(index: number) {
           label="Have all adult members of the household agreed to this adoption?"
           :modelValue="modelValue.adultMembersAgreed"
           @update:modelValue="(val) => (modelValue.adultMembersAgreed = val as 'Yes' | 'No')"
+          :hasError="hasAttemptedSubmit && !modelValue.adultMembersAgreed"
         />
       </div>
     </div>
@@ -271,7 +273,14 @@ function removeChild(index: number) {
     font-size: 1.75rem;
     font-weight: 600;
     text-align: center;
-    color: var(--green);
+    color: var(--color-primary);
+  }
+
+  h2 {
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin-bottom: 24px;
+    color: var(--text-primary);
   }
 
   .form-grid {
@@ -299,7 +308,7 @@ function removeChild(index: number) {
   .section-label {
     font-size: 0.875rem;
     font-weight: 600;
-    color: var(--font-color-dark);
+    color: var(--text-primary);
     margin-bottom: 0.25rem;
   }
 
@@ -339,22 +348,22 @@ function removeChild(index: number) {
     display: flex;
     align-items: center;
     justify-content: center;
-    color: var(--green);
+    color: var(--color-primary);
     padding: 0;
     flex-shrink: 0;
     margin-top: 0;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 
     &:hover {
-      color: var(--blue-hover);
-      border-color: var(--blue-hover);
+      color: var(--color-secondary);
+      border-color: var(--color-secondary);
     }
   }
 
   .remove-btn:hover {
-    color: var(--red);
-    border-color: var(--red);
-    background-color: #fff5f5;
+    color: var(--color-danger);
+    border-color: var(--color-danger);
+    background-color: hsl(from var(--color-danger) h s 95%);
   }
 
   /* Children specific overrides */
@@ -392,7 +401,7 @@ function removeChild(index: number) {
       font-size: 1.25rem;
       font-weight: 600;
       text-align: center;
-      color: var(--green);
+      color: var(--color-primary);
     }
   }
 }

@@ -31,14 +31,15 @@ const goToSurrenderForm = () => {
 <style scoped lang="css">
 h2 {
   font-size: 2.5rem;
-  color: var(--font-color-light);
+  color: var(--text-inverse);
   text-align: center;
   margin: 50px 0 10px;
 }
 
 .surrender-cat-section {
   text-align: center;
-  padding: 20px 0;
+  background-color: var(--color-primary);
+  padding: 80px var(--layout-padding-side);
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -46,7 +47,7 @@ h2 {
 
 .description {
   font-size: 1.2rem;
-  color: var(--font-color-light);
+  color: var(--text-inverse);
   margin-bottom: 50px;
   text-align: center;
   font-weight: 400;

@@ -72,7 +72,7 @@ const pet = computed(() => pets.find((p) => p.id === id.value))
     padding: 8px 20px;
     border-radius: 20px;
     background-color: rgba(255, 255, 255, 0.2);
-    color: var(--font-color-light);
+    color: var(--text-inverse);
     font-weight: 600;
     cursor: pointer;
     transition: all 0.2s;
@@ -83,8 +83,8 @@ const pet = computed(() => pets.find((p) => p.id === id.value))
     }
 
     &.active {
-      background-color: var(--white);
-      color: var(--green);
+      background-color: var(--text-inverse);
+      color: var(--color-primary);
     }
   }
 }
@@ -92,7 +92,7 @@ const pet = computed(() => pets.find((p) => p.id === id.value))
 .adopt {
   width: 100%;
   min-height: 100vh;
-  background-color: var(--green);
+  background-color: var(--color-primary);
   display: flex;
   justify-content: center;
 
@@ -117,12 +117,12 @@ const pet = computed(() => pets.find((p) => p.id === id.value))
     text-align: center;
     & h1 {
       font-size: 3.5rem;
-      color: var(--font-color-light);
+      color: var(--text-inverse);
       min-width: 360px;
     }
     & p {
       font-size: 1.25rem;
-      color: var(--font-color-light);
+      color: var(--text-inverse);
       min-width: 340px;
       max-width: 100%;
       font-weight: 400;
@@ -139,7 +139,7 @@ const pet = computed(() => pets.find((p) => p.id === id.value))
     }
     & h1 {
       font-size: 2rem;
-      color: var(--font-color-light);
+      color: var(--text-inverse);
       line-height: 1.2;
       margin-bottom: 12px;
     }
@@ -180,7 +180,7 @@ const pet = computed(() => pets.find((p) => p.id === id.value))
   flex-direction: column;
   align-items: center;
   text-align: center;
-  color: var(--font-color-light);
+  color: var(--text-inverse);
   margin-top: 2rem;
   padding: 3rem;
   background: rgba(255, 255, 255, 0.1);
@@ -204,8 +204,8 @@ const pet = computed(() => pets.find((p) => p.id === id.value))
 
   .reset-btn {
     all: unset;
-    background-color: var(--white);
-    color: var(--green);
+    background-color: var(--text-inverse);
+    color: var(--color-primary);
     padding: 12px 32px;
     border-radius: 30px;
     font-weight: 600;

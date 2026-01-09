@@ -4,6 +4,7 @@ import { mockPetsData } from '../../stores/mockPetData'
 import type { IPet } from '../../models/common'
 import PetEditor from '../../components/admin/pets/PetEditor.vue'
 import PetRow from '../../components/admin/pets/PetRow.vue'
+import { Button, InputField, InputSelectGroup } from '../../components/common/ui'
 
 // State
 const pets = ref<IPet[]>([...mockPetsData])
@@ -137,28 +138,28 @@ function handleToggleExpand(pet: IPet) {
         <span class="count-badge">{{ filteredPets.length }} Pets</span>
       </div>
       <div class="header-actions" @click.stop>
-        <select v-model="speciesFilter" class="filter-select">
-          <option value="all">All Species</option>
-          <option value="cat">Cats</option>
-          <option value="dog">Dogs</option>
-        </select>
+        <div class="filter-group">
+          <select v-model="speciesFilter" class="filter-select">
+            <option value="all">All Species</option>
+            <option value="cat">Cats</option>
+            <option value="dog">Dogs</option>
+          </select>
 
-        <select v-model="statusFilter" class="filter-select">
-          <option value="all">All Statuses</option>
-          <option value="available">Available</option>
-          <option value="adoption-pending">Adoption Pending</option>
-          <option value="adopted">Adopted</option>
-          <option value="foster">In Foster</option>
-          <option value="hold">Medical/Behavioral Hold</option>
-          <option value="intake">Intake Processing</option>
-          <option value="archived">Archived</option>
-        </select>
-        <input
-          v-model="searchQuery"
-          type="text"
-          placeholder="Search pets..."
-          class="search-input"
-        />
+          <select v-model="statusFilter" class="filter-select">
+            <option value="all">All Statuses</option>
+            <option value="available">Available</option>
+            <option value="adoption-pending">Adoption Pending</option>
+            <option value="adopted">Adopted</option>
+            <option value="foster">In Foster</option>
+            <option value="hold">Medical/Behavioral Hold</option>
+            <option value="intake">Intake Processing</option>
+            <option value="archived">Archived</option>
+          </select>
+        </div>
+
+        <div class="search-wrapper">
+          <InputField v-model="searchQuery" placeholder="Search pets..." />
+        </div>
 
         <!-- Column Settings -->
         <div class="settings-dropdown-wrapper">
@@ -205,7 +206,7 @@ function handleToggleExpand(pet: IPet) {
           </div>
         </div>
 
-        <button class="add-btn" @click="handleAddPet">Add New Pet +</button>
+        <Button title="Add New Pet +" color="black" :onClick="handleAddPet" />
       </div>
     </div>
 
@@ -281,17 +282,17 @@ function handleToggleExpand(pet: IPet) {
 
   h1 {
     font-size: 1.8rem;
-    color: var(--font-color-dark);
+    color: var(--text-primary);
     margin: 0;
   }
 }
 
 .count-badge {
-  background: #f3f4f6;
+  background: hsl(from var(--color-neutral) h s 95%);
   padding: 4px 12px;
   border-radius: 20px;
   font-size: 0.9rem;
-  color: var(--font-color-medium);
+  color: hsl(from var(--color-neutral) h s 50%);
   font-weight: 600;
 }
 
@@ -307,8 +308,8 @@ function handleToggleExpand(pet: IPet) {
 }
 
 .settings-btn {
-  background: white;
-  border: 1px solid #e5e7eb;
+  background: var(--text-inverse);
+  border: 1px solid var(--border-color);
   width: 42px; /* Match height of inputs/selects approx */
   height: 42px;
   font-size: 1.2rem;
@@ -316,7 +317,7 @@ function handleToggleExpand(pet: IPet) {
   cursor: pointer;
 
   &:hover {
-    background: #f9fafb;
+    background: hsl(from var(--color-neutral) h s 98%);
   }
 }
 
@@ -325,8 +326,8 @@ function handleToggleExpand(pet: IPet) {
   top: 100%;
   right: 0; /* Changed from left: 0 to right: 0 to align with the button */
   margin-top: 8px;
-  background: white;
-  border: 1px solid #e5e7eb;
+  background: var(--text-inverse);
+  border: 1px solid var(--border-color);
   border-radius: 8px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   width: 200px;
@@ -338,9 +339,9 @@ function handleToggleExpand(pet: IPet) {
   padding: 8px 16px;
   font-size: 0.8rem;
   font-weight: 600;
-  color: var(--font-color-medium);
+  color: hsl(from var(--color-neutral) h s 50%);
   text-transform: uppercase;
-  border-bottom: 1px solid #f3f4f6;
+  border-bottom: 1px solid var(--border-color);
   margin-bottom: 4px;
 }
 
@@ -350,70 +351,21 @@ function handleToggleExpand(pet: IPet) {
   gap: 8px;
   padding: 8px 16px;
   font-size: 0.95rem;
-  color: var(--font-color-dark);
+  color: var(--text-primary);
   cursor: pointer;
   transition: background 0.2s;
 
   &:hover {
-    background: #f3f4f6;
+    background: hsl(from var(--color-neutral) h s 95%);
   }
 
   input[type='checkbox'] {
-    accent-color: var(--blue);
-  }
-}
-
-.search-input {
-  padding: 10px 16px;
-  border: 1px solid #e5e7eb;
-  border-radius: 8px;
-  width: 250px;
-  outline: none;
-  font-size: 0.95rem;
-  background-color: white;
-  color: var(--font-color-dark);
-
-  &:focus {
-    border-color: var(--blue);
-  }
-
-  &::placeholder {
-    color: #9ca3af;
-  }
-}
-
-.filter-select {
-  padding: 10px 16px;
-  border: 1px solid #e5e7eb;
-  border-radius: 8px;
-  outline: none;
-  font-size: 0.95rem;
-  background-color: white;
-  color: var(--font-color-dark);
-  cursor: pointer;
-
-  &:focus {
-    border-color: var(--blue);
-  }
-}
-
-.add-btn {
-  background-color: var(--green);
-  color: white;
-  border: none;
-  padding: 10px 20px;
-  border-radius: 8px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: background-color 0.2s;
-
-  &:hover {
-    background-color: var(--green-hover);
+    accent-color: var(--color-secondary);
   }
 }
 
 .table-container {
-  background: white;
+  background: var(--text-inverse);
   border-radius: 12px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
   overflow: hidden;
@@ -434,7 +386,7 @@ function handleToggleExpand(pet: IPet) {
     background: #cbd5e1; /* Using a neutral gray that fits */
     border-radius: 4px;
 
-    /* If we want branded: background: var(--green-weak); */
+    /* If we want branded: background: hsl(from var(--color-primary) h s 80%); */
   }
 
   &::-webkit-scrollbar-thumb:hover {
@@ -448,12 +400,12 @@ function handleToggleExpand(pet: IPet) {
   text-align: left;
 
   th {
-    background: #f9fafb;
+    background: hsl(from var(--color-neutral) h s 98%);
     padding: 12px 24px;
     font-weight: 600;
-    color: var(--font-color-medium);
+    color: hsl(from var(--color-neutral) h s 50%);
     font-size: 0.9rem;
-    border-bottom: 1px solid #e5e7eb;
+    border-bottom: 1px solid var(--border-color);
     position: sticky;
     top: 0;
     z-index: 10;

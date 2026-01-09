@@ -9,7 +9,7 @@ import {
 import Button from '../components/common/ui/Button.vue'
 import InputField from '../components/common/ui/InputField.vue'
 import InputTextArea from '../components/common/ui/InputTextArea.vue'
-import { reactive, onMounted } from 'vue'
+import { reactive, onMounted, ref, nextTick } from 'vue'
 import FormSubmitted from '../components/common/form-submitted/FormSubmitted.vue'
 import { storeToRefs } from 'pinia'
 import { useVolunteerStore } from '../stores/volunteer.ts'
@@ -72,6 +72,11 @@ const handleBlur = (field: string) => {
 const handleSubmit = async () => {
   if (!isFormValid.value) {
     Object.keys(formState.value).forEach((key) => (touched[key] = true))
+    await nextTick()
+    const errorSummary = document.querySelector('.validation-summary') as HTMLElement
+    if (errorSummary) {
+      errorSummary.focus()
+    }
   }
 
   const success = await submit()
@@ -93,17 +98,15 @@ const handleReset = () => {
   <section class="page-shell">
     <div v-if="!isSubmitted" class="form-container">
       <form class="form-card" aria-labelledby="form-title" @submit.prevent="handleSubmit">
-        <div v-scroll-reveal>
-          <ApplicationHeader
-            header-title="Volunteer"
-            header-text="I Dream of Home Rescue (IDOHR) is an all-volunteer, nonprofit dedicated to helping homeless cats
+        <ApplicationHeader
+          header-title="Volunteer"
+          header-text="I Dream of Home Rescue (IDOHR) is an all-volunteer, nonprofit dedicated to helping homeless cats
     and kittens find loving, permanent homes. We’re looking for responsible volunteers to help with
     feeding and cleaning, socializing cats and kittens, supporting adoptions, and light
     administrative tasks. Volunteers must be 21 or older. If under 21, a parent or guardian must
     sign the waiver below. Join us and help change a life. You’ll connect with amazing animals, work
     alongside caring volunteers, and make a meaningful impact."
-          />
-        </div>
+        />
         <fieldset class="volunteer-grid" aria-labelledby="pi" v-scroll-reveal>
           <legend id="pi" class="section-title">Personal Information</legend>
 
@@ -291,6 +294,8 @@ const handleReset = () => {
           <div
             v-if="hasAttemptedSubmit && !isFormValid && validationErrors.length > 0"
             class="validation-summary"
+            role="alert"
+            tabindex="-1"
           >
             <p class="summary-title">Please complete the following required fields:</p>
             <div class="tags">
@@ -320,7 +325,7 @@ const handleReset = () => {
 <style scoped>
 .page-shell {
   min-height: 100vh;
-  background-color: var(--green);
+  background-color: var(--color-primary);
   padding: 9rem var(--layout-padding-side) 64px;
 
   /* Viewport adjustments can remain, but simplified */
@@ -336,8 +341,8 @@ const handleReset = () => {
   }
 
   .form-card {
-    background: var(--white);
-    color: var(--font-color-dark);
+    background: var(--text-inverse);
+    color: var(--text-primary);
     border-radius: 24px;
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
     padding: 48px 48px 32px;
@@ -381,15 +386,15 @@ const handleReset = () => {
 
   /* Nested components that are localized */
   .validation-summary {
-    background-color: #fef2f2;
-    border: 1px solid #ef4444;
+    background-color: hsl(from var(--color-danger) h s 98%);
+    border: 1px solid var(--color-danger);
     border-radius: 12px;
     padding: 16px;
     margin: 24px 0;
     text-align: center;
 
     .summary-title {
-      color: #b91c1c;
+      color: var(--color-danger);
       font-weight: 600;
       margin-bottom: 12px;
     }
@@ -402,8 +407,8 @@ const handleReset = () => {
     }
 
     .tag.is-danger {
-      background-color: #fee2e2;
-      color: #b91c1c;
+      background-color: hsl(from var(--color-danger) h s 92%);
+      color: var(--color-danger);
       padding: 4px 12px;
       border-radius: 16px;
       font-size: 0.875rem;
@@ -414,8 +419,8 @@ const handleReset = () => {
   /* Utility classes nested here or could be global, but scoped so kept here */
   .has-error :deep(input),
   .has-error :deep(textarea) {
-    border-color: #ef4444 !important;
-    outline: 2px solid #ef4444 !important;
+    border-color: var(--color-danger) !important;
+    outline: 2px solid var(--color-danger) !important;
   }
 
   /* Reveal Animations */

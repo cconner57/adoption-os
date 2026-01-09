@@ -3,7 +3,8 @@ const props = defineProps<{
   color: 'green' | 'blue' | 'purple' | 'green-weak' | 'orange' | 'white'
   onClick?: () => void
   size?: 'small' | 'medium' | 'large'
-  title: string
+  align?: 'center' | 'start' | 'between'
+  title?: string
   fullWidth?: boolean
   disabled?: boolean
   loading?: boolean
@@ -22,6 +23,9 @@ const props = defineProps<{
       small: props.size === 'small',
       medium: props.size === 'medium' || !props.size,
       large: props.size === 'large',
+      'justify-center': !props.align || props.align === 'center',
+      'justify-start': props.align === 'start',
+      'justify-between': props.align === 'between',
       'w-full': props.fullWidth,
       'button-disabled': props.disabled || props.loading,
     }"
@@ -29,7 +33,9 @@ const props = defineProps<{
     :disabled="props.disabled || props.loading"
   >
     <span v-if="props.loading" class="spinner"></span>
-    <span v-else>{{ props.title }}</span>
+    <slot v-else>
+      <span>{{ props.title }}</span>
+    </slot>
   </button>
 </template>
 
@@ -37,15 +43,24 @@ const props = defineProps<{
 button {
   display: inline-flex;
   align-items: center;
-  justify-content: center;
   font-weight: 600;
   border-radius: 6px;
-  color: var(--white);
+  color: var(--text-inverse);
   transition: background-color 0.2s;
   white-space: nowrap; /* Force single line */
   &:hover {
     cursor: pointer;
   }
+}
+
+.justify-center {
+  justify-content: center;
+}
+.justify-start {
+  justify-content: flex-start;
+}
+.justify-between {
+  justify-content: space-between;
 }
 
 .spinner {
@@ -101,47 +116,48 @@ button {
 }
 
 .button-color-blue {
-  background-color: var(--blue);
+  background-color: var(--color-secondary);
 
   &:hover {
-    background-color: var(--blue-hover);
+    background-color: hsl(from var(--color-secondary) h s 40%);
   }
 }
 
 .button-color-purple {
-  background-color: var(--purple);
+  background-color: var(--color-tertiary);
   &:hover {
-    background-color: var(--purple-hover);
+    background-color: hsl(from var(--color-tertiary) h s 40%);
   }
 }
 
 .button-color-green {
-  background-color: var(--green);
+  background-color: var(--color-primary);
   &:hover {
-    background-color: var(--green-hover);
+    background-color: hsl(from var(--color-primary) h s 40%);
   }
 }
 
 .button-color-orange {
-  background-color: #ed8936;
+  background-color: var(--color-warning);
   &:hover {
-    background-color: #dd6b20;
+    background-color: hsl(from var(--color-warning) h s 40%);
   }
 }
 
 .button-green-weak {
-  background-color: var(--green-weak);
+  background-color: hsl(from var(--color-primary) h s 95%);
+  color: var(--color-primary);
   &:hover {
-    background-color: var(--green-weak-hover);
+    background-color: hsl(from var(--color-primary) h s 80%);
   }
 }
 
 .button-color-white {
-  background-color: var(--white);
-  color: var(--font-color-dark);
-  border: 1px solid #e2e8f0;
+  background-color: var(--text-inverse);
+  color: var(--text-primary);
+  border: 1px solid var(--border-color);
   &:hover {
-    background-color: #f8fafc;
+    background-color: hsl(from var(--text-inverse) h s 95%);
   }
 }
 

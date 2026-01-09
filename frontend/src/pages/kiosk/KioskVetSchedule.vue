@@ -95,7 +95,7 @@ const goHome = () => router.push('/kiosk')
   background: none;
   border: none;
   font-size: 1.2rem;
-  color: var(--font-color-medium);
+  color: hsl(from var(--color-neutral) h s 50%);
   cursor: pointer;
   font-weight: 600;
 }
@@ -103,8 +103,8 @@ const goHome = () => router.push('/kiosk')
 .date-display {
   font-size: 1.2rem;
   font-weight: 600;
-  color: var(--purple);
-  background: #f3e8ff;
+  color: var(--color-secondary);
+  background: hsl(from var(--color-secondary) h s 95%);
   padding: 8px 16px;
   border-radius: 12px;
 }
@@ -125,8 +125,8 @@ const goHome = () => router.push('/kiosk')
   box-shadow: 0 4px 6px -2px rgba(0, 0, 0, 0.05);
 
   &.urgent {
-    border-left: 6px solid #ef4444;
-    background: #fef2f2;
+    border-left: 6px solid var(--color-danger);
+    background: hsl(from var(--color-danger) h s 98%);
   }
 }
 
@@ -134,7 +134,7 @@ const goHome = () => router.push('/kiosk')
   width: 140px;
   font-size: 1.5rem;
   font-weight: 700;
-  color: var(--font-color-medium);
+  color: hsl(from var(--color-neutral) h s 50%);
 }
 
 .info-col {
@@ -142,17 +142,17 @@ const goHome = () => router.push('/kiosk')
   h2 {
     margin: 0 0 6px 0;
     font-size: 1.6rem;
-    color: var(--font-color-dark);
+    color: var(--text-primary);
   }
 }
 
 .apt-details {
   font-size: 1.1rem;
-  color: var(--font-color-medium);
+  color: hsl(from var(--color-neutral) h s 50%);
 }
 
 .urgent-badge {
-  background: #ef4444;
+  background: var(--color-danger);
   color: white;
   font-weight: 700;
   padding: 6px 16px;
@@ -164,7 +164,7 @@ const goHome = () => router.push('/kiosk')
 
 .empty-state {
   text-align: center;
-  color: var(--font-color-medium);
+  color: hsl(from var(--color-neutral) h s 50%);
   padding: 60px;
   font-size: 1.2rem;
   background: white;

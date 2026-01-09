@@ -117,6 +117,8 @@ onUnmounted(() => {
       id="signatureCanvas"
       ref="canvasRef"
       class="signature-canvas"
+      role="img"
+      :aria-label="label || 'Signature canvas'"
       width="500"
       height="200"
       @mousedown="startDrawing"
@@ -145,14 +147,14 @@ onUnmounted(() => {
     margin-bottom: 10px;
     font-size: 16px;
     font-weight: bold;
-    color: #333;
+    color: var(--text-primary);
   }
 
   .signature-canvas {
-    border: 1px solid #ccc;
+    border: 1px solid var(--border-color);
     border-radius: 4px;
     cursor: crosshair;
-    background-color: #fff;
+    background-color: #ffffff;
     width: 100%;
     height: 200px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
@@ -161,7 +163,7 @@ onUnmounted(() => {
 
   /* Nested state modifier */
   &.has-error .signature-canvas {
-    border: 2px solid #ef4444;
+    border: 2px solid var(--color-danger);
   }
 
   .signature-actions {
@@ -171,14 +173,14 @@ onUnmounted(() => {
 
     button {
       padding: 5px 10px;
-      background-color: #007bff;
-      color: #fff;
+      background-color: var(--color-secondary);
+      color: var(--text-inverse);
       border: none;
       border-radius: 4px;
       cursor: pointer;
 
       &:hover {
-        background-color: #0056b3;
+        background-color: hsl(from var(--color-secondary) h s 40%);
       }
     }
   }

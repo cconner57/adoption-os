@@ -344,7 +344,7 @@ const { formState, touched, handleBlur, hasAttemptedSubmit, selectedAnimal } = d
     margin-bottom: 24px;
 
     .subtitle {
-      color: var(--font-color-dark);
+      color: var(--text-primary);
       margin-top: -8px;
       margin-bottom: 8px;
     }
@@ -353,10 +353,10 @@ const { formState, touched, handleBlur, hasAttemptedSubmit, selectedAnimal } = d
       display: flex;
       align-items: flex-start;
       gap: 16px;
-      background: #f8fafc;
+      background: hsl(from var(--color-neutral) h s 98%);
       padding: 16px;
       border-radius: 12px;
-      border: 1px solid #e2e8f0;
+      border: 1px solid var(--border-color);
 
       @media (max-width: 640px) {
         flex-direction: column;
@@ -391,13 +391,13 @@ const { formState, touched, handleBlur, hasAttemptedSubmit, selectedAnimal } = d
     .field-label {
       font-size: 0.875rem;
       font-weight: 600;
-      color: #374151;
+      color: hsl(from var(--color-neutral) h s 30%);
     }
 
     .gender-toggle {
       display: flex;
-      background: #fff;
-      border: 1px solid #e2e8f0;
+      background: var(--text-inverse);
+      border: 1px solid var(--border-color);
       border-radius: 8px;
       padding: 4px;
       height: 48px; /* Match typical input height */
@@ -408,16 +408,16 @@ const { formState, touched, handleBlur, hasAttemptedSubmit, selectedAnimal } = d
         background: transparent;
         border-radius: 6px;
         font-weight: 500;
-        color: #64748b;
+        color: hsl(from var(--color-neutral) h s 50%);
         cursor: pointer;
         padding: 0 4px;
         transition: all 0.2s;
 
         &.active {
-          background: color-mix(in srgb, var(--green) 10%, white);
-          border: 1px solid var(--green);
-          box-shadow: 0 0 0 1px var(--green) inset;
-          color: var(--font-color-dark);
+          background: color-mix(in srgb, var(--color-primary) 10%, white);
+          border: 1px solid var(--color-primary);
+          box-shadow: 0 0 0 1px var(--color-primary) inset;
+          color: var(--text-primary);
           font-weight: 600;
         }
       }
@@ -433,9 +433,9 @@ const { formState, touched, handleBlur, hasAttemptedSubmit, selectedAnimal } = d
       justify-content: center;
       width: 48px;
       height: 48px;
-      border: 1px solid #fee2e2;
-      background: #fff;
-      color: #ef4444;
+      border: 1px solid hsl(from var(--color-danger) h s 90%);
+      background: var(--text-inverse);
+      color: var(--color-danger);
       border-radius: 8px;
       cursor: pointer;
       transition: all 0.2s;
@@ -443,7 +443,7 @@ const { formState, touched, handleBlur, hasAttemptedSubmit, selectedAnimal } = d
       margin-top: 29px; /* Align with input fields */
 
       &:hover {
-        background: #fef2f2;
+        background: hsl(from var(--color-danger) h s 98%);
       }
 
       @media (max-width: 640px) {
@@ -459,19 +459,19 @@ const { formState, touched, handleBlur, hasAttemptedSubmit, selectedAnimal } = d
       align-items: center;
       gap: 8px;
       padding: 12px 20px;
-      background: #fff;
-      border: 1px dashed #cbd5e1;
+      background: var(--text-inverse);
+      border: 1px dashed var(--border-color);
       border-radius: 8px;
-      color: #64748b;
+      color: hsl(from var(--color-neutral) h s 50%);
       font-weight: 500;
       cursor: pointer;
       transition: all 0.2s;
 
       &:hover {
-        border: 1px solid var(--green);
-        background: color-mix(in srgb, var(--green) 10%, white);
-        color: var(--font-color-dark);
-        box-shadow: 0 0 0 1px var(--green) inset;
+        border: 1px solid var(--color-primary);
+        background: color-mix(in srgb, var(--color-primary) 10%, white);
+        color: var(--text-primary);
+        box-shadow: 0 0 0 1px var(--color-primary) inset;
         font-weight: 600;
       }
     }
@@ -479,8 +479,8 @@ const { formState, touched, handleBlur, hasAttemptedSubmit, selectedAnimal } = d
 }
 /* Add error styles for fieldsets */
 fieldset.has-error .chips {
-  outline: 2px solid #ef4444;
-  border-color: #ef4444;
+  outline: 2px solid var(--color-danger);
+  border-color: var(--color-danger);
   border-radius: 12px; /* Add some radius */
   padding: 8px; /* Add padding so border doesn't hug chips too tight */
 }

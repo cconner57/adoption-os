@@ -119,7 +119,7 @@ const monthDays = computed(() => {
 <style scoped>
 /* Month View */
 .month-view {
-  background: white;
+  background: var(--text-inverse);
   border-radius: 12px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
   padding: 24px;
@@ -134,7 +134,7 @@ const monthDays = computed(() => {
   text-align: center;
   margin-bottom: 12px;
   font-weight: 600;
-  color: var(--font-color-medium);
+  color: hsl(from var(--color-neutral) h s 50%);
 }
 
 .month-grid {
@@ -142,24 +142,24 @@ const monthDays = computed(() => {
   grid-template-columns: repeat(7, 1fr);
   grid-auto-rows: 1fr;
   gap: 1px;
-  background-color: #f3f4f6; /* Grid lines */
-  border: 1px solid #f3f4f6;
+  background-color: var(--border-color); /* Grid lines */
+  border: 1px solid var(--border-color);
   flex: 1;
 }
 
 .day-cell {
-  background-color: white;
+  background-color: var(--text-inverse);
   min-height: 100px;
   padding: 8px;
 
   &.empty {
-    background-color: #fcfcfc;
+    background-color: hsl(from var(--color-neutral) h s 98%);
   }
 
   &.today {
-    background-color: #f0f9ff;
+    background-color: hsl(from var(--color-secondary) h s 95%);
     .date-number {
-      color: var(--blue);
+      color: var(--color-secondary);
       font-weight: 700;
     }
   }
@@ -168,7 +168,7 @@ const monthDays = computed(() => {
 .date-number {
   font-size: 0.9rem;
   font-weight: 500;
-  color: var(--font-color-dark);
+  color: var(--text-primary);
   margin-bottom: 8px;
   display: block;
 }
@@ -186,7 +186,7 @@ const monthDays = computed(() => {
   padding: 4px 6px;
   border-radius: 4px;
   font-size: 0.75rem;
-  background-color: #f3f4f6;
+  background-color: hsl(from var(--color-neutral) h s 95%);
   cursor: pointer;
   white-space: normal;
   line-height: 1.3;
@@ -216,18 +216,18 @@ const monthDays = computed(() => {
 
   /* Specific event type styling needs to be here or passed down/global */
   &.volunteer {
-    background-color: #faf5ff;
-    color: var(--purple);
+    background-color: hsl(from var(--color-secondary) h s 95%);
+    color: var(--color-secondary);
     .dot {
-      background-color: var(--purple);
+      background-color: var(--color-secondary);
     }
   }
 
   &.vet {
-    background-color: #f0fdf4;
-    color: var(--green);
+    background-color: hsl(from var(--color-primary) h s 95%);
+    color: var(--color-primary);
     .dot {
-      background-color: var(--green);
+      background-color: var(--color-primary);
     }
   }
 }

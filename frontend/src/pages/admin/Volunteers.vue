@@ -78,18 +78,18 @@ const selectedIncidents = computed(() => {
 
 .sidebar {
   width: 320px;
-  background: white;
+  background: var(--text-inverse);
   border-radius: 16px;
   display: flex;
   flex-direction: column;
   overflow: hidden;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
-  border: 1px solid #f3f4f6;
+  border: 1px solid var(--border-color);
 }
 
 .sidebar-header {
   padding: 20px;
-  border-bottom: 1px solid #f3f4f6;
+  border-bottom: 1px solid var(--border-color);
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -97,14 +97,14 @@ const selectedIncidents = computed(() => {
   h2 {
     font-size: 1.2rem;
     font-weight: 700;
-    color: var(--font-color-dark);
+    color: var(--text-primary);
     margin: 0;
   }
 }
 
 .invite-btn {
-  background: var(--purple);
-  color: white;
+  background: var(--color-secondary);
+  color: var(--text-inverse);
   border: none;
   width: 32px;
   height: 32px;
@@ -121,27 +121,27 @@ const selectedIncidents = computed(() => {
 
 .search-box {
   padding: 16px;
-  border-bottom: 1px solid #f3f4f6;
+  border-bottom: 1px solid var(--border-color);
   input {
     width: 100%;
     padding: 10px 12px;
-    border: 1px solid #e5e7eb;
+    border: 1px solid var(--border-color);
     border-radius: 8px;
-    background: #f9fafb;
+    background: hsl(from var(--color-neutral) h s 98%);
     outline: none;
     &:focus {
-      border-color: var(--purple);
-      background: white;
+      border-color: var(--color-secondary);
+      background: var(--text-inverse);
     }
   }
 }
 
 .main-content {
   flex: 1;
-  background: white;
+  background: var(--text-inverse);
   border-radius: 16px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
-  border: 1px solid #f3f4f6;
+  border: 1px solid var(--border-color);
   overflow: hidden;
   display: flex;
   flex-direction: column;
@@ -155,7 +155,7 @@ const selectedIncidents = computed(() => {
   align-items: center;
   justify-content: center;
   height: 100%;
-  color: var(--font-color-medium);
+  color: hsl(from var(--color-neutral) h s 50%);
 
   .icon {
     font-size: 4rem;
@@ -163,7 +163,7 @@ const selectedIncidents = computed(() => {
     opacity: 0.5;
   }
   h2 {
-    color: var(--font-color-dark);
+    color: var(--text-primary);
     margin-bottom: 8px;
   }
 }
@@ -182,14 +182,14 @@ const selectedIncidents = computed(() => {
 
   h1 {
     font-size: 1.8rem;
-    color: var(--font-color-dark);
+    color: var(--text-primary);
     margin: 0;
   }
 }
 
 .add-btn {
-  background-color: var(--purple);
-  color: white;
+  background-color: var(--color-secondary); /* Assuming purple mapped to secondary */
+  color: var(--text-inverse);
   border: none;
   padding: 10px 20px;
   border-radius: 8px;
@@ -198,16 +198,16 @@ const selectedIncidents = computed(() => {
   transition: background-color 0.2s;
 
   &:hover {
-    background-color: var(--purple-hover);
+    background-color: hsl(from var(--color-secondary) h s 40%);
   }
 }
 
 .placeholder-content {
-  background: white;
+  background: var(--text-inverse);
   padding: 48px;
   border-radius: 12px;
   text-align: center;
-  color: var(--font-color-medium);
-  border: 1px dashed #e5e7eb;
+  color: hsl(from var(--color-neutral) h s 50%);
+  border: 1px dashed var(--border-color);
 }
 </style>

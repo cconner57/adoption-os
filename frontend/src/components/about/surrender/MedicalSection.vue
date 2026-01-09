@@ -19,21 +19,13 @@ const behaviorRows = [
   'bathe',
   'clean ears',
   'trim nails',
-  'take blood'
+  'take blood',
 ]
 
-const behaviorColumns = [
-  'never done',
-  'shows teeth/hisses',
-  'snap',
-  'bite',
-  'none of these'
-]
-
+const behaviorColumns = ['never done', 'shows teeth/hisses', 'snap', 'bite', 'none of these']
 
 const vaccineOptions = ['Rabies', 'FVRCP', 'FPV', 'FVR/FHV-1', 'FCV', 'None']
 const selectedVaccines = ref<string[]>([])
-
 
 const toggleFields: (
   | 'catVeterinarianYearlyVisits'
@@ -54,60 +46,56 @@ const toggleFields: (
   'catMicrochipped',
   'catPastOrPresentHealthProblems',
   'catCurrentMedications',
-  'catVetMuzzled'
+  'catVetMuzzled',
 ]
 
-toggleFields.forEach(field => {
+toggleFields.forEach((field) => {
   if (!formState[field]) {
-
     formState[field] = 'No'
   }
 })
-
 
 if (formState.catVaccinationHistory) {
   selectedVaccines.value = formState.catVaccinationHistory.split(', ')
 }
 
-
 if (!formState.catVetOrGroomerBehavior) {
-   const initialGridState: Record<string, string[]> = {}
-   behaviorRows.forEach(row => {
-     initialGridState[row] = ['none of these']
-   })
-   formState.catVetOrGroomerBehavior = JSON.stringify(initialGridState)
+  const initialGridState: Record<string, string[]> = {}
+  behaviorRows.forEach((row) => {
+    initialGridState[row] = ['none of these']
+  })
+  formState.catVetOrGroomerBehavior = JSON.stringify(initialGridState)
 }
-
-
 
 const toggleVaccine = (option: string) => {
   if (option === 'None') {
     selectedVaccines.value = ['None']
   } else {
-
     if (selectedVaccines.value.includes('None')) {
-      selectedVaccines.value = selectedVaccines.value.filter(v => v !== 'None')
+      selectedVaccines.value = selectedVaccines.value.filter((v) => v !== 'None')
     }
 
     if (selectedVaccines.value.includes(option)) {
-      selectedVaccines.value = selectedVaccines.value.filter(v => v !== option)
+      selectedVaccines.value = selectedVaccines.value.filter((v) => v !== option)
     } else {
       selectedVaccines.value.push(option)
     }
   }
 }
 
-watch(selectedVaccines, (newVal) => {
-  formState.catVaccinationHistory = newVal.join(', ')
-}, { deep: true })
-
+watch(
+  selectedVaccines,
+  (newVal) => {
+    formState.catVaccinationHistory = newVal.join(', ')
+  },
+  { deep: true },
+)
 </script>
 
 <template>
   <div class="medical-section">
     <h5>Medical History</h5>
     <div class="medical-grid">
-
       <InputTextArea
         label="Please list all veterniarians that have seen the cat, including address and number"
         placeholder="List veterinarians, addresses, and phone numbers"
@@ -116,15 +104,11 @@ watch(selectedVaccines, (newVal) => {
         @update:modelValue="(val) => (formState.catVeterinarianList = val)"
       />
 
-
-
       <ButtonToggle
         label="Does the cat see a veterinarian at least once a year?"
         :modelValue="formState.catVeterinarianYearlyVisits"
         @update:modelValue="(val) => (formState.catVeterinarianYearlyVisits = val as string)"
       />
-
-
 
       <ButtonToggle
         label="Is the cat spayed/neutered?"
@@ -132,9 +116,10 @@ watch(selectedVaccines, (newVal) => {
         @update:modelValue="(val) => (formState.catSpayedNeutered = val as string)"
       />
 
-
       <fieldset class="field" aria-labelledby="vaccine-legend">
-        <legend id="vaccine-legend" class="field-label">What vaccinations has the cat received?</legend>
+        <legend id="vaccine-legend" class="field-label">
+          What vaccinations has the cat received?
+        </legend>
         <div class="chips">
           <label class="chip" v-for="option in vaccineOptions" :key="option">
             <input
@@ -148,22 +133,17 @@ watch(selectedVaccines, (newVal) => {
         </div>
       </fieldset>
 
-
-
       <ButtonToggle
         label="Are vaccinations current?"
         :modelValue="formState.catVaccinationsCurrent"
         @update:modelValue="(val) => (formState.catVaccinationsCurrent = val as string)"
       />
 
-
-
       <ButtonToggle
         label="Has the cat been tested for heartworm?"
         :modelValue="formState.catTestedHeartworm"
         @update:modelValue="(val) => (formState.catTestedHeartworm = val as string)"
       />
-
 
       <InputTextArea
         label="If yes, what were the test results"
@@ -173,14 +153,11 @@ watch(selectedVaccines, (newVal) => {
         @update:modelValue="(val) => (formState.catTestedHeartwormExplanation = val)"
       />
 
-
-
       <ButtonToggle
         label="Is the pet taking heartworm preventative?"
         :modelValue="formState.catHeartwormPrevention"
         @update:modelValue="(val) => (formState.catHeartwormPrevention = val as string)"
       />
-
 
       <InputTextArea
         label="If yes, when is the next dosage due?"
@@ -190,14 +167,11 @@ watch(selectedVaccines, (newVal) => {
         @update:modelValue="(val) => (formState.catHeartwormPreventionExplanation = val)"
       />
 
-
-
       <ButtonToggle
         label="Is the pet microchipped?"
         :modelValue="formState.catMicrochipped"
         @update:modelValue="(val) => (formState.catMicrochipped = val as string)"
       />
-
 
       <InputTextArea
         label="If yes, please provide microchip number"
@@ -206,7 +180,6 @@ watch(selectedVaccines, (newVal) => {
         :modelValue="formState.catMicrochippedExplanation"
         @update:modelValue="(val) => (formState.catMicrochippedExplanation = val)"
       />
-
 
       <InputGrid
         label="Check if the cat has ever shown any of the following behaviors when handled by a vet or groomer"
@@ -217,16 +190,11 @@ watch(selectedVaccines, (newVal) => {
         :exclusiveOptions="['none of these', 'never done']"
       />
 
-
-
-
-
       <ButtonToggle
         label="Does the pet have any past or present health problems"
         :modelValue="formState.catPastOrPresentHealthProblems"
         @update:modelValue="(val) => (formState.catPastOrPresentHealthProblems = val as string)"
       />
-
 
       <InputTextArea
         label="If yes, please describe"
@@ -236,14 +204,11 @@ watch(selectedVaccines, (newVal) => {
         @update:modelValue="(val) => (formState.catPastOrPresentHealthProblemsExplanation = val)"
       />
 
-
-
       <ButtonToggle
         label="Is the cat currently taking any medications?"
         :modelValue="formState.catCurrentMedications"
         @update:modelValue="(val) => (formState.catCurrentMedications = val as string)"
       />
-
 
       <InputTextArea
         label="If yes, please list medications"
@@ -252,7 +217,6 @@ watch(selectedVaccines, (newVal) => {
         :modelValue="formState.catCurrentMedicationsExplanation"
         @update:modelValue="(val) => (formState.catCurrentMedicationsExplanation = val)"
       />
-
 
       <ButtonToggle
         label="Does the cat have to be muzzled at the veterinarians?"
@@ -290,12 +254,9 @@ watch(selectedVaccines, (newVal) => {
 .field-label {
   font-size: 0.875rem;
   font-weight: 600;
-  color: var(--font-color-dark);
+  color: var(--text-primary);
   margin-bottom: 4px;
 }
-
-
-
 
 .chips {
   display: flex;
@@ -325,7 +286,7 @@ watch(selectedVaccines, (newVal) => {
 
   span {
     font-weight: 600;
-    color: var(--text-900);
+    color: var(--text-primary);
     line-height: 1.5;
   }
 
@@ -344,14 +305,14 @@ watch(selectedVaccines, (newVal) => {
 }
 
 .chip:has(> input:checked) {
-  background: color-mix(in srgb, var(--green) 10%, white);
-  border: 1px solid var(--green);
-  box-shadow: 0 0 0 1px var(--green) inset;
-  color: var(--font-color-dark);
+  background: color-mix(in srgb, var(--color-primary) 10%, white);
+  border: 1px solid var(--color-primary);
+  box-shadow: 0 0 0 1px var(--color-primary) inset;
+  color: var(--text-primary);
 }
 
 .chip:has(> input:focus-visible) {
-  box-shadow: 0 0 0 3px var(--ring);
+  box-shadow: 0 0 0 3px var(--color-secondary);
 }
 
 @supports not (selector(:has(*))) {
@@ -386,6 +347,4 @@ fieldset.field {
 .required {
   color: #ef4444;
 }
-
-
 </style>

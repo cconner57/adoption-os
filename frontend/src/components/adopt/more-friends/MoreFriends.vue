@@ -66,8 +66,8 @@ const isMobile = useIsMobile()
 .adopt-detail__more-friends {
   margin-top: 30px;
   width: 100%;
-  background-color: var(--white);
-  color: var(--font-color-dark);
+  background-color: var(--text-inverse);
+  color: var(--text-primary);
   padding: 20px 20px 30px;
   border-radius: 16px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.25);

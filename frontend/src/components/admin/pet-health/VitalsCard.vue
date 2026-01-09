@@ -70,18 +70,18 @@ function getStatusColor(status?: string | null) {
 
 <style scoped>
 .stat-card {
-  background: white;
+  background: var(--text-inverse);
   border-radius: 12px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
   padding: 24px;
-  border: 1px solid #f3f4f6;
+  border: 1px solid var(--border-color);
 }
 
 .vitals-snapshot {
   h3 {
     margin: 0 0 16px 0;
     font-size: 1rem;
-    color: var(--font-color-medium);
+    color: hsl(from var(--color-neutral) h s 50%);
   }
 }
 
@@ -99,7 +99,7 @@ function getStatusColor(status?: string | null) {
   label {
     font-size: 0.75rem;
     text-transform: uppercase;
-    color: var(--font-color-medium);
+    color: hsl(from var(--color-neutral) h s 50%);
     font-weight: 600;
   }
 }
@@ -107,7 +107,7 @@ function getStatusColor(status?: string | null) {
 .vital-value {
   font-size: 1.1rem;
   font-weight: 600;
-  color: var(--font-color-dark);
+  color: var(--text-primary);
 }
 
 .status-pill {
@@ -118,24 +118,24 @@ function getStatusColor(status?: string | null) {
   text-transform: capitalize;
 
   &.green {
-    background: #dcfce7;
-    color: #166534;
+    background: hsl(from var(--color-primary) h s 95%);
+    color: var(--color-primary);
   }
   &.orange {
-    background: #ffedd5;
-    color: #9a3412;
+    background: hsl(from var(--color-warning) h s 95%);
+    color: var(--color-warning);
   }
   &.red {
-    background: #fee2e2;
-    color: #991b1b;
+    background: hsl(from var(--color-danger) h s 95%);
+    color: var(--color-danger);
   }
   &.blue {
-    background: #dbeafe;
-    color: #1e40af;
+    background: hsl(from var(--color-secondary) h s 95%);
+    color: var(--color-secondary);
   }
   &.gray {
-    background: #f3f4f6;
-    color: #6b7280;
+    background: hsl(from var(--color-neutral) h s 95%);
+    color: hsl(from var(--color-neutral) h s 50%);
   }
 }
 
@@ -151,7 +151,7 @@ function getStatusColor(status?: string | null) {
   label {
     font-size: 0.75rem;
     text-transform: uppercase;
-    color: var(--font-color-medium);
+    color: hsl(from var(--color-neutral) h s 50%);
     font-weight: 600;
     display: block;
     margin-bottom: 8px;
@@ -159,15 +159,15 @@ function getStatusColor(status?: string | null) {
 }
 
 .note-box {
-  background: #f9fafb;
+  background: hsl(from var(--color-neutral) h s 98%);
   border-radius: 8px;
   padding: 12px;
-  border: 1px solid #e5e7eb;
+  border: 1px solid var(--border-color);
 
   p {
     margin: 0 0 8px 0;
     font-size: 0.9rem;
-    color: var(--font-color-dark);
+    color: var(--text-primary);
     line-height: 1.4;
     font-style: italic;
   }
@@ -175,7 +175,7 @@ function getStatusColor(status?: string | null) {
 
 .note-author {
   font-size: 0.75rem;
-  color: var(--font-color-medium);
+  color: hsl(from var(--color-neutral) h s 50%);
   display: block;
   text-align: right;
   font-weight: 500;

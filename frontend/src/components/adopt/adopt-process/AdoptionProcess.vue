@@ -122,7 +122,7 @@ li span {
 }
 li p {
   margin: 4px 0;
-  color: var(--font-color-dark);
+  color: var(--text-primary);
   line-height: 1.4;
   padding-left: 16px;
   font-weight: 400;

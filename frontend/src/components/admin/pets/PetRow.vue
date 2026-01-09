@@ -295,27 +295,27 @@ const vaccineSummary = computed(() => {
 <style scoped>
 .pet-row {
   cursor: pointer;
-  border-bottom: 2px solid #e5e7eb; /* Strong outline for row separation */
+  border-bottom: 2px solid var(--border-color); /* Strong outline for row separation */
   transition: background-color 0.2s;
 }
 
 .pet-row.even-row {
-  background-color: #fafafa;
+  background-color: hsl(from var(--color-neutral) h s 98%);
 }
 
 .pet-row:hover {
-  background-color: #f1f5f9;
+  background-color: hsl(from var(--color-neutral) h s 95%);
 }
 
 .pet-row.expanded {
-  background-color: #eff6ff;
+  background-color: hsl(from var(--color-secondary) h s 95%);
   border-bottom: none; /* Merges with details row visually if needed, but we wanted outline */
 }
 
 td {
   padding: 16px 24px;
   vertical-align: middle;
-  color: var(--font-color-dark);
+  color: var(--text-primary);
 }
 
 /* Override padding for the expand icon column */
@@ -327,14 +327,14 @@ td {
 
 .details-row td {
   padding: 0;
-  /* border-bottom: 2px solid #e5e7eb;  Ensure the bottom of the details row closes the "card" */
-  background-color: white;
+  /* border-bottom: 2px solid var(--border-color);  Ensure the bottom of the details row closes the "card" */
+  background-color: var(--text-inverse);
 }
 
 .expanded-content {
   padding: 24px;
-  border-top: 1px dashed #cbd5e1;
-  background-color: #fafafa;
+  border-top: 1px dashed var(--border-color);
+  background-color: hsl(from var(--color-neutral) h s 98%);
 }
 
 .details-grid {
@@ -345,11 +345,11 @@ td {
 
 .detail-section h4 {
   font-size: 0.85rem;
-  color: var(--font-color-medium);
+  color: hsl(from var(--color-neutral) h s 50%);
   text-transform: uppercase;
   margin-bottom: 12px;
   font-weight: 700;
-  border-bottom: 1px solid #e2e8f0;
+  border-bottom: 1px solid var(--border-color);
   padding-bottom: 4px;
 }
 
@@ -361,17 +361,17 @@ td {
 
 .label {
   font-size: 0.8rem;
-  color: var(--font-color-medium);
+  color: hsl(from var(--color-neutral) h s 50%);
 }
 
 .value {
   font-size: 0.95rem;
-  color: var(--font-color-dark);
+  color: var(--text-primary);
   font-weight: 500;
 }
 
 .warning {
-  color: var(--red);
+  color: var(--color-danger);
   font-weight: 700;
 }
 
@@ -381,7 +381,7 @@ td {
 
 .description-text {
   font-size: 0.9rem;
-  color: var(--font-color-dark);
+  color: var(--text-primary);
   line-height: 1.5;
 }
 
@@ -391,7 +391,7 @@ td {
   height: 48px;
   border-radius: 8px;
   overflow: hidden;
-  background: #f3f4f6;
+  background: hsl(from var(--color-neutral) h s 95%);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -413,38 +413,38 @@ td {
 }
 /* Re-include status badge colors or rely on global if they are global (they were scoped in Pets.vue) */
 .status-badge.green {
-  background-color: rgba(0, 165, 173, 0.1);
-  color: var(--green);
+  background-color: hsl(from var(--color-primary) h s 95%);
+  color: var(--color-primary);
 }
 .status-badge.orange {
-  background-color: rgba(222, 176, 36, 0.1);
-  color: var(--yellow);
+  background-color: hsl(from var(--color-warning) h s 95%);
+  color: var(--color-warning);
 }
 .status-badge.blue {
-  background-color: rgba(25, 118, 210, 0.1);
-  color: var(--blue);
+  background-color: hsl(from var(--color-secondary) h s 95%);
+  color: var(--color-secondary);
 }
 .status-badge.purple {
-  background-color: rgba(107, 91, 149, 0.1);
-  color: var(--purple);
+  background-color: hsl(from var(--color-secondary) h s 92%); /* Using secondary tint for purple */
+  color: var(--color-secondary);
 }
 .status-badge.red {
-  background-color: rgba(199, 58, 103, 0.1);
-  color: var(--red);
+  background-color: hsl(from var(--color-danger) h s 95%);
+  color: var(--color-danger);
 }
 .status-badge.gray {
-  background-color: #f3f4f6;
-  color: var(--font-color-medium);
+  background-color: hsl(from var(--color-neutral) h s 95%);
+  color: hsl(from var(--color-neutral) h s 50%);
 }
 
 .mono-text {
   font-family: monospace;
   font-size: 0.9em;
-  color: var(--font-color-dark);
-  background: white; /* Contrast against row background */
+  color: var(--text-primary);
+  background: var(--text-inverse); /* Contrast against row background */
   padding: 2px 6px;
   border-radius: 4px;
-  border: 1px solid #e5e7eb;
+  border: 1px solid var(--border-color);
 }
 
 .row-actions {
@@ -468,21 +468,21 @@ td {
 }
 
 .icon-btn.edit:hover {
-  background: #eff6ff;
-  color: var(--blue);
+  background: hsl(from var(--color-secondary) h s 95%);
+  color: var(--color-secondary);
 }
 .icon-btn.archive:hover {
-  background: #fef2f2;
-  color: #ef4444;
+  background: hsl(from var(--color-danger) h s 95%);
+  color: var(--color-danger);
 }
 
 .expand-btn {
   transition: transform 0.2s;
-  color: var(--font-color-medium);
+  color: hsl(from var(--color-neutral) h s 50%);
 }
 .expand-btn:hover {
-  background: #f3f4f6;
-  color: var(--font-color-dark);
+  background: hsl(from var(--color-neutral) h s 95%);
+  color: var(--text-primary);
 }
 .expand-btn.rotated {
   transform: rotate(
@@ -491,11 +491,11 @@ td {
 }
 
 .pet-link {
-  color: var(--font-color-dark);
+  color: var(--text-primary);
   text-decoration: none;
 }
 .pet-link:hover {
-  color: var(--blue);
+  color: var(--color-secondary);
   text-decoration: underline;
 }
 </style>

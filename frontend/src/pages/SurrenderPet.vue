@@ -151,7 +151,12 @@ const formattedAnimal = computed(() => {
         :selectedAnimal="formattedAnimal"
       />
 
-      <div v-if="hasAttemptedSubmit && validationErrors.length > 0" class="validation-summary">
+      <div
+        v-if="hasAttemptedSubmit && validationErrors.length > 0"
+        class="validation-summary"
+        role="alert"
+        aria-live="polite"
+      >
         <p class="summary-title">Please complete the following required fields:</p>
         <div class="tags">
           <span v-for="err in validationErrors" :key="err" class="tag is-danger">{{ err }}</span>
@@ -165,7 +170,7 @@ const formattedAnimal = computed(() => {
           title="Back"
           color="white"
           size="large"
-          style="border: 1px solid var(--green); color: var(--green)"
+          style="border: 1px solid var(--color-primary); color: var(--color-primary)"
         />
         <Button
           @click="handleSubmit"
@@ -173,7 +178,6 @@ const formattedAnimal = computed(() => {
           :title="step === 6 ? 'Submit' : 'Next'"
           color="green"
           size="large"
-          :disabled="step === 0 && !selectedAnimal"
         />
       </div>
     </section>
@@ -185,7 +189,7 @@ const formattedAnimal = computed(() => {
 <style scoped lang="css">
 .page-shell {
   min-height: 100vh;
-  background-color: var(--green);
+  background-color: var(--color-primary);
   padding: 9rem var(--layout-padding-side) 64px;
   container-type: inline-size;
   container-name: shell;
@@ -198,8 +202,8 @@ const formattedAnimal = computed(() => {
   .form-card {
     max-width: 1600px;
     margin: 0 auto;
-    background: var(--white);
-    color: var(--font-color-dark);
+    background: var(--text-inverse);
+    color: var(--text-primary);
     border-radius: 24px;
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
     padding: 48px 48px 32px;
@@ -215,13 +219,13 @@ const formattedAnimal = computed(() => {
       align-items: center;
       gap: 16px;
       margin-bottom: 4px;
-      color: var(--green);
+      color: var(--color-primary);
 
       h1 {
         font-size: 4.25rem;
         line-height: 1.2;
         letter-spacing: 0.2px;
-        color: var(--green);
+        color: var(--color-primary);
       }
       img {
         width: 100px;
@@ -259,37 +263,37 @@ const formattedAnimal = computed(() => {
   }
 
   /* Nested validation summary */
+  /* Nested validation summary matching Volunteer.vue */
   .validation-summary {
-    background-color: #fef2f2;
-    border: 1px solid #ef4444;
+    background-color: #fff1f2;
+    border: 1px solid #e11d48;
+    color: #9f1239;
     border-radius: 12px;
-    padding: 16px;
-    margin: 24px 0;
+    padding: 1.5rem;
+    margin: 2rem 0;
     text-align: center;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
 
     .summary-title {
-      color: #b91c1c;
-      font-weight: 600;
-      margin-bottom: 12px;
+      font-weight: 700;
+      margin-bottom: 1rem;
+      font-size: 1.1rem;
     }
 
     .tags {
       display: flex;
       flex-wrap: wrap;
-      gap: 8px;
       justify-content: center;
+      gap: 0.5rem;
     }
 
     .tag.is-danger {
-      background-color: #fee2e2;
-      color: #b91c1c;
-      padding: 4px 12px;
-      border-radius: 16px;
-      font-size: 0.875rem;
-      font-weight: 500;
+      background-color: #fce7f3;
+      color: #9f1239;
+      padding: 0.5rem 1rem;
+      border-radius: 999px;
+      font-size: 0.9rem;
+      font-weight: 600;
     }
   }
 }

@@ -169,8 +169,8 @@ const { modelValue } = defineProps<{
 h3 {
   font-size: 1.25rem;
   font-weight: 600;
-  color: var(--green);
-  border-bottom: 2px solid var(--green);
+  color: var(--color-primary);
+  border-bottom: 2px solid var(--color-primary);
   padding-bottom: 0.5rem;
   margin-bottom: 0.5rem;
 }

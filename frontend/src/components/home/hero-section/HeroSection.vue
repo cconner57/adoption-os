@@ -22,13 +22,13 @@ function handleAdopt() {
   box-sizing: border-box;
   inline-size: 100%;
   min-height: 600px;
-  background: url('/images/hero.png') center 70% / cover no-repeat;
+  background: url('/images/hero.jpg') center 70% / cover no-repeat;
   padding: 100px var(--layout-padding-side) 40px;
   overflow: hidden;
 
   & h1 {
     font-size: 6rem;
-    color: var(--white);
+    color: var(--text-inverse);
     max-width: 600px;
     margin-bottom: 24px;
     text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);

@@ -8,7 +8,7 @@
 .label {
   font-weight: 600;
   font-size: 14px;
-  color: var(--font-color-dark);
+  color: var(--text-primary);
   user-select: none;
 }
 
@@ -23,20 +23,20 @@
     box-shadow 0.15s,
     border-color 0.15s;
   background: #fff;
-  color: var(--font-color-dark);
+  color: var(--text-primary);
 }
 
 .control input::placeholder,
 .control textarea::placeholder {
-  color: var(--font-color-dark);
+  color: var(--text-primary);
   opacity: 0.6;
 }
 
 .control input:focus,
 .control textarea:focus {
   outline: none;
-  border-color: var(--blue-600);
-  box-shadow: 0 0 0 3px var(--ring);
+  border-color: var(--color-secondary);
+  box-shadow: 0 0 0 3px rgba(from var(--color-secondary) r g b / 0.4);
 }
 
 .control textarea {
@@ -44,24 +44,24 @@
 }
 
 .button-color-green {
-  background-color: var(--green);
+  background-color: var(--color-primary);
 }
 .button-color-green:hover {
-  background-color: var(--green-hover);
+  background-color: hsl(from var(--color-primary) h s 40%);
 }
 
 .button-color-blue {
-  background-color: var(--blue);
+  background-color: var(--color-secondary);
 }
 .button-color-blue:hover {
-  background-color: var(--blue-hover);
+  background-color: hsl(from var(--color-secondary) h s 40%);
 }
 
 .button-color-purple {
-  background-color: var(--purple);
+  background-color: var(--color-tertiary);
 }
 .button-color-purple:hover {
-  background-color: var(--purple-hover);
+  background-color: hsl(from var(--color-tertiary) h s 40%);
 }
 
 input[type='date'],

@@ -77,7 +77,7 @@ onMounted(async () => {
   width: 40px;
   height: 40px;
   border: 4px solid rgba(0, 0, 0, 0.1);
-  border-left-color: var(--primary-color, #00c3c3);
+  border-left-color: var(--color-primary);
   border-radius: 50%;
   animation: spin 1s linear infinite;
 }
@@ -91,7 +91,7 @@ onMounted(async () => {
 /* Main Layout Styles */
 .impact {
   width: 100%;
-  background-color: var(--white);
+  background-color: var(--text-inverse);
   display: flex;
   flex-direction: column;
   gap: 16px;
@@ -104,7 +104,7 @@ onMounted(async () => {
 
   & h4 {
     font-size: 2rem;
-    color: var(--font-color-dark);
+    color: var(--text-primary);
     margin-left: -15px;
   }
   & content {
@@ -112,7 +112,7 @@ onMounted(async () => {
     align-items: center;
     justify-content: center;
     width: 100%;
-    color: var(--font-color-dark);
+    color: var(--text-primary);
     gap: 40px;
   }
   & .awards {
@@ -121,7 +121,7 @@ onMounted(async () => {
     justify-content: center;
   }
   .divider {
-    border-left: 2px solid #e5e7eb;
+    border-left: 2px solid var(--border-color);
     height: 120px;
     margin: 0 20px;
   }
@@ -142,11 +142,11 @@ onMounted(async () => {
 
       & h5 {
         font-size: 3rem;
-        color: var(--font-color-dark);
+        color: var(--text-primary);
       }
       & p {
         font-size: 1.1rem;
-        color: var(--font-color-dark);
+        color: var(--text-primary);
         max-width: 150px;
       }
     }
@@ -175,7 +175,7 @@ onMounted(async () => {
       width: 100%;
       height: 2px;
       border-left: none;
-      border-top: 2px solid #e5e7eb;
+      border-top: 2px solid var(--border-color);
       margin: 0;
     }
 

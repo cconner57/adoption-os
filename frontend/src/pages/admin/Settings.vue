@@ -2,6 +2,9 @@
 import { ref, computed } from 'vue'
 import { InputField, ButtonToggle, InputSelectGroup, Capsules } from '../../components/common/ui'
 import Button from '../../components/common/ui/Button.vue'
+import { useDemoMode } from '../../composables/useDemoMode'
+
+const { isDemoMode, toggleDemoMode } = useDemoMode()
 
 const saving = ref(false)
 const showToast = ref(false)
@@ -334,6 +337,34 @@ const activeCategoryLabel = computed(
       <div v-if="activeCategory === 'website'" class="settings-grid single-col">
         <section class="card settings-card">
           <div class="card-header">
+            <div class="icon-box">🚧</div>
+            <h3>Development Tools</h3>
+          </div>
+          <div class="card-content">
+            <div class="setting-row">
+              <div class="setting-info">
+                <label>Demo Mode</label>
+                <p class="setting-desc">
+                  Bypass validation and simulate submissions for all forms.
+                </p>
+              </div>
+              <div class="toggle-wrapper">
+                <ButtonToggle
+                  label=""
+                  :modelValue="isDemoMode"
+                  @update:modelValue="toggleDemoMode"
+                  true-label="On"
+                  false-label="Off"
+                  :true-value="true"
+                  :false-value="false"
+                />
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="card settings-card">
+          <div class="card-header">
             <div class="icon-box">📝</div>
             <h3>Applications & Forms</h3>
           </div>
@@ -649,7 +680,7 @@ const activeCategoryLabel = computed(
 
   h1 {
     font-size: 1.8rem;
-    color: var(--font-color-dark);
+    color: var(--text-primary);
     margin: 0;
   }
 }
@@ -667,13 +698,13 @@ const activeCategoryLabel = computed(
   border-radius: 8px;
   cursor: pointer;
   font-weight: 600;
-  color: var(--font-color-medium);
+  color: var(--text-secondary);
   transition: all 0.2s;
 
   &:hover {
-    color: var(--font-color-dark);
-    background: #f9fafb;
-    border-color: #d1d5db;
+    color: var(--text-primary);
+    background: hsl(from var(--color-neutral) h s 98%);
+    border-color: var(--border-color);
   }
 }
 
@@ -705,7 +736,7 @@ const activeCategoryLabel = computed(
     border-color: #d1d5db;
 
     .cat-icon-wrapper {
-      background: #e8f6f4;
+      background: hsl(from var(--color-primary) h s 95%);
       transform: scale(1.1);
     }
 
@@ -720,7 +751,7 @@ const activeCategoryLabel = computed(
   width: 48px;
   height: 48px;
   border-radius: 12px;
-  background: #f3f4f6;
+  background: hsl(from var(--color-neutral) h s 95%);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -736,12 +767,12 @@ const activeCategoryLabel = computed(
   h3 {
     margin: 0 0 8px 0;
     font-size: 1.1rem;
-    color: var(--font-color-dark);
+    color: var(--text-primary);
   }
   p {
     margin: 0;
     font-size: 0.9rem;
-    color: var(--font-color-medium);
+    color: var(--text-secondary);
     line-height: 1.4;
   }
 }
@@ -751,7 +782,7 @@ const activeCategoryLabel = computed(
   top: 24px;
   right: 24px;
   font-size: 1.2rem;
-  color: var(--font-color-medium);
+  color: var(--text-secondary);
   opacity: 0;
   transform: translateX(-10px);
   transition: all 0.2s;
@@ -776,8 +807,8 @@ const activeCategoryLabel = computed(
 }
 
 .save-btn {
-  background: var(--purple);
-  color: white;
+  background: var(--color-secondary);
+  color: var(--text-inverse);
   border: none;
   padding: 10px 24px;
   border-radius: 8px;
@@ -948,9 +979,9 @@ const activeCategoryLabel = computed(
     margin-bottom: 4px;
   }
   .setting-desc {
-    margin: 0;
-    font-size: 0.85rem;
-    color: var(--font-color-medium);
+    font-weight: 500;
+    font-size: 0.9rem;
+    color: var(--text-secondary);
   }
 }
 
@@ -979,10 +1010,16 @@ const activeCategoryLabel = computed(
   color: var(--font-color-dark);
 }
 
+.preview-label {
+  margin-top: 16px;
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+}
+
 .system-info p {
   margin: 4px 0;
   font-size: 0.9rem;
-  color: var(--font-color-medium);
+  color: var(--text-secondary);
 }
 
 .toast-notification {

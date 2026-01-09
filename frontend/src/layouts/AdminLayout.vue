@@ -101,8 +101,8 @@ const navItems = [
 /* Sidebar Styles */
 .sidebar {
   width: 280px;
-  background-color: var(--white);
-  border-right: 1px solid rgba(0, 0, 0, 0.08);
+  background-color: var(--text-inverse);
+  border-right: 1px solid var(--border-color);
   display: flex;
   flex-direction: column;
   flex-shrink: 0;
@@ -128,7 +128,7 @@ const navItems = [
   h2 {
     font-size: 1.5rem;
     font-weight: 800;
-    color: var(--font-color-dark);
+    color: var(--text-primary);
     margin: 0;
     letter-spacing: -0.02em;
   }
@@ -150,21 +150,21 @@ const navItems = [
   padding: 14px 20px;
   border-radius: 12px;
   text-decoration: none;
-  color: var(--font-color-medium);
+  color: hsl(from var(--color-neutral) h s 40%);
   transition: all 0.2s cubic-bezier(0.2, 0.8, 0.2, 1);
   font-weight: 600;
   font-size: 1rem;
 
   &:hover {
-    background-color: #f8fafc;
-    color: var(--font-color-dark);
+    background-color: hsl(from var(--color-neutral) h s 95%);
+    color: var(--text-primary);
     transform: translateX(4px);
   }
 
   &.active {
-    background-color: var(--green);
-    color: var(--white);
-    box-shadow: 0 4px 12px rgba(16, 185, 129, 0.2);
+    background-color: var(--color-primary);
+    color: var(--text-inverse);
+    box-shadow: 0 4px 12px hsla(from var(--color-primary) h s l / 0.2);
 
     &:hover {
       transform: none;
@@ -178,11 +178,11 @@ const navItems = [
 
 .sidebar-footer {
   padding: 24px;
-  border-top: 1px solid rgba(0, 0, 0, 0.05);
+  border-top: 1px solid var(--border-color);
   display: flex;
   align-items: center;
   justify-content: space-between;
-  background-color: #fcfcfc;
+  background-color: hsl(from var(--color-neutral) h s 99%);
 }
 
 .user-info {
@@ -193,7 +193,7 @@ const navItems = [
   .avatar {
     width: 42px;
     height: 42px;
-    background: linear-gradient(135deg, var(--purple), #8b5cf6);
+    background: linear-gradient(135deg, var(--color-tertiary), #8b5cf6);
     color: white;
     border-radius: 50%;
     display: flex;
@@ -201,7 +201,7 @@ const navItems = [
     justify-content: center;
     font-weight: 700;
     font-size: 0.9rem;
-    box-shadow: 0 2px 8px rgba(124, 58, 237, 0.2);
+    box-shadow: 0 2px 8px hsla(from var(--color-tertiary) h s l / 0.2);
   }
 
   .details {
@@ -212,11 +212,11 @@ const navItems = [
     .name {
       font-size: 0.95rem;
       font-weight: 700;
-      color: var(--font-color-dark);
+      color: var(--text-primary);
     }
     .role {
       font-size: 0.75rem;
-      color: var(--font-color-medium);
+      color: hsl(from var(--color-neutral) h s 50%);
       font-weight: 500;
       text-transform: uppercase;
       letter-spacing: 0.05em;
@@ -225,8 +225,8 @@ const navItems = [
 }
 
 .logout-btn {
-  background: var(--white);
-  border: 1px solid #fee2e2;
+  background: var(--text-inverse);
+  border: 1px solid hsl(from var(--color-danger) h s 90%);
   cursor: pointer;
   font-size: 1.1rem;
   width: 40px;
@@ -236,10 +236,10 @@ const navItems = [
   justify-content: center;
   border-radius: 10px;
   transition: all 0.2s;
-  color: #ef4444;
+  color: var(--color-danger);
 
   &:hover {
-    background-color: #fee2e2;
+    background-color: hsl(from var(--color-danger) h s 95%);
     transform: translateY(-2px);
   }
 }
@@ -250,7 +250,7 @@ const navItems = [
   display: flex;
   flex-direction: column;
   overflow: hidden;
-  background-color: #f8fafc; /* Cooler, lighter gray */
+  background-color: hsl(from var(--color-neutral) h s 98%); /* Cooler, lighter gray */
 }
 
 .top-bar {
@@ -265,7 +265,7 @@ const navItems = [
   h3 {
     font-size: 1.75rem;
     font-weight: 800;
-    color: var(--font-color-dark);
+    color: var(--text-primary);
     margin: 0;
     letter-spacing: -0.02em;
   }
@@ -277,7 +277,7 @@ const navItems = [
   border: none;
   font-size: 1.5rem;
   cursor: pointer;
-  color: var(--font-color-dark);
+  color: var(--text-primary);
   padding: 4px;
 }
 

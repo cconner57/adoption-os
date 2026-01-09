@@ -323,13 +323,13 @@ watch(activeThreadId, scrollToBottom)
   h2 {
     margin: 0;
     font-size: 1.1rem;
-    color: var(--font-color-dark);
+    color: var(--text-primary);
   }
 }
 
 .user-badge {
   font-size: 0.8rem;
-  color: var(--font-color-medium);
+  color: hsl(from var(--color-neutral) h s 50%);
   display: block;
   margin-top: 4px;
 }
@@ -347,17 +347,17 @@ watch(activeThreadId, scrollToBottom)
   align-items: center;
   font-size: 0.75rem;
   font-weight: 700;
-  color: var(--font-color-medium);
+  color: hsl(from var(--color-neutral) h s 50%);
 
   .add-btn {
     background: none;
     border: none;
-    color: var(--font-color-medium);
+    color: hsl(from var(--color-neutral) h s 50%);
     cursor: pointer;
     font-size: 1.2rem;
     line-height: 1;
     &:hover {
-      color: var(--font-color-dark);
+      color: var(--text-primary);
     }
   }
 }
@@ -387,13 +387,13 @@ watch(activeThreadId, scrollToBottom)
   font-size: 0.95rem;
 
   &:hover {
-    background: #e2e8f0;
-    color: #1e293b;
+    background: hsl(from var(--color-neutral) h s 90%);
+    color: var(--text-primary);
   }
 
   &.active {
-    background: #e0e7ff; /* indigo-100 */
-    color: #4338ca; /* indigo-700 */
+    background: hsl(from var(--color-secondary) h s 95%);
+    color: var(--color-secondary);
     font-weight: 500;
   }
 }
@@ -409,11 +409,11 @@ watch(activeThreadId, scrollToBottom)
   font-weight: 700;
 
   &.sms {
-    color: #10b981;
-  } /* Green */
+    color: var(--color-primary);
+  }
   &.email {
-    color: #f59e0b;
-  } /* Orange */
+    color: var(--color-warning);
+  }
 }
 
 .lock-icon {
@@ -446,7 +446,7 @@ watch(activeThreadId, scrollToBottom)
   .topic {
     margin: 4px 0 0 0;
     font-size: 0.85rem;
-    color: var(--font-color-medium);
+    color: hsl(from var(--color-neutral) h s 50%);
   }
 }
 
@@ -502,8 +502,8 @@ watch(activeThreadId, scrollToBottom)
   }
 
   .send-btn {
-    background: var(--purple);
-    color: white;
+    background: var(--color-secondary);
+    color: var(--text-inverse);
     border: none;
     width: 32px;
     height: 32px;
@@ -542,10 +542,10 @@ watch(activeThreadId, scrollToBottom)
   }
   p {
     margin: 0;
-    color: var(--font-color-medium);
+    color: hsl(from var(--color-neutral) h s 50%);
   }
   .highlight {
-    color: var(--purple);
+    color: var(--color-secondary);
     font-weight: 600;
   }
 }
@@ -555,7 +555,7 @@ watch(activeThreadId, scrollToBottom)
   gap: 16px;
 
   &:hover {
-    background: #f8fafc;
+    background: hsl(from var(--color-neutral) h s 98%);
     margin: 0 -20px;
     padding: 4px 20px;
   }
@@ -564,7 +564,7 @@ watch(activeThreadId, scrollToBottom)
 .avatar {
   width: 40px;
   height: 40px;
-  background: #e2e8f0;
+  background: hsl(from var(--color-neutral) h s 95%);
   border-radius: 8px;
   display: flex;
   align-items: center;
@@ -584,16 +584,16 @@ watch(activeThreadId, scrollToBottom)
 
   .username {
     font-weight: 700;
-    color: #1e293b;
+    color: var(--text-primary);
   }
   .timestamp {
     font-size: 0.75rem;
-    color: #94a3b8;
+    color: hsl(from var(--color-neutral) h s 60%);
   }
 }
 
 .message-text {
-  color: #334155;
+  color: var(--text-primary);
   line-height: 1.5;
 }
 
@@ -622,7 +622,7 @@ watch(activeThreadId, scrollToBottom)
     margin-top: 0;
   }
   .subtitle {
-    color: var(--font-color-medium);
+    color: hsl(from var(--color-neutral) h s 50%);
     margin-bottom: 20px;
     font-size: 0.9rem;
   }
@@ -675,8 +675,8 @@ watch(activeThreadId, scrollToBottom)
   font-size: 1.2rem;
 }
 .admin-badge {
-  background: #e0e7ff;
-  color: #4338ca;
+  background: hsl(from var(--color-secondary) h s 95%);
+  color: var(--color-secondary);
   font-size: 0.7rem;
   padding: 2px 6px;
   border-radius: 4px;
@@ -685,7 +685,7 @@ watch(activeThreadId, scrollToBottom)
 }
 
 .remove-btn {
-  color: #ef4444;
+  color: var(--color-danger);
   background: none;
   border: none;
   font-size: 0.85rem;

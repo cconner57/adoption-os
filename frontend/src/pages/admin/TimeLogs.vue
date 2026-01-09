@@ -299,7 +299,7 @@ const handleIncidentAction = (action: 'resolve' | 'archive' | 'report', inc: IIn
   h1 {
     margin: 0;
     font-size: 1.8rem;
-    color: var(--font-color-dark);
+    color: var(--text-primary);
   }
 }
 
@@ -318,14 +318,15 @@ const handleIncidentAction = (action: 'resolve' | 'archive' | 'report', inc: IIn
   border: none;
   padding: 12px 4px;
   font-size: 1rem;
-  color: var(--font-color-medium);
+  font-size: 1rem;
+  color: hsl(from var(--color-neutral) h s 50%);
   cursor: pointer;
   border-bottom: 2px solid transparent;
   font-weight: 500;
 
   &.active {
-    color: var(--font-color-dark);
-    border-bottom-color: var(--purple);
+    color: var(--text-primary);
+    border-bottom-color: var(--color-secondary);
     font-weight: 700;
   }
 }
@@ -359,19 +360,20 @@ const handleIncidentAction = (action: 'resolve' | 'archive' | 'report', inc: IIn
 
   th {
     text-align: left;
+    text-align: left;
     padding: 16px;
-    background: #f9fafb;
-    color: var(--font-color-medium);
+    background: hsl(from var(--color-neutral) h s 98%);
+    color: hsl(from var(--color-neutral) h s 50%);
     font-weight: 600;
     font-size: 0.85rem;
     text-transform: uppercase;
-    border-bottom: 1px solid #e5e7eb;
+    border-bottom: 1px solid var(--border-color);
   }
 
   td {
     padding: 16px;
-    border-bottom: 1px solid #f3f4f6;
-    color: var(--font-color-dark);
+    border-bottom: 1px solid var(--border-color);
+    color: var(--text-primary);
     font-size: 0.95rem;
   }
 
@@ -388,7 +390,7 @@ const handleIncidentAction = (action: 'resolve' | 'archive' | 'report', inc: IIn
 }
 
 .time-pill {
-  background: #f3f4f6;
+  background: hsl(from var(--color-neutral) h s 98%);
   padding: 2px 6px;
   border-radius: 4px;
   font-size: 0.85rem;
@@ -401,8 +403,8 @@ const handleIncidentAction = (action: 'resolve' | 'archive' | 'report', inc: IIn
 }
 
 .active-badge {
-  background: #dcfce7;
-  color: #166534;
+  background: hsl(from var(--color-primary) h s 95%);
+  color: var(--color-primary);
   font-size: 0.75rem;
   padding: 2px 6px;
   border-radius: 4px;
@@ -420,13 +422,14 @@ const handleIncidentAction = (action: 'resolve' | 'archive' | 'report', inc: IIn
   border: none;
   font-size: 1.2rem;
   padding: 4px 8px;
+  padding: 4px 8px;
   border-radius: 4px;
   cursor: pointer;
-  color: var(--font-color-medium);
+  color: hsl(from var(--color-neutral) h s 50%);
 
   &:hover {
-    background: #f3f4f6;
-    color: var(--font-color-dark);
+    background: hsl(from var(--color-neutral) h s 98%);
+    color: var(--text-primary);
   }
 }
 
@@ -462,18 +465,18 @@ const handleIncidentAction = (action: 'resolve' | 'archive' | 'report', inc: IIn
     text-align: left;
     padding: 8px 12px;
     font-size: 0.9rem;
-    color: var(--font-color-dark);
+    color: var(--text-primary);
     cursor: pointer;
     border-radius: 4px;
 
     &:hover {
-      background: #f9fafb;
+      background: hsl(from var(--color-neutral) h s 98%);
     }
 
     &.danger {
-      color: #ef4444;
+      color: var(--color-danger);
       &:hover {
-        background: #fef2f2;
+        background: hsl(from var(--color-danger) h s 98%);
       }
     }
   }
@@ -509,7 +512,7 @@ const handleIncidentAction = (action: 'resolve' | 'archive' | 'report', inc: IIn
   h3 {
     margin: 0;
     font-size: 1.1rem;
-    color: var(--font-color-dark);
+    color: var(--text-primary);
   }
 }
 
@@ -521,7 +524,7 @@ const handleIncidentAction = (action: 'resolve' | 'archive' | 'report', inc: IIn
 
 .inc-date {
   font-size: 0.9rem;
-  color: var(--font-color-medium);
+  color: hsl(from var(--color-neutral) h s 50%);
 }
 
 .inc-body {
@@ -529,7 +532,7 @@ const handleIncidentAction = (action: 'resolve' | 'archive' | 'report', inc: IIn
   p {
     margin: 0;
     line-height: 1.5;
-    color: var(--font-color-dark);
+    color: var(--text-primary);
   }
 }
 
@@ -538,12 +541,12 @@ const handleIncidentAction = (action: 'resolve' | 'archive' | 'report', inc: IIn
   justify-content: space-between;
   align-items: center;
   padding-top: 16px;
-  border-top: 1px solid #f3f4f6;
+  border-top: 1px solid var(--border-color);
   font-size: 0.9rem;
-  color: var(--font-color-medium);
+  color: hsl(from var(--color-neutral) h s 50%);
 
   strong {
-    color: var(--font-color-dark);
+    color: var(--text-primary);
   }
 }
 
@@ -555,7 +558,7 @@ const handleIncidentAction = (action: 'resolve' | 'archive' | 'report', inc: IIn
 .empty-state {
   text-align: center;
   padding: 40px;
-  color: var(--font-color-medium);
+  color: hsl(from var(--color-neutral) h s 50%);
   font-style: italic;
 }
 </style>

@@ -200,7 +200,7 @@ const approveStory = (story: IHappyTail) => {
   h1 {
     margin: 0;
     font-size: 1.8rem;
-    color: var(--font-color-dark);
+    color: var(--text-primary);
   }
 }
 
@@ -215,14 +215,14 @@ const approveStory = (story: IHappyTail) => {
   border: none;
   padding: 12px 4px;
   font-size: 1rem;
-  color: var(--font-color-medium);
+  color: hsl(from var(--color-neutral) h s 50%);
   cursor: pointer;
   border-bottom: 2px solid transparent;
   font-weight: 500;
 
   &.active {
-    color: var(--font-color-dark);
-    border-bottom-color: var(--purple);
+    color: var(--text-primary);
+    border-bottom-color: var(--color-secondary);
     font-weight: 700;
   }
 }
@@ -265,13 +265,13 @@ const approveStory = (story: IHappyTail) => {
 
 .camp-dates {
   font-size: 0.9rem;
-  color: var(--font-color-medium);
+  color: hsl(from var(--color-neutral) h s 50%);
   margin-bottom: 20px;
 }
 
 .progress-bar {
   height: 8px;
-  background: #f3f4f6;
+  background: hsl(from var(--color-neutral) h s 95%);
   border-radius: 4px;
   overflow: hidden;
   margin-top: 8px;
@@ -300,7 +300,7 @@ const approveStory = (story: IHappyTail) => {
   display: flex;
   align-items: center;
   padding: 16px;
-  border-bottom: 1px solid #f3f4f6;
+  border-bottom: 1px solid var(--border-color);
   gap: 16px;
 
   &:last-child {
@@ -318,7 +318,7 @@ const approveStory = (story: IHappyTail) => {
 }
 .meta {
   font-size: 0.85rem;
-  color: var(--font-color-medium);
+  color: hsl(from var(--color-neutral) h s 50%);
 }
 
 .item-stats {
@@ -328,7 +328,7 @@ const approveStory = (story: IHappyTail) => {
 .stat-lbl {
   display: block;
   font-size: 0.75rem;
-  color: var(--font-color-medium);
+  color: hsl(from var(--color-neutral) h s 50%);
   text-transform: uppercase;
 }
 .stat-val {
@@ -341,7 +341,7 @@ const approveStory = (story: IHappyTail) => {
   border: none;
   font-size: 1.2rem;
   cursor: pointer;
-  color: var(--font-color-medium);
+  color: hsl(from var(--color-neutral) h s 50%);
 }
 
 /* STORIES */
@@ -370,16 +370,16 @@ const approveStory = (story: IHappyTail) => {
 .pet-name {
   font-weight: 700;
   font-size: 1.1rem;
-  color: var(--purple);
+  color: var(--color-secondary);
 }
 .date {
   font-size: 0.8rem;
-  color: var(--font-color-medium);
+  color: hsl(from var(--color-neutral) h s 50%);
 }
 .adopter {
   font-size: 0.9rem;
   margin: 0 0 12px 0;
-  color: var(--font-color-dark);
+  color: var(--text-primary);
 }
 
 .story-body {

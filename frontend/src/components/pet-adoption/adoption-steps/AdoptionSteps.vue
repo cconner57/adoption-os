@@ -59,7 +59,7 @@ const { formStep, selectedAnimal } = defineProps<{
     left: 20px;
     right: 20px;
     height: 2px;
-    background-color: var(--green);
+    background-color: var(--color-primary);
     z-index: 1;
     width: auto !important;
     max-width: none;
@@ -95,9 +95,9 @@ const { formStep, selectedAnimal } = defineProps<{
       width: 30px;
       height: 30px;
       border-radius: 50%;
-      background-color: var(--white);
-      border: 1px solid var(--green);
-      color: var(--font-color-dark);
+      background-color: var(--text-inverse);
+      border: 1px solid var(--color-primary);
+      color: var(--text-primary);
       display: flex;
       justify-content: center;
       align-items: center;
@@ -120,8 +120,8 @@ const { formStep, selectedAnimal } = defineProps<{
     }
     &.active {
       .step-number {
-        background-color: var(--green);
-        color: var(--white);
+        background-color: var(--color-primary);
+        color: var(--text-inverse);
       }
     }
   }

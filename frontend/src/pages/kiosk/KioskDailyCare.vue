@@ -194,7 +194,7 @@ const goHome = () => router.push('/kiosk')
   background: none;
   border: none;
   font-size: 1.1rem;
-  color: var(--font-color-medium);
+  color: hsl(from var(--color-neutral) h s 50%);
   font-weight: 500;
   cursor: pointer;
 }
@@ -206,7 +206,7 @@ const goHome = () => router.push('/kiosk')
     font-size: 2rem;
   }
   .date-badge {
-    color: var(--font-color-medium);
+    color: hsl(from var(--color-neutral) h s 50%);
     font-size: 1.1rem;
   }
 }
@@ -231,7 +231,7 @@ const goHome = () => router.push('/kiosk')
 
   &.active {
     background: white;
-    color: var(--purple);
+    color: var(--color-secondary);
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
   }
 }
@@ -257,7 +257,7 @@ const goHome = () => router.push('/kiosk')
   border-bottom: 2px solid #e2e8f0;
   outline: none;
   &:focus {
-    border-color: var(--purple);
+    border-color: var(--color-secondary);
   }
 }
 
@@ -282,11 +282,11 @@ const goHome = () => router.push('/kiosk')
   }
 
   th {
-    background: #f1f5f9;
+    background: hsl(from var(--color-neutral) h s 95%);
     text-align: center;
     font-size: 0.85rem;
     text-transform: uppercase;
-    color: #475569;
+    color: hsl(from var(--color-neutral) h s 50%);
   }
 }
 
@@ -328,7 +328,7 @@ const goHome = () => router.push('/kiosk')
   width: 28px;
   height: 28px;
   cursor: pointer;
-  accent-color: var(--purple);
+  accent-color: var(--color-secondary);
 }
 
 .table-input {
@@ -375,8 +375,8 @@ const goHome = () => router.push('/kiosk')
   border: 1px solid transparent;
 
   &.checked {
-    background: #f0fdf4;
-    border-color: #bbf7d0;
+    background: hsl(from var(--color-primary) h s 98%);
+    border-color: hsl(from var(--color-primary) h s 80%);
   }
 
   span {

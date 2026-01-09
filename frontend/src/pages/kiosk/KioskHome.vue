@@ -75,11 +75,11 @@ const menuItems = [
   h1 {
     font-size: 2.5rem;
     margin-bottom: 12px;
-    color: var(--font-color-dark);
+    color: var(--text-primary);
   }
   p {
     font-size: 1.2rem;
-    color: var(--font-color-medium);
+    color: hsl(from var(--color-neutral) h s 50%);
   }
 }
 
@@ -106,7 +106,7 @@ const menuItems = [
   &:hover {
     transform: translateY(-4px);
     box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
-    border-color: var(--purple);
+    border-color: var(--color-secondary);
   }
 
   &:active {
@@ -129,11 +129,11 @@ const menuItems = [
   h3 {
     margin: 0 0 8px 0;
     font-size: 1.4rem;
-    color: var(--font-color-dark);
+    color: var(--text-primary);
   }
   p {
     margin: 0;
-    color: var(--font-color-medium);
+    color: hsl(from var(--color-neutral) h s 50%);
     font-size: 1rem;
     line-height: 1.4;
   }

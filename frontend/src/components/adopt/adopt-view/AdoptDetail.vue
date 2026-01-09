@@ -225,8 +225,8 @@ function onImgError() {
       display: flex;
       flex-direction: column;
       gap: 20px;
-      background-color: var(--white);
-      color: var(--font-color-dark);
+      background-color: var(--text-inverse);
+      color: var(--text-primary);
       padding: 32px;
       border-radius: 16px;
       flex: 2;
@@ -259,7 +259,7 @@ function onImgError() {
           gap: 10px;
           flex-wrap: wrap;
           & p {
-            background-color: var(--green-weak);
+            background-color: hsl(from var(--color-primary) h s 95%);
             padding: 4px 12px;
             border-radius: 16px;
           }
@@ -293,10 +293,10 @@ function onImgError() {
   .adopt-detail__about {
     display: flex;
     margin-top: 20px;
-    background-color: var(--white);
+    background-color: var(--text-inverse);
     padding: 32px;
     border-radius: 16px;
-    color: var(--font-color-dark);
+    color: var(--text-primary);
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.25);
     width: 100%;
     & .adopt-detail__about__content {
@@ -369,8 +369,8 @@ function onImgError() {
   .adopt-detail__adoption {
     display: flex;
     margin-top: 30px;
-    background-color: var(--white);
-    color: var(--font-color-dark);
+    background-color: var(--text-inverse);
+    color: var(--text-primary);
     padding: 32px;
     border-radius: 16px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.25);

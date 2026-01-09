@@ -33,6 +33,10 @@ const props = defineProps({
     required: false,
     default: 'medium',
   },
+  priority: {
+    type: Boolean,
+    default: false,
+  },
 })
 const router = useRouter()
 
@@ -59,12 +63,13 @@ function handleAdopt() {
       height="250"
       width="240"
       :style="{ viewTransitionName: 'pet-' + props.id }"
+      :fetchpriority="priority ? 'high' : 'auto'"
       @error="onImgError"
       @click="handleAdopt"
     />
     <div v-else class="img-fallback" aria-hidden="true" @click="handleAdopt"></div>
     <div class="info-section">
-      <h5>{{ props.name }}</h5>
+      <h3>{{ props.name }}</h3>
       <div v-if="props.capsules.length > 0" class="capsules">
         <template v-for="capText in props.capsules" :key="capText">
           <Capsules v-if="capText && capText !== 'Invalid Date'">{{ capText }}</Capsules>
@@ -86,8 +91,9 @@ function handleAdopt() {
   width: 280px;
   border-radius: 8px;
   overflow: hidden;
-  background-color: var(--white);
-  color: var(--font-color-dark);
+  overflow: hidden;
+  background-color: var(--text-inverse);
+  color: var(--text-primary);
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.25);
   height: 400px;
 
@@ -114,7 +120,7 @@ function handleAdopt() {
     overflow: hidden;
   }
 
-  h5 {
+  h3 {
     font-size: 1.5rem;
     margin-bottom: 4px;
     white-space: nowrap;

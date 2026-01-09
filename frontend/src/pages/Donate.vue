@@ -20,14 +20,20 @@ import Footer from '../components/common/footer/Footer.vue'
       <section class="donate-card cat-card">
         <h2>Support Our Cats</h2>
         <div class="illustration">
-          <img src="/images/shadow.jpeg" alt="Cute Cat" />
+          <img src="/images/shadow.jpeg" alt="Cute Cat" width="500" height="375" />
         </div>
 
         <div class="payment-methods">
           <div class="qr-section">
             <div class="qr-placeholder">
               <span class="username">lorraine marrero</span>
-              <img src="/images/cat-paypal.jpg" class="real-qr" alt="PayPal QR Code" />
+              <img
+                src="/images/cat-paypal.jpg"
+                class="real-qr"
+                alt="PayPal QR Code"
+                width="400"
+                height="402"
+              />
               <span>Scan for PayPal</span>
             </div>
           </div>
@@ -45,7 +51,13 @@ import Footer from '../components/common/footer/Footer.vue'
             <div class="qr-placeholder">
               <span class="username">Lorraine Marrero-Baeza</span>
               <span class="handle">@Lorraine-Marrero-Baeza</span>
-              <img src="/images/cat-venmo.jpg" class="real-qr" alt="Venmo QR Code" />
+              <img
+                src="/images/cat-venmo.jpg"
+                class="real-qr"
+                alt="Venmo QR Code"
+                width="400"
+                height="403"
+              />
               <span>Scan for Venmo</span>
             </div>
           </div>
@@ -102,7 +114,7 @@ import Footer from '../components/common/footer/Footer.vue'
 
 <style scoped>
 .donate-page {
-  background-color: var(--green);
+  background-color: var(--color-primary);
   min-height: 100vh;
   display: flex;
   flex-direction: column;
@@ -115,7 +127,7 @@ import Footer from '../components/common/footer/Footer.vue'
 }
 
 .header h1 {
-  color: var(--font-color-light);
+  color: var(--text-inverse);
   font-size: 3rem;
   margin: 0;
   line-height: 1.2; /* Better line height for multi-line titles */
@@ -126,7 +138,7 @@ import Footer from '../components/common/footer/Footer.vue'
 }
 
 .mission-text {
-  color: var(--font-color-light);
+  color: var(--text-inverse);
   font-size: 1.15rem;
   line-height: 1.6;
   max-width: 840px;
@@ -149,7 +161,7 @@ import Footer from '../components/common/footer/Footer.vue'
 
 /* Common Card Styles */
 .donate-card {
-  background: var(--white);
+  background: var(--text-inverse);
   border-radius: 24px;
   padding: 40px;
   flex: 1;
@@ -287,52 +299,65 @@ import Footer from '../components/common/footer/Footer.vue'
 
 /* Cat Specific Styles */
 .cat-card h2 {
-  color: var(--purple);
+  color: var(--color-tertiary);
 }
 .cat-card .illustration img {
-  border-color: var(--purple-weak);
+  border-color: hsl(from var(--color-tertiary) h s 90%);
 }
 .cat-card .qr-placeholder {
-  background-color: var(--purple-weak);
-  color: var(--purple);
+  background-color: var(--color-tertiary-weak);
+  color: var(--color-tertiary);
+  border: 2px solid hsl(from var(--color-tertiary) h s 90%);
 }
 .btn-paypal {
-  background-color: var(--purple);
+  background-color: var(--color-tertiary);
 }
 
 /* Dog Specific Styles */
 .dog-card h2 {
-  color: var(--blue);
+  color: var(--color-secondary);
 }
 .dog-card .illustration img {
-  border-color: var(--blue-weak);
+  border-color: var(--color-secondary-light);
   padding: 40px;
   box-sizing: border-box;
-  background-color: var(--blue-weak);
+  background-color: var(--color-secondary-weak);
   border-width: 6px;
   box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.05);
+  /* Filter to turn white #fff to blue #3b82f6 */
+  filter: brightness(0) saturate(100%) invert(42%) sepia(97%) saturate(1466%) hue-rotate(198deg)
+    brightness(99%) contrast(94%);
 }
 .dog-card .qr-placeholder {
-  background-color: var(--blue-weak);
-  color: var(--blue);
+  background-color: var(--color-secondary-weak);
+  color: var(--color-secondary);
   padding: 24px;
+  border: 2px solid var(--color-secondary-light);
 }
 .dog-card .qr-icon {
   width: 80px;
   height: 80px;
-  opacity: 0.8;
+  opacity: 0.9;
   margin-bottom: 12px;
+  /* Filter to turn white #fff to blue #3b82f6 */
+  filter: brightness(0) saturate(100%) invert(42%) sepia(97%) saturate(1466%) hue-rotate(198deg)
+    brightness(99%) contrast(94%);
+  /* Mimic the "boxed" look of a QR code */
+  border: 2px solid var(--color-secondary-light);
+  padding: 12px;
+  border-radius: 12px;
+  background-color: white;
 }
 .dog-card .btn-paypal {
-  background-color: var(--blue);
+  background-color: var(--color-secondary);
 }
 
 /* Adjusting Zelle/Venmo Colors */
 .cat-card .btn-venmo {
-  background-color: var(--purple);
+  background-color: var(--color-tertiary);
 }
 .dog-card .btn-venmo {
-  background-color: var(--blue);
+  background-color: var(--color-secondary);
 }
 
 /* --- RESPONSIVENESS UPDATES --- */

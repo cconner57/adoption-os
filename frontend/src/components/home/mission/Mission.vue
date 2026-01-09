@@ -11,7 +11,12 @@
         pet adoption, spaying, neutering, and proper pet care.
       </p>
       <div class="image-container">
-        <img src="/images/watercolor.jpeg" alt="watercolor painting of dog and cat" height="300" />
+        <img
+          src="/images/watercolor.jpeg"
+          alt="watercolor painting of dog and cat"
+          width="600"
+          height="466"
+        />
       </div>
     </div>
   </section>
@@ -28,7 +33,7 @@
 
   & h4 {
     font-size: 2.75rem;
-    color: var(--font-color-light);
+    color: var(--text-inverse);
     margin: 0;
   }
   .mission-content {
@@ -39,7 +44,7 @@
     gap: 40px;
 
     & .image-container {
-      background-color: var(--white);
+      background-color: var(--text-inverse);
       padding: 16px;
       border-radius: 24px;
       flex-shrink: 0;
@@ -60,8 +65,7 @@
       width: 100%;
       max-width: 650px;
       font-size: 1.2rem;
-      color: var(--font-color-light);
-      line-height: 1.6;
+      color: var(--text-inverse);
       line-height: 1.6;
       font-weight: 400;
     }

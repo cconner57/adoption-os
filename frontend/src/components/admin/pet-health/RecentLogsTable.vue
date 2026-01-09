@@ -73,12 +73,12 @@ function getStatusColor(status?: string | null) {
   h3 {
     font-size: 1.2rem;
     margin-bottom: 16px;
-    color: var(--font-color-dark);
+    color: var(--text-primary);
   }
 }
 
 .logs-table-wrapper {
-  border: 1px solid #e5e7eb;
+  border: 1px solid var(--border-color);
   border-radius: 12px;
   overflow: hidden;
   max-height: 500px;
@@ -90,12 +90,12 @@ function getStatusColor(status?: string | null) {
   border-collapse: collapse;
 
   th {
-    background: #f9fafb;
+    background: hsl(from var(--color-neutral) h s 98%);
     padding: 12px 16px;
     text-align: left;
     font-size: 0.85rem;
     font-weight: 600;
-    color: var(--font-color-medium);
+    color: hsl(from var(--color-neutral) h s 40%);
     position: sticky;
     top: 0;
     z-index: 10;
@@ -103,17 +103,17 @@ function getStatusColor(status?: string | null) {
 
   td {
     padding: 12px 16px;
-    border-top: 1px solid #e5e7eb;
+    border-top: 1px solid var(--border-color);
     font-size: 0.9rem;
-    color: var(--font-color-dark);
+    color: var(--text-primary);
   }
 
   tr:nth-child(even) {
-    background-color: #f9fafb;
+    background-color: hsl(from var(--color-neutral) h s 98%);
   }
 
   tr:hover {
-    background: #f3f4f6;
+    background: hsl(from var(--color-neutral) h s 95%);
   }
 }
 
@@ -122,13 +122,16 @@ function getStatusColor(status?: string | null) {
   text-transform: capitalize;
 
   &.green {
-    color: var(--green);
+    color: var(--color-primary);
   }
   &.orange {
-    color: var(--yellow);
+    color: var(--color-warning);
   }
   &.red {
-    color: var(--red);
+    color: var(--color-danger);
+  }
+  &.blue {
+    color: var(--color-secondary);
   }
 }
 
@@ -140,7 +143,7 @@ function getStatusColor(status?: string | null) {
 }
 
 .text-muted {
-  color: var(--font-color-medium);
+  color: hsl(from var(--color-neutral) h s 50%);
 }
 
 .text-center {

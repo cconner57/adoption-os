@@ -127,9 +127,9 @@ const selected = computed({
   pointer-events: none;
 }
 .time-card:has(> input:checked) {
-  background: color-mix(in srgb, var(--green) 10%, white);
-  border-color: var(--green);
-  box-shadow: 0 0 0 1px var(--green) inset;
+  background: color-mix(in srgb, var(--color-primary) 10%, white);
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 1px var(--color-primary) inset;
 }
 .time-card:has(> input:focus-visible) {
   box-shadow: 0 0 0 3px rgba(30, 99, 217, 0.45);

@@ -103,8 +103,8 @@ const formatWeight = (w: number) => `${w.toFixed(2)}kg / ${(w * 2.20462).toFixed
     >
       <defs>
         <linearGradient id="line-gradient" x1="0" x2="0" y1="0" y2="1">
-          <stop offset="0%" stop-color="var(--blue)" stop-opacity="0.2" />
-          <stop offset="100%" stop-color="var(--blue)" stop-opacity="0" />
+          <stop offset="0%" stop-color="var(--color-secondary)" stop-opacity="0.2" />
+          <stop offset="100%" stop-color="var(--color-secondary)" stop-opacity="0" />
         </linearGradient>
       </defs>
 
@@ -145,7 +145,7 @@ const formatWeight = (w: number) => `${w.toFixed(2)}kg / ${(w * 2.20462).toFixed
       <path
         :d="chartComputeds.linePath"
         fill="none"
-        stroke="var(--blue)"
+        stroke="var(--color-secondary)"
         stroke-width="3"
         stroke-linecap="round"
         stroke-linejoin="round"
@@ -159,7 +159,7 @@ const formatWeight = (w: number) => `${w.toFixed(2)}kg / ${(w * 2.20462).toFixed
           :cy="point.y"
           r="4"
           fill="white"
-          stroke="var(--blue)"
+          stroke="var(--color-secondary)"
           stroke-width="2"
         />
         <!-- Invisible Hit Area -->
@@ -213,7 +213,7 @@ svg {
   align-items: center;
   justify-content: center;
   height: 100%;
-  color: var(--font-color-medium);
+  color: hsl(from var(--color-neutral) h s 50%);
   font-size: 0.9rem;
 }
 

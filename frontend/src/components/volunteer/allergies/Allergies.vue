@@ -6,7 +6,7 @@ defineOptions({
 })
 
 defineProps<{
-  modelValue?: boolean
+  modelValue?: boolean | null
 }>()
 
 const emit = defineEmits<{

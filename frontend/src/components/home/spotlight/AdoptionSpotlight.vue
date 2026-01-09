@@ -42,7 +42,7 @@ const displayedPets = computed((): IPet[] => {
 
 <template>
   <section class="adoption-spotlight">
-    <h4>Adoption Spotlight</h4>
+    <h2>Adoption Spotlight</h2>
     <div class="pet-list">
       <PetItem
         v-for="pet in displayedPets"
@@ -59,7 +59,7 @@ const displayedPets = computed((): IPet[] => {
 
 <style scoped lang="css">
 .adoption-spotlight {
-  background-color: var(--white);
+  background-color: var(--text-inverse);
   border-radius: 12px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.25);
   display: flex;
@@ -69,9 +69,9 @@ const displayedPets = computed((): IPet[] => {
   width: 100%;
   padding: 24px 50px 40px 50px;
 
-  & h4 {
+  & h2 {
     font-size: 2rem;
-    color: var(--font-color-dark);
+    color: var(--text-primary);
   }
 
   .pet-list {
@@ -94,7 +94,7 @@ const displayedPets = computed((): IPet[] => {
     margin: 2rem 0 0;
     padding: 1rem 2rem;
     gap: 0.5rem;
-    & h4 {
+    & h2 {
       font-size: 1.5rem;
     }
     .pet-list {
@@ -108,19 +108,19 @@ const displayedPets = computed((): IPet[] => {
   }
   @media (min-width: 431px) and (max-width: 768px) {
     margin: -20px 0 0;
-    & h4 {
+    & h2 {
       font-size: 1.75rem;
     }
   }
   @media (min-width: 769px) and (max-width: 1024px) {
-    & h4 {
+    & h2 {
       font-size: 1.75rem;
     }
   }
   @media (min-width: 1025px) and (max-width: 1440px) {
     width: 100%;
     padding: 24px 30px 30px;
-    & h4 {
+    & h2 {
       font-size: 1.75rem;
     }
     .pet-list {

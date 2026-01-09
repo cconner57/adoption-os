@@ -135,13 +135,13 @@ function selectVolunteer(vol: IVolunteer) {
   display: flex;
   flex-direction: column;
   height: 100%;
-  background: white;
-  border-right: 1px solid #e5e7eb;
+  background: var(--text-inverse);
+  border-right: 1px solid var(--border-color);
 }
 
 .list-header {
   padding: 20px;
-  border-bottom: 1px solid #f3f4f6;
+  border-bottom: 1px solid var(--border-color);
 }
 
 .title-row {
@@ -153,7 +153,7 @@ function selectVolunteer(vol: IVolunteer) {
   h2 {
     margin: 0;
     font-size: 1.2rem;
-    color: var(--font-color-dark);
+    color: var(--text-primary);
   }
 }
 
@@ -161,7 +161,7 @@ function selectVolunteer(vol: IVolunteer) {
   width: 32px;
   height: 32px;
   border-radius: 8px;
-  background: var(--purple);
+  background: var(--color-secondary);
   color: white;
   border: none;
   font-size: 1.2rem;
@@ -172,29 +172,29 @@ function selectVolunteer(vol: IVolunteer) {
   justify-content: center;
 
   &:hover {
-    background: var(--purple-dark);
+    background: hsl(from var(--color-secondary) h s 40%);
   }
 }
 
 .search-box input {
   width: 100%;
   padding: 10px 12px;
-  border: 1px solid #e5e7eb;
+  border: 1px solid var(--border-color);
   border-radius: 8px;
-  background: #f9fafb;
+  background: hsl(from var(--color-neutral) h s 98%);
   font-size: 0.9rem;
 
   &:focus {
     outline: none;
-    border-color: var(--purple);
-    background: white;
+    border-color: var(--color-secondary);
+    background: var(--text-inverse);
   }
 }
 
 .list-tabs {
   display: flex;
   margin-top: 12px;
-  background: #f3f4f6;
+  background: hsl(from var(--color-neutral) h s 95%);
   padding: 4px;
   border-radius: 8px;
 }
@@ -206,14 +206,14 @@ function selectVolunteer(vol: IVolunteer) {
   padding: 6px;
   font-size: 0.85rem;
   font-weight: 600;
-  color: var(--font-color-medium);
+  color: hsl(from var(--color-neutral) h s 50%);
   border-radius: 6px;
   cursor: pointer;
   transition: all 0.2s;
 
   &.active {
-    background: white;
-    color: var(--font-color-dark);
+    background: var(--text-inverse);
+    color: var(--text-primary);
     box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
   }
 }
@@ -227,7 +227,7 @@ function selectVolunteer(vol: IVolunteer) {
 
 .sort-label {
   font-size: 0.8rem;
-  color: var(--font-color-medium);
+  color: hsl(from var(--color-neutral) h s 50%);
 }
 
 .sort-options {
@@ -237,22 +237,22 @@ function selectVolunteer(vol: IVolunteer) {
 
 .sort-chip {
   background: none;
-  border: 1px solid #e5e7eb;
+  border: 1px solid var(--border-color);
   padding: 4px 10px;
   border-radius: 12px;
   font-size: 0.75rem;
-  color: var(--font-color-medium);
+  color: hsl(from var(--color-neutral) h s 50%);
   cursor: pointer;
   transition: all 0.2s;
 
   &:hover {
-    background: #f9fafb;
+    background: hsl(from var(--color-neutral) h s 98%);
   }
 
   &.active {
-    background: var(--purple-light);
-    color: var(--purple);
-    border-color: var(--purple-light);
+    background: hsl(from var(--color-secondary) h s 90%);
+    color: var(--color-secondary);
+    border-color: hsl(from var(--color-secondary) h s 90%);
     font-weight: 600;
   }
 }
@@ -265,7 +265,7 @@ function selectVolunteer(vol: IVolunteer) {
 
 .empty-list {
   text-align: center;
-  color: var(--font-color-medium);
+  color: hsl(from var(--color-neutral) h s 50%);
   padding: 24px;
   font-size: 0.9rem;
 }
@@ -280,13 +280,13 @@ function selectVolunteer(vol: IVolunteer) {
   margin-bottom: 4px;
 
   &:hover {
-    background: #f9fafb;
+    background: hsl(from var(--color-neutral) h s 98%);
   }
 
   &.selected {
-    background: #f5f3ff;
+    background: hsl(from var(--color-secondary) h s 95%);
     .name {
-      color: var(--purple);
+      color: var(--color-secondary);
     }
   }
 }
@@ -295,8 +295,8 @@ function selectVolunteer(vol: IVolunteer) {
   width: 40px;
   height: 40px;
   border-radius: 50%;
-  background: #eef2ff;
-  color: var(--purple);
+  background: hsl(from var(--color-secondary) h s 90%);
+  color: var(--color-secondary);
   font-weight: 700;
   display: flex;
   align-items: center;
@@ -318,7 +318,7 @@ function selectVolunteer(vol: IVolunteer) {
 .name {
   font-weight: 600;
   font-size: 0.95rem;
-  color: var(--font-color-dark);
+  color: var(--text-primary);
   margin-right: 6px;
 }
 
@@ -328,20 +328,20 @@ function selectVolunteer(vol: IVolunteer) {
   border-radius: 50%;
 
   &.active {
-    background: #22c55e;
-    box-shadow: 0 0 4px #22c55e66;
+    background: var(--color-primary);
+    box-shadow: 0 0 4px hsla(from var(--color-primary) h s l / 0.4);
   }
   &.inactive {
-    background: #d1d5db;
+    background: hsl(from var(--color-neutral) h s 80%);
   }
   &.pending {
-    background: #f97316;
+    background: var(--color-warning);
   }
 }
 
 .role {
   font-size: 0.8rem;
-  color: var(--font-color-medium);
+  color: hsl(from var(--color-neutral) h s 50%);
 }
 
 .vol-score {
@@ -349,13 +349,13 @@ function selectVolunteer(vol: IVolunteer) {
   font-size: 0.9rem;
 
   &.high {
-    color: #10b981;
+    color: var(--color-primary);
   }
   &.mid {
-    color: #f59e0b;
+    color: var(--color-warning);
   }
   &.low {
-    color: #ef4444;
+    color: var(--color-danger);
   }
 }
 </style>

@@ -145,7 +145,7 @@ main {
 }
 
 .section-1 {
-  background-color: var(--background);
+  background-color: var(--color-primary); /* Restored colored background */
   padding: 0 var(--layout-padding-side) 220px;
   margin-top: -20px;
   min-height: auto;
@@ -170,7 +170,7 @@ main {
 }
 
 .section-2 {
-  background-color: var(--white);
+  background-color: var(--text-inverse);
   padding: 60px var(--layout-padding-side) 80px;
   height: auto;
 
@@ -231,7 +231,7 @@ main {
 }
 
 .adopt-now-button {
-  background-color: var(--green);
+  background-color: var(--color-primary);
   height: 48px;
   min-width: 160px;
   padding: 0 24px;

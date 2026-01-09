@@ -18,7 +18,7 @@ const props = defineProps<{
 
 const emit = defineEmits<{
   'update:modelValue': [value: string | number | null]
-  'blur': [event: Event]
+  blur: [event: Event]
 }>()
 
 const attrs = useAttrs()
@@ -43,7 +43,10 @@ function onBlur(e: Event) {
 </script>
 
 <template>
-  <div class="control field" :class="{ 'is-fullwidth': props.fullWidth, 'has-error': props.hasError }">
+  <div
+    class="control field"
+    :class="{ 'is-fullwidth': props.fullWidth, 'has-error': props.hasError }"
+  >
     <label class="label" :for="inputId">{{ props.label }}</label>
     <div class="field">
       <input
@@ -53,6 +56,7 @@ function onBlur(e: Event) {
         :placeholder="props.placeholder"
         :type="props.type"
         :value="props.modelValue"
+        :aria-invalid="props.hasError"
         @input="onInput"
         @blur="onBlur"
         :required="props.required"
@@ -74,34 +78,35 @@ function onBlur(e: Event) {
 }
 
 .has-error input {
-  border-color: #ef4444; /* Red-500 */
-  outline: 2px solid #ef4444;
+  border-color: var(--color-danger); /* Red-500 */
+  outline: 2px solid var(--color-danger);
 }
 /* Focus state for error to keep it red */
 .has-error input:focus {
-  border-color: #ef4444;
-  outline: 2px solid #ef4444;
+  border-color: var(--color-danger);
+  outline: 2px solid var(--color-danger);
 }
 
 input {
   width: 100%;
   padding: 12px 16px;
   border-radius: 8px;
-  border: 1px solid #e5e7eb;
+  border: 1px solid var(--border-color);
   font-size: 1rem;
   transition: all 0.2s;
-  background-color: #ffffff; /* Explicit white background */
-  caret-color: #000000; /* Ensure caret is always visible */
+  background-color: #ffffff; /* Explicit white background for contrast */
+  caret-color: var(--text-primary); /* Ensure caret is always visible */
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  color: var(--text-primary);
 
   &::placeholder {
-    color: #6b7280; /* Darker gray for better visibility */
-    opacity: 1;
+    color: var(--text-primary); /* Darker gray for better visibility */
+    opacity: 0.6;
   }
 }
 
 .is-empty {
-  color: var(--font-color-dark);
+  color: var(--text-primary);
 }
 
 /* Date input specific handling */
@@ -114,13 +119,13 @@ input[type='date'] {
 
 input[type='date'].is-empty,
 input[type='time'].is-empty {
-  color: var(--font-color-dark);
+  color: var(--text-primary);
   opacity: 0.6;
 }
 
 input[type='date']::placeholder,
 input[type='time']::placeholder {
-  color: #6b7280;
+  color: var(--text-primary);
   opacity: 1;
 }
 

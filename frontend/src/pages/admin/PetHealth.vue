@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, computed } from 'vue'
+import { ref, computed, watch } from 'vue'
 import { mockPetsData } from '../../stores/mockPetData'
 import { mockHealthLogs } from '../../stores/mockHealthLogs'
 import WeightChart from '../../components/common/WeightChart.vue'
@@ -86,6 +86,17 @@ function formatWeight(grams?: number | null) {
 function formatDate(date: string) {
   return new Date(date).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })
 }
+
+// Auto-select first pet
+watch(
+  filteredPets,
+  (newPets) => {
+    if (!selectedPetId.value && newPets.length > 0) {
+      selectedPetId.value = newPets[0].id
+    }
+  },
+  { immediate: true },
+)
 </script>
 
 <template>
@@ -207,13 +218,13 @@ function formatDate(date: string) {
   h2 {
     font-size: 1.2rem;
     font-weight: 700;
-    color: var(--font-color-dark);
+    color: var(--text-primary);
     margin: 0;
   }
 }
 
 .add-log-btn {
-  background: var(--green);
+  background: var(--color-primary);
   color: white;
   border: none;
   width: 32px;
@@ -244,7 +255,7 @@ function formatDate(date: string) {
     outline: none;
 
     &:focus {
-      border-color: var(--blue);
+      border-color: var(--color-secondary);
       background: white;
     }
   }
@@ -271,7 +282,7 @@ function formatDate(date: string) {
   }
   &.active {
     background: #eff6ff;
-    border-color: var(--blue-weak);
+    border-color: hsl(from var(--color-secondary) h s 80%);
   }
 }
 
@@ -299,13 +310,13 @@ function formatDate(date: string) {
 
 .pet-name {
   font-weight: 600;
-  color: var(--font-color-dark);
+  color: var(--text-primary);
   font-size: 0.95rem;
 }
 
 .pet-meta {
   font-size: 0.8rem;
-  color: var(--font-color-medium);
+  color: hsl(from var(--color-neutral) h s 50%);
   margin-top: 2px;
 }
 
@@ -343,11 +354,11 @@ function formatDate(date: string) {
 .dash-title h1 {
   font-size: 2rem;
   margin: 0 0 4px 0;
-  color: var(--font-color-dark);
+  color: var(--text-primary);
 }
 
 .breed {
-  color: var(--font-color-medium);
+  color: hsl(from var(--color-neutral) h s 50%);
   font-size: 0.95rem;
 }
 
@@ -370,12 +381,12 @@ function formatDate(date: string) {
   }
 
   &.primary {
-    background: var(--blue);
+    background: var(--color-secondary);
     color: white;
     border: none;
 
     &:hover {
-      background: var(--blue-hover);
+      background: hsl(from var(--color-secondary) h s 40%);
     }
   }
 }
@@ -404,14 +415,14 @@ function formatDate(date: string) {
   h3 {
     margin: 0;
     font-size: 1.1rem;
-    color: var(--font-color-dark);
+    color: var(--text-primary);
   }
 }
 
 .current-value {
   font-size: 1.25rem;
   font-weight: 700;
-  color: var(--font-color-dark);
+  color: var(--text-primary);
 }
 
 .footer-filters {
@@ -435,17 +446,17 @@ function formatDate(date: string) {
   border-radius: 6px;
   font-size: 0.8rem;
   font-weight: 600;
-  color: var(--font-color-medium);
+  color: hsl(from var(--color-neutral) h s 50%);
   cursor: pointer;
 
   &:hover {
-    color: var(--font-color-dark);
+    color: var(--text-primary);
     background: rgba(0, 0, 0, 0.05);
   }
 
   &.active {
     background: white;
-    color: var(--blue);
+    color: var(--color-secondary);
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
   }
 }
@@ -462,10 +473,10 @@ function formatDate(date: string) {
   justify-content: center;
   height: 100%;
   text-align: center;
-  color: var(--font-color-medium);
+  color: hsl(from var(--color-neutral) h s 50%);
 
   h2 {
-    color: var(--font-color-dark);
+    color: var(--text-primary);
     margin-bottom: 8px;
   }
 }

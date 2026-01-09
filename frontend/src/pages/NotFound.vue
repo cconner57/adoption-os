@@ -56,7 +56,7 @@ const handleGoHome = () => {
 }
 
 h1 {
-  color: var(--white);
+  color: var(--text-inverse);
   font-size: 2.5rem;
   font-weight: 800; /* Bolder title */
   margin: 0;
@@ -64,7 +64,7 @@ h1 {
 }
 
 p {
-  color: #ffffff; /* Pure white */
+  color: var(--text-inverse); /* Pure white */
   font-size: 1.25rem; /* Slightly larger */
   font-weight: 600; /* Semibold for readability */
   margin: 0 0 1rem 0;

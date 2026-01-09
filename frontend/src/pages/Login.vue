@@ -78,12 +78,12 @@ const handleLogin = async () => {
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: var(--green);
+  background-color: var(--color-primary);
   padding: 20px;
 }
 
 .login-card {
-  background: var(--white);
+  background: var(--text-inverse);
   width: 100%;
   max-width: 440px;
   padding: 48px;
@@ -108,13 +108,13 @@ const handleLogin = async () => {
 
 .logo-area h1 {
   font-size: 1.75rem;
-  color: var(--font-color-dark);
+  color: var(--text-primary);
   margin-bottom: 8px;
   font-weight: 700;
 }
 
 .logo-area p {
-  color: var(--font-color-medium);
+  color: hsl(from var(--color-neutral) h s 50%);
   font-size: 1rem;
 }
 
@@ -125,10 +125,10 @@ const handleLogin = async () => {
 }
 
 .error-message {
-  color: #ef4444;
+  color: var(--color-danger);
   font-size: 0.9rem;
   text-align: center;
-  background-color: #fef2f2;
+  background-color: hsl(from var(--color-danger) h s 95%);
   padding: 10px;
   border-radius: 8px;
 }

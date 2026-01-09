@@ -23,11 +23,11 @@ const currentYear = computed(() => new Date().getFullYear())
 
 <style scoped lang="css">
 .footer {
-  background-color: var(--green);
-  color: var(--font-color-light);
+  background-color: var(--color-primary);
+  color: var(--text-inverse);
   padding: 40px 20px;
   text-align: center;
-  border-top: 1px solid #ddd;
+  border-top: 1px solid var(--border-color);
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -45,13 +45,13 @@ const currentYear = computed(() => new Date().getFullYear())
   align-items: center;
   a {
     margin: 0 10px;
-    color: var(--font-color-light) !important;
+    color: var(--text-inverse) !important;
     text-decoration: none;
     font-weight: 500;
     padding-bottom: 5px;
   }
   a:hover {
-    color: #ddd;
+    color: hsl(from var(--text-inverse) h s 90%);
   }
 }
 
@@ -59,7 +59,7 @@ const currentYear = computed(() => new Date().getFullYear())
   font-size: 20px;
   font-weight: 800;
   margin-bottom: 10px;
-  color: var(--font-color-light) !important;
+  color: var(--text-inverse) !important;
 
   @media (max-width: 440px) {
     font-size: 16px;
@@ -73,7 +73,7 @@ const currentYear = computed(() => new Date().getFullYear())
     line-height: 1.5;
     font-weight: 400;
     margin: 4px 0;
-    color: var(--font-color-light) !important;
+    color: var(--text-inverse) !important;
   }
 
   @media (max-width: 440px) {
@@ -89,11 +89,11 @@ const currentYear = computed(() => new Date().getFullYear())
 
 .footer__copyright {
   font-size: 12px;
-  color: var(--font-color-light);
+  color: var(--text-inverse);
   p {
     line-height: 1.5;
     font-weight: 400;
-    color: var(--font-color-light) !important;
+    color: var(--text-inverse) !important;
   }
 
   @media (max-width: 440px) {

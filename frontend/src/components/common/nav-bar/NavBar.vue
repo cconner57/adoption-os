@@ -31,7 +31,7 @@ const isTablet = useIsTablet()
           <h1>I Dream of Home Rescue</h1>
         </RouterLink>
       </div>
-      <NavDrawer v-model="menuOpen" :size="28" style="color: #fff" />
+      <NavDrawer v-model="menuOpen" :size="28" style="color: var(--text-inverse)" />
     </nav>
     <nav v-else class="nav-blurred" aria-label="Primary navigation">
       <div class="nav-container">
@@ -98,7 +98,7 @@ const isTablet = useIsTablet()
       display: flex;
       gap: 4rem;
       & .nav-item {
-        color: var(--font-color-light);
+        color: var(--text-inverse);
         text-decoration: none;
 
         p {
@@ -108,7 +108,7 @@ const isTablet = useIsTablet()
       }
       & .nav-item.active {
         font-weight: 600;
-        border-bottom: 2px solid var(--font-color-light);
+        border-bottom: 2px solid var(--text-inverse);
         padding-bottom: 4px;
         p {
           font-size: 1.2rem;
@@ -121,7 +121,9 @@ const isTablet = useIsTablet()
   }
 
   .nav-blurred {
-    background-color: hsl(182, 100%, 23%, 0.75);
+    background-color: hsla(
+      from var(--color-primary) h s 25% / 0.85
+    ); /* Darkened teal with opacity */
     backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(10px);
     transition:
@@ -150,7 +152,7 @@ const isTablet = useIsTablet()
 
           & h1 {
             font-size: 1.2rem;
-            color: var(--font-color-light);
+            color: var(--text-inverse);
           }
         }
       }

@@ -162,7 +162,10 @@ function getShiftStatusColor(status: string) {
         <span class="metric-label">Reliability</span>
         <span
           class="metric-val-colored"
-          :style="{ color: volunteer.reliabilityScore >= 90 ? 'var(--green)' : 'var(--orange)' }"
+          :style="{
+            color:
+              volunteer.reliabilityScore >= 90 ? 'var(--color-primary)' : 'var(--color-warning)',
+          }"
           >{{ volunteer.reliabilityScore }}%</span
         >
       </div>
@@ -498,8 +501,8 @@ function getShiftStatusColor(status: string) {
   width: 80px;
   height: 80px;
   border-radius: 50%;
-  background: var(--purple-light);
-  color: var(--purple);
+  background: hsl(from var(--color-secondary) h s 90%);
+  color: var(--color-secondary);
   font-size: 2rem;
   font-weight: 700;
   display: flex;
@@ -510,7 +513,7 @@ function getShiftStatusColor(status: string) {
 .header-text h1 {
   margin: 0 0 8px 0;
   font-size: 1.8rem;
-  color: var(--font-color-dark);
+  color: var(--text-primary);
 }
 
 .badges {
@@ -519,25 +522,25 @@ function getShiftStatusColor(status: string) {
 }
 
 .role-badge {
-  background: #f3f4f6;
+  background: hsl(from var(--color-neutral) h s 95%);
   padding: 4px 12px;
   border-radius: 16px;
   font-size: 0.85rem;
   font-weight: 600;
   text-transform: capitalize;
-  color: var(--font-color-dark);
+  color: var(--text-primary);
 
   &.teen {
-    background: #e0f2fe;
-    color: #0369a1;
+    background: hsl(from var(--color-secondary) h s 90%);
+    color: var(--color-secondary);
   }
   &.tier-2 {
-    background: #fef3c7;
-    color: #b45309;
+    background: hsl(from var(--color-warning) h s 90%);
+    color: var(--color-warning);
   }
   &.tier-1 {
-    background: #f3f4f6;
-    color: #374151;
+    background: hsl(from var(--color-neutral) h s 90%);
+    color: hsl(from var(--color-neutral) h s 30%);
   }
 }
 
@@ -549,16 +552,16 @@ function getShiftStatusColor(status: string) {
   text-transform: capitalize;
 
   &.active {
-    background: #dcfce7;
-    color: #166534;
+    background: hsl(from var(--color-primary) h s 90%);
+    color: var(--color-primary);
   }
   &.inactive {
-    background: #fee2e2;
-    color: #991b1b;
+    background: hsl(from var(--color-danger) h s 90%);
+    color: var(--color-danger);
   }
   &.pending {
-    background: #ffedd5;
-    color: #9a3412;
+    background: hsl(from var(--color-warning) h s 90%);
+    color: var(--color-warning);
   }
 }
 
@@ -571,17 +574,17 @@ function getShiftStatusColor(status: string) {
   padding: 8px 16px;
   border-radius: 8px;
   border: 1px solid transparent;
-  background: var(--purple);
-  color: white;
+  background: var(--color-secondary);
+  color: var(--text-inverse);
   font-weight: 600;
   cursor: pointer;
 
   &.outline {
-    background: white;
-    border: 1px solid #e5e7eb;
-    color: var(--font-color-dark);
+    background: var(--text-inverse);
+    border: 1px solid var(--border-color);
+    color: var(--text-primary);
     &:hover {
-      background: #f9fafb;
+      background: hsl(from var(--color-neutral) h s 98%);
     }
   }
 }
@@ -590,8 +593,8 @@ function getShiftStatusColor(status: string) {
 .metrics-bar {
   display: flex;
   gap: 24px;
-  background: white;
-  border: 1px solid #e5e7eb;
+  background: var(--text-inverse);
+  border: 1px solid var(--border-color);
   border-radius: 12px;
   padding: 16px 24px;
   margin-bottom: 24px;
@@ -607,7 +610,7 @@ function getShiftStatusColor(status: string) {
   flex-direction: column;
   gap: 4px;
   padding-right: 24px;
-  border-right: 1px solid #f3f4f6;
+  border-right: 1px solid var(--border-color);
 
   &:last-child {
     border-right: none;
@@ -617,14 +620,14 @@ function getShiftStatusColor(status: string) {
 .metric-label {
   font-size: 0.75rem;
   text-transform: uppercase;
-  color: var(--font-color-medium);
+  color: hsl(from var(--color-neutral) h s 50%);
   font-weight: 600;
 }
 
 .metric-value {
   font-size: 1.2rem;
   font-weight: 700;
-  color: var(--font-color-dark);
+  color: var(--text-primary);
 }
 
 .metric-val-colored {
@@ -640,7 +643,7 @@ function getShiftStatusColor(status: string) {
 .tabs {
   display: flex;
   gap: 24px;
-  border-bottom: 1px solid #e5e7eb;
+  border-bottom: 1px solid var(--border-color);
   margin-bottom: 24px;
 }
 
@@ -649,14 +652,14 @@ function getShiftStatusColor(status: string) {
   border: none;
   padding: 12px 0;
   font-size: 1rem;
-  color: var(--font-color-medium);
+  color: hsl(from var(--color-neutral) h s 50%);
   cursor: pointer;
   border-bottom: 2px solid transparent;
   text-transform: capitalize;
 
   &.active {
-    color: var(--purple);
-    border-bottom-color: var(--purple);
+    color: var(--color-secondary);
+    border-bottom-color: var(--color-secondary);
     font-weight: 600;
   }
 }
@@ -677,8 +680,8 @@ function getShiftStatusColor(status: string) {
 }
 
 .card {
-  background: white;
-  border: 1px solid #f3f4f6;
+  background: var(--text-inverse);
+  border: 1px solid var(--border-color);
   border-radius: 12px;
   padding: 24px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02);
@@ -687,8 +690,8 @@ function getShiftStatusColor(status: string) {
   h3 {
     margin: 0 0 20px 0;
     font-size: 1.1rem;
-    color: var(--font-color-dark);
-    border-bottom: 1px solid #f3f4f6;
+    color: var(--text-primary);
+    border-bottom: 1px solid var(--border-color);
     padding-bottom: 12px;
   }
 }
@@ -700,12 +703,12 @@ function getShiftStatusColor(status: string) {
   font-size: 0.95rem;
 
   label {
-    color: var(--font-color-medium);
+    color: hsl(from var(--color-neutral) h s 50%);
     font-weight: 500;
   }
   span {
     font-weight: 500;
-    color: var(--font-color-dark);
+    color: var(--text-primary);
     text-align: right;
     max-width: 60%;
   }
@@ -714,22 +717,22 @@ function getShiftStatusColor(status: string) {
 .skill-tag,
 .pref-tag {
   display: inline-block;
-  background: #f3f4f6;
+  background: hsl(from var(--color-neutral) h s 95%);
   padding: 6px 12px;
   border-radius: 6px;
   font-size: 0.85rem;
   margin-right: 8px;
   margin-bottom: 8px;
-  color: var(--font-color-dark);
+  color: var(--text-primary);
 
   &.outline {
-    background: white;
-    border: 1px solid #e5e7eb;
+    background: var(--text-inverse);
+    border: 1px solid var(--border-color);
   }
 }
 
 .bio {
-  color: var(--font-color-medium);
+  color: hsl(from var(--color-neutral) h s 50%);
   line-height: 1.5;
   margin-bottom: 16px;
 }
@@ -739,22 +742,22 @@ function getShiftStatusColor(status: string) {
   label {
     display: block;
     font-size: 0.85rem;
-    color: var(--font-color-medium);
+    color: hsl(from var(--color-neutral) h s 50%);
     margin-bottom: 8px;
     font-weight: 600;
   }
   p {
     margin: 0;
-    color: var(--font-color-dark);
+    color: var(--text-primary);
     line-height: 1.5;
-    background: #f9fafb;
+    background: hsl(from var(--color-neutral) h s 98%);
     padding: 12px;
     border-radius: 8px;
   }
 }
 
 .text-red {
-  color: var(--red);
+  color: var(--color-danger);
   font-weight: 700;
 }
 
@@ -763,10 +766,10 @@ function getShiftStatusColor(status: string) {
   justify-content: space-between;
   margin-top: 24px;
   padding-top: 16px;
-  border-top: 1px solid #f3f4f6;
+  border-top: 1px solid var(--border-color);
   font-size: 0.9rem;
   label {
-    color: var(--font-color-medium);
+    color: hsl(from var(--color-neutral) h s 50%);
   }
   span {
     font-weight: 600;
@@ -777,18 +780,18 @@ function getShiftStatusColor(status: string) {
   width: 100%;
   margin-top: 16px;
   padding: 10px;
-  background: white;
-  border: 1px dashed #cbd5e1;
-  color: var(--font-color-medium);
+  background: var(--text-inverse);
+  border: 1px dashed var(--border-color);
+  color: hsl(from var(--color-neutral) h s 50%);
   border-radius: 8px;
   cursor: pointer;
   font-weight: 600;
   transition: all 0.2s;
 
   &:hover {
-    border-color: var(--purple);
-    color: var(--purple);
-    background: #fdf4ff;
+    border-color: var(--color-secondary);
+    color: var(--color-secondary);
+    background: hsl(from var(--color-secondary) h s 98%);
   }
 }
 
@@ -796,8 +799,8 @@ function getShiftStatusColor(status: string) {
 .shift-card {
   display: flex;
   align-items: center;
-  background: white;
-  border: 1px solid #e5e7eb;
+  background: var(--text-inverse);
+  border: 1px solid var(--border-color);
   padding: 16px;
   border-radius: 12px;
   margin-bottom: 12px;
@@ -808,19 +811,19 @@ function getShiftStatusColor(status: string) {
   display: flex;
   flex-direction: column;
   align-items: center;
-  background: #f9fafb;
+  background: hsl(from var(--color-neutral) h s 98%);
   padding: 8px 16px;
   border-radius: 8px;
 
   .day {
     font-size: 1.2rem;
     font-weight: 700;
-    color: var(--font-color-dark);
+    color: var(--text-primary);
   }
   .month {
     font-size: 0.8rem;
     text-transform: uppercase;
-    color: var(--font-color-medium);
+    color: hsl(from var(--color-neutral) h s 50%);
   }
 }
 
@@ -832,7 +835,7 @@ function getShiftStatusColor(status: string) {
     margin-bottom: 4px;
   }
   .shift-time {
-    color: var(--font-color-medium);
+    color: hsl(from var(--color-neutral) h s 50%);
     font-size: 0.9rem;
   }
 }
@@ -845,24 +848,24 @@ function getShiftStatusColor(status: string) {
   text-transform: capitalize;
 
   &.green {
-    background: #dcfce7;
-    color: #166534;
+    background: hsl(from var(--color-primary) h s 95%);
+    color: var(--color-primary);
   }
   &.orange {
-    background: #ffedd5;
-    color: #9a3412;
+    background: hsl(from var(--color-warning) h s 95%);
+    color: var(--color-warning);
   }
   &.red {
-    background: #fee2e2;
-    color: #991b1b;
+    background: hsl(from var(--color-danger) h s 95%);
+    color: var(--color-danger);
   }
   &.gray {
-    background: #f3f4f6;
-    color: #6b7280;
+    background: hsl(from var(--color-neutral) h s 95%);
+    color: hsl(from var(--color-neutral) h s 50%);
   }
   &.blue {
-    background: #dbeafe;
-    color: #1e40af;
+    background: hsl(from var(--color-secondary) h s 95%);
+    color: var(--color-secondary);
   }
 
   &.small {
@@ -887,13 +890,13 @@ function getShiftStatusColor(status: string) {
   th {
     text-align: left;
     padding: 12px;
-    color: var(--font-color-medium);
+    color: hsl(from var(--color-neutral) h s 50%);
     font-size: 0.9rem;
-    border-bottom: 1px solid #e5e7eb;
+    border-bottom: 1px solid var(--border-color);
   }
   td {
     padding: 12px;
-    border-bottom: 1px solid #f3f4f6;
+    border-bottom: 1px solid var(--border-color);
     font-size: 0.95rem;
   }
 }
@@ -907,21 +910,21 @@ function getShiftStatusColor(status: string) {
 }
 
 .add-incident-btn {
-  background: white;
-  border: 1px solid #ef4444;
-  color: #ef4444;
+  background: var(--text-inverse);
+  border: 1px solid var(--color-danger);
+  color: var(--color-danger);
   padding: 8px 16px;
   border-radius: 8px;
   font-weight: 600;
   cursor: pointer;
   &:hover {
-    background: #fef2f2;
+    background: hsl(from var(--color-danger) h s 98%);
   }
 }
 
 .incident-card {
-  border: 1px solid #fca5a5;
-  background: #fef2f2;
+  border: 1px solid hsl(from var(--color-danger) h s 80%);
+  background: hsl(from var(--color-danger) h s 98%);
   border-radius: 8px;
   padding: 16px;
   margin-bottom: 16px;
@@ -941,36 +944,36 @@ function getShiftStatusColor(status: string) {
   font-weight: 700;
 
   &.low {
-    color: #d97706;
-    border: 1px solid #fbbf24;
+    color: var(--color-warning);
+    border: 1px solid hsl(from var(--color-warning) h s 80%);
   }
   &.medium {
-    color: #ea580c;
-    border: 1px solid #fdba74;
+    color: hsl(from var(--color-warning) h s 40%);
+    border: 1px solid hsl(from var(--color-warning) h s 60%);
   }
   &.high {
-    color: #dc2626;
-    border: 1px solid #fca5a5;
+    color: var(--color-danger);
+    border: 1px solid hsl(from var(--color-danger) h s 80%);
   }
 }
 
 .inc-desc {
   margin: 0 0 12px 0;
-  color: #7f1d1d;
+  color: hsl(from var(--color-danger) h s 30%);
   line-height: 1.5;
 }
 
 .inc-footer {
   font-size: 0.85rem;
-  color: #991b1b;
+  color: hsl(from var(--color-danger) h s 40%);
   font-style: italic;
 }
 
 .empty-state {
   text-align: center;
-  color: var(--font-color-medium);
+  color: hsl(from var(--color-neutral) h s 50%);
   padding: 40px;
-  background: #f9fafb;
+  background: hsl(from var(--color-neutral) h s 98%);
   border-radius: 12px;
 }
 
@@ -985,13 +988,13 @@ function getShiftStatusColor(status: string) {
 
 .year-cell {
   font-weight: 700;
-  color: var(--purple);
+  color: var(--color-secondary);
 }
 
 .badges-row h3 {
   margin-bottom: 16px;
   font-size: 1.1rem;
-  color: var(--font-color-dark);
+  color: var(--text-primary);
 }
 
 .badges-grid {
@@ -1004,8 +1007,8 @@ function getShiftStatusColor(status: string) {
   display: flex;
   align-items: center;
   padding: 16px;
-  background: #f9fafb;
-  border: 1px solid #e5e7eb;
+  background: hsl(from var(--color-neutral) h s 98%);
+  border: 1px solid var(--border-color);
   border-radius: 12px;
   gap: 16px;
   opacity: 0.7;
@@ -1015,9 +1018,9 @@ function getShiftStatusColor(status: string) {
   &.earned {
     opacity: 1;
     filter: none;
-    background: white;
-    border-color: #fbbf24;
-    box-shadow: 0 4px 6px rgba(251, 191, 36, 0.1);
+    background: var(--text-inverse);
+    border-color: var(--color-warning);
+    box-shadow: 0 4px 6px hsla(from var(--color-warning) h s l / 0.1);
   }
 }
 
@@ -1031,35 +1034,35 @@ function getShiftStatusColor(status: string) {
 
 .badge-name {
   font-weight: 700;
-  color: var(--font-color-dark);
+  color: var(--text-primary);
   margin-bottom: 4px;
 }
 
 .badge-desc {
   font-size: 0.8rem;
-  color: var(--font-color-medium);
+  color: hsl(from var(--color-neutral) h s 50%);
   line-height: 1.3;
 }
 
 .badge-status {
   font-size: 0.7rem;
   font-weight: 800;
-  color: #9ca3af;
+  color: hsl(from var(--color-neutral) h s 60%);
   letter-spacing: 0.5px;
 
   .earned & {
-    color: #d97706;
+    color: var(--color-warning);
   }
 }
 
 .text-center {
   text-align: center;
-  color: var(--font-color-medium);
+  color: hsl(from var(--color-neutral) h s 50%);
 }
 
 .suggestion-card {
   width: 100%;
-  border-left: 4px solid var(--purple);
+  border-left: 4px solid var(--color-secondary);
 }
 
 .suggestion-list {
@@ -1076,7 +1079,7 @@ function getShiftStatusColor(status: string) {
 
 .sug-icon {
   font-size: 1.5rem;
-  background: #f3f4f6;
+  background: hsl(from var(--color-neutral) h s 95%);
   width: 40px;
   height: 40px;
   border-radius: 8px;
@@ -1087,13 +1090,13 @@ function getShiftStatusColor(status: string) {
 
 .sug-title {
   font-weight: 700;
-  color: var(--font-color-dark);
+  color: var(--text-primary);
   margin-bottom: 4px;
 }
 
 .sug-desc {
   font-size: 0.9rem;
-  color: var(--font-color-medium);
+  color: hsl(from var(--color-neutral) h s 50%);
   line-height: 1.4;
 }
 </style>

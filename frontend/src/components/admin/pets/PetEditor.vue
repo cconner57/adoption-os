@@ -368,7 +368,7 @@ const tabs = [
 
 .pet-editor-drawer {
   width: 500px;
-  background: white;
+  background: var(--text-inverse);
   height: 100%;
   display: flex;
   flex-direction: column;
@@ -383,7 +383,7 @@ const tabs = [
 
 .drawer-header {
   padding: 20px 24px;
-  border-bottom: 1px solid #eee;
+  border-bottom: 1px solid var(--border-color);
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -391,7 +391,7 @@ const tabs = [
   h2 {
     margin: 0;
     font-size: 1.5rem;
-    color: var(--font-color-dark);
+    color: var(--text-primary);
   }
 }
 
@@ -400,7 +400,7 @@ const tabs = [
   border: none;
   font-size: 1.5rem;
   cursor: pointer;
-  color: var(--font-color-medium);
+  color: hsl(from var(--color-neutral) h s 50%);
 }
 
 .drawer-body {
@@ -413,9 +413,9 @@ const tabs = [
 .tabs-nav {
   display: flex;
   overflow-x: auto;
-  border-bottom: 1px solid #eee;
+  border-bottom: 1px solid var(--border-color);
   padding: 0 12px;
-  background: #fafafa;
+  background: hsl(from var(--color-neutral) h s 98%);
 }
 
 .tab-btn {
@@ -425,19 +425,19 @@ const tabs = [
   border-bottom: 3px solid transparent;
   cursor: pointer;
   font-weight: 500;
-  color: var(--font-color-medium);
+  color: hsl(from var(--color-neutral) h s 50%);
   white-space: nowrap;
   display: flex;
   align-items: center;
   gap: 6px;
 
   &.active {
-    color: var(--blue);
-    border-bottom-color: var(--blue);
+    color: var(--color-secondary);
+    border-bottom-color: var(--color-secondary);
   }
 
   &:hover {
-    background: #f0fdf4;
+    background: hsl(from var(--color-primary) h s 98%);
   }
 }
 
@@ -458,7 +458,7 @@ const tabs = [
 
   label {
     font-weight: 600;
-    color: var(--font-color-dark);
+    color: var(--text-primary);
     font-size: 0.9rem;
   }
 
@@ -470,13 +470,13 @@ const tabs = [
     border-radius: 8px;
     font-size: 1rem;
     outline: none;
-    background-color: white;
-    color: var(--font-color-dark);
+    background-color: var(--text-inverse);
+    color: var(--text-primary);
     font-family: var(--font-regular);
 
     &:focus {
-      border-color: var(--blue);
-      box-shadow: 0 0 0 2px rgba(25, 118, 210, 0.1);
+      border-color: var(--color-secondary);
+      box-shadow: 0 0 0 2px hsla(from var(--color-secondary) h s l / 0.1);
     }
   }
 }
@@ -511,7 +511,7 @@ const tabs = [
     display: flex;
     align-items: center;
     gap: 6px;
-    color: var(--font-color-dark);
+    color: var(--text-primary);
   }
 }
 
@@ -526,7 +526,7 @@ const tabs = [
   aspect-ratio: 1;
   border-radius: 8px;
   overflow: hidden;
-  border: 1px solid #eee;
+  border: 1px solid var(--border-color);
 
   img {
     width: 100%;
@@ -540,7 +540,7 @@ const tabs = [
   top: 4px;
   right: 4px;
   background: rgba(0, 0, 0, 0.6);
-  color: white;
+  color: white; /* overlay text always white */
   border: none;
   border-radius: 50%;
   width: 24px;
@@ -556,7 +556,7 @@ const tabs = [
   bottom: 0;
   left: 0;
   right: 0;
-  background: rgba(46, 204, 113, 0.8);
+  background: rgba(46, 204, 113, 0.8); /* Keep nice green overlay */
   color: white;
   text-align: center;
   font-size: 0.75rem;
@@ -565,35 +565,35 @@ const tabs = [
 
 .add-photo-btn {
   aspect-ratio: 1;
-  border: 2px dashed #ddd;
+  border: 2px dashed var(--border-color);
   border-radius: 8px;
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  color: var(--font-color-medium);
+  color: hsl(from var(--color-neutral) h s 50%);
   transition: all 0.2s;
 
   &:hover {
-    border-color: var(--blue);
-    color: var(--blue);
-    background: #f0f9ff;
+    border-color: var(--color-secondary);
+    color: var(--color-secondary);
+    background: hsl(from var(--color-secondary) h s 98%);
   }
 }
 
 .drawer-footer {
   padding: 16px 24px;
-  border-top: 1px solid #eee;
+  border-top: 1px solid var(--border-color);
   display: flex;
   justify-content: flex-end;
   gap: 12px;
-  background: white;
+  background: var(--text-inverse);
 }
 
 .btn-cancel {
   padding: 10px 20px;
-  border: 1px solid #ddd;
-  background: white;
+  border: 1px solid var(--border-color);
+  background: var(--text-inverse);
   border-radius: 8px;
   font-weight: 600;
   cursor: pointer;
@@ -601,15 +601,15 @@ const tabs = [
 
 .btn-save {
   padding: 10px 20px;
-  background: var(--green);
-  color: white;
+  background: var(--color-primary);
+  color: var(--text-inverse);
   border: none;
   border-radius: 8px;
   font-weight: 600;
   cursor: pointer;
 
   &:hover {
-    background: var(--green-hover);
+    background: hsl(from var(--color-primary) h s 40%);
   }
 }
 </style>

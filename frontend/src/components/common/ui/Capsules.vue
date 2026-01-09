@@ -4,6 +4,7 @@ import { computed } from 'vue'
 const props = defineProps<{
   label?: string | null
   color?: string
+  textColor?: string
   size?: 'sm' | 'md' | 'lg'
 }>()
 
@@ -15,18 +16,25 @@ const sizeClass = computed(() => {
 </script>
 
 <template>
-  <span class="capsule" :class="sizeClass" :style="{ '--capsule-bg': props.color || '' }">
+  <span
+    class="capsule"
+    :class="sizeClass"
+    :style="{
+      '--capsule-bg': props.color || '',
+      '--capsule-text': props.textColor || '',
+    }"
+  >
     <slot>{{ props.label }}</slot>
   </span>
 </template>
 
 <style scoped lang="css">
 .capsule {
-  background: var(--capsule-bg, #e8f6f4);
-  color: #0f5b52;
+  background: var(--capsule-bg, hsl(from var(--color-primary) h s 95%));
+  color: var(--capsule-text, hsl(from var(--color-primary) h s 30%));
   border-radius: 999px;
   padding: 0.375rem 0.625rem;
-  border: 1px solid rgba(15, 91, 82, 0.12);
+  border: 1px solid hsl(from var(--color-primary) h s 80%);
   font-weight: 600;
   font-size: 0.875rem;
   line-height: 1;

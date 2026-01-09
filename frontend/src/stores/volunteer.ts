@@ -4,7 +4,10 @@ import type { IVolunteerFormState } from '../models/volunteer-form'
 import { API_ENDPOINTS } from '../constants/api'
 import { useMetrics } from '../composables/useMetrics'
 
+import { useDemoMode } from '../composables/useDemoMode'
+
 export const useVolunteerStore = defineStore('volunteer', () => {
+  const { isDemoMode } = useDemoMode()
   const isSubmitted = ref(false)
   const hasAttemptedSubmit = ref(false)
   const apiError = ref<string | null>(null)
@@ -18,7 +21,7 @@ export const useVolunteerStore = defineStore('volunteer', () => {
     phoneNumber: '',
     birthday: '',
     age: null,
-    allergies: false,
+    allergies: null,
     emergencyContactName: '',
     emergencyContactPhone: '',
     volunteerExperience: '',
@@ -86,7 +89,10 @@ export const useVolunteerStore = defineStore('volunteer', () => {
     return errors
   })
 
-  const isFormValid = computed(() => validationErrors.value.length === 0)
+  const isFormValid = computed(() => {
+    if (isDemoMode.value) return true
+    return validationErrors.value.length === 0
+  })
 
   const isSubmitting = ref(false)
 
@@ -99,7 +105,7 @@ export const useVolunteerStore = defineStore('volunteer', () => {
     formState.phoneNumber = ''
     formState.birthday = ''
     formState.age = null
-    formState.allergies = false
+    formState.allergies = null
     formState.emergencyContactName = ''
     formState.emergencyContactPhone = ''
     formState.volunteerExperience = ''
@@ -118,9 +124,18 @@ export const useVolunteerStore = defineStore('volunteer', () => {
     hasAttemptedSubmit.value = true
     apiError.value = null
 
-    if (!isFormValid.value) return false
+    if (!isFormValid.value && !isDemoMode.value) return false
 
     isSubmitting.value = true
+
+    if (isDemoMode.value) {
+      console.log('Demo Mode: Simulating submission success')
+      await new Promise((resolve) => setTimeout(resolve, 1000))
+      isSubmitted.value = true
+      clearFormData()
+      isSubmitting.value = false
+      return true
+    }
 
     const payload: Partial<IVolunteerFormState> = { ...formState }
 

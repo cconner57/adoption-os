@@ -228,8 +228,8 @@ svg[data-open='true'] .hx-bot {
   right: 0;
   height: 100dvh;
   z-index: 9999;
-  background: var(--white);
-  color: var(--font-color-dark);
+  background: var(--text-inverse);
+  color: var(--text-primary);
   box-shadow: -8px 0 32px rgba(0, 0, 0, 0.12);
   display: grid;
   grid-template-rows: auto 1fr auto;
@@ -260,7 +260,7 @@ svg[data-open='true'] .hx-bot {
 .drawer-title {
   font-size: 20px;
   font-weight: 700;
-  color: var(--font-color-dark);
+  color: var(--text-primary);
   letter-spacing: -0.02em;
 }
 .drawer-close {
@@ -268,17 +268,17 @@ svg[data-open='true'] .hx-bot {
   cursor: pointer;
   padding: 8px;
   border-radius: 50%;
-  color: var(--font-color-dark);
+  color: var(--text-primary);
   display: flex;
   align-items: center;
   justify-content: center;
   transition: background-color 0.2s;
 }
 .drawer-close:hover {
-  background-color: #f3f4f6;
+  background-color: hsl(from var(--color-neutral) h s 95%);
 }
 .drawer-close:focus-visible {
-  outline: 2px solid var(--green);
+  outline: 2px solid var(--color-primary);
   outline-offset: 2px;
 }
 
@@ -296,20 +296,20 @@ svg[data-open='true'] .hx-bot {
   padding: 16px 20px;
   border-radius: 12px;
   text-decoration: none;
-  color: var(--font-color-dark);
+  color: var(--text-primary);
   font-weight: 600;
   font-size: 1.1rem;
   transition: all 0.2s ease;
 }
 .nav-link:hover,
 .nav-link:active {
-  background-color: #f3f4f6;
-  color: var(--green);
+  background-color: hsl(from var(--color-neutral) h s 95%);
+  color: var(--color-primary);
   transform: translateX(4px);
 }
 .nav-link.router-link-active {
-  background-color: #e6f7f4; /* Light green tint */
-  color: var(--green);
+  background-color: hsl(from var(--color-primary) h s 95%); /* Light green tint */
+  color: var(--color-primary);
 }
 
 .drawer-footer {
@@ -324,20 +324,20 @@ svg[data-open='true'] .hx-bot {
   width: 100%;
   padding: 16px;
   border-radius: 16px;
-  background: var(--green);
-  color: #fff;
+  background: var(--color-primary);
+  color: var(--text-inverse);
   text-decoration: none;
   font-weight: 700;
   font-size: 1.1rem;
-  box-shadow: 0 4px 12px rgba(22, 51, 58, 0.15);
+  box-shadow: 0 4px 12px hsla(from var(--color-primary) h s l / 0.15);
   transition:
     transform 0.2s,
     box-shadow 0.2s;
 }
 .donate-btn:hover {
   transform: translateY(-2px);
-  box-shadow: 0 6px 16px rgba(22, 51, 58, 0.2);
-  background: var(--green-hover, #0e2b32);
+  box-shadow: 0 6px 16px hsla(from var(--color-primary) h s l / 0.2);
+  background: hsl(from var(--color-primary) h s 40%);
 }
 .donate-btn:active {
   transform: translateY(0);

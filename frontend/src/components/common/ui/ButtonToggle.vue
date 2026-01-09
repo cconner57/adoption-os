@@ -1,17 +1,21 @@
 <script setup lang="ts">
 import { computed } from 'vue'
-const props = withDefaults(defineProps<{
-  label: string
-  modelValue?: string | number | boolean | null
-  trueValue?: string | number | boolean | null
-  falseValue?: string | number | boolean | null
-  trueLabel?: string
-  falseLabel?: string
-}>(), {
-  modelValue: 'No',
-  trueValue: 'Yes',
-  falseValue: 'No'
-})
+const props = withDefaults(
+  defineProps<{
+    label: string
+    modelValue?: string | number | boolean | null
+    trueValue?: string | number | boolean | null
+    falseValue?: string | number | boolean | null
+    trueLabel?: string
+    trueLabel?: string
+    falseLabel?: string
+    hasError?: boolean
+  }>(),
+  {
+    trueValue: 'Yes',
+    falseValue: 'No',
+  },
+)
 
 const emit = defineEmits<{
   'update:modelValue': [value: string | number | boolean | null]
@@ -33,11 +37,17 @@ const displayFalseLabel = computed(() => {
 <template>
   <div class="field-group">
     <label class="field-label">{{ props.label }}</label>
-    <div class="toggle-container">
+    <div
+      class="toggle-container"
+      :class="{ 'has-error': props.hasError }"
+      role="group"
+      :aria-label="props.label"
+    >
       <button
         type="button"
         class="toggle-btn"
         :class="{ active: props.modelValue === props.trueValue }"
+        :aria-pressed="props.modelValue === props.trueValue"
         @click="emit('update:modelValue', props.trueValue)"
       >
         {{ displayTrueLabel }}
@@ -46,6 +56,7 @@ const displayFalseLabel = computed(() => {
         type="button"
         class="toggle-btn"
         :class="{ active: props.modelValue === props.falseValue }"
+        :aria-pressed="props.modelValue === props.falseValue"
         @click="emit('update:modelValue', props.falseValue)"
       >
         {{ displayFalseLabel }}
@@ -66,19 +77,24 @@ const displayFalseLabel = computed(() => {
 .field-label {
   font-size: 0.875rem;
   font-weight: 600;
-  color: var(--font-color-dark);
+  color: var(--text-primary);
   margin-bottom: 4px;
 }
 
 .toggle-container {
   display: flex;
-  background: #fff;
-  border: 1px solid #e2e8f0;
+  background: #ffffff;
+  border: 1px solid var(--border-color);
   border-radius: 8px;
   padding: 4px;
   height: 48px;
   width: 100%;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.toggle-container.has-error {
+  border-color: var(--color-danger);
+  outline: 2px solid var(--color-danger);
 }
 
 .toggle-btn {
@@ -87,22 +103,22 @@ const displayFalseLabel = computed(() => {
   background: transparent;
   border-radius: 6px;
   font-weight: 500;
-  color: #64748b;
+  color: hsl(from var(--color-neutral) h s 60%);
   cursor: pointer;
   padding: 0 4px;
   transition: all 0.2s;
   font-size: 1rem;
 
   &.active {
-    background: color-mix(in srgb, var(--green) 10%, white);
-    border: 1px solid var(--green);
-    box-shadow: 0 0 0 1px var(--green) inset;
-    color: var(--font-color-dark);
+    background: color-mix(in srgb, var(--color-primary) 10%, white);
+    border: 1px solid var(--color-primary);
+    box-shadow: 0 0 0 1px var(--color-primary) inset;
+    color: var(--text-primary);
     font-weight: 600;
   }
 
   &:hover:not(.active) {
-    background-color: #f1f5f9;
+    background-color: hsl(from var(--color-neutral) h s 95%);
   }
 }
 </style>

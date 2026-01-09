@@ -105,7 +105,7 @@ const submitForm = () => {
 p {
   margin: 0;
   font-size: 1rem;
-  color: var(--font-color-dark);
+  color: var(--text-primary);
   margin-bottom: 1rem;
   font-weight: 300;
   &:last-of-type {
@@ -117,7 +117,7 @@ ul {
   margin: 0 0 1rem 1.5rem;
   padding: 0;
   list-style-type: disc;
-  color: var(--font-color-dark);
+  color: var(--text-primary);
 }
 li {
   margin-bottom: 0.5rem;

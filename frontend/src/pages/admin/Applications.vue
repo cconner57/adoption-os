@@ -219,7 +219,11 @@ const formatKey = (key: string) => {
   margin-bottom: 24px;
   h1 {
     font-size: 1.8rem;
-    color: var(--font-color-dark);
+    h1 {
+      font-size: 1.8rem;
+      color: var(--text-primary);
+      margin: 0;
+    }
     margin: 0;
   }
   display: flex;
@@ -240,7 +244,7 @@ const formatKey = (key: string) => {
   border: none;
   padding: 12px 16px;
   font-size: 1rem;
-  color: var(--font-color-medium);
+  color: hsl(from var(--color-neutral) h s 50%);
   cursor: pointer;
   border-bottom: 2px solid transparent;
   display: flex;
@@ -250,22 +254,22 @@ const formatKey = (key: string) => {
   transition: all 0.2s;
 
   &:hover {
-    color: var(--font-color-dark);
-    background-color: #f9fafb;
+    color: var(--text-primary);
+    background-color: hsl(from var(--color-neutral) h s 95%);
     border-top-left-radius: 8px;
     border-top-right-radius: 8px;
   }
 
   &.active {
-    color: var(--purple);
-    border-bottom-color: var(--purple);
+    color: var(--color-secondary);
+    border-bottom-color: var(--color-secondary);
     font-weight: 600;
   }
 }
 
 .count-badge {
-  background: #f3f4f6;
-  color: var(--font-color-medium);
+  background: hsl(from var(--color-neutral) h s 95%);
+  color: hsl(from var(--color-neutral) h s 50%);
   font-size: 0.75rem;
   padding: 2px 8px;
   border-radius: 12px;
@@ -273,8 +277,8 @@ const formatKey = (key: string) => {
 }
 
 .tab-btn.active .count-badge {
-  background: #f3e8ff;
-  color: var(--purple);
+  background: hsl(from var(--color-secondary) h s 95%);
+  color: var(--color-secondary);
 }
 
 /* List */
@@ -300,8 +304,8 @@ const formatKey = (key: string) => {
   }
 
   &.unread {
-    border-left-color: var(--purple);
-    background: #fafafa;
+    border-left-color: var(--color-secondary);
+    background: hsl(from var(--color-secondary) h s 98%);
   }
 
   &.expanded {
@@ -333,29 +337,29 @@ const formatKey = (key: string) => {
   h3 {
     margin: 0;
     font-size: 1.1rem;
-    color: var(--font-color-dark);
+    color: var(--text-primary);
   }
 
   .date {
     font-size: 0.85rem;
-    color: var(--font-color-medium);
+    color: hsl(from var(--color-neutral) h s 50%);
   }
 }
 
 .email {
   margin: 0 0 8px 0;
   font-size: 0.9rem;
-  color: var(--font-color-light);
+  color: hsl(from var(--color-neutral) h s 50%);
 }
 
 .details-preview {
   font-size: 0.9rem;
-  color: var(--font-color-medium);
+  color: hsl(from var(--color-neutral) h s 50%);
   display: flex;
   gap: 16px;
 
   strong {
-    color: var(--font-color-dark);
+    color: var(--text-primary);
     font-weight: 600;
   }
 }
@@ -368,7 +372,7 @@ const formatKey = (key: string) => {
 
 .expand-icon {
   font-size: 0.8rem;
-  color: var(--font-color-medium);
+  color: hsl(from var(--color-neutral) h s 50%);
   transition: transform 0.2s;
 }
 
@@ -414,7 +418,7 @@ const formatKey = (key: string) => {
   h4 {
     margin: 0 0 16px 0;
     font-size: 1rem;
-    color: var(--font-color-dark);
+    color: var(--text-primary);
     font-weight: 600;
   }
 }
@@ -434,20 +438,20 @@ const formatKey = (key: string) => {
 .question {
   font-size: 0.85rem;
   font-weight: 600;
-  color: var(--font-color-medium);
+  color: hsl(from var(--color-neutral) h s 50%);
 }
 
 .answer {
   font-size: 0.95rem;
-  color: var(--font-color-dark);
+  color: var(--text-primary);
   line-height: 1.4;
 }
 
 .empty-state {
   text-align: center;
   padding: 60px;
-  color: var(--font-color-medium);
-  background: white;
+  color: hsl(from var(--color-neutral) h s 50%);
+  background: var(--text-inverse);
   border-radius: 12px;
   border: 1px dashed #e5e7eb;
 }

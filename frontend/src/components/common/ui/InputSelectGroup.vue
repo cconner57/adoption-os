@@ -1,24 +1,27 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 
-const props = withDefaults(defineProps<{
-  label?: string
-  modelValue: string | string[] | null
-  options: string[] | { label: string; value: string }[]
-  multiple?: boolean
-  hasError?: boolean
-}>(), {
-  multiple: false,
-  hasError: false
-})
+const props = withDefaults(
+  defineProps<{
+    label?: string
+    modelValue: string | string[] | null
+    options: string[] | { label: string; value: string }[]
+    multiple?: boolean
+    hasError?: boolean
+  }>(),
+  {
+    multiple: false,
+    hasError: false,
+  },
+)
 
 const emit = defineEmits<{
   'update:modelValue': [value: string | string[] | null]
-  'blur': []
+  blur: []
 }>()
 
 const normalizedOptions = computed(() => {
-  return props.options.map(opt => {
+  return props.options.map((opt) => {
     if (typeof opt === 'string') {
       return { label: opt, value: opt }
     }
@@ -52,14 +55,20 @@ const toggleOption = (value: string) => {
 </script>
 
 <template>
-  <fieldset class="field" :class="{ 'has-error': hasError }" :aria-labelledby="label ? `legend-${label.replace(/\s+/g, '-')}` : undefined">
-    <legend v-if="label" :id="`legend-${label.replace(/\s+/g, '-')}`" class="label">{{ label }}</legend>
+  <fieldset
+    class="field"
+    :class="{ 'has-error': hasError }"
+    :aria-labelledby="label ? `legend-${label.replace(/\s+/g, '-')}` : undefined"
+  >
+    <legend v-if="label" :id="`legend-${label.replace(/\s+/g, '-')}`" class="label">
+      {{ label }}
+    </legend>
     <div class="chips">
       <label
         v-for="option in normalizedOptions"
         :key="option.value"
         class="chip"
-        :class="{ 'selected': isSelected(option.value) }"
+        :class="{ selected: isSelected(option.value) }"
       >
         <input
           :type="multiple ? 'checkbox' : 'radio'"
@@ -88,7 +97,7 @@ const toggleOption = (value: string) => {
   margin-bottom: 8px;
   font-weight: 600;
   font-size: 0.875rem;
-  color: var(--font-color-dark);
+  color: var(--text-primary);
 }
 
 .chips {
@@ -114,8 +123,8 @@ const toggleOption = (value: string) => {
   gap: 8px;
   padding: 8px 12px;
   border-radius: 999px;
-  border: 1px solid #e7ebf0;
-  background-color: #fff;
+  border: 1px solid var(--border-color);
+  background-color: var(--text-inverse);
   cursor: pointer;
   user-select: none;
   font-size: 1rem;
@@ -126,19 +135,19 @@ const toggleOption = (value: string) => {
     box-shadow 0.2s;
 
   @media (max-width: 440px) {
-      width: 100%;
-      justify-content: center;
+    width: 100%;
+    justify-content: center;
   }
 
   span {
     font-weight: 600;
-    color: var(--text-900);
+    color: var(--text-primary);
     line-height: 1.5;
   }
 
   &:hover {
-    border-color: #d7e2f2;
-    background: #f2f7ff;
+    border-color: hsl(from var(--color-primary) h s 80%);
+    background: hsl(from var(--color-primary) h s 95%);
   }
 }
 
@@ -152,34 +161,34 @@ const toggleOption = (value: string) => {
 
 /* Selected State */
 .chip:has(> input:checked) {
-  background: color-mix(in srgb, var(--green) 10%, white);
-  border: 1px solid var(--green);
-  box-shadow: 0 0 0 1px var(--green) inset;
-  color: var(--font-color-dark);
+  background: color-mix(in srgb, var(--color-primary) 10%, white);
+  border: 1px solid var(--color-primary);
+  box-shadow: 0 0 0 1px var(--color-primary) inset;
+  color: var(--text-primary);
 }
 
 .chip:has(> input:focus-visible) {
-  box-shadow: 0 0 0 3px var(--ring);
+  box-shadow: 0 0 0 3px rgba(from var(--color-secondary) r g b / 0.4);
 }
 
 /* Fallback for browsers without :has support */
 @supports not (selector(:has(*))) {
   .chip > input:checked + span {
-    background: #e8f1ff;
+    background: hsl(from var(--color-primary) h s 95%);
     border-radius: 999px;
     padding: 6px 10px;
     margin: -6px -10px;
-    box-shadow: 0 0 0 2px #bfd0ff inset;
+    box-shadow: 0 0 0 2px hsl(from var(--color-primary) h s 80%) inset;
   }
   .chip > input:focus-visible + span {
-    box-shadow: 0 0 0 3px var(--ring);
+    box-shadow: 0 0 0 3px rgba(from var(--color-secondary) r g b / 0.4);
   }
 }
 
 /* Error State */
 .field.has-error .chips {
-  outline: 2px solid #ef4444;
-  border-color: #ef4444;
+  outline: 2px solid var(--color-danger);
+  border-color: var(--color-danger);
   border-radius: 12px;
   padding: 8px;
 }

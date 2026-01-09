@@ -1,16 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import {
-  About,
-  Adopt,
-  Donate,
-  Home,
-  SurrenderPet,
-  Volunteer,
-  PetAdoption,
-  NotFound,
-  Login,
-} from '../pages/index.ts'
-// Kiosk Pages (Lazy load to keep bundle small)
+// Pages are now lazy-loaded inline to support code splitting
 const KioskLayout = () => import('../layouts/KioskLayout.vue')
 const KioskHome = () => import('../pages/kiosk/KioskHome.vue')
 const KioskDailyCare = () => import('../pages/kiosk/KioskDailyCare.vue')
@@ -25,11 +14,11 @@ const router = createRouter({
   routes: [
     {
       path: '/',
-      component: Home,
+      component: () => import('../pages/Home.vue'),
     },
     {
       path: '/login',
-      component: Login,
+      component: () => import('../pages/Login.vue'),
     },
     {
       path: '/kiosk',
@@ -134,35 +123,35 @@ const router = createRouter({
     },
     {
       path: '/about',
-      component: About,
+      component: () => import('../pages/About.vue'),
     },
-    { path: '/adopt', name: 'adopt-list', component: Adopt },
+    { path: '/adopt', name: 'adopt-list', component: () => import('../pages/Adopt.vue') },
     {
       path: '/adopt/:id',
       name: 'adopt-pet',
-      component: Adopt,
+      component: () => import('../pages/Adopt.vue'),
       props: true,
     },
     {
       path: '/donate',
-      component: Donate,
+      component: () => import('../pages/Donate.vue'),
     },
     {
       path: '/volunteer',
-      component: Volunteer,
+      component: () => import('../pages/Volunteer.vue'),
     },
     {
       path: '/surrender',
-      component: SurrenderPet,
+      component: () => import('../pages/SurrenderPet.vue'),
     },
     {
       path: '/pet-adoption/:id',
-      component: PetAdoption,
+      component: () => import('../pages/PetAdoption.vue'),
     },
     {
       path: '/:pathMatch(.*)*',
       name: 'not-found',
-      component: NotFound,
+      component: () => import('../pages/NotFound.vue'),
     },
   ],
   scrollBehavior(to, from, savedPosition) {

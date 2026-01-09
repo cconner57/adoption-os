@@ -6,14 +6,12 @@ import { formatDate } from '../../../utils/common.ts'
 defineProps<{
   pets: IPet[]
 }>()
-
-
 </script>
 
 <template>
   <div class="adopt-summary">
     <PetItem
-      v-for="pet in pets"
+      v-for="(pet, index) in pets"
       :capsules="[
         pet?.species ?? '',
         pet?.sex ?? '',
@@ -24,6 +22,7 @@ defineProps<{
       :key="pet.id"
       :name="pet.name"
       :photo="pet.photos?.find((p) => p.isPrimary)?.url"
+      :priority="index === 0"
     />
   </div>
 </template>

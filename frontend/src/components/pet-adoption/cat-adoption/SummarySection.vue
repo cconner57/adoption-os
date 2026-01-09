@@ -75,7 +75,7 @@ defineProps<{
 
 p {
   line-height: 1.6;
-  color: var(--font-color-dark);
+  color: var(--text-primary);
   font-size: 1rem;
   max-width: 100%;
 }

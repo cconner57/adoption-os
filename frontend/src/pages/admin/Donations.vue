@@ -46,15 +46,15 @@ const getTypeLabel = (type: ITransaction['type']) => {
 const getStatusColor = (status: ITransaction['status']) => {
   switch (status) {
     case 'completed':
-      return '#d1fae5' // Green
+      return 'var(--color-primary)'
     case 'pending':
-      return '#fef3c7' // Yellow
+      return 'var(--color-warning)'
     case 'failed':
-      return '#fee2e2' // Red
+      return 'var(--color-danger)'
     case 'refunded':
-      return '#f3f4f6' // Gray
+      return 'var(--color-neutral)'
     default:
-      return '#f3f4f6'
+      return 'var(--color-neutral)'
   }
 }
 
@@ -217,7 +217,7 @@ const handleLogDonation = () => {
   h1 {
     margin: 0;
     font-size: 1.8rem;
-    color: var(--font-color-dark);
+    color: var(--text-primary);
   }
 }
 
@@ -240,7 +240,7 @@ const handleLogDonation = () => {
 
 .stat-label {
   font-size: 0.85rem;
-  color: var(--font-color-medium);
+  color: hsl(from var(--color-neutral) h s 50%);
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.5px;
@@ -249,11 +249,11 @@ const handleLogDonation = () => {
 .stat-value {
   font-size: 2rem;
   font-weight: 700;
-  color: var(--font-color-dark);
+  color: var(--text-primary);
 
   &.highlight {
-    color: #10b981;
-  } /* Green */
+    color: var(--color-primary);
+  }
 }
 
 /* FILTERS */
@@ -282,18 +282,18 @@ const handleLogDonation = () => {
   th {
     text-align: left;
     padding: 16px;
-    background: #f9fafb;
-    color: var(--font-color-medium);
+    background: hsl(from var(--color-neutral) h s 98%);
+    color: hsl(from var(--color-neutral) h s 50%);
     font-weight: 600;
     font-size: 0.85rem;
     text-transform: uppercase;
-    border-bottom: 1px solid #e5e7eb;
+    border-bottom: 1px solid var(--border-color);
   }
 
   td {
     padding: 16px;
-    border-bottom: 1px solid #f3f4f6;
-    color: var(--font-color-dark);
+    border-bottom: 1px solid var(--border-color);
+    color: var(--text-primary);
     font-size: 0.95rem;
   }
 
@@ -304,7 +304,7 @@ const handleLogDonation = () => {
 
 .date-cell {
   font-family: monospace;
-  color: var(--font-color-medium);
+  color: hsl(from var(--color-neutral) h s 50%);
 }
 .fw-bold {
   font-weight: 600;
@@ -321,8 +321,8 @@ const handleLogDonation = () => {
 }
 
 .pet-badge {
-  background: #e0e7ff;
-  color: #4338ca;
+  background: hsl(from var(--color-secondary) h s 95%);
+  color: var(--color-secondary);
   padding: 2px 6px;
   border-radius: 4px;
   display: inline-block;
@@ -332,7 +332,7 @@ const handleLogDonation = () => {
 }
 
 .notes-text {
-  color: var(--font-color-medium);
+  color: hsl(from var(--color-neutral) h s 50%);
   font-style: italic;
 }
 
@@ -343,7 +343,7 @@ const handleLogDonation = () => {
 .empty-state {
   padding: 40px;
   text-align: center;
-  color: var(--font-color-medium);
+  color: hsl(from var(--color-neutral) h s 50%);
 }
 
 /* MODAL */
@@ -371,7 +371,7 @@ const handleLogDonation = () => {
   }
   .subtitle {
     margin-top: 0;
-    color: var(--font-color-medium);
+    color: hsl(from var(--color-neutral) h s 50%);
     margin-bottom: 20px;
     font-size: 0.9rem;
   }

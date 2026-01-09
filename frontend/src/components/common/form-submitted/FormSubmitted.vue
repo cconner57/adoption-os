@@ -10,7 +10,7 @@ interface Props {
 const props = withDefaults(defineProps<Props>(), {
   title: 'Application Received!',
   message: "Thank you for volunteering! We'll review your application and get back to you shortly.",
-  formType: "volunteer"
+  formType: 'volunteer',
 })
 
 const emit = defineEmits(['reset'])
@@ -73,10 +73,11 @@ const messageText = () => {
   </div>
 </template>
 
-<style scoped lang="css">.success-card {
+<style scoped lang="css">
+.success-card {
   max-width: 600px;
   margin: 0 auto;
-  background: var(--white);
+  background: var(--text-inverse);
   border-radius: 24px;
   padding: 60px 32px;
   display: flex;
@@ -89,8 +90,8 @@ const messageText = () => {
 }
 
 .icon-wrapper {
-  color: var(--green);
-  background-color: color-mix(in srgb, var(--green) 10%, white);
+  color: var(--color-primary);
+  background-color: color-mix(in srgb, var(--color-primary) 10%, white);
   width: 100px;
   height: 100px;
   border-radius: 50%;
@@ -110,11 +111,11 @@ const messageText = () => {
   font-size: 2rem;
   font-weight: 700;
   margin-bottom: 16px;
-  color: var(--font-color-dark);
+  color: var(--text-primary);
 }
 
 .success-message {
-  color: #374151;
+  color: hsl(from var(--color-neutral) h s 30%);
   font-size: 1.1rem;
   margin-bottom: 40px;
   line-height: 1.6;
@@ -128,11 +129,24 @@ const messageText = () => {
 }
 
 @keyframes scaleIn {
-  from { opacity: 0; transform: scale(0.9); }
-  to { opacity: 1; transform: scale(1); }
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
 }
 
 @keyframes popIn {
-  from { opacity: 0; transform: scale(0.5); }
-  to { opacity: 1; transform: scale(1); }
-}</style>
+  from {
+    opacity: 0;
+    transform: scale(0.5);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+</style>

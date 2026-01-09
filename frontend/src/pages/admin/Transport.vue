@@ -372,13 +372,14 @@ const updateVehicleInfo = () => {
   h1 {
     margin: 0;
     font-size: 1.8rem;
-    color: var(--font-color-dark);
+    font-size: 1.8rem;
+    color: var(--text-primary);
   }
 }
 
 .user-role-badge {
-  background: #f3e8ff;
-  color: var(--purple);
+  background: hsl(from var(--color-secondary) h s 95%);
+  color: var(--color-secondary);
   padding: 6px 12px;
   border-radius: 20px;
   font-weight: 600;
@@ -403,7 +404,8 @@ const updateVehicleInfo = () => {
   h3 {
     margin: 0;
     font-size: 1.1rem;
-    color: var(--font-color-medium);
+    font-size: 1.1rem;
+    color: hsl(from var(--color-neutral) h s 50%);
   }
 }
 
@@ -422,17 +424,17 @@ const updateVehicleInfo = () => {
   }
 
   &.selected {
-    border-color: var(--purple);
-    background: #fdfbff;
+    border-color: var(--color-secondary);
+    background: hsl(from var(--color-secondary) h s 98%);
   }
 
   &.active-trip {
-    border-left-color: #10b981;
+    border-left-color: var(--color-primary);
   }
 
   &.urgent-trip {
-    border-left-color: #ef4444;
-    background: #fef2f2;
+    border-left-color: var(--color-danger);
+    background: hsl(from var(--color-danger) h s 98%);
   }
 }
 
@@ -449,17 +451,17 @@ const updateVehicleInfo = () => {
   text-transform: uppercase;
 
   &.to_vet {
-    color: #3b82f6;
+    color: var(--color-secondary);
   }
   &.from_vet {
-    color: #8b5cf6;
+    color: var(--color-tertiary);
   }
 }
 
 .trip-time {
   font-size: 1.1rem;
   font-weight: 700;
-  color: var(--font-color-dark);
+  color: var(--text-primary);
   margin-bottom: 12px;
 }
 
@@ -470,16 +472,16 @@ const updateVehicleInfo = () => {
 }
 
 .pet-capsule {
-  background: #f3f4f6;
+  background: hsl(from var(--color-neutral) h s 95%);
   padding: 4px 10px;
   border-radius: 12px;
   font-size: 0.85rem;
-  color: var(--font-color-dark);
+  color: var(--text-primary);
 }
 
 .more-pets {
   font-size: 0.8rem;
-  color: var(--font-color-medium);
+  color: hsl(from var(--color-neutral) h s 50%);
   align-self: center;
 }
 
@@ -517,7 +519,7 @@ const updateVehicleInfo = () => {
     font-size: 1.2rem;
   }
   .trip-id {
-    color: var(--font-color-medium);
+    color: hsl(from var(--color-neutral) h s 50%);
     font-family: monospace;
   }
 }
@@ -534,7 +536,8 @@ const updateVehicleInfo = () => {
   .section-label {
     font-size: 0.8rem;
     text-transform: uppercase;
-    color: var(--font-color-medium);
+    text-transform: uppercase;
+    color: hsl(from var(--color-neutral) h s 50%);
     font-weight: 700;
     margin-bottom: 12px;
     letter-spacing: 0.05em;
@@ -568,7 +571,7 @@ const updateVehicleInfo = () => {
 }
 
 .status-helper {
-  color: var(--font-color-medium);
+  color: hsl(from var(--color-neutral) h s 50%);
   font-style: italic;
   text-align: center;
 }
@@ -605,11 +608,11 @@ const updateVehicleInfo = () => {
 
 .pet-name {
   font-weight: 600;
-  color: var(--font-color-dark);
+  color: var(--text-primary);
   font-size: 1rem;
 }
 .pet-reason {
-  color: var(--font-color-medium);
+  color: hsl(from var(--color-neutral) h s 50%);
   font-size: 0.85rem;
   font-weight: 500;
 }
@@ -622,18 +625,18 @@ const updateVehicleInfo = () => {
   font-weight: 700;
 
   &.adopted {
-    background: #dcfce7;
-    color: #166534;
+    background: hsl(from var(--color-primary) h s 95%);
+    color: var(--color-primary);
   }
   &.shelter {
-    background: #e0e7ff;
-    color: #3730a3;
+    background: hsl(from var(--color-secondary) h s 95%);
+    color: var(--color-secondary);
   }
 }
 
 .pet-description {
   font-size: 0.9rem;
-  color: var(--font-color-medium);
+  color: hsl(from var(--color-neutral) h s 50%);
   line-height: 1.4;
   background: white;
   padding: 8px;
@@ -653,10 +656,10 @@ const updateVehicleInfo = () => {
 .log-entry {
   margin-bottom: 8px;
   line-height: 1.4;
-  color: var(--font-color-dark);
+  color: var(--text-primary);
 }
 .no-logs {
-  color: var(--font-color-medium);
+  color: hsl(from var(--color-neutral) h s 50%);
   font-style: italic;
 }
 </style>

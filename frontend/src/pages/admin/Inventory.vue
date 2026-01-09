@@ -251,14 +251,14 @@ const addItem = () => {
   h1 {
     margin: 0;
     font-size: 1.8rem;
-    color: var(--font-color-dark);
+    color: var(--text-primary);
   }
 }
 
 .alert-banner {
-  background: #fff7ed;
-  border: 1px solid #fed7aa;
-  color: #c2410c;
+  background: hsl(from var(--color-warning) h s 95%);
+  border: 1px solid hsl(from var(--color-warning) h s 80%);
+  color: hsl(from var(--color-warning) h s 40%);
   padding: 12px 16px;
   border-radius: 8px;
   display: flex;
@@ -290,14 +290,14 @@ const addItem = () => {
   gap: 8px;
 
   &.warning-bg {
-    border-color: #fca5a5;
-    background: #fef2f2;
+    border-color: hsl(from var(--color-danger) h s 80%);
+    background: hsl(from var(--color-danger) h s 95%);
   }
 }
 
 .stat-label {
   font-size: 0.85rem;
-  color: var(--font-color-medium);
+  color: hsl(from var(--color-neutral) h s 50%);
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.5px;
@@ -306,9 +306,9 @@ const addItem = () => {
 .stat-value {
   font-size: 2rem;
   font-weight: 700;
-  color: var(--font-color-dark);
+  color: var(--text-primary);
   &.warning-text {
-    color: #b91c1c;
+    color: var(--color-danger);
   }
 }
 
@@ -352,18 +352,18 @@ const addItem = () => {
   th {
     text-align: left;
     padding: 16px;
-    background: #f9fafb;
-    color: var(--font-color-medium);
+    background: hsl(from var(--color-neutral) h s 98%);
+    color: hsl(from var(--color-neutral) h s 50%);
     font-weight: 600;
     font-size: 0.85rem;
     text-transform: uppercase;
-    border-bottom: 1px solid #e5e7eb;
+    border-bottom: 1px solid var(--border-color);
   }
 
   td {
     padding: 16px;
-    border-bottom: 1px solid #f3f4f6;
-    color: var(--font-color-dark);
+    border-bottom: 1px solid var(--border-color);
+    color: var(--text-primary);
     font-size: 0.95rem;
     vertical-align: middle;
   }
@@ -378,8 +378,8 @@ const addItem = () => {
 }
 
 .cat-badge {
-  background: #f3f4f6;
-  color: var(--font-color-dark);
+  background: hsl(from var(--color-neutral) h s 95%);
+  color: var(--text-primary);
   padding: 2px 8px;
   border-radius: 4px;
   font-size: 0.8rem;
@@ -404,7 +404,7 @@ const addItem = () => {
 
 .threshold-sub {
   font-size: 0.75rem;
-  color: var(--font-color-medium);
+  color: hsl(from var(--color-neutral) h s 50%);
 }
 
 .progress-bar {
@@ -424,7 +424,7 @@ const addItem = () => {
 .empty-state {
   padding: 40px;
   text-align: center;
-  color: var(--font-color-medium);
+  color: hsl(from var(--color-neutral) h s 50%);
 }
 
 /* MODAL */
@@ -452,7 +452,7 @@ const addItem = () => {
   }
   .subtitle {
     margin: 0 0 24px 0;
-    color: var(--font-color-medium);
+    color: hsl(from var(--color-neutral) h s 50%);
   }
 }
 
@@ -476,7 +476,7 @@ const addItem = () => {
   align-items: center;
   justify-content: center;
   &:hover {
-    background: #f9fafb;
+    background: hsl(from var(--color-neutral) h s 98%);
   }
 }
 
@@ -486,13 +486,13 @@ const addItem = () => {
   font-size: 1.5rem;
   font-weight: 700;
   border: none;
-  border-bottom: 2px solid var(--purple);
+  border-bottom: 2px solid var(--color-secondary);
   outline: none;
 }
 
 .threshold-info {
   font-size: 0.85rem;
-  color: var(--font-color-medium);
+  color: hsl(from var(--color-neutral) h s 50%);
   margin-bottom: 24px;
 }
 

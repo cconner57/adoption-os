@@ -1,19 +1,22 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 
-const props = withDefaults(defineProps<{
-  label: string
-  modelValue?: string | File | (File | string)[] | null
-  multiple?: boolean
-  accept?: string
-  required?: boolean
-  hasError?: boolean
-}>(), {
-  multiple: false,
-  modelValue: null,
-  required: false,
-  hasError: false
-})
+const props = withDefaults(
+  defineProps<{
+    label: string
+    modelValue?: string | File | (File | string)[] | null
+    multiple?: boolean
+    accept?: string
+    required?: boolean
+    hasError?: boolean
+  }>(),
+  {
+    multiple: false,
+    modelValue: null,
+    required: false,
+    hasError: false,
+  },
+)
 
 const emit = defineEmits<{
   'update:modelValue': [value: string | File | (File | string)[] | null]
@@ -57,8 +60,6 @@ const onFileChange = (e: Event) => {
     handleFiles(target.files)
   }
 }
-
-
 
 const triggerBrowse = () => {
   fileInput.value?.click()
@@ -110,7 +111,17 @@ const formatSize = (bytes: number) => {
 
       <div class="upload-content">
         <div class="cloud-icon">
-          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
             <path d="M4 14.899A7 7 0 1 1 15.71 8h1.79a4.5 4.5 0 0 1 2.5 8.242"></path>
             <path d="M12 12v9"></path>
             <path d="m16 16-4-4-4 4"></path>
@@ -129,10 +140,22 @@ const formatSize = (bytes: number) => {
         <div v-for="(file, index) in modelValue" :key="index" class="file-item">
           <div class="file-info">
             <span class="file-name">{{ typeof file === 'string' ? file : file.name }}</span>
-            <span class="file-size" v-if="typeof file !== 'string'">{{ formatSize(file.size) }}</span>
+            <span class="file-size" v-if="typeof file !== 'string'">{{
+              formatSize(file.size)
+            }}</span>
           </div>
           <button type="button" class="remove-btn" @click.stop="removeFile(index)">
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="16"
+              height="16"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
               <path d="M18 6 6 18"></path>
               <path d="m6 6 12 12"></path>
             </svg>
@@ -142,11 +165,25 @@ const formatSize = (bytes: number) => {
       <template v-else>
         <div class="file-item">
           <div class="file-info">
-            <span class="file-name">{{ typeof modelValue === 'string' ? modelValue : (modelValue as File).name }}</span>
-            <span class="file-size" v-if="typeof modelValue !== 'string'">{{ formatSize((modelValue as File).size) }}</span>
+            <span class="file-name">{{
+              typeof modelValue === 'string' ? modelValue : (modelValue as File).name
+            }}</span>
+            <span class="file-size" v-if="typeof modelValue !== 'string'">{{
+              formatSize((modelValue as File).size)
+            }}</span>
           </div>
           <button type="button" class="remove-btn" @click.stop="removeFile()">
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="16"
+              height="16"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
               <path d="M18 6 6 18"></path>
               <path d="m6 6 12 12"></path>
             </svg>
@@ -168,18 +205,18 @@ const formatSize = (bytes: number) => {
 .field-label {
   font-size: 0.875rem;
   font-weight: 600;
-  color: var(--font-color-dark);
+  color: var(--text-primary);
 }
 
 .required {
-  color: #ef4444;
+  color: var(--color-danger);
   margin-left: 2px;
 }
 
 .upload-container {
-  border: 1px dashed #cbd5e1;
+  border: 1px dashed var(--border-color);
   border-radius: 8px;
-  background-color: #ffffff;
+  background-color: var(--text-inverse);
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   padding: 24px;
   text-align: center;
@@ -192,18 +229,18 @@ const formatSize = (bytes: number) => {
 }
 
 .upload-container:hover {
-  background-color: #f1f5f9;
-  border-color: #94a3b8;
+  background-color: hsl(from var(--color-neutral) h s 95%);
+  border-color: hsl(from var(--color-neutral) h s 60%);
 }
 
 .upload-container.is-dragging {
-  background-color: #e2e8f0;
-  border-color: var(--green);
+  background-color: hsl(from var(--color-neutral) h s 90%);
+  border-color: var(--color-primary);
 }
 
 .has-error .upload-container {
-  border-color: #ef4444;
-  background-color: #fef2f2;
+  border-color: var(--color-danger);
+  background-color: hsl(from var(--color-danger) h s 95%);
 }
 
 .file-input {
@@ -218,8 +255,8 @@ const formatSize = (bytes: number) => {
 }
 
 .cloud-icon {
-  color: #94a3b8;
-  background: #e2e8f0;
+  color: hsl(from var(--color-neutral) h s 60%);
+  background: var(--border-color);
   padding: 8px;
   border-radius: 50%;
   width: 40px;
@@ -237,12 +274,12 @@ const formatSize = (bytes: number) => {
 
 .browse-text {
   font-weight: 600;
-  color: var(--font-color-dark);
+  color: var(--text-primary);
   font-size: 1rem;
 }
 
 .drag-text {
-  color: #64748b;
+  color: hsl(from var(--color-neutral) h s 40%);
   font-size: 0.875rem;
 }
 
@@ -257,8 +294,8 @@ const formatSize = (bytes: number) => {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  background: #fff;
-  border: 1px solid #e2e8f0;
+  background: var(--text-inverse);
+  border: 1px solid var(--border-color);
   border-radius: 6px;
   padding: 8px 12px;
 }
@@ -272,27 +309,27 @@ const formatSize = (bytes: number) => {
 .file-name {
   font-size: 0.875rem;
   font-weight: 500;
-  color: var(--font-color-dark);
+  color: var(--text-primary);
   word-break: break-all;
 }
 
 .file-size {
   font-size: 0.75rem;
-  color: #64748b;
+  color: hsl(from var(--color-neutral) h s 40%);
 }
 
 .remove-btn {
   background: none;
   border: none;
   cursor: pointer;
-  color: #94a3b8;
+  color: hsl(from var(--color-neutral) h s 60%);
   padding: 4px;
   border-radius: 4px;
   transition: color 0.2s;
 }
 
 .remove-btn:hover {
-  color: #ef4444;
-  background-color: #fee2e2;
+  color: var(--color-danger);
+  background-color: hsl(from var(--color-danger) h s 95%);
 }
 </style>

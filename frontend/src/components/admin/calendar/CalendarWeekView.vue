@@ -107,7 +107,7 @@ const weekDays = computed(() => {
 }
 
 .week-day-column {
-  background: white;
+  background: var(--text-inverse);
   border-radius: 12px;
   padding: 16px;
   min-height: 400px;
@@ -116,19 +116,19 @@ const weekDays = computed(() => {
   gap: 16px;
 
   &.today {
-    border: 2px solid var(--blue-weak);
+    border: 2px solid hsl(from var(--color-secondary) h s 80%);
   }
 }
 
 .column-header {
   text-align: center;
-  border-bottom: 1px solid #f3f4f6;
+  border-bottom: 1px solid var(--border-color);
   padding-bottom: 12px;
 
   .day-name {
     display: block;
     font-size: 0.9rem;
-    color: var(--font-color-medium);
+    color: hsl(from var(--color-neutral) h s 50%);
     text-transform: uppercase;
     font-weight: 600;
   }
@@ -137,7 +137,7 @@ const weekDays = computed(() => {
     display: block;
     font-size: 1.5rem;
     font-weight: 700;
-    color: var(--font-color-dark);
+    color: var(--text-primary);
   }
 }
 
@@ -153,15 +153,15 @@ const weekDays = computed(() => {
   border-left: 4px solid transparent;
 
   &.volunteer {
-    background: #faf5ff;
-    border-left-color: var(--purple);
-    color: var(--purple-hover);
+    background: hsl(from var(--color-secondary) h s 95%);
+    border-left-color: var(--color-secondary);
+    color: var(--color-secondary);
   }
 
   &.vet {
-    background: #f0fdf4;
-    border-left-color: var(--green);
-    color: var(--green-hover);
+    background: hsl(from var(--color-primary) h s 95%);
+    border-left-color: var(--color-primary);
+    color: var(--color-primary);
   }
 
   .time {

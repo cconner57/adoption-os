@@ -21,7 +21,12 @@ const { vScrollReveal } = useScrollReveal()
     <section class="story">
       <div class="content-wrapper">
         <content v-scroll-reveal class="reveal-left">
-          <img src="/images/watercolor.jpeg" alt="IDOHR watercolor inspiration" />
+          <img
+            src="/images/watercolor.jpeg"
+            alt="IDOHR watercolor inspiration"
+            width="600"
+            height="466"
+          />
         </content>
         <div class="story-text reveal-right" v-scroll-reveal>
           <h2>Our Story</h2>
@@ -51,7 +56,13 @@ const { vScrollReveal } = useScrollReveal()
           </ul>
         </content>
         <div class="image-wrapper reveal-delay-200" v-scroll-reveal>
-          <img class="mission-image" src="/images/mission.png" alt="Happy adopted dog and cat" />
+          <img
+            src="/images/mission.png"
+            alt="Happy adopted dog and cat"
+            class="mission-image"
+            width="600"
+            height="900"
+          />
         </div>
       </div>
     </section>
@@ -119,7 +130,7 @@ const { vScrollReveal } = useScrollReveal()
 .about {
   width: 100%;
   overflow: hidden;
-  color: var(--font-color-dark);
+  color: var(--text-primary);
 
   /* Shared wrapper style */
   .content-wrapper {
@@ -132,8 +143,8 @@ const { vScrollReveal } = useScrollReveal()
 
   .hero {
     padding: 150px var(--layout-padding-side) 50px;
-    color: var(--font-color-light);
-    background-color: var(--green);
+    color: var(--text-inverse);
+    background-color: var(--color-primary);
     display: flex;
     justify-content: center;
 
@@ -146,19 +157,19 @@ const { vScrollReveal } = useScrollReveal()
 
     h1 {
       font-size: 2.5rem;
-      color: var(--font-color-light);
+      color: var(--text-inverse);
     }
     p {
       font-size: 1.25rem;
       max-width: 600px;
       margin-top: 12px;
       font-weight: 400; /* Increased contrast */
-      color: var(--font-color-light);
+      color: var(--text-inverse);
     }
   }
 
   .story {
-    background-color: var(--white);
+    background-color: var(--text-inverse);
     display: flex;
     justify-content: center;
     padding: 80px var(--layout-padding-side);
@@ -189,8 +200,8 @@ const { vScrollReveal } = useScrollReveal()
   }
 
   .mission {
-    background-color: var(--green);
-    color: var(--font-color-light);
+    background-color: var(--color-primary);
+    color: var(--text-inverse);
     display: flex;
     justify-content: center;
     padding: 80px var(--layout-padding-side);
@@ -211,7 +222,7 @@ const { vScrollReveal } = useScrollReveal()
 
     h2 {
       font-size: 2.5rem;
-      color: var(--font-color-light);
+      color: var(--text-inverse);
     }
 
     p {
@@ -219,7 +230,7 @@ const { vScrollReveal } = useScrollReveal()
       max-width: 600px;
       margin-top: 12px;
       font-weight: 400; /* Increased contrast */
-      color: var(--font-color-light);
+      color: var(--text-inverse);
     }
 
     img {
@@ -233,7 +244,7 @@ const { vScrollReveal } = useScrollReveal()
       padding: 0;
       margin: 12px 0 0;
       font-weight: 400; /* Increased contrast */
-      color: var(--font-color-light);
+      color: var(--text-inverse);
     }
     & .ticks li {
       position: relative;
@@ -244,7 +255,7 @@ const { vScrollReveal } = useScrollReveal()
       content: '✓';
       position: absolute;
       left: 0;
-      color: #bbf7d0;
+      color: hsl(from var(--color-primary) h s 85%);
       font-weight: 700;
     }
   }
@@ -255,8 +266,8 @@ const { vScrollReveal } = useScrollReveal()
   }
 
   .transparency {
-    color: var(--font-color-dark);
-    background-color: var(--white);
+    color: var(--text-primary);
+    background-color: var(--text-inverse);
     display: flex;
     justify-content: center;
     padding: 80px var(--layout-padding-side);
@@ -284,7 +295,7 @@ const { vScrollReveal } = useScrollReveal()
       }
       .small {
         font-size: 0.85rem;
-        color: var(--font-color-medium);
+        color: hsl(from var(--color-neutral) h s 40%);
         margin-top: 12px;
       }
     }

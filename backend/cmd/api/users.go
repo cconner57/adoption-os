@@ -103,8 +103,8 @@ func (app *application) loginUserHandler(w http.ResponseWriter, r *http.Request)
 		Path:     "/",
 		Expires:  time.Now().Add(ttl),
 		HttpOnly: true,
-		Secure:   app.config.env != "development", // Only secure in production/staging
-		SameSite: http.SameSiteLaxMode,            // Relax to Lax for easier dev validation? Or keep Strict?
+		Secure:   false,                // Only secure in production/staging
+		SameSite: http.SameSiteLaxMode, // Relax to Lax for easier dev validation? Or keep Strict?
 		// Strict is fine for same-origin (same IP).
 		// But let's use Lax to be safe for now if they are crossing ports in some browsers (though ports usually fine).
 		// keeping Strict as originally requested but let's change Secure.

@@ -2,7 +2,7 @@
 
 **AdoptionOS** is an open-source ERP (Enterprise Resource Planning) system designed for animal shelters. It manages the entire lifecycle of animal rescue—from intake and medical records to foster management and public adoption listings.
 
-The platform is designed to run on low-cost hardware (**Raspberry Pi 5**) for on-premise deployments but is cloud-ready for SaaS scaling.
+The platform is designed to run on **low-cost, energy-efficient hardware** for on-premise deployments but is cloud-ready for SaaS scaling.
 
 ---
 
@@ -29,8 +29,8 @@ The backend is a high-performance API built with **Go (Latest Stable)** (Standar
 - **Key Features:**
   - **REST API:** Handles all data operations for the frontend.
   - **Data Storage:** PostgreSQL with JSONB for flexible schema requirements (e.g., medical records).
-  - **File Management:** Local storage handling for pet images and documents.
-  - **Deployment:** Optimized for Raspberry Pi 5 (Production) and macOS (Development).
+  - **Asset Management:** Secure handling for pet images and documents.
+  - **Deployment:** Optimized for energy-efficient hardware (Production) and macOS (Development).
 
 ### Folder Structure
 
@@ -143,7 +143,7 @@ _(Status: In Progress)_
 - [ ] **Admin Dashboard:** Create a "Morning Overview" widget showing pending applications, urgent medical tasks, and recent donations at a glance.
 - [ ] **Pet Record Management:** Develop full CRUD (Create, Read, Update, Delete) views for animal profiles, including status toggles (Available/Pending/Adopted).
 - [ ] **Mobile Image Compression:** Implement client-side image resizing (Canvas API) to auto-convert 10MB phone photos to optimized WebP thumbnails _before_ upload.
-- [ ] **External API Sync:** Build a nightly Cron job to export pet data into CSV/JSON formats compliant with Petfinder and RescueGroups API standards.
+- [ ] **External API Sync:** Build a scheduled job to securely sync pet data with Petfinder and RescueGroups API standards.
 - [ ] **Volunteer Hours:** Create a digital "Time Clock" for volunteers to log start/stop times, generating reports needed for grant compliance.
 - [ ] **Intake Kiosk:** Design a simplified, high-contrast "Kiosk Mode" view for tablets used at the front desk for rapid animal intake.
 
@@ -157,7 +157,7 @@ _(Status: In Progress)_
 - [ ] **Foster-to-Adopt Fast-Track:** Build a simplified workflow that allows current fosters to finalize an adoption without re-entering their personal data.
 - [ ] **SMS Status Integration:** Connect Brevo/Twilio to send automated text alerts (e.g., "Application Approved") to reduce follow-up phone calls.
 - [ ] **Smart QR Codes:** Implement a generator that creates unique QR codes linking directly to a pet’s profile, printable for kennel cards.
-- [ ] **Digital Kennel Cards (E-Ink V1):** Develop the Go script for Raspberry Pi Zero to fetch pet details via API and render them to an e-ink display.
+- [ ] **Digital Kennel Cards (E-Ink V1):** Develop the Go script for IoT devices to fetch pet details via API and render them to an e-ink display.
 
 #### Phase 4: PWA & Mobile Capabilities
 
@@ -194,7 +194,7 @@ _(Status: In Progress)_
 
 #### Phase 8: Clinical Health & Inventory Operations
 
-- [ ] **Medication Logs:** Build a strict digital ledger for controlled substances, requiring specific user permissions to log dispensing.
+- [ ] **Medication Logs:** Build a strict digital ledger for veterinary pharmaceuticals, requiring specific user permissions to log dispensing.
 - [ ] **Weight Visualization:** Integrate Chart.js to visualize kitten weight gain over time, flagging animals that are losing weight.
 - [ ] **Incident Reporting:** Create a legal-grade form for documenting bites or accidents, generating PDFs for insurance purposes.
 - [ ] **Inventory System:** A "Supply Closet" tracker that alerts admins when critical items (like vaccines or kitten formula) drop below par levels.
@@ -218,7 +218,7 @@ _(Status: In Progress)_
 
 #### Phase 11: IoT & Connected Hardware
 
-- [ ] **Device Health Monitor:** A dashboard view showing the "Heartbeat" status, CPU temp, and connection quality of all deployed Raspberry Pi devices.
+- [ ] **Device Health Monitor:** A dashboard view showing the "Heartbeat" status, CPU temp, and connection quality of all deployed IoT devices.
 - [ ] **NFC Support:** Update the mobile app to read NFC tags on kennel cards or collars to instantly pull up the medical record on a staff phone.
 - [ ] **Smart Supply Buttons:** Integration with physical IoT buttons (like AWS IoT buttons) to trigger "Restock Needed" alerts for laundry or food.
 
@@ -273,7 +273,7 @@ _(Status: In Progress)_
 
 #### Phase 18: Operational Automation
 
-- **Task Automation:** IFTTT logic for shelter tasks.
+- **Task Automation:** Event-driven workflows for shelter tasks.
 - **Document Generator:** Auto-fill PDF contracts.
 - **Shift Reminders:** SMS/Email shift reminders.
 - **Lost & Found Board:** Internal matching logic.

@@ -67,6 +67,7 @@ func (app *application) loginUserHandler(w http.ResponseWriter, r *http.Request)
 	// 1. Lookup user by email
 	user, err := app.models.Users.GetByEmail(input.Email)
 	if err != nil {
+		app.logger.Info("Login failed: User lookup error", "email", input.Email, "error", err.Error())
 		if errors.Is(err, data.ErrRecordNotFound) {
 			app.invalidCredentialsResponse(w, r)
 			return
@@ -75,17 +76,23 @@ func (app *application) loginUserHandler(w http.ResponseWriter, r *http.Request)
 		return
 	}
 
+	app.logger.Info("Login: User found", "id", user.ID, "activated", user.Activated)
+
 	// 2. Verify password
 	match, err := password.CheckPassword(input.Password, user.PasswordHash)
 	if err != nil {
+		app.logger.Error("Login: Password check error", "error", err)
 		app.serverErrorResponse(w, r, err)
 		return
 	}
 
 	if !match {
+		app.logger.Info("Login failed: Password mismatch", "email", input.Email)
 		app.invalidCredentialsResponse(w, r)
 		return
 	}
+
+	app.logger.Info("Login successful", "email", input.Email)
 
 	// 3. Create Session
 	// 24 hour expiry

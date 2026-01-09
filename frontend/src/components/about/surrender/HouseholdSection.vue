@@ -4,6 +4,7 @@ import type { SurrenderFormState } from '../../../models/surrender-form.ts'
 import InputTextArea from '../../common/ui/InputTextArea.vue'
 import InputSelectGroup from '../../common/ui/InputSelectGroup.vue'
 import ButtonToggle from '../../common/ui/ButtonToggle.vue'
+import HoneypotField from '../../common/ui/HoneypotField.vue'
 import {
   formatPhoneNumber,
   sanitizeName,
@@ -24,6 +25,7 @@ const { formState, touched, handleBlur, hasAttemptedSubmit, selectedAnimal } = d
 <template>
   <div class="household-section">
     <h5>{{ selectedAnimal }} & Household Information</h5>
+    <HoneypotField v-model="formState.fax_number" />
     <fieldset class="household-grid">
       <InputField
         label="First Name"

@@ -5,6 +5,7 @@ export interface IHouseholdMember {
 }
 
 export interface SurrenderFormState {
+  fax_number?: string
   firstName: string
   lastName: string
   phoneNumber: string

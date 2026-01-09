@@ -13,6 +13,7 @@ export const useAdoptionStore = defineStore('adoption', () => {
   const hasAttemptedSubmit = ref(false)
 
   const formState = reactive<FormState>({
+    fax_number: '',
     firstName: '',
     lastName: '',
     age: null,

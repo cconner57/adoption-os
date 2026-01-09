@@ -15,6 +15,7 @@ export const useSurrenderStore = defineStore('surrender', () => {
   const selectedAnimal = ref<'dog' | 'cat' | null>(null)
 
   const formState = reactive<SurrenderFormState>({
+    fax_number: '',
     firstName: '',
     lastName: '',
     phoneNumber: '',

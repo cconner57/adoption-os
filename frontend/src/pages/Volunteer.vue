@@ -9,6 +9,7 @@ import {
 import Button from '../components/common/ui/Button.vue'
 import InputField from '../components/common/ui/InputField.vue'
 import InputTextArea from '../components/common/ui/InputTextArea.vue'
+import HoneypotField from '../components/common/ui/HoneypotField.vue'
 import { reactive, onMounted, ref, nextTick } from 'vue'
 import FormSubmitted from '../components/common/form-submitted/FormSubmitted.vue'
 import { storeToRefs } from 'pinia'
@@ -109,6 +110,8 @@ const handleReset = () => {
         />
         <fieldset class="volunteer-grid" aria-labelledby="pi" v-scroll-reveal>
           <legend id="pi" class="section-title">Personal Information</legend>
+
+          <HoneypotField v-model="formState.fax_number" />
 
           <InputField
             :modelValue="formState.firstName"

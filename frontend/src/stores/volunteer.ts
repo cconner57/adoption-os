@@ -13,6 +13,7 @@ export const useVolunteerStore = defineStore('volunteer', () => {
   const apiError = ref<string | null>(null)
 
   const formState = reactive<IVolunteerFormState>({
+    fax_number: '',
     firstName: '',
     lastName: '',
     address: '',

@@ -35,6 +35,9 @@ type AdoptionApplication struct {
 	CreatedAt time.Time `json:"createdAt"`
 	Status    string    `json:"status"`
 
+	// Honeypot
+	FaxNumber string `json:"fax_number"`
+
 	// General Section
 	FirstName          string      `json:"firstName"`
 	LastName           string      `json:"lastName"`

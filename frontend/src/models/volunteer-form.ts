@@ -1,4 +1,5 @@
 export interface IVolunteerFormState {
+  fax_number?: string
   firstName: string
   lastName: string
   address: string

@@ -18,6 +18,17 @@ func (app *application) submitSurrenderApplication(w http.ResponseWriter, r *htt
 		return
 	}
 
+	// Honeypot Check
+	if input.FaxNumber != "" {
+		app.logger.Println("Bot detected: honeypot field 'fax_number' was populated")
+		// Fake success
+		err = app.writeJSON(w, http.StatusOK, envelope{"message": "Surrender application submitted successfully"}, nil)
+		if err != nil {
+			app.serverErrorResponse(w, r, err)
+		}
+		return
+	}
+
 	v := validator.New()
 	data.ValidateSurrenderApplication(v, &input)
 

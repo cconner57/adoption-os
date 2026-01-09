@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import InputField from '../../common/ui/InputField.vue'
 import ButtonToggle from '../../common/ui/ButtonToggle.vue'
+import HoneypotField from '../../common/ui/HoneypotField.vue'
 
 const { modelValue } = defineProps<{
   modelValue: {
@@ -20,6 +21,7 @@ const { modelValue } = defineProps<{
     spouseFirstName: string | null
     spouseLastName: string | null
     adultMembersAgreed: string | null
+    fax_number: string | null
   }
   touched?: Record<string, boolean>
   // eslint-disable-next-line no-unused-vars
@@ -48,6 +50,20 @@ function removeChild(index: number) {
   <div class="cat-adoption-form">
     <div>
       <h2>Applicant Information</h2>
+
+      <!-- Honeypot Field (Hidden) -->
+      <div class="fax-field" aria-hidden="true">
+        <label for="fax_number">Fax Number</label>
+        <input
+          id="fax_number"
+          v-model="modelValue.fax_number"
+          type="text"
+          name="fax_number"
+          tabindex="-1"
+          autocomplete="off"
+        />
+      </div>
+
       <div class="form-grid">
         <InputField
           v-model="modelValue.firstName"
@@ -404,5 +420,4 @@ function removeChild(index: number) {
       color: var(--color-primary);
     }
   }
-}
-</style>
+

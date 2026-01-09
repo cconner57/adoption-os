@@ -23,6 +23,17 @@ func (app *application) submitAdoptionApplication(w http.ResponseWriter, r *http
 		return
 	}
 
+	// Honeypot Check
+	if input.FaxNumber != "" {
+		app.logger.Println("Bot detected: honeypot field 'fax_number' was populated")
+		// Fake success
+		err = app.writeJSON(w, http.StatusOK, envelope{"status": "success", "message": "Adoption application received"}, nil)
+		if err != nil {
+			app.serverErrorResponse(w, r, err)
+		}
+		return
+	}
+
 	// Validate
 	v := validator.New()
 	data.ValidateAdoptionApplication(v, &input)

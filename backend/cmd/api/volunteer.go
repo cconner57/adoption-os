@@ -20,6 +20,15 @@ func (app *application) submitVolunteerApplication(w http.ResponseWriter, r *htt
 	if err != nil {
 		app.badRequestResponse(w, r, err)
 		return
+	// Honeypot Check
+	if input.FaxNumber != "" {
+		app.logger.Println("Bot detected: honeypot field 'fax_number' was populated")
+		// Fake success
+		err = app.writeJSON(w, http.StatusOK, envelope{"status": "success", "message": "Application received and validated"}, nil)
+		if err != nil {
+			app.serverErrorResponse(w, r, err)
+		}
+		return
 	}
 
 	// Validate

@@ -10,7 +10,9 @@ func (app *application) routes() http.Handler {
 	mux := http.NewServeMux()
 
 	// Register Routes
-	mux.HandleFunc("GET /", app.home)
+	mux.HandleFunc("GET /", app.healthcheckHandler)
+	mux.HandleFunc("GET /healthz", app.healthcheckHandler)
+	mux.HandleFunc("GET /sitemap.xml", app.sitemapHandler)
 	mux.HandleFunc("GET /pets", app.getAllPets)
 	mux.HandleFunc("GET /pets/spotlight", app.getSpotlightPets)
 	mux.HandleFunc("GET /pets/available", app.getAvailablePets)
@@ -28,5 +30,5 @@ func (app *application) routes() http.Handler {
 		AllowCredentials: true,
 	})
 
-	return c.Handler(mux)
+	return app.recoverPanic(app.rateLimit(c.Handler(mux)))
 }

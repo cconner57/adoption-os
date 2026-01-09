@@ -242,3 +242,38 @@ func (m PetModel) GetAdoptedCount(year int) (int, error) {
 
 	return count, nil
 }
+
+type SitemapPet struct {
+	ID        string
+	UpdatedAt time.Time
+}
+
+func (m PetModel) GetAllAvailablePets() ([]*SitemapPet, error) {
+	if m.DB == nil {
+		// Just return empty for CSV mode (simplification)
+		return []*SitemapPet{}, nil
+	}
+
+	query := `
+		SELECT id, updated_at
+		FROM pets
+		WHERE status = 'available'
+	`
+
+	rows, err := m.DB.Query(query)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	var pets []*SitemapPet
+	for rows.Next() {
+		var p SitemapPet
+		err := rows.Scan(&p.ID, &p.UpdatedAt)
+		if err != nil {
+			return nil, err
+		}
+		pets = append(pets, &p)
+	}
+	return pets, nil
+}

@@ -12,7 +12,7 @@ var (
 )
 
 type User struct {
-	ID           int64
+	ID           string
 	CreatedAt    time.Time
 	Name         string
 	Email        string

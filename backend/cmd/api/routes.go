@@ -27,7 +27,7 @@ func (app *application) routes() http.Handler {
 	mux.Handle("POST /metrics", app.requireAuthentication(http.HandlerFunc(app.submitMetric)))
 
 	// User Authentication
-	mux.HandleFunc("POST /users/login", app.loginUserHandler)
+	mux.HandleFunc("POST /api/login", app.loginUserHandler)
 	mux.Handle("GET /users/me", app.requireLogin(http.HandlerFunc(app.profileUserHandler)))
 
 	// Static Files (Uploads)

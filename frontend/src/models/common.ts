@@ -158,9 +158,8 @@ export interface IPet {
   }
 
   returned: {
-    date?: string | null
     isReturned: boolean
-    reason?: string | null
+    history: { date: string; reason: string }[]
   }
 
   sponsored: {
@@ -182,6 +181,7 @@ export interface IPet {
 export interface IVaccineRecord {
   dateAdministered: string
   expiresAt?: string
+  name?: string
   veterinarian?: string
 }
 
@@ -201,6 +201,7 @@ export interface IMedicalProcedure {
 
 export interface IPhoto {
   isPrimary: boolean
+  isSpotlight?: boolean
   thumbnailUrl?: string
   uploadedAt: string
   url: string

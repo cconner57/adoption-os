@@ -124,7 +124,7 @@ const toggleOption = (value: string) => {
   padding: 8px 12px;
   border-radius: 999px;
   border: 1px solid var(--border-color);
-  background-color: var(--text-inverse);
+  background-color: #ffffff;
   cursor: pointer;
   user-select: none;
   font-size: 1rem;

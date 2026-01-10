@@ -75,13 +75,16 @@ function formatList(list?: string[] | null) {
 // --- Computed Properties for Expanded Data ---
 
 const hasVaccinations = computed(() => {
-  const v = props.pet.medical.vaccinations
-  return v && (v.rabies || v.bordetella || v.canineDistemper || v.felineDistemper)
+  const v = props.pet.medical?.vaccinations
+  if (!v) return false
+  return !!(v.rabies || v.bordetella || v.canineDistemper || v.felineDistemper)
 })
 
 const vaccineSummary = computed(() => {
-  const v = props.pet.medical.vaccinations
-  const list = []
+  const v = props.pet.medical?.vaccinations
+  if (!v) return 'No recent records'
+
+  const list: string[] = []
   if (v.rabies?.dateAdministered) list.push(`Rabies: ${formatDoB(v.rabies.dateAdministered)}`)
   if (v.bordetella?.dateAdministered)
     list.push(`Bordetella: ${formatDoB(v.bordetella.dateAdministered)}`)
@@ -212,18 +215,47 @@ const vaccineSummary = computed(() => {
     <td :colspan="100">
       <div class="expanded-content">
         <div class="details-grid">
+          <!-- Basic Info -->
+          <div class="detail-section">
+            <h4>Basic Info</h4>
+            <div class="detail-item">
+              <span class="label">Breed:</span>
+              <span class="value">{{ pet.physical.breed || 'Unknown' }}</span>
+            </div>
+            <div class="detail-item">
+              <span class="label">Color:</span>
+              <span class="value">{{ pet.physical.color || '-' }}</span>
+            </div>
+            <div class="detail-item">
+              <span class="label">Sex:</span>
+              <span class="value capitalize">{{ pet.sex }}</span>
+            </div>
+            <div class="detail-item">
+              <span class="label">Age Group:</span>
+              <span class="value capitalize">{{ pet.physical.ageGroup }}</span>
+            </div>
+            <div class="detail-item">
+              <span class="label">Size:</span>
+              <span class="value capitalize">{{ pet.physical.size }}</span>
+            </div>
+            <div class="detail-item">
+              <span class="label">Coat:</span>
+              <span class="value capitalize">{{ pet.physical.coatLength }}</span>
+            </div>
+          </div>
+
           <!-- Adoption & Sponsorship -->
           <div class="detail-section">
             <h4>Adoption & Status</h4>
-            <div class="detail-item">
+            <div class="detail-item" v-if="pet.details.status === 'adopted'">
               <span class="label">Adopted Date:</span>
               <span class="value">{{ formatDoB(pet.adoption.date) }}</span>
             </div>
-            <div class="detail-item">
+            <div class="detail-item" v-if="pet.details.status === 'adopted'">
               <span class="label">Adopted By:</span>
               <span class="value">{{ pet.adoption.adoptedBy || '-' }}</span>
             </div>
-            <div class="detail-item">
+            <div class="detail-item" v-if="pet.details.status === 'adopted'">
               <span class="label">New Name:</span>
               <span class="value">{{ pet.adoption.newAdoptedName || '-' }}</span>
             </div>

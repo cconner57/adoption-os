@@ -21,6 +21,8 @@ func (app *application) routes() http.Handler {
 
 	// Protected Routes (Applications & Metrics)
 	// We create a protected mux or just wrap handlers inline. Inline is easier for mixed usage here.
+	// Pet Management
+	mux.Handle("PUT /pets/{id}", app.requireLogin(http.HandlerFunc(app.updatePet)))
 	mux.Handle("POST /applications/volunteer", app.requireAuthentication(http.HandlerFunc(app.submitVolunteerApplication)))
 	mux.Handle("POST /applications/adoption", app.requireAuthentication(http.HandlerFunc(app.submitAdoptionApplication)))
 	mux.Handle("POST /applications/surrender", app.requireAuthentication(http.HandlerFunc(app.submitSurrenderApplication)))
@@ -29,7 +31,8 @@ func (app *application) routes() http.Handler {
 	// User Authentication
 	mux.HandleFunc("POST /api/users", app.registerUserHandler)
 	mux.HandleFunc("POST /api/login", app.loginUserHandler)
-	mux.Handle("GET /users/me", app.requireLogin(http.HandlerFunc(app.profileUserHandler)))
+	mux.HandleFunc("POST /api/users/logout", app.logoutUserHandler)
+	mux.Handle("GET /api/users/me", app.requireLogin(http.HandlerFunc(app.profileUserHandler)))
 	mux.Handle("PUT /api/users", app.requireLogin(http.HandlerFunc(app.updateUserHandler)))
 
 	// Static Files (Uploads)

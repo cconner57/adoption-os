@@ -130,14 +130,30 @@ func (app *application) securityHeaders(next http.Handler) http.Handler {
 // Session Auth Middleware
 func (app *application) requireLogin(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		cookie, err := r.Cookie("session_token")
-		if err != nil {
-			// No cookie provided
+		var token string
+
+		// 1. Check for Bearer Token
+		authHeader := r.Header.Get("Authorization")
+		if len(authHeader) > 7 && authHeader[:7] == "Bearer " {
+			token = authHeader[7:]
+		}
+
+		// 2. Fallback to Cookie
+		if token == "" {
+			cookie, err := r.Cookie("session_token")
+			if err == nil {
+				token = cookie.Value
+			}
+		}
+
+		if token == "" {
+			// No token provided via header or cookie
 			app.JSONError(w, http.StatusUnauthorized, "Authentication required")
 			return
 		}
 
-		session, err := app.models.Sessions.Get(cookie.Value)
+		// 3. Validate Session
+		session, err := app.models.Sessions.Get(token)
 		if err != nil {
 			// Database error
 			app.serverErrorResponse(w, r, err)
@@ -146,7 +162,7 @@ func (app *application) requireLogin(next http.Handler) http.Handler {
 
 		if session == nil {
 			// Invalid or expired token
-			// Clear the cookie
+			// Clear the cookie just in case it was a cookie
 			http.SetCookie(w, &http.Cookie{
 				Name:     "session_token",
 				Value:    "",

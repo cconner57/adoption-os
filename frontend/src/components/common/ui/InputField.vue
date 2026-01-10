@@ -7,7 +7,8 @@ defineOptions({
 
 const props = defineProps<{
   id?: string
-  label: string
+  id?: string
+  label?: string
   placeholder: string
   type?: string
   modelValue: string | number | null
@@ -47,7 +48,7 @@ function onBlur(e: Event) {
     class="control field"
     :class="{ 'is-fullwidth': props.fullWidth, 'has-error': props.hasError }"
   >
-    <label class="label" :for="inputId">{{ props.label }}</label>
+    <label v-if="props.label" class="label" :for="inputId">{{ props.label }}</label>
     <div class="field">
       <input
         v-bind="attrs"

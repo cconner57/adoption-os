@@ -188,3 +188,18 @@ func (app *application) updateUserHandler(w http.ResponseWriter, r *http.Request
 
 	app.writeJSON(w, http.StatusOK, envelope{"user": user}, nil)
 }
+
+func (app *application) logoutUserHandler(w http.ResponseWriter, r *http.Request) {
+	// Clear the session cookie
+	http.SetCookie(w, &http.Cookie{
+		Name:     "session_token",
+		Value:    "",
+		Path:     "/",
+		Expires:  time.Unix(0, 0),
+		MaxAge:   -1,
+		HttpOnly: true,
+		Secure:   false, // Match login handler
+	})
+
+	app.writeJSON(w, http.StatusOK, envelope{"message": "logout successful"}, nil)
+}

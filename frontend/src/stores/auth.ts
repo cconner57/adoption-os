@@ -51,11 +51,17 @@ export const useAuthStore = defineStore('auth', () => {
   }
 
   const logout = async () => {
-    // Ideally call backend logout endpoint if we had one to clear cookie
-    // For now just clear local state, but cookie will persist until expiry or cleared
-    // Note: To do this properly, we need a POST /users/logout endpoint that clears the cookie.
-    user.value = null
-    window.location.reload() // Force reload to clear any memory/state
+    try {
+      await fetch('/api/users/logout', {
+        method: 'POST',
+        credentials: 'include',
+      })
+    } catch (error) {
+      console.error('Logout error:', error)
+    } finally {
+      user.value = null
+      window.location.reload() // Force reload to clear any memory/state
+    }
   }
 
   const initialized = ref(false)

@@ -23,7 +23,7 @@ func main() {
 
 	// Update 'realadmin' to 'super_admin'
 	// Note: Adjust the email if you are using a different one
-	res1, err := db.ExecContext(ctx, "UPDATE users SET role = 'super_admin' WHERE email = 'realadmin@example.com'")
+	res1, err := db.ExecContext(ctx, "UPDATE users SET role = 'super_admin' WHERE email = 'realadmin@example.com' OR email = 'csconner@protonmail.com'")
 	if err != nil {
 		log.Fatalf("Failed to update super_admin: %v", err)
 	}

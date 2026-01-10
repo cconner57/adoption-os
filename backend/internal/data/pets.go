@@ -288,3 +288,209 @@ func (m PetModel) GetAllAvailablePets() ([]*SitemapPet, error) {
 	}
 	return pets, nil
 }
+
+// Full Pet Struct for Grid/List Views
+type Pet struct {
+	ID        string    `json:"id"`
+	Slug      *string   `json:"slug,omitempty"`
+	CreatedAt time.Time `json:"createdAt"`
+	UpdatedAt time.Time `json:"updatedAt"`
+
+	Name       string  `json:"name"`
+	Species    string  `json:"species"` // Hardcoded to 'cat' for now as DB col missing
+	Sex        string  `json:"sex"`
+	LitterName *string `json:"litterName,omitempty"`
+
+	// JSONB Fields
+	Physical        json.RawMessage `json:"physical"`
+	Behavior        json.RawMessage `json:"behavior"`
+	Medical         json.RawMessage `json:"medical"`
+	Descriptions    json.RawMessage `json:"descriptions"`
+	Details         json.RawMessage `json:"details"`
+	Adoption        json.RawMessage `json:"adoption"`
+	Foster          json.RawMessage `json:"foster"`
+	Returned        json.RawMessage `json:"returned"`
+	Sponsored       json.RawMessage `json:"sponsored"`
+	Photos          json.RawMessage `json:"photos"`
+	ProfileSettings json.RawMessage `json:"profileSettings"`
+}
+
+func (m PetModel) GetAll(status string, search string) ([]*Pet, error) {
+	if m.DB == nil {
+		return []*Pet{}, nil
+	}
+
+	query := `
+		SELECT 
+			id, 
+			name, 
+			COALESCE(sex, 'unknown'),
+			COALESCE(slug, ''),
+			COALESCE(litter_name, ''),
+			created_at, 
+			updated_at,
+			COALESCE(physical, '{}'),
+			COALESCE(behavior, '{}'),
+			COALESCE(medical, '{}'),
+			COALESCE(descriptions, '{}'),
+			-- Inject 'status' from the column into the details JSON
+			COALESCE(details, '{}'::jsonb) || jsonb_build_object('status', status),
+			COALESCE(adoption, '{}'),
+			COALESCE(foster, '{}'),
+			COALESCE(returned, '{}'),
+			COALESCE(sponsored, '{}'),
+			COALESCE(photos, '[]'),
+			COALESCE(profile_settings, '{}')
+		FROM pets
+		WHERE 1=1
+	`
+	cleanArgs := []interface{}{}
+	cleanArgCount := 1
+
+	if status != "" && status != "all" {
+		query += fmt.Sprintf(" AND LOWER(status) = LOWER($%d)", cleanArgCount)
+		cleanArgs = append(cleanArgs, status)
+		cleanArgCount++
+	}
+
+	if search != "" {
+		searchT := "%" + strings.ToLower(search) + "%"
+		query += fmt.Sprintf(" AND (LOWER(name) LIKE $%d OR LOWER(physical->>'breed') LIKE $%d)", cleanArgCount, cleanArgCount+1)
+		cleanArgs = append(cleanArgs, searchT, searchT)
+		cleanArgCount += 2
+	}
+
+	query += " ORDER BY name ASC"
+
+	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
+	defer cancel()
+
+	rows, err := m.DB.QueryContext(ctx, query, cleanArgs...)
+	if err != nil {
+		fmt.Println("GetAll Query Error:", err)
+		return nil, err
+	}
+	defer rows.Close()
+
+	pets := []*Pet{}
+	for rows.Next() {
+		var p Pet
+		var slug, litterName string
+
+		err := rows.Scan(
+			&p.ID,
+			&p.Name,
+			&p.Sex,
+			&slug,
+			&litterName,
+			&p.CreatedAt,
+			&p.UpdatedAt,
+			&p.Physical,
+			&p.Behavior,
+			&p.Medical,
+			&p.Descriptions,
+			&p.Details,
+			&p.Adoption,
+			&p.Foster,
+			&p.Returned,
+			&p.Sponsored,
+			&p.Photos,
+			&p.ProfileSettings,
+		)
+		if err != nil {
+			fmt.Println("GetAll Scan Error:", err)
+			return nil, err
+		}
+
+		p.Species = "cat"
+		if slug != "" {
+			p.Slug = &slug
+		}
+		if litterName != "" {
+			p.LitterName = &litterName
+		}
+
+		pets = append(pets, &p)
+	}
+
+	return pets, nil
+}
+
+func (m PetModel) Update(p *Pet) error {
+	if m.DB == nil {
+		return fmt.Errorf("database connection not available")
+	}
+
+	query := `
+		UPDATE pets
+		SET 
+			name = $1,
+			sex = $2,
+			updated_at = NOW(),
+			physical = $3,
+			behavior = $4,
+			medical = $5,
+			descriptions = $6,
+			details = $7,
+			adoption = $8,
+			foster = $9,
+			returned = $10,
+			sponsored = $11,
+			photos = $12,
+			profile_settings = $13,
+			status = $14,
+			litter_name = $16
+		WHERE id = $15
+	`
+
+	// Extract status from Details JSON if present, otherwise keep existing or default?
+	// The frontend sends status inside details.
+	// We need to parse p.Details to get the status for the column.
+	var detailsMap map[string]interface{}
+	status := "available" // Default fall back? Or should we fetch existing?
+	// Better to try to parse.
+	if len(p.Details) > 0 {
+		if err := json.Unmarshal(p.Details, &detailsMap); err == nil {
+			if s, ok := detailsMap["status"].(string); ok {
+				status = s
+			}
+		}
+	}
+
+	// We should also remove 'status' from details JSON before saving to avoid duplication/confusion?
+	// Or kept it in sync?
+	// The GetAll logic injects it FROM the column.
+	// So if we save it to JSON, it gets overwritten by column on read.
+	// So it doesn't matter much if it's in JSON, but cleaner if we rely on column.
+	// Let's just save the column.
+
+	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
+	defer cancel()
+
+	// Handle standard fields arguments + JSONB arguments + ID
+	args := []interface{}{
+		p.Name,
+		p.Sex,
+		p.Physical,
+		p.Behavior,
+		p.Medical,
+		p.Descriptions,
+		p.Details,
+		p.Adoption,
+		p.Foster,
+		p.Returned,
+		p.Sponsored,
+		p.Photos,
+		p.ProfileSettings,
+		status,       // $14
+		p.ID,         // $15
+		p.LitterName, // $16
+	}
+
+	_, err := m.DB.ExecContext(ctx, query, args...)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}

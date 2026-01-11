@@ -120,34 +120,10 @@ function handleEditPet(pet: IPet) {
 }
 
 async function handleSavePet(petData: Partial<IPet>) {
-  if (!petData.id) {
-    // Handle create (not implemented yet, but we are fixing update now)
-    console.log('Create not implemented yet')
-    return
-  }
-
   try {
-    // Sanitize payload: remove non-editable fields that might cause strict JSON decoding errors on backend
-    // Backend struct in updatePet only has: Name, Sex, Physical, Behavior, Medical, Descriptions, Details, Adoption, Foster, Returned, Sponsored, Photos, ProfileSettings
-    // It DOES NOT have: id, slug, createdAt, updatedAt, litterName, species (frontend has species, backend struct needs checking).
-    // Let's check backend cmd/api/pets.go updatePet struct:
-    /*
-    		Name            string          `json:"name"`
-		Sex             string          `json:"sex"`
-		Physical        json.RawMessage `json:"physical"`
-        ...
-    */
-    // It does NOT have 'species'.
     const payload = {
       name: petData.name,
       sex: petData.sex,
-      // species: petData.species, // Backend doesn't support updating species yet? Struct didn't have it.
-      // Actually, let's look at the struct I added in step 10100/10141. Use `view_file` if unsure.
-      // Proceeding with safe assumption: update input struct in backend if needed, or omit here.
-      // Backend `Pet` struct has Species but `updatePet` anonymous struct didn't have it?
-      // I will assume it's safer to only send what the backend explicitly expects or fix the backend.
-      // The user wants to update everything.
-      // I'll filter here to be safe and avoid 400 Bad Request.
       physical: petData.physical,
       behavior: petData.behavior,
       medical: petData.medical,
@@ -160,32 +136,43 @@ async function handleSavePet(petData: Partial<IPet>) {
       photos: petData.photos,
       profileSettings: petData.profileSettings,
       litterName: petData.litterName,
+      species: petData.species,
     }
 
-    const response = await fetch(`${import.meta.env.VITE_API_URL}/pets/${petData.id}`, {
-      method: 'PUT',
+    let url = `${import.meta.env.VITE_API_URL}/pets`
+    let method = 'POST'
+    let successMessage = 'Pet added successfully!'
+
+    if (petData.id) {
+      // Update Mode
+      url = `${import.meta.env.VITE_API_URL}/pets/${petData.id}`
+      method = 'PUT'
+      successMessage = 'Pet updated successfully!'
+    }
+
+    const response = await fetch(url, {
+      method: method,
       headers: {
         'Content-Type': 'application/json',
       },
-      credentials: 'include', // Ensure session cookie is sent (required for localhost:8080)
+      credentials: 'include',
       body: JSON.stringify(payload),
     })
 
     if (!response.ok) {
-      // Log the error response text for debugging
       const text = await response.text()
-      console.error('Update failed:', text)
-      throw new Error(text || 'Failed to update pet')
+      console.error(`${method} failed:`, text)
+      throw new Error(text || `Failed to ${petData.id ? 'update' : 'create'} pet`)
     }
 
     // Refetch pets to show changes
     await fetchPets()
     isEditorOpen.value = false
 
-    showNotification('Pet updated successfully!', 'success')
+    showNotification(successMessage, 'success')
   } catch (error) {
-    console.error('Error updating pet:', error)
-    showNotification(`Failed to update pet: ${error}`, 'error')
+    console.error('Error saving pet:', error)
+    showNotification(`Failed to save pet: ${error}`, 'error')
   }
 }
 
@@ -266,7 +253,7 @@ function showNotification(message: string, type: 'success' | 'error' = 'success'
               <input type="checkbox" v-model="visibleColumns.age" /> Age
             </label>
             <label class="dropdown-item">
-              <input type="checkbox" v-model="visibleColumns.breed" /> Breed
+              <input type="checkbox" v-model="visibleColumns.breed" /> Species
             </label>
             <label class="dropdown-item">
               <input type="checkbox" v-model="visibleColumns.dob" /> Date of Birth
@@ -308,12 +295,12 @@ function showNotification(message: string, type: 'success' | 'error' = 'success'
             <!-- Expand Arrow Column -->
             <th v-if="visibleColumns.photo">Photo</th>
             <th v-if="visibleColumns.name">Name</th>
-            <th v-if="visibleColumns.breed">Breed</th>
+            <th v-if="visibleColumns.breed">Species</th>
             <th v-if="visibleColumns.sex">Sex</th>
             <th v-if="visibleColumns.sn" class="text-center">S/N</th>
             <th v-if="visibleColumns.microchip">Microchip</th>
             <th v-if="visibleColumns.age">Age</th>
-            <th v-if="visibleColumns.dob">DoB</th>
+            <th v-if="visibleColumns.dob">DOB</th>
             <th v-if="visibleColumns.intake">Intake</th>
             <!-- Dynamic Columns -->
             <th v-if="statusFilter === 'adopted'">Adopted Date</th>

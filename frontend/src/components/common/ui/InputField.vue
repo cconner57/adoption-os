@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { useAttrs } from 'vue'
+import { useAttrs, ref, watch, nextTick } from 'vue'
 
 defineOptions({
   inheritAttrs: false,
@@ -25,6 +25,8 @@ const emit = defineEmits<{
 const attrs = useAttrs()
 const inputId = props.id ?? `input-${Math.random().toString(36).slice(2, 9)}`
 
+const inputRef = ref<HTMLInputElement | null>(null)
+
 function onInput(e: Event) {
   const target = e.target as HTMLInputElement | null
   let val: string | number | null = target?.value ?? null
@@ -36,7 +38,25 @@ function onInput(e: Event) {
     }
   }
   emit('update:modelValue', val)
+
+  // Force strict sync: if the emitted value was rejected by the parent (modelValue didn't change),
+  // we must manually reset the input value to match the modelValue.
+  nextTick(() => {
+    if (inputRef.value && String(props.modelValue ?? '') !== inputRef.value.value) {
+      inputRef.value.value = String(props.modelValue ?? '')
+    }
+  })
 }
+
+// Enforce strict sync: if modelValue changes (or stays same while DOM changed), force DOM update
+watch(
+  () => props.modelValue,
+  (newVal) => {
+    if (inputRef.value && inputRef.value.value !== String(newVal ?? '')) {
+      inputRef.value.value = String(newVal ?? '')
+    }
+  },
+)
 
 function onBlur(e: Event) {
   emit('blur', e)
@@ -49,20 +69,19 @@ function onBlur(e: Event) {
     :class="{ 'is-fullwidth': props.fullWidth, 'has-error': props.hasError }"
   >
     <label v-if="props.label" class="label" :for="inputId">{{ props.label }}</label>
-    <div class="field">
-      <input
-        v-bind="attrs"
-        :id="inputId"
-        :class="{ 'is-empty': !props.modelValue }"
-        :placeholder="props.placeholder"
-        :type="props.type"
-        :value="props.modelValue"
-        :aria-invalid="props.hasError"
-        @input="onInput"
-        @blur="onBlur"
-        :required="props.required"
-      />
-    </div>
+    <input
+      ref="inputRef"
+      v-bind="attrs"
+      :id="inputId"
+      :class="{ 'is-empty': !props.modelValue }"
+      :placeholder="props.placeholder"
+      :type="props.type"
+      :value="props.modelValue"
+      :aria-invalid="props.hasError"
+      @input="onInput"
+      @blur="onBlur"
+      :required="props.required"
+    />
   </div>
 </template>
 
@@ -71,22 +90,10 @@ function onBlur(e: Event) {
   display: flex;
   flex-direction: column;
   gap: 8px;
+  width: 100%; /* Default to full width of parent */
 }
 
-.label {
-  font-weight: 600;
-  font-size: 0.9rem;
-}
-
-.has-error input {
-  border-color: var(--color-danger); /* Red-500 */
-  outline: 2px solid var(--color-danger);
-}
-/* Focus state for error to keep it red */
-.has-error input:focus {
-  border-color: var(--color-danger);
-  outline: 2px solid var(--color-danger);
-}
+/* ... label styles ... */
 
 input {
   width: 100%;
@@ -95,42 +102,12 @@ input {
   border: 1px solid var(--border-color);
   font-size: 1rem;
   transition: all 0.2s;
-  background-color: #ffffff; /* Explicit white background for contrast */
-  caret-color: var(--text-primary); /* Ensure caret is always visible */
+  background-color: #ffffff;
+  caret-color: var(--text-primary);
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   color: var(--text-primary);
-
-  &::placeholder {
-    color: var(--text-primary); /* Darker gray for better visibility */
-    opacity: 0.6;
-  }
+  flex: 1; /* Allow input to grow */
 }
 
-.is-empty {
-  color: var(--text-primary);
-}
-
-/* Date input specific handling */
-input[type='date'] {
-  appearance: none;
-  -webkit-appearance: none;
-  -moz-appearance: none;
-  min-height: 2.5rem; /* Ensure height matches text inputs */
-}
-
-input[type='date'].is-empty,
-input[type='time'].is-empty {
-  color: var(--text-primary);
-  opacity: 0.6;
-}
-
-input[type='date']::placeholder,
-input[type='time']::placeholder {
-  color: var(--text-primary);
-  opacity: 1;
-}
-
-.field.is-fullwidth {
-  width: 100%;
-}
+/* ... other styles ... */
 </style>

@@ -1,42 +1,175 @@
 <script setup lang="ts">
 import { ref, computed, onMounted } from 'vue'
-import { mockVolunteers, mockShifts, mockIncidents } from '../../stores/mockVolunteerData'
+import { mockShifts, mockIncidents } from '../../stores/mockVolunteerData'
 import VolunteerList from '../../components/admin/volunteers/VolunteerList.vue'
 import VolunteerDetail from '../../components/admin/volunteers/VolunteerDetail.vue'
+import VolunteerEditor from '../../components/admin/volunteers/VolunteerEditor.vue'
+
+// Stores
+const allVolunteers = ref<IVolunteer[]>([])
+const isLoading = ref(true)
+
+// Fetch Volunteers
+async function fetchVolunteers() {
+  isLoading.value = true
+  try {
+    const res = await fetch('/v1/volunteers?page_size=100')
+    if (res.ok) {
+      const data = await res.json()
+      // Backend returns { volunteers: [], metadata: {} }
+      // Map backend fields to frontend interface if needed
+      // Currently backend uses camelCase JSON tags so it should match mostly
+      allVolunteers.value = data.data.volunteers || []
+    }
+  } catch (err) {
+    console.error('Failed to fetch volunteers', err)
+  } finally {
+    isLoading.value = false
+  }
+}
 
 const selectedVolunteerId = ref<string | null>(null)
 
 const selectedVolunteer = computed(() => {
-  return mockVolunteers.find((v) => v.id === selectedVolunteerId.value) || null
+  return (
+    allVolunteers.value.find(
+      (v) => v.id == selectedVolunteerId.value /* loose match for string/int ids */,
+    ) || null
+  )
 })
 
-onMounted(() => {
-  if (!selectedVolunteerId.value) {
-    const defaults = mockVolunteers
-      .filter((v) => v.status === 'active' || v.status === 'pending')
-      .sort((a, b) => {
-        if (b.reliabilityScore !== a.reliabilityScore)
-          return b.reliabilityScore - a.reliabilityScore
-        return a.firstName.localeCompare(b.firstName)
-      })
+onMounted(async () => {
+  await fetchVolunteers()
 
-    if (defaults.length > 0) {
-      selectedVolunteerId.value = defaults[0].id
-    }
+  if (!selectedVolunteerId.value && allVolunteers.value.length > 0) {
+    // Default select first (logic similar to before but simpler)
+    selectedVolunteerId.value = allVolunteers.value[0].id
   }
 })
 
+const allShifts = ref([...mockShifts])
+
 const selectedShifts = computed(() => {
   if (!selectedVolunteerId.value) return []
-  return mockShifts.filter((s) => s.volunteerId === selectedVolunteerId.value)
+  // Mock shifts likely use string IDs, our new IDs might be numbers or strings
+  // For now, loose equality or cast might be needed depending on type.
+  return allShifts.value.filter((s) => s.volunteerId == selectedVolunteerId.value)
 })
 
 const selectedIncidents = computed(() => {
   if (!selectedVolunteerId.value) return []
   return mockIncidents
-    .filter((i) => i.volunteerId === selectedVolunteerId.value)
+    .filter((i) => i.volunteerId == selectedVolunteerId.value)
     .sort((a, b) => b.date.localeCompare(a.date))
 })
+
+const isCreating = ref(false)
+
+function handleOpenCreate() {
+  isCreating.value = true
+}
+
+async function handleCreateSave(newVolunteer: any) {
+  try {
+    const res = await fetch('/v1/volunteers', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(newVolunteer),
+    })
+
+    if (res.ok) {
+      await fetchVolunteers()
+      const data = await res.json()
+      if (data.data && data.data.volunteer) {
+        selectedVolunteerId.value = data.data.volunteer.id
+      }
+      isCreating.value = false
+    } else {
+      const errText = await res.text()
+      console.error('Create failed:', res.status, errText)
+      alert(`Failed to create volunteer: ${errText}`)
+    }
+  } catch (e) {
+    console.error(e)
+    alert('Error creating volunteer')
+  }
+}
+
+async function handleUpdateSave(updatedData: any) {
+  if (!selectedVolunteerId.value) return
+
+  try {
+    const res = await fetch(`/v1/volunteers/${selectedVolunteerId.value}`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(updatedData),
+    })
+
+    if (res.ok) {
+      await fetchVolunteers()
+      // No need to reset selectedVolunteerId as it persists
+    } else {
+      const errText = await res.text()
+      console.error('Update failed:', res.status, errText)
+      alert(`Failed to update volunteer: ${errText}`)
+    }
+  } catch (e) {
+    console.error('Error updating volunteer', e)
+    alert('Error updating volunteer')
+  }
+}
+
+function handleAddShift(shiftData: any) {
+  if (!selectedVolunteerId.value) return
+
+  // Basic recurring logic for prototype
+  const newShifts = []
+  const baseDate = new Date(shiftData.date)
+
+  if (shiftData.isRecurring) {
+    // Generate shifts for next 3 months or until end date
+    const endDate = shiftData.endDate
+      ? new Date(shiftData.endDate)
+      : new Date(baseDate.getTime() + 90 * 24 * 60 * 60 * 1000)
+
+    let currentDate = new Date(baseDate)
+    while (currentDate <= endDate) {
+      newShifts.push({
+        id: `new-${Date.now()}-${Math.random()}`,
+        volunteerId: selectedVolunteerId.value,
+        date: currentDate.toISOString().split('T')[0],
+        startTime: shiftData.startTime,
+        endTime: shiftData.endTime,
+        role: shiftData.role,
+        status: 'scheduled',
+      })
+
+      // Increment based on frequency
+      if (shiftData.frequency === 'weekly') {
+        currentDate.setDate(currentDate.getDate() + 7)
+      } else if (shiftData.frequency === 'biweekly') {
+        currentDate.setDate(currentDate.getDate() + 14)
+      } else if (shiftData.frequency === 'monthly') {
+        currentDate.setMonth(currentDate.getMonth() + 1)
+      } else {
+        break // Safety
+      }
+    }
+  } else {
+    // Single shift
+    newShifts.push({
+      id: `new-${Date.now()}`,
+      volunteerId: selectedVolunteerId.value,
+      date: shiftData.date,
+      startTime: shiftData.startTime,
+      endTime: shiftData.endTime,
+      role: shiftData.role,
+      status: 'scheduled',
+    })
+  }
+
+  allShifts.value.push(...newShifts)
+}
 </script>
 
 <template>
@@ -44,10 +177,20 @@ const selectedIncidents = computed(() => {
     <!-- Sidebar -->
     <aside class="sidebar">
       <VolunteerList
-        :selectedId="selectedVolunteerId"
+        :volunteers="allVolunteers"
+        :selectedId="String(selectedVolunteerId)"
         @select="(vol) => (selectedVolunteerId = vol.id)"
+        @add="handleOpenCreate"
       />
     </aside>
+
+    <!-- Create Modal/Drawer -->
+    <VolunteerEditor
+      :volunteer="null"
+      :isOpen="isCreating"
+      @close="isCreating = false"
+      @save="handleCreateSave"
+    />
 
     <!-- Main Content -->
     <main class="main-content">
@@ -56,6 +199,8 @@ const selectedIncidents = computed(() => {
         :volunteer="selectedVolunteer"
         :shifts="selectedShifts"
         :incidents="selectedIncidents"
+        @add-shift="handleAddShift"
+        @update="handleUpdateSave"
       />
 
       <div v-else class="empty-selection">

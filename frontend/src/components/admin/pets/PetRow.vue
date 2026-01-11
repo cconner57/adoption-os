@@ -2,6 +2,7 @@
 import { computed } from 'vue'
 import type { IPet } from '../../../models/common'
 import { useRouter } from 'vue-router'
+import { formatDate, calculateAge } from '../../../utils/date'
 
 const props = defineProps<{
   pet: IPet
@@ -36,30 +37,7 @@ function getStatusColor(status: string) {
 }
 
 function formatDoB(dateString?: string | null) {
-  if (!dateString) return '-'
-  return new Date(dateString).toLocaleDateString('en-US', {
-    year: 'numeric',
-    month: 'short',
-    day: 'numeric',
-  })
-}
-
-function calculateAge(dateOfBirth?: string | null) {
-  if (!dateOfBirth) return '-'
-  const birthDate = new Date(dateOfBirth)
-  const today = new Date()
-  let years = today.getFullYear() - birthDate.getFullYear()
-  let months = today.getMonth() - birthDate.getMonth()
-  if (months < 0 || (months === 0 && today.getDate() < birthDate.getDate())) {
-    years--
-    months += 12
-  }
-  if (today.getDate() < birthDate.getDate()) months--
-
-  if (years === 0 && months === 0) return '< 1 mo'
-  if (years === 0) return `${months} mo`
-  if (months === 0) return `${years} yr`
-  return `${years} yr ${months} mo`
+  return formatDate(dateString)
 }
 
 function formatCurrency(amount?: number | null) {
@@ -141,7 +119,7 @@ const vaccineSummary = computed(() => {
         {{ pet.name }}
       </router-link>
     </td>
-    <td v-if="visibleColumns.breed">{{ pet.physical.breed || 'Unknown' }}</td>
+    <td v-if="visibleColumns.breed" class="capitalize">{{ pet.species }}</td>
     <td v-if="visibleColumns.sex" class="capitalize">{{ pet.sex }}</td>
     <td v-if="visibleColumns.sn" class="text-center">
       <span v-if="pet.medical?.spayedOrNeutered" title="Spayed/Neutered">✅</span>
@@ -215,12 +193,15 @@ const vaccineSummary = computed(() => {
     <td :colspan="100">
       <div class="expanded-content">
         <div class="details-grid">
-          <!-- Basic Info -->
           <div class="detail-section">
             <h4>Basic Info</h4>
             <div class="detail-item">
               <span class="label">Breed:</span>
               <span class="value">{{ pet.physical.breed || 'Unknown' }}</span>
+            </div>
+            <div class="detail-item" v-if="pet.litterName">
+              <span class="label">Litter:</span>
+              <span class="value">{{ pet.litterName }}</span>
             </div>
             <div class="detail-item">
               <span class="label">Color:</span>
@@ -235,8 +216,22 @@ const vaccineSummary = computed(() => {
               <span class="value capitalize">{{ pet.physical.ageGroup }}</span>
             </div>
             <div class="detail-item">
-              <span class="label">Size:</span>
-              <span class="value capitalize">{{ pet.physical.size }}</span>
+              <span class="label">Birth Date:</span>
+              <span class="value">
+                {{ formatDoB(pet.physical.dateOfBirth) }}
+                <span class="text-muted" v-if="pet.physical.dateOfBirth">
+                  ({{ calculateAge(pet.physical.dateOfBirth) }})
+                </span>
+              </span>
+            </div>
+            <div class="detail-item">
+              <span class="label">Size / Weight:</span>
+              <span class="value capitalize">
+                {{ pet.physical.size || '-' }}
+                <span v-if="pet.physical.currentWeight">
+                  / {{ pet.physical.currentWeight }} lbs
+                </span>
+              </span>
             </div>
             <div class="detail-item">
               <span class="label">Coat:</span>
@@ -244,39 +239,169 @@ const vaccineSummary = computed(() => {
             </div>
           </div>
 
+          <!-- Behavior & Compatibility -->
+          <div class="detail-section">
+            <h4>Behavior & Compatibility</h4>
+            <div class="detail-item">
+              <span class="label">Energy Level:</span>
+              <span class="value capitalize">{{ pet.behavior?.energyLevel || '-' }}</span>
+            </div>
+            <div class="detail-item">
+              <span class="label">House Trained:</span>
+              <span class="value">{{ pet.behavior?.isHouseTrained ? 'Yes' : 'No' }}</span>
+            </div>
+            <div class="detail-item compatibility-grid">
+              <span class="label">Good With:</span>
+              <div class="comp-tags">
+                <span class="tag" :class="pet.behavior?.isGoodWithKids ? 'yes' : 'no'">Kids</span>
+                <span class="tag" :class="pet.behavior?.isGoodWithCats ? 'yes' : 'no'">Cats</span>
+                <span class="tag" :class="pet.behavior?.isGoodWithDogs ? 'yes' : 'no'">Dogs</span>
+              </div>
+            </div>
+            <div class="detail-item" v-if="pet.behavior?.personalityTags?.length">
+              <span class="label">Personality:</span>
+              <span class="tag-list">
+                <span v-for="tag in pet.behavior.personalityTags" :key="tag" class="p-tag">{{
+                  tag
+                }}</span>
+              </span>
+            </div>
+            <div class="detail-item warning" v-if="pet.behavior?.prefersToBeAlone">
+              <span class="label">Note:</span>
+              <span>Prefers to be alone</span>
+            </div>
+          </div>
+
           <!-- Adoption & Sponsorship -->
           <div class="detail-section">
             <h4>Adoption & Status</h4>
-            <div class="detail-item" v-if="pet.details.status === 'adopted'">
-              <span class="label">Adopted Date:</span>
-              <span class="value">{{ formatDoB(pet.adoption.date) }}</span>
-            </div>
-            <div class="detail-item" v-if="pet.details.status === 'adopted'">
-              <span class="label">Adopted By:</span>
-              <span class="value">{{ pet.adoption.adoptedBy || '-' }}</span>
-            </div>
-            <div class="detail-item" v-if="pet.details.status === 'adopted'">
-              <span class="label">New Name:</span>
-              <span class="value">{{ pet.adoption.newAdoptedName || '-' }}</span>
+            <div class="detail-item">
+              <span class="label">Intake Date:</span>
+              <span class="value">{{ formatDoB(pet.details.intakeDate) }}</span>
             </div>
             <div class="detail-item">
-              <span class="label">Adoption Fee:</span>
-              <span class="value">{{ formatCurrency(pet.adoption.fee) }}</span>
+              <span class="label">Location:</span>
+              <span class="value">{{ pet.details.shelterLocation || '-' }}</span>
             </div>
-            <div class="detail-item" v-if="pet.sponsored.isSponsored">
-              <span class="label">Sponsored By:</span>
-              <span class="value"
-                >{{ pet.sponsored.sponsoredBy }} ({{ formatCurrency(pet.sponsored.amount) }})</span
-              >
+            <div class="detail-item">
+              <span class="label">Environment:</span>
+              <span class="value capitalize">{{ pet.details.environmentType || '-' }}</span>
             </div>
+            <div class="detail-item">
+              <span class="label">Sponsored:</span>
+              <div v-if="pet.sponsored.isSponsored">
+                <span class="value warning">YES</span>
+                <div class="text-muted text-small">
+                  {{ pet.sponsored.sponsoredBy }} ({{ formatCurrency(pet.sponsored.amount) }})
+                </div>
+              </div>
+              <span class="value" v-else>No</span>
+            </div>
+
+            <!-- Profile Settings -->
+            <div class="detail-item mt-2">
+              <span class="label">Profile Visibility:</span>
+              <div class="settings-grid">
+                <div
+                  class="setting-tag"
+                  :class="{ active: pet.profileSettings?.isSpotlightFeatured }"
+                >
+                  Spotlight: {{ pet.profileSettings?.isSpotlightFeatured ? 'ON' : 'OFF' }}
+                </div>
+                <div
+                  class="setting-tag"
+                  :class="{ active: pet.profileSettings?.showMedicalHistory }"
+                >
+                  Public Medical: {{ pet.profileSettings?.showMedicalHistory ? 'ON' : 'OFF' }}
+                </div>
+                <div
+                  class="setting-tag"
+                  :class="{ active: pet.profileSettings?.showAdditionalInformation }"
+                >
+                  Add. Info: {{ pet.profileSettings?.showAdditionalInformation ? 'ON' : 'OFF' }}
+                </div>
+              </div>
+            </div>
+
+            <!-- Adoption Specific -->
+            <template v-if="pet.details.status === 'adopted'">
+              <div class="detail-item">
+                <span class="label">Adopted Date:</span>
+                <span class="value">{{ formatDoB(pet.adoption.date) }}</span>
+              </div>
+              <div class="detail-item">
+                <span class="label">Adopted By:</span>
+                <span class="value">
+                  {{ pet.adoption.adoptedBy || '-' }}
+                  <div v-if="pet.adoption.adopterContactInfo" class="text-muted text-small">
+                    {{ pet.adoption.adopterContactInfo.email }}
+                    <br />
+                    {{ pet.adoption.adopterContactInfo.phone }}
+                  </div>
+                </span>
+              </div>
+              <div class="detail-item">
+                <span class="label">Adoption Fee:</span>
+                <span class="value">{{ formatCurrency(pet.adoption.fee) }}</span>
+              </div>
+              <div class="detail-item" v-if="pet.adoption.surveyCompleted !== undefined">
+                <span class="label">Survey:</span>
+                <span class="value">{{
+                  pet.adoption.surveyCompleted ? 'Completed' : 'Pending'
+                }}</span>
+              </div>
+            </template>
+
+            <!-- Foster Specific -->
+            <template v-if="pet.details.status === 'foster'">
+              <div class="detail-item">
+                <span class="label">Foster Parent:</span>
+                <span class="value">
+                  {{ pet.foster.parentName || '-' }}
+                  <div v-if="pet.foster.fosterContactInfo" class="text-muted text-small">
+                    {{ pet.foster.fosterContactInfo.email }}
+                  </div>
+                </span>
+              </div>
+              <div class="detail-item">
+                <span class="label">Dates:</span>
+                <span class="value">
+                  {{ formatDoB(pet.foster.startDate) }} -
+                  {{ pet.foster.endDate ? formatDoB(pet.foster.endDate) : 'Present' }}
+                </span>
+              </div>
+            </template>
           </div>
 
           <!-- Medical Info -->
           <div class="detail-section">
             <h4>Medical Snapshot</h4>
             <div class="detail-item">
+              <span class="label">Spayed/Neutered:</span>
+              <span class="value">
+                {{ pet.medical.spayedOrNeutered ? 'Yes' : 'No' }}
+                <span class="text-muted" v-if="pet.medical.spayedOrNeuteredDate">
+                  ({{ formatDoB(pet.medical.spayedOrNeuteredDate) }})
+                </span>
+              </span>
+            </div>
+            <div class="detail-item">
+              <span class="label">Microchip:</span>
+              <span class="value mono-text" v-if="pet.medical?.microchip?.microchipID">
+                {{ pet.medical.microchip.microchipID }}
+                <span class="text-muted" v-if="pet.medical.microchip.microchipCompany">
+                  ({{ pet.medical.microchip.microchipCompany }})
+                </span>
+              </span>
+              <span class="value" v-else>-</span>
+            </div>
+            <div class="detail-item">
               <span class="label">Health Concerns:</span>
-              <span class="value" :class="{ warning: pet.medical.healthConcerns?.length }">
+              <span
+                class="value"
+                :class="{ warning: pet.medical.healthConcerns?.length }"
+                style="text-transform: capitalize"
+              >
                 {{ formatList(pet.medical.healthConcerns) }}
               </span>
             </div>
@@ -287,6 +412,10 @@ const vaccineSummary = computed(() => {
             <div class="detail-item">
               <span class="label">Vaccinations:</span>
               <span class="value text-small">{{ vaccineSummary }}</span>
+            </div>
+            <div class="detail-item" v-if="pet.medical.surgeries?.length">
+              <span class="label">Surgeries:</span>
+              <span class="value">{{ pet.medical.surgeries.map((s) => s.name).join(', ') }}</span>
             </div>
           </div>
 
@@ -314,9 +443,40 @@ const vaccineSummary = computed(() => {
           <!-- Additional Notes -->
           <div class="detail-section">
             <h4>Descriptions</h4>
-            <p class="description-text">
-              {{ pet.descriptions.primary || 'No primary description available.' }}
-            </p>
+            <div class="desc-group">
+              <span class="label">Origin</span>
+              <p class="description-text italic line-clamp-5">
+                {{ pet.descriptions.origin ? `"${pet.descriptions.origin}"` : '-' }}
+              </p>
+            </div>
+            <div class="desc-group">
+              <span class="label">Primary Bio</span>
+              <p class="description-text line-clamp-5">
+                {{ pet.descriptions.primary || '-' }}
+              </p>
+            </div>
+            <div class="desc-group">
+              <span class="label">Spotlight</span>
+              <p class="description-text line-clamp-5">
+                {{ pet.descriptions.spotlight ? `"${pet.descriptions.spotlight}"` : '-' }}
+              </p>
+            </div>
+
+            <div class="desc-group">
+              <span class="label">Health Summary</span>
+              <p class="description-text line-clamp-5">
+                {{ pet.behavior?.healthSummary || '-' }}
+              </p>
+            </div>
+            <div class="desc-group">
+              <span class="label">Additional Info</span>
+              <ul class="info-list" v-if="pet.descriptions.additionalInformation?.length">
+                <li v-for="info in pet.descriptions.additionalInformation" :key="info">
+                  {{ info }}
+                </li>
+              </ul>
+              <p class="description-text" v-else>-</p>
+            </div>
           </div>
         </div>
       </div>
@@ -332,7 +492,7 @@ const vaccineSummary = computed(() => {
 }
 
 .pet-row.even-row {
-  background-color: hsl(from var(--color-neutral) h s 98%);
+  background-color: hsl(from var(--color-neutral) h s 94%);
 }
 
 .pet-row:hover {
@@ -367,6 +527,7 @@ td {
   padding: 24px;
   border-top: 1px dashed var(--border-color);
   background-color: hsl(from var(--color-neutral) h s 98%);
+  border-bottom: 2px solid var(--border-color); /* Added bottom border */
 }
 
 .details-grid {
@@ -415,6 +576,101 @@ td {
   font-size: 0.9rem;
   color: var(--text-primary);
   line-height: 1.5;
+  margin-top: 2px;
+}
+
+.desc-group {
+  margin-bottom: 12px;
+}
+
+.comp-tags {
+  display: flex;
+  gap: 4px;
+  flex-wrap: wrap;
+  margin-top: 4px;
+}
+.tag {
+  font-size: 0.75rem;
+  padding: 2px 6px;
+  border-radius: 4px;
+  background: #f1f5f9;
+  color: #94a3b8;
+  border: 1px solid #e2e8f0;
+}
+.tag.yes {
+  background: #dcfce7;
+  color: #166534;
+  border-color: #bbf7d0;
+}
+.tag.no {
+  background: #fee2e2;
+  color: #991b1b;
+  border-color: #fecaca;
+  text-decoration: line-through;
+  opacity: 0.7;
+}
+
+.tag-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 4px;
+}
+.p-tag {
+  background: hsl(from var(--color-secondary) h s 96%);
+  color: var(--color-secondary);
+  padding: 2px 8px;
+  border-radius: 12px;
+  font-size: 0.8rem;
+  font-weight: 500;
+}
+
+.info-list {
+  margin: 4px 0 0 16px;
+  padding: 0;
+  font-size: 0.9rem;
+  color: var(--text-primary);
+}
+.italic {
+  font-style: italic;
+}
+
+.line-clamp-5 {
+  display: -webkit-box;
+  -webkit-line-clamp: 5;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.mt-2 {
+  margin-top: 8px;
+}
+
+.settings-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-top: 4px;
+  align-items: flex-start;
+}
+
+.setting-tag {
+  font-size: 0.7rem;
+  padding: 2px 6px;
+  border-radius: 4px;
+  background: #f1f5f9;
+  color: #475569; /* Darker slate for better contrast */
+  border: 1px solid #cbd5e1; /* Darker border */
+  white-space: nowrap;
+}
+
+.setting-tag.active {
+  background: hsl(from var(--color-secondary) h s 96%);
+  color: var(--color-secondary);
+  border-color: #bbf7d0; /* Slight green tint for active border? Or match brand */
+  border-color: hsl(from var(--color-secondary) h s 90%);
+  font-weight: 500;
 }
 
 /* Inherited styles that need to be scoped here or global */
@@ -529,5 +785,9 @@ td {
 .pet-link:hover {
   color: var(--color-secondary);
   text-decoration: underline;
+}
+
+.capitalize {
+  text-transform: capitalize;
 }
 </style>

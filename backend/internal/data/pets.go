@@ -439,7 +439,8 @@ func (m PetModel) Update(p *Pet) error {
 			photos = $12,
 			profile_settings = $13,
 			status = $14,
-			litter_name = $16
+			litter_name = $16,
+			species = $17
 		WHERE id = $15
 	`
 
@@ -485,9 +486,67 @@ func (m PetModel) Update(p *Pet) error {
 		status,       // $14
 		p.ID,         // $15
 		p.LitterName, // $16
+		p.Species,    // $17
 	}
 
 	_, err := m.DB.ExecContext(ctx, query, args...)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (m PetModel) Insert(p *Pet) error {
+	if m.DB == nil {
+		return fmt.Errorf("database connection not available")
+	}
+
+	query := `
+		INSERT INTO pets (
+			name, sex, physical, behavior, medical, descriptions, 
+			details, adoption, foster, returned, sponsored, photos, profile_settings, 
+			status, litter_name, species, created_at, updated_at
+		)
+		VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, NOW(), NOW())
+		RETURNING id, created_at, updated_at
+	`
+
+	// Status fallback
+	var detailsMap map[string]interface{}
+	status := "available"
+	if len(p.Details) > 0 {
+		if err := json.Unmarshal(p.Details, &detailsMap); err == nil {
+			if s, ok := detailsMap["status"].(string); ok {
+				status = s
+			}
+		}
+	}
+
+	args := []interface{}{
+		p.Name,
+		p.Sex,
+		p.Physical,
+		p.Behavior,
+		p.Medical,
+		p.Descriptions,
+		p.Details,
+		p.Adoption,
+		p.Foster,
+		p.Returned,
+		p.Sponsored,
+		p.Photos,
+		p.ProfileSettings,
+		status,
+		p.LitterName,
+		p.Species,
+	}
+
+	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
+	defer cancel()
+
+	// Scan the generated ID and timestamps back into the struct
+	err := m.DB.QueryRowContext(ctx, query, args...).Scan(&p.ID, &p.CreatedAt, &p.UpdatedAt)
 	if err != nil {
 		return err
 	}

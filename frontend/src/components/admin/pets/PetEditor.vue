@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { ref, watch } from 'vue'
 import type { IPet } from '../../../models/common'
+import { SidebarNav } from '../../common/ui'
 import PetEditorBasic from './editor/PetEditorBasic.vue'
 import PetEditorPhysical from './editor/PetEditorPhysical.vue'
 import PetEditorBehavior from './editor/PetEditorBehavior.vue'
@@ -246,18 +247,17 @@ const tabs = [
       </div>
 
       <div class="drawer-body">
-        <div class="sidebar-nav">
-          <button
-            v-for="tab in tabs"
-            :key="tab.id"
-            class="tab-btn"
-            :class="{ active: activeTab === tab.id }"
-            @click="activeTab = tab.id"
-          >
-            <span class="tab-icon">{{ tab.icon }}</span>
-            {{ tab.label }}
-          </button>
-        </div>
+        <SidebarNav
+          :items="tabs"
+          v-model="activeTab"
+          variant="editor"
+          style="
+            width: 200px;
+            background: hsl(from var(--color-neutral) h s 98%);
+            border-right: 1px solid var(--border-color);
+            padding-top: 16px;
+          "
+        />
 
         <div class="tab-content" v-if="formData">
           <form @submit.prevent>
@@ -356,52 +356,6 @@ const tabs = [
   overflow: hidden; /* Hide outer overflow, inner sections scroll */
   display: flex;
   flex-direction: row; /* Horizontal Layout */
-}
-
-/* SIDEBAR NAV */
-.sidebar-nav {
-  width: 200px;
-  background: hsl(from var(--color-neutral) h s 98%);
-  display: flex;
-  flex-direction: column;
-  padding: 16px 0;
-  border-right: 1px solid var(--border-color);
-  overflow-y: auto;
-  flex-shrink: 0;
-}
-
-.tab-btn {
-  padding: 12px 24px;
-  background: none;
-  border: none;
-  border-left: 3px solid transparent;
-  cursor: pointer;
-  font-weight: 500;
-  color: hsl(from var(--color-neutral) h s 50%);
-  text-align: left;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  transition: all 0.2s;
-  font-size: 0.95rem;
-
-  &.active {
-    color: var(--color-primary);
-    background: hsla(from var(--color-primary) h s l / 0.05);
-    border-left-color: var(--color-primary);
-    font-weight: 600;
-  }
-
-  &:hover:not(.active) {
-    background: hsl(from var(--color-neutral) h s 95%);
-    color: var(--text-primary);
-  }
-
-  .tab-icon {
-    font-size: 1.1rem;
-    width: 24px;
-    text-align: center;
-  }
 }
 
 .tab-content {

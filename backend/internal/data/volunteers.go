@@ -123,3 +123,208 @@ func ValidateVolunteerApplication(v *validator.Validator, application *Volunteer
 		v.Check(application.ParentSignatureData != nil && *application.ParentSignatureData != "", "parentSignatureData", "must be provided for applicants under 21")
 	}
 }
+
+// --- Active Volunteer Management ---
+
+type Volunteer struct {
+	ID                    int64     `json:"id"`
+	CreatedAt             time.Time `json:"createdAt"`
+	UpdatedAt             time.Time `json:"updatedAt"`
+	FirstName             string    `json:"firstName"`
+	LastName              string    `json:"lastName"`
+	Email                 string    `json:"email"`
+	Phone                 string    `json:"phone"`
+	Address               string    `json:"address"`
+	City                  string    `json:"city"`
+	Zip                   string    `json:"zip"`
+	Role                  string    `json:"role"`
+	Status                string    `json:"status"`
+	Bio                   string    `json:"bio"`
+	PhotoURL              string    `json:"photoUrl"`
+	ReliabilityScore      int       `json:"reliabilityScore"`
+	TotalHours            int       `json:"totalHours"`
+	Streak                int       `json:"streak"`
+	JoinDate              string    `json:"joinDate"` // Stored as date, simplified to string for API
+	Allergies             bool      `json:"allergies"`
+	Skills                []string  `json:"skills"`
+	PositionPreferences   []string  `json:"positionPreferences"`
+	Availability          []string  `json:"availability"`
+	Badges                []string  `json:"badges"`
+	Birthday              string    `json:"birthday"`
+	EmergencyContactName  string    `json:"emergencyContactName"`
+	EmergencyContactPhone string    `json:"emergencyContactPhone"`
+	InterestReason        string    `json:"interestReason"`
+	VolunteerExperience   string    `json:"volunteerExperience"`
+	Version               int       `json:"version"`
+}
+
+func (m VolunteerModel) InsertGetId(v *Volunteer) error {
+	query := `
+		INSERT INTO volunteers (
+			first_name, last_name, email, phone, address, city, zip, role, status,
+			bio, photo_url, reliability_score, total_hours, streak, join_date, allergies,
+			skills, position_preferences, availability, badges,
+			birthday, emergency_contact_name, emergency_contact_phone, interest_reason, volunteer_experience
+		)
+		VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20, $21, $22, $23, $24, $25)
+		RETURNING id, created_at, updated_at, version`
+
+	args := []any{
+		v.FirstName, v.LastName, v.Email, v.Phone, v.Address, v.City, v.Zip, v.Role, v.Status,
+		v.Bio, v.PhotoURL, v.ReliabilityScore, v.TotalHours, v.Streak, v.JoinDate, v.Allergies,
+		pq.Array(v.Skills), pq.Array(v.PositionPreferences), pq.Array(v.Availability), pq.Array(v.Badges),
+		v.Birthday, v.EmergencyContactName, v.EmergencyContactPhone, v.InterestReason, v.VolunteerExperience,
+	}
+
+	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
+	defer cancel()
+
+	return m.DB.QueryRowContext(ctx, query, args...).Scan(&v.ID, &v.CreatedAt, &v.UpdatedAt, &v.Version)
+}
+
+func (m VolunteerModel) GetAll(firstName string, lastName string, role string, STATUS string, filters Filters) ([]*Volunteer, Metadata, error) {
+	// Basic implementation, filters to be added specifically if needed
+	query := `
+		SELECT count(*) OVER(), id, created_at, updated_at, first_name, last_name, email, phone, address, city, zip, role, status,
+		bio, photo_url, reliability_score, total_hours, streak, join_date, allergies, skills, position_preferences, availability, badges,
+		COALESCE(TO_CHAR(birthday, 'YYYY-MM-DD'), '') as birthday, emergency_contact_name, emergency_contact_phone, interest_reason, volunteer_experience, version
+		FROM volunteers
+		WHERE (to_tsvector('simple', first_name) @@ plainto_tsquery('simple', $1) OR $1 = '')
+		ORDER BY id DESC`
+
+	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
+	defer cancel()
+
+	args := []any{firstName} // Simplified for now
+
+	rows, err := m.DB.QueryContext(ctx, query, args...)
+	if err != nil {
+		return nil, Metadata{}, err
+	}
+	defer rows.Close()
+
+	totalRecords := 0
+	volunteers := []*Volunteer{}
+
+	for rows.Next() {
+		var v Volunteer
+		var joinDate time.Time // Scan as time, format later
+
+		err := rows.Scan(
+			&totalRecords,
+			&v.ID,
+			&v.CreatedAt,
+			&v.UpdatedAt,
+			&v.FirstName,
+			&v.LastName,
+			&v.Email,
+			&v.Phone,
+			&v.Address,
+			&v.City,
+			&v.Zip,
+			&v.Role,
+			&v.Status,
+			&v.Bio,
+			&v.PhotoURL,
+			&v.ReliabilityScore,
+			&v.TotalHours,
+			&v.Streak,
+			&joinDate,
+			&v.Allergies,
+			pq.Array(&v.Skills),
+			pq.Array(&v.PositionPreferences),
+			pq.Array(&v.Availability),
+			pq.Array(&v.Badges),
+			&v.Birthday,
+			&v.EmergencyContactName,
+			&v.EmergencyContactPhone,
+			&v.InterestReason,
+			&v.VolunteerExperience,
+			&v.Version,
+		)
+		if err != nil {
+			return nil, Metadata{}, err
+		}
+		v.JoinDate = joinDate.Format("2006-01-02")
+		volunteers = append(volunteers, &v)
+	}
+
+	if err = rows.Err(); err != nil {
+		return nil, Metadata{}, err
+	}
+
+	metadata := calculateMetadata(totalRecords, filters.Page, filters.PageSize)
+
+	return volunteers, metadata, nil
+}
+
+func (m VolunteerModel) Get(id int64) (*Volunteer, error) {
+	query := `
+		SELECT id, created_at, updated_at, first_name, last_name, email, phone, address, city, zip, role, status,
+		bio, photo_url, reliability_score, total_hours, streak, join_date, allergies, skills, position_preferences, availability, badges,
+		COALESCE(TO_CHAR(birthday, 'YYYY-MM-DD'), '') as birthday, emergency_contact_name, emergency_contact_phone, interest_reason, volunteer_experience, version
+		FROM volunteers
+		WHERE id = $1`
+
+	var v Volunteer
+	var joinDate time.Time
+
+	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
+	defer cancel()
+
+	err := m.DB.QueryRowContext(ctx, query, id).Scan(
+		&v.ID, &v.CreatedAt, &v.UpdatedAt, &v.FirstName, &v.LastName, &v.Email, &v.Phone,
+		&v.Address, &v.City, &v.Zip, &v.Role, &v.Status,
+		&v.Bio, &v.PhotoURL, &v.ReliabilityScore, &v.TotalHours, &v.Streak,
+		&joinDate, &v.Allergies, pq.Array(&v.Skills), pq.Array(&v.PositionPreferences), pq.Array(&v.Availability), pq.Array(&v.Badges),
+		&v.Birthday, &v.EmergencyContactName, &v.EmergencyContactPhone, &v.InterestReason, &v.VolunteerExperience,
+		&v.Version,
+	)
+
+	if err != nil {
+		switch {
+		case err == sql.ErrNoRows:
+			return nil, ErrRecordNotFound
+		default:
+			return nil, err
+		}
+	}
+	v.JoinDate = joinDate.Format("2006-01-02")
+	return &v, nil
+}
+
+func (m VolunteerModel) Update(v *Volunteer) error {
+	query := `
+		UPDATE volunteers
+		SET first_name = $1, last_name = $2, email = $3, phone = $4, address = $5, city = $6, zip = $7,
+		    role = $8, status = $9, bio = $10, photo_url = $11, reliability_score = $12, total_hours = $13,
+		    streak = $14, join_date = $15, allergies = $16, skills = $17, position_preferences = $18,
+		    availability = $19, badges = $20, birthday = $21, emergency_contact_name = $22,
+			emergency_contact_phone = $23, interest_reason = $24, volunteer_experience = $25,
+			updated_at = NOW(), version = version + 1
+		WHERE id = $26 AND version = $27
+		RETURNING updated_at, version`
+
+	args := []any{
+		v.FirstName, v.LastName, v.Email, v.Phone, v.Address, v.City, v.Zip,
+		v.Role, v.Status, v.Bio, v.PhotoURL, v.ReliabilityScore, v.TotalHours,
+		v.Streak, v.JoinDate, v.Allergies, pq.Array(v.Skills), pq.Array(v.PositionPreferences),
+		pq.Array(v.Availability), pq.Array(v.Badges),
+		v.Birthday, v.EmergencyContactName, v.EmergencyContactPhone, v.InterestReason, v.VolunteerExperience,
+		v.ID, v.Version,
+	}
+
+	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
+	defer cancel()
+
+	err := m.DB.QueryRowContext(ctx, query, args...).Scan(&v.UpdatedAt, &v.Version)
+	if err != nil {
+		switch {
+		case err == sql.ErrNoRows:
+			return ErrEditConflict
+		default:
+			return err
+		}
+	}
+	return nil
+}

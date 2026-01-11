@@ -13,10 +13,27 @@ const formData = computed({
   get: () => props.modelValue,
   set: (val) => emit('update:modelValue', val),
 })
+
+const additionalInfoString = computed({
+  get: () => {
+    return formData.value.descriptions?.additionalInformation?.join('\n') || ''
+  },
+  set: (val: string) => {
+    if (!formData.value.descriptions) return
+    formData.value.descriptions.additionalInformation = val
+      .split('\n')
+      .map((s) => s.trim())
+      .filter(Boolean)
+  },
+})
 </script>
 
 <style scoped>
 @import './form.css';
+
+.form-section {
+  gap: 12px;
+}
 </style>
 
 <template>
@@ -65,8 +82,16 @@ const formData = computed({
       <InputTextArea
         label="Spotlight Blurb (Short)"
         v-model="formData.descriptions.spotlight"
-        placeholder="Catchy one-liner..."
         :maxChars="100"
+      />
+    </div>
+    <div class="form-group" v-if="formData.descriptions">
+      <InputTextArea
+        label="Additional Information"
+        v-model="additionalInfoString"
+        placeholder="Any extra details (one per line)..."
+        :rows="4"
+        :maxChars="1000"
       />
     </div>
   </div>

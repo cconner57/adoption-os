@@ -2,12 +2,61 @@
 import { ref, computed } from 'vue'
 import type { IVolunteer, IShift, IIncident } from '../../../stores/mockVolunteerData'
 import { availableBadges } from '../../../stores/mockVolunteerData'
+import { Tag, Toast, Button } from '../../common/ui'
+
+import VolunteerEditor from './VolunteerEditor.vue'
+import ShiftForm from './ShiftForm.vue'
+import { useAuthStore } from '../../../stores/auth'
+import { formatPhoneNumber } from '../../../utils/formatters'
+import { formatDate } from '../../../utils/date'
 
 const props = defineProps<{
   volunteer: IVolunteer
   shifts: IShift[]
   incidents: IIncident[]
 }>()
+
+const authStore = useAuthStore()
+const canEdit = computed(() => {
+  if (!authStore.user?.Role) return true
+  return ['admin', 'super_admin'].includes(authStore.user.Role.toLowerCase())
+})
+
+const isEditorOpen = ref(false)
+const isAddingShift = ref(false)
+const showToast = ref(false)
+
+const emit = defineEmits(['add-shift', 'update'])
+
+function openEditor() {
+  isEditorOpen.value = true
+}
+
+function toggleAddShift() {
+  isAddingShift.value = !isAddingShift.value
+}
+
+function handleShiftSave(shiftData: any) {
+  emit('add-shift', shiftData)
+  isAddingShift.value = false
+  showToast.value = true
+}
+
+function handleSave(updatedData: Partial<IVolunteer>) {
+  emit('update', updatedData)
+  isEditorOpen.value = false
+  // Toast handled by parent or shown here? Maybe parent.
+  // actually, if we want to show success here, we can, but persistence is up to parent.
+}
+
+function handleArchive() {
+  if (confirm('Are you sure you want to archive this volunteer?')) {
+    // In real app, call API
+    console.log('Archiving volunteer', props.volunteer.id)
+    isEditorOpen.value = false
+    // Show a different toast or redirect
+  }
+}
 
 const activeTab = ref<'overview' | 'schedule' | 'incidents' | 'performance' | 'suggestions'>(
   'overview',
@@ -99,17 +148,6 @@ const suggestions = computed(() => {
   return list
 })
 
-// Updated to include full year
-function formatDate(dateStr: string) {
-  if (!dateStr) return '-'
-  return new Date(dateStr).toLocaleDateString('en-US', {
-    weekday: 'short',
-    month: 'short',
-    day: 'numeric',
-    year: 'numeric',
-  })
-}
-
 function getShiftStatusColor(status: string) {
   switch (status) {
     case 'all_good':
@@ -128,6 +166,14 @@ function getShiftStatusColor(status: string) {
 
 <template>
   <div class="vol-detail">
+    <VolunteerEditor
+      :volunteer="volunteer"
+      :isOpen="isEditorOpen"
+      @close="isEditorOpen = false"
+      @save="handleSave"
+      @archive="handleArchive"
+    />
+    <Toast :show="showToast" message="Updated successfully" @close="showToast = false" />
     <!-- Header -->
     <header class="detail-header">
       <div class="profile-main">
@@ -143,7 +189,7 @@ function getShiftStatusColor(status: string) {
         </div>
       </div>
       <div class="actions">
-        <button class="action-btn">Edit Profile</button>
+        <button v-if="canEdit" class="action-btn" @click="openEditor">Edit Profile</button>
         <button class="action-btn outline">Message</button>
       </div>
     </header>
@@ -233,7 +279,7 @@ function getShiftStatusColor(status: string) {
             </div>
             <div class="info-row">
               <label>Phone</label>
-              <span>{{ volunteer.phone }}</span>
+              <span>{{ formatPhoneNumber(volunteer.phone) }}</span>
             </div>
             <div class="info-row">
               <label>Address</label>
@@ -249,24 +295,42 @@ function getShiftStatusColor(status: string) {
             <div class="info-row">
               <label>Emergency Contact</label>
               <span
-                >{{ volunteer.emergencyContactName }} ({{ volunteer.emergencyContactPhone }})</span
-              >
+                >{{ volunteer.emergencyContactName }}
+                <span v-if="volunteer.emergencyContactPhone">
+                  ({{ formatPhoneNumber(volunteer.emergencyContactPhone) }})
+                </span>
+              </span>
             </div>
           </div>
 
           <div class="card bio-card">
             <h3>Bio & Skills</h3>
-            <p class="bio">{{ volunteer.bio || 'No bio provided.' }}</p>
+
+            <div class="app-section">
+              <label>Bio:</label>
+              <p class="bio">{{ volunteer.bio || 'No bio provided.' }}</p>
+            </div>
+
+            <div class="app-section">
+              <label>Skills:</label>
+              <div class="skills-list">
+                <Tag
+                  v-for="skill in volunteer.skills"
+                  :key="skill"
+                  color="neutral"
+                  style="margin-right: 8px; margin-bottom: 8px"
+                >
+                  {{ skill }}
+                </Tag>
+                <span v-if="!volunteer.skills.length" class="text-muted">None listed</span>
+              </div>
+            </div>
+
             <div class="info-row">
               <label>Allergies?</label>
               <span :class="{ 'text-red': volunteer.allergies }">{{
                 volunteer.allergies ? 'Yes' : 'No'
               }}</span>
-            </div>
-            <div class="skills-list">
-              <span v-for="skill in volunteer.skills" :key="skill" class="skill-tag">
-                {{ skill }}
-              </span>
             </div>
           </div>
         </div>
@@ -275,6 +339,7 @@ function getShiftStatusColor(status: string) {
         <div class="right-col">
           <div class="card app-card">
             <h3>Application Details</h3>
+
             <div class="app-section">
               <label>Why they joined:</label>
               <p>{{ volunteer.interestReason || 'N/A' }}</p>
@@ -286,20 +351,28 @@ function getShiftStatusColor(status: string) {
             <div class="app-section">
               <label>Position Preferences:</label>
               <div class="pref-list">
-                <span v-for="pref in volunteer.positionPreferences" :key="pref" class="pref-tag">{{
-                  pref
-                }}</span>
+                <Tag
+                  v-for="pref in volunteer.positionPreferences"
+                  :key="pref"
+                  color="neutral"
+                  style="margin-right: 8px; margin-bottom: 8px"
+                >
+                  {{ pref }}
+                </Tag>
               </div>
             </div>
             <div class="app-section">
               <label>Availability:</label>
               <div class="pref-list">
-                <span
+                <Tag
                   v-for="avail in volunteer.availability"
                   :key="avail"
-                  class="pref-tag outline"
-                  >{{ avail }}</span
+                  variant="outline"
+                  color="neutral"
+                  style="margin-right: 8px; margin-bottom: 8px"
                 >
+                  {{ avail }}
+                </Tag>
               </div>
             </div>
             <div class="app-info-row">
@@ -317,7 +390,26 @@ function getShiftStatusColor(status: string) {
       <!-- Schedule Tab -->
       <div v-if="activeTab === 'schedule'" class="schedule-section">
         <div class="section-block">
-          <h3>Upcoming Shifts</h3>
+          <div
+            class="block-header"
+            style="
+              display: flex;
+              justify-content: space-between;
+              align-items: center;
+              margin-bottom: 20px;
+            "
+          >
+            <h3>Upcoming Shifts</h3>
+            <Button
+              size="small"
+              :color="isAddingShift ? 'white' : 'green'"
+              :title="isAddingShift ? 'Cancel' : '+ Add Shift'"
+              @click="toggleAddShift"
+            />
+          </div>
+
+          <ShiftForm v-if="isAddingShift" @close="isAddingShift = false" @save="handleShiftSave" />
+
           <div v-if="upcomingShifts.length === 0" class="empty-msg">
             No upcoming shifts scheduled.
           </div>
@@ -714,8 +806,7 @@ function getShiftStatusColor(status: string) {
   }
 }
 
-.skill-tag,
-.pref-tag {
+.skill-tag {
   display: inline-block;
   background: hsl(from var(--color-neutral) h s 95%);
   padding: 6px 12px;
@@ -724,17 +815,12 @@ function getShiftStatusColor(status: string) {
   margin-right: 8px;
   margin-bottom: 8px;
   color: var(--text-primary);
-
-  &.outline {
-    background: var(--text-inverse);
-    border: 1px solid var(--border-color);
-  }
 }
 
 .bio {
   color: hsl(from var(--color-neutral) h s 50%);
   line-height: 1.5;
-  margin-bottom: 16px;
+  /* margin-bottom handled by app-section */
 }
 
 .app-section {

@@ -1,13 +1,15 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue'
-import { mockVolunteers, type IVolunteer } from '../../../stores/mockVolunteerData'
+import type { IVolunteer } from '../../../stores/mockVolunteerData'
 
 const props = defineProps<{
   selectedId?: string
+  volunteers: IVolunteer[]
 }>()
 
 const emit = defineEmits<{
   (e: 'select', volunteer: IVolunteer): void
+  (e: 'add'): void
 }>()
 
 const searchQuery = ref('')
@@ -15,8 +17,8 @@ const filterType = ref<'active' | 'archived'>('active')
 const sortType = ref<'alphabetical' | 'level'>('level')
 
 const filteredVolunteers = computed(() => {
-  const filtered = mockVolunteers.filter((v) => {
-    const matchesSearch = (`${v.firstName  } ${  v.lastName}`)
+  const filtered = props.volunteers.filter((v) => {
+    const matchesSearch = `${v.firstName} ${v.lastName}`
       .toLowerCase()
       .includes(searchQuery.value.toLowerCase())
 
@@ -52,7 +54,7 @@ function selectVolunteer(vol: IVolunteer) {
     <div class="list-header">
       <div class="title-row">
         <h2>Volunteers</h2>
-        <button class="add-btn">+</button>
+        <button class="add-btn" @click="emit('add')">+</button>
       </div>
 
       <div class="search-box">

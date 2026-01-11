@@ -239,7 +239,7 @@ const handleReset = () => {
           />
         </fieldset>
 
-        <fieldset aria-labelledby="exp" v-scroll-reveal>
+        <fieldset class="volunteer-stack" aria-labelledby="exp" v-scroll-reveal>
           <legend id="exp" class="section-title">Experience & Interests</legend>
 
           <InputTextArea
@@ -384,6 +384,12 @@ const handleReset = () => {
         display: grid;
         grid-template-columns: repeat(2, minmax(0, 1fr));
       }
+    }
+
+    .volunteer-stack {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
     }
   }
 

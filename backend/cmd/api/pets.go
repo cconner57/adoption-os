@@ -82,6 +82,7 @@ func (app *application) updatePet(w http.ResponseWriter, r *http.Request) {
 	var input struct {
 		Name            string          `json:"name"`
 		Sex             string          `json:"sex"`
+		Species         string          `json:"species"`
 		Physical        json.RawMessage `json:"physical"`
 		Behavior        json.RawMessage `json:"behavior"`
 		Medical         json.RawMessage `json:"medical"`
@@ -107,6 +108,7 @@ func (app *application) updatePet(w http.ResponseWriter, r *http.Request) {
 		ID:              id,
 		Name:            input.Name,
 		Sex:             input.Sex,
+		Species:         input.Species,
 		Physical:        input.Physical,
 		Behavior:        input.Behavior,
 		Medical:         input.Medical,
@@ -136,4 +138,66 @@ func (app *application) updatePet(w http.ResponseWriter, r *http.Request) {
 
 	// 5. Return success
 	app.JSONResponse(w, http.StatusOK, map[string]string{"status": "success", "message": "Pet updated successfully"})
+}
+
+func (app *application) createPet(w http.ResponseWriter, r *http.Request) {
+	// 1. Parse Body
+	var input struct {
+		Name            string          `json:"name"`
+		Sex             string          `json:"sex"`
+		Species         string          `json:"species"`
+		Physical        json.RawMessage `json:"physical"`
+		Behavior        json.RawMessage `json:"behavior"`
+		Medical         json.RawMessage `json:"medical"`
+		Descriptions    json.RawMessage `json:"descriptions"`
+		Details         json.RawMessage `json:"details"`
+		Adoption        json.RawMessage `json:"adoption"`
+		Foster          json.RawMessage `json:"foster"`
+		Returned        json.RawMessage `json:"returned"`
+		Sponsored       json.RawMessage `json:"sponsored"`
+		Photos          json.RawMessage `json:"photos"`
+		ProfileSettings json.RawMessage `json:"profileSettings"`
+		LitterName      *string         `json:"litterName"`
+	}
+
+	err := app.readJSON(w, r, &input)
+	if err != nil {
+		app.badRequestResponse(w, r, err)
+		return
+	}
+
+	// 2. Validate essential fields
+	if input.Name == "" {
+		app.badRequestResponse(w, r, fmt.Errorf("name is required"))
+		return
+	}
+
+	// 3. Construct Pet Model
+	pet := &data.Pet{
+		Name:            input.Name,
+		Sex:             input.Sex,
+		Species:         input.Species,
+		Physical:        input.Physical,
+		Behavior:        input.Behavior,
+		Medical:         input.Medical,
+		Descriptions:    input.Descriptions,
+		Details:         input.Details,
+		Adoption:        input.Adoption,
+		Foster:          input.Foster,
+		Returned:        input.Returned,
+		Sponsored:       input.Sponsored,
+		Photos:          input.Photos,
+		ProfileSettings: input.ProfileSettings,
+		LitterName:      input.LitterName,
+	}
+
+	// 4. Insert via Model
+	err = app.models.Pets.Insert(pet)
+	if err != nil {
+		app.serverErrorResponse(w, r, err)
+		return
+	}
+
+	// 5. Return success with the created resource
+	app.JSONResponse(w, http.StatusCreated, pet)
 }

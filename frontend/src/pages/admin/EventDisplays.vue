@@ -318,11 +318,7 @@ const directionOptions = [
       label {
         font-size: 0.85rem;
         font-weight: 600;
-      label {
-        font-size: 0.85rem;
-        font-weight: 600;
         color: var(--text-secondary);
-      }
       }
     }
 
@@ -515,12 +511,7 @@ const directionOptions = [
   display: flex;
   align-items: center;
   justify-content: center;
-  display: flex;
-  align-items: center;
-  justify-content: center;
   color: var(--text-secondary);
-  font-size: 1.1rem;
-}
   font-size: 1.1rem;
 }
 </style>

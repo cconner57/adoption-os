@@ -40,7 +40,7 @@ function startTimer() {
   if (props.duration !== 0) {
     timer = window.setTimeout(() => {
       emit('close')
-    }, props.duration || 3000)
+    }, props.duration || 6000)
   }
 }
 

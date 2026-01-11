@@ -2,6 +2,7 @@
 import { ref, computed } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import { useAuthStore } from '../stores/auth'
+import { SidebarNav } from '../components/common/ui'
 
 const router = useRouter()
 const route = useRoute()
@@ -18,23 +19,24 @@ const handleLogout = () => {
   router.push('/login')
 }
 
+// Mapped to SidebarNav interface (label, to, icon)
 const navItems = [
-  { name: 'Overview', path: '/admin', icon: '📊' },
-  { name: 'Calendar', path: '/admin/calendar', icon: '📅' },
-  { name: 'Pet Records', path: '/admin/pets', icon: '🐾' },
-  { name: 'Applications', path: '/admin/applications', icon: '📝' },
-  { name: 'Medical', path: '/admin/pet-health', icon: '🩺' },
-  { name: 'Volunteers', path: '/admin/volunteers', icon: '🤝' },
-  { name: 'Transport', path: '/admin/transport', icon: '🚙' },
-  { name: 'Timesheets', path: '/admin/time-logs', icon: '⏱️' },
-  { name: 'Messages', path: '/admin/messages', icon: '✉️' },
-  { name: 'Donations', path: '/admin/donations', icon: '💰' },
-  { name: 'Inventory', path: '/admin/inventory', icon: '📦' },
-  { name: 'Marketing', path: '/admin/marketing', icon: '📣' },
-  { name: 'Intake Kiosk', path: '/admin/kiosk', icon: '🖥️' },
-  { name: 'Smart Kennel Cards', path: '/admin/kennel-displays', icon: '🏷️' },
-  { name: 'Event Signage', path: '/admin/event-displays', icon: '🎪' },
-  { name: 'Settings', path: '/admin/settings', icon: '⚙️' },
+  { label: 'Overview', to: '/admin', icon: '📊', exact: true },
+  { label: 'Calendar', to: '/admin/calendar', icon: '📅' },
+  { label: 'Pet Records', to: '/admin/pets', icon: '🐾' },
+  { label: 'Applications', to: '/admin/applications', icon: '📝' },
+  { label: 'Medical', to: '/admin/pet-health', icon: '🩺' },
+  { label: 'Volunteers', to: '/admin/volunteers', icon: '🤝' },
+  { label: 'Transport', to: '/admin/transport', icon: '🚙' },
+  { label: 'Timesheets', to: '/admin/time-logs', icon: '⏱️' },
+  { label: 'Messages', to: '/admin/messages', icon: '✉️' },
+  { label: 'Donations', to: '/admin/donations', icon: '💰' },
+  { label: 'Inventory', to: '/admin/inventory', icon: '📦' },
+  { label: 'Marketing', to: '/admin/marketing', icon: '📣' },
+  { label: 'Intake Kiosk', to: '/admin/kiosk', icon: '🖥️' },
+  { label: 'Smart Kennel Cards', to: '/admin/kennel-displays', icon: '🏷️' },
+  { label: 'Event Signage', to: '/admin/event-displays', icon: '🎪' },
+  { label: 'Settings', to: '/admin/settings', icon: '⚙️' },
 ]
 
 const userName = computed(() => authStore.user?.Name || 'Admin User')
@@ -58,19 +60,7 @@ const userInitials = computed(() => {
         <h2>Admin</h2>
       </div>
 
-      <nav class="sidebar-nav">
-        <router-link
-          v-for="item in navItems"
-          :key="item.path"
-          :to="item.path"
-          class="nav-item"
-          :class="{ active: route.path === item.path }"
-          @click="isMobileMenuOpen = false"
-        >
-          <span class="icon">{{ item.icon }}</span>
-          <span class="label">{{ item.name }}</span>
-        </router-link>
-      </nav>
+      <SidebarNav :items="navItems" variant="dashboard" @click="isMobileMenuOpen = false" />
 
       <div class="sidebar-footer">
         <div class="user-info">
@@ -145,47 +135,7 @@ const userInitials = computed(() => {
   }
 }
 
-.sidebar-nav {
-  flex: 1;
-  padding: 12px 16px;
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  overflow-y: auto;
-}
-
-.nav-item {
-  display: flex;
-  align-items: center;
-  gap: 16px;
-  padding: 14px 20px;
-  border-radius: 12px;
-  text-decoration: none;
-  color: hsl(from var(--color-neutral) h s 40%);
-  transition: all 0.2s cubic-bezier(0.2, 0.8, 0.2, 1);
-  font-weight: 600;
-  font-size: 1rem;
-
-  &:hover {
-    background-color: hsl(from var(--color-neutral) h s 95%);
-    color: var(--text-primary);
-    transform: translateX(4px);
-  }
-
-  &.active {
-    background-color: var(--color-primary);
-    color: var(--text-inverse);
-    box-shadow: 0 4px 12px hsla(from var(--color-primary) h s l / 0.2);
-
-    &:hover {
-      transform: none;
-    }
-  }
-
-  .icon {
-    font-size: 1.25rem;
-  }
-}
+/* SidebarNav component handles the nav items styling */
 
 .sidebar-footer {
   padding: 24px;

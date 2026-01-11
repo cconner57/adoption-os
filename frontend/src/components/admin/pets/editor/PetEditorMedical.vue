@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed } from 'vue'
-import { InputField, ButtonToggle, Combobox } from '../../../common/ui'
+import { InputField, ButtonToggle, Combobox, InputTextArea } from '../../../common/ui'
 import type { IPet } from '../../../../../models/common'
 
 const props = defineProps<{
@@ -60,7 +60,7 @@ const medicalConcernOptions = [
       </div>
     </div>
 
-    <div class="form-group checkbox-list" style="margin-top: 12px">
+    <div class="form-group checkbox-list">
       <ButtonToggle
         label="Vaccinations Up to Date"
         v-model="formData.medical.vaccinationsUpToDate"
@@ -69,7 +69,7 @@ const medicalConcernOptions = [
       />
     </div>
 
-    <div class="form-group checkbox-list" style="margin-top: 12px">
+    <div class="form-group checkbox-list">
       <ButtonToggle
         label="Microchipped"
         v-model="formData.medical.microchip.microchipped"
@@ -91,6 +91,15 @@ const medicalConcernOptions = [
           placeholder="e.g. HomeAgain"
         />
       </div>
+    </div>
+
+    <div class="form-group" v-if="formData.behavior">
+      <InputTextArea
+        label="Health Summary"
+        v-model="formData.behavior.healthSummary"
+        placeholder="General summary of health status..."
+        :maxChars="500"
+      />
     </div>
 
     <hr class="divider" />

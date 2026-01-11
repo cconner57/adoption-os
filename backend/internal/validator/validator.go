@@ -39,3 +39,13 @@ func (v *Validator) Check(ok bool, key, message string) {
 func Matches(value string, rx *regexp.Regexp) bool {
 	return rx.MatchString(value)
 }
+
+// PermittedValue returns true if a specific value is in a list of permitted values.
+func PermittedValue[T comparable](value T, permittedValues ...T) bool {
+	for _, permission := range permittedValues {
+		if value == permission {
+			return true
+		}
+	}
+	return false
+}

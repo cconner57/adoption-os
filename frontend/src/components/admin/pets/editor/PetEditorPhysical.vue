@@ -75,22 +75,18 @@ const breedOptions = computed(() => {
   <div class="form-section" v-if="formData.physical">
     <Select label="Breed" v-model="formData.physical.breed" :options="breedOptions" fullWidth />
 
-    <br />
-
     <div class="form-row">
       <InputField
         label="Color"
         v-model="formData.physical.color"
         placeholder="e.g. Black & White"
       />
-      <div class="form-group dob-group">
-        <InputField
-          label="Date of Birth"
-          v-model="formData.physical.dateOfBirth"
-          type="date"
-          placeholder="mm/dd/yyyy"
-        />
-      </div>
+      <InputField
+        label="Date of Birth"
+        v-model="formData.physical.dateOfBirth"
+        type="date"
+        placeholder="mm/dd/yyyy"
+      />
     </div>
 
     <div class="form-row">

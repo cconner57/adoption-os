@@ -69,7 +69,7 @@ function removeAdoptionPhoto() {
           placeholder="(555) 123-4567"
         />
       </div>
-      <div class="form-group checkbox-list" style="margin-top: 12px">
+      <div class="form-group checkbox-list">
         <ButtonToggle
           label="Post-Adoption Survey Completed?"
           v-model="formData.adoption.surveyCompleted"
@@ -79,7 +79,7 @@ function removeAdoptionPhoto() {
       </div>
 
       <!-- Adoption Photo -->
-      <div class="form-group" style="margin-top: 20px">
+      <div class="form-group">
         <label class="input-label">Adoption Photo (Family)</label>
         <div style="display: flex; gap: 12px; align-items: flex-start; margin-top: 8px">
           <div

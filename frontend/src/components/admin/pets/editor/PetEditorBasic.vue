@@ -84,7 +84,7 @@ const litterOptions = computed(() => {
       />
     </div>
 
-    <div class="form-row" style="margin-top: 20px" v-if="formData.details">
+    <div class="form-row" v-if="formData.details">
       <InputField label="Intake Date" v-model="formData.details.intakeDate" type="date" />
       <Select
         label="Environment"
@@ -94,7 +94,7 @@ const litterOptions = computed(() => {
       />
     </div>
 
-    <div class="form-row" style="margin-top: 12px" v-if="formData.details">
+    <div class="form-row" v-if="formData.details">
       <InputField
         label="Shelter Location"
         v-model="formData.details.shelterLocation"
@@ -102,11 +102,7 @@ const litterOptions = computed(() => {
       />
     </div>
 
-    <div
-      class="form-row"
-      style="margin-top: 12px"
-      v-if="formData.species === 'cat' && formData.details"
-    >
+    <div class="form-row" v-if="formData.species === 'cat' && formData.details">
       <Combobox
         label="Preferred Litter Type"
         v-model="formData.details.preferredPetLitterType"

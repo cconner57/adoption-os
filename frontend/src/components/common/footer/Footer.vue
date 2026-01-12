@@ -8,8 +8,10 @@ const currentYear = computed(() => new Date().getFullYear())
   <footer class="footer">
     <div class="footer__social">
       <h3 class="footer__title">Connect with us on:</h3>
-      <a href="#" aria-label="Facebook">Facebook</a>
-      <a href="#" aria-label="Instagram">Instagram</a>
+      <a href="https://www.facebook.com/IDOHR.ORG" aria-label="Facebook">Facebook</a>
+      <a href="https://www.instagram.com/pasadenapetsmartadoptioncenter/" aria-label="Instagram"
+        >Instagram</a
+      >
     </div>
     <div class="footer__info">
       <p>I Dream of Home Rescue, Inc. is a 501(c)(3) NON-PROFIT ORGANIZATION. TAX ID: 81-0780050</p>

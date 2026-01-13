@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue'
 import type { IPet } from '../../../../../models/common'
+import { Toast, ImageCropper } from '../../../common/ui'
 
 const props = defineProps<{
   modelValue: Partial<IPet>
@@ -18,38 +19,42 @@ function triggerFileInput() {
   fileInput.value?.click()
 }
 
-const isDragging = ref(false)
-
-function onDragOver(e: DragEvent) {
-  isDragging.value = true
-}
-
-function onDragLeave(e: DragEvent) {
-  isDragging.value = false
-}
-
-function onDrop(e: DragEvent) {
-  isDragging.value = false
-  const file = e.dataTransfer?.files[0]
-  if (file) {
-    uploadFile(file)
-  }
-}
-
 const isUploading = ref(false)
+const showToast = ref(false)
+const toastMessage = ref('')
+const toastType = ref<'success' | 'error'>('error')
+
+// --- Cropping State ---
+const pendingFile = ref<File | null>(null)
+
+function onCancelCrop() {
+  pendingFile.value = null
+  if (fileInput.value) fileInput.value.value = ''
+}
+
+async function onCropComplete(croppedBlob: Blob) {
+  // Convert blob to File
+  const file = new File([croppedBlob], pendingFile.value?.name || 'photo.jpg', {
+    type: 'image/jpeg',
+  })
+
+  await uploadFile(file)
+  pendingFile.value = null
+  if (fileInput.value) fileInput.value.value = ''
+}
 
 async function uploadFile(file: File) {
   // Validate Pet ID availability
   if (!formData.value.id) {
-    alert('Please save the pet first before uploading photos.')
+    toastMessage.value = 'Please save the pet first before uploading photos.'
+    toastType.value = 'error'
+    showToast.value = true
     return
   }
 
-  // Validate Max Photos
-  if ((formData.value.photos?.length || 0) >= 5) {
-    alert('Maximum of 5 photos allowed.')
-    return
-  }
+  // note: max photos check moved to selection time or here?
+  // If we check here, user might crop then get rejected. Better to check before crop.
+  // But redundant check is fine safety.
 
   isUploading.value = true
 
@@ -87,11 +92,35 @@ async function uploadFile(file: File) {
       isSpotlight: isFirstPhoto,
       uploadedAt: new Date().toISOString(),
     })
+
+    toastMessage.value = 'Photo uploaded successfully'
+    toastType.value = 'success'
+    showToast.value = true
   } catch (error: any) {
     console.error('Upload error:', error)
-    alert(error.message || 'Failed to upload photo')
+    toastMessage.value = error.message || 'Failed to upload photo'
+    toastType.value = 'error'
+    showToast.value = true
   } finally {
     isUploading.value = false
+  }
+}
+
+const isDragging = ref(false)
+
+function onDragOver(e: DragEvent) {
+  isDragging.value = true
+}
+
+function onDragLeave(e: DragEvent) {
+  isDragging.value = false
+}
+
+function onDrop(e: DragEvent) {
+  isDragging.value = false
+  const file = e.dataTransfer?.files[0]
+  if (file) {
+    handleFileSelection(file)
   }
 }
 
@@ -99,8 +128,20 @@ async function onFileSelected(event: Event) {
   const target = event.target as HTMLInputElement
   const file = target.files?.[0]
   if (!file) return
-  await uploadFile(file)
-  if (fileInput.value) fileInput.value.value = ''
+  handleFileSelection(file)
+}
+
+function handleFileSelection(file: File) {
+  // Validate Max Photos BEFORE cropping
+  if ((formData.value.photos?.length || 0) >= 5) {
+    toastMessage.value = 'Maximum of 5 photos allowed.'
+    toastType.value = 'error'
+    showToast.value = true
+    if (fileInput.value) fileInput.value.value = ''
+    return
+  }
+
+  pendingFile.value = file
 }
 
 function setPrimaryPhoto(index: number) {
@@ -118,7 +159,13 @@ function setSpotlightPhoto(index: number) {
 }
 
 function removePhoto(index: number) {
-  formData.value.photos?.splice(index, 1)
+  formData.value.photos?.splice(index, 1) // already removed
+
+  // If only 1 photo remains, enforce Main + Spotlight
+  if (formData.value.photos?.length === 1) {
+    formData.value.photos[0].isPrimary = true
+    formData.value.photos[0].isSpotlight = true
+  }
 }
 </script>
 
@@ -151,14 +198,16 @@ function removePhoto(index: number) {
           </button>
         </div>
       </div>
+
+      <!-- Hide Add Button if Cropping -->
       <div
         class="add-photo-btn"
         :class="{ 'is-dragging': isDragging, 'is-loading': isUploading }"
-        @click="!isUploading && triggerFileInput()"
+        @click="!isUploading && !pendingFile && triggerFileInput()"
         @dragover.prevent="onDragOver"
         @dragleave.prevent="onDragLeave"
         @drop.prevent="onDrop"
-        v-if="(formData.photos?.length || 0) < 5"
+        v-if="(formData.photos?.length || 0) < 5 && !pendingFile"
       >
         <div v-if="isUploading" class="spinner"></div>
         <template v-else>
@@ -176,6 +225,16 @@ function removePhoto(index: number) {
         />
       </div>
     </div>
+
+    <!-- Inline Cropper -->
+    <ImageCropper
+      v-if="pendingFile"
+      :imageFile="pendingFile"
+      @cancel="onCancelCrop"
+      @crop="onCropComplete"
+    />
+
+    <Toast :show="showToast" :message="toastMessage" :type="toastType" @close="showToast = false" />
   </div>
 </template>
 

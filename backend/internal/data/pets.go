@@ -432,6 +432,148 @@ func (m PetModel) GetAll(status string, search, sort string, filters map[string]
 	return pets, nil
 }
 
+func (m PetModel) Get(id string) (*Pet, error) {
+	if m.DB == nil {
+		return nil, fmt.Errorf("database connection not available")
+	}
+
+	query := `
+		SELECT 
+			id, 
+			name, 
+			COALESCE(sex, 'unknown'),
+			COALESCE(slug, ''),
+			COALESCE(litter_name, ''),
+			created_at, 
+			updated_at,
+			COALESCE(physical, '{}'),
+			COALESCE(behavior, '{}'),
+			COALESCE(medical, '{}'),
+			COALESCE(descriptions, '{}'),
+			COALESCE(details, '{}'),
+			COALESCE(adoption, '{}'),
+			COALESCE(foster, '{}'),
+			COALESCE(returned, '{}'),
+			COALESCE(sponsored, '{}'),
+			COALESCE(photos, '[]'),
+			COALESCE(profile_settings, '{}')
+		FROM pets
+		WHERE id = $1
+	`
+
+	var p Pet
+	var slug, litterName string
+
+	err := m.DB.QueryRow(query, id).Scan(
+		&p.ID,
+		&p.Name,
+		&p.Sex,
+		&slug,
+		&litterName,
+		&p.CreatedAt,
+		&p.UpdatedAt,
+		&p.Physical,
+		&p.Behavior,
+		&p.Medical,
+		&p.Descriptions,
+		&p.Details,
+		&p.Adoption,
+		&p.Foster,
+		&p.Returned,
+		&p.Sponsored,
+		&p.Photos,
+		&p.ProfileSettings,
+	)
+
+	if err != nil {
+		if err == sql.ErrNoRows {
+			return nil, ErrRecordNotFound
+		}
+		return nil, err
+	}
+
+	p.Species = "cat"
+	if slug != "" {
+		p.Slug = &slug
+	}
+	if litterName != "" {
+		p.LitterName = &litterName
+	}
+
+	return &p, nil
+}
+
+func (m PetModel) GetByName(name string) (*Pet, error) {
+	if m.DB == nil {
+		return nil, fmt.Errorf("database connection not available")
+	}
+
+	query := `
+		SELECT 
+			id, 
+			name, 
+			COALESCE(sex, 'unknown'),
+			COALESCE(slug, ''),
+			COALESCE(litter_name, ''),
+			created_at, 
+			updated_at,
+			COALESCE(physical, '{}'),
+			COALESCE(behavior, '{}'),
+			COALESCE(medical, '{}'),
+			COALESCE(descriptions, '{}'),
+			COALESCE(details, '{}'),
+			COALESCE(adoption, '{}'),
+			COALESCE(foster, '{}'),
+			COALESCE(returned, '{}'),
+			COALESCE(sponsored, '{}'),
+			COALESCE(photos, '[]'),
+			COALESCE(profile_settings, '{}')
+		FROM pets
+		WHERE LOWER(name) = LOWER($1)
+	`
+
+	var p Pet
+	var slug, litterName string
+
+	err := m.DB.QueryRow(query, name).Scan(
+		&p.ID,
+		&p.Name,
+		&p.Sex,
+		&slug,
+		&litterName,
+		&p.CreatedAt,
+		&p.UpdatedAt,
+		&p.Physical,
+		&p.Behavior,
+		&p.Medical,
+		&p.Descriptions,
+		&p.Details,
+		&p.Adoption,
+		&p.Foster,
+		&p.Returned,
+		&p.Sponsored,
+		&p.Photos,
+		&p.ProfileSettings,
+	)
+
+	if err != nil {
+		if err == sql.ErrNoRows {
+			return nil, ErrRecordNotFound
+		}
+		return nil, err
+	}
+
+	p.Species = "cat"
+	if slug != "" {
+		p.Slug = &slug
+	}
+	if litterName != "" {
+		p.LitterName = &litterName
+	}
+
+	return &p, nil
+}
+
 func (m PetModel) Update(p *Pet) error {
 	if m.DB == nil {
 		return fmt.Errorf("database connection not available")
@@ -465,6 +607,117 @@ func (m PetModel) Update(p *Pet) error {
 			// User text: "4 spotlight pets is the maximum and to please turn this setting off for another pet and return to enable it on the new pet"
 			// I'll return the error text. The frontend handles errors generically usually, but I should make it clear.
 			return fmt.Errorf("maximum of 4 spotlight pets allowed. Please unfeature another pet first")
+		}
+	}
+
+	// --- Bidirectional Bonding Logic ---
+	// 1. Fetch current state to compare
+	currentPet, err := m.Get(p.ID)
+	if err == nil {
+		// Define helper struct for parsing
+		type behaviorStruct struct {
+			Bonded struct {
+				IsBonded   bool     `json:"isBonded"`
+				BondedWith []string `json:"bondedWith"`
+			} `json:"bonded"`
+		}
+
+		// Parse Current
+		var currentB behaviorStruct
+		_ = json.Unmarshal(currentPet.Behavior, &currentB)
+
+		// Parse New
+		var newB behaviorStruct
+		_ = json.Unmarshal(p.Behavior, &newB)
+
+		// Calculate Diff
+		currentMap := make(map[string]bool)
+		for _, name := range currentB.Bonded.BondedWith {
+			currentMap[name] = true
+		}
+
+		newMap := make(map[string]bool)
+		for _, name := range newB.Bonded.BondedWith {
+			newMap[name] = true
+		}
+
+		// Added: In New but not Current
+		for _, name := range newB.Bonded.BondedWith {
+			if !currentMap[name] {
+				// ADD BOND: Find other pet and add p.Name to its list
+				otherPet, err := m.GetByName(name)
+				if err == nil {
+					var otherB behaviorStruct
+					_ = json.Unmarshal(otherPet.Behavior, &otherB)
+
+					// Check if already connected (avoid infinite loop if bi-directional already)
+					exists := false
+					for _, existing := range otherB.Bonded.BondedWith {
+						if existing == p.Name {
+							exists = true
+							break
+						}
+					}
+
+					if !exists {
+						otherB.Bonded.BondedWith = append(otherB.Bonded.BondedWith, p.Name)
+						otherB.Bonded.IsBonded = true
+
+						var fullBehavior map[string]interface{}
+						_ = json.Unmarshal(otherPet.Behavior, &fullBehavior)
+
+						bondedMap := make(map[string]interface{})
+						if b, ok := fullBehavior["bonded"].(map[string]interface{}); ok {
+							bondedMap = b
+						}
+						bondedMap["isBonded"] = true
+						bondedMap["bondedWith"] = otherB.Bonded.BondedWith
+						fullBehavior["bonded"] = bondedMap
+
+						finalJSON, _ := json.Marshal(fullBehavior)
+						otherPet.Behavior = json.RawMessage(finalJSON)
+
+						m.Update(otherPet)
+					}
+				}
+			}
+		}
+
+		// Removed: In Current but not New
+		for _, name := range currentB.Bonded.BondedWith {
+			if !newMap[name] {
+				// REMOVE BOND
+				otherPet, err := m.GetByName(name)
+				if err == nil {
+					var otherB behaviorStruct
+					_ = json.Unmarshal(otherPet.Behavior, &otherB)
+
+					filtered := []string{}
+					for _, n := range otherB.Bonded.BondedWith {
+						if n != p.Name {
+							filtered = append(filtered, n)
+						}
+					}
+
+					var fullBehavior map[string]interface{}
+					_ = json.Unmarshal(otherPet.Behavior, &fullBehavior)
+
+					bondedMap := make(map[string]interface{})
+					if b, ok := fullBehavior["bonded"].(map[string]interface{}); ok {
+						bondedMap = b
+					}
+					bondedMap["bondedWith"] = filtered
+					if len(filtered) == 0 {
+						bondedMap["isBonded"] = false
+					}
+					fullBehavior["bonded"] = bondedMap
+
+					finalJSON, _ := json.Marshal(fullBehavior)
+					otherPet.Behavior = json.RawMessage(finalJSON)
+
+					m.Update(otherPet)
+				}
+			}
 		}
 	}
 

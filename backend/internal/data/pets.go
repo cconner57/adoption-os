@@ -277,7 +277,7 @@ type Pet struct {
 	ProfileSettings json.RawMessage `json:"profileSettings"`
 }
 
-func (m PetModel) GetAll(status string, search string) ([]*Pet, error) {
+func (m PetModel) GetAll(status string, search, sort string) ([]*Pet, error) {
 	if m.DB == nil {
 		return []*Pet{}, nil
 	}
@@ -321,7 +321,15 @@ func (m PetModel) GetAll(status string, search string) ([]*Pet, error) {
 		cleanArgCount += 2
 	}
 
-	query += " ORDER BY name ASC"
+	if sort == "age" {
+		// Oldest first = Earliest DOB first.
+		// DOB is likely in physical->>'dob' based on previous task,
+		// but let's check strict casting.
+		// If dob is missing, put them last.
+		query += " ORDER BY NULLIF(physical->>'dob', '')::date ASC NULLS LAST, name ASC"
+	} else {
+		query += " ORDER BY name ASC"
+	}
 
 	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
 	defer cancel()

@@ -1,20 +1,47 @@
 <script setup lang="ts">
 import AdoptDetail from '../components/adopt/adopt-view/AdoptDetail.vue'
 import AdoptSummary from '../components/adopt/adopt-view/AdoptSummary.vue'
-import { computed, ref, nextTick } from 'vue'
+import { computed, ref, nextTick, onMounted, watch } from 'vue'
 import { useRoute } from 'vue-router'
-import { mockPetsData } from '../stores/mockPetData.ts'
+import type { IPet } from '../models/common'
 
 const props = defineProps<{ id?: string }>()
 const route = useRoute()
 
 const id = computed(() => props.id ?? (route.params.id as string | undefined))
+const pets = ref<IPet[]>([])
+const isLoading = ref(true)
 
 const activeFilter = ref('All')
 
+// Fetch pets from API
+const fetchPets = async () => {
+  isLoading.value = true
+  try {
+    // Only fetch available pets, sorted by age (oldest first)
+    const response = await fetch(`${import.meta.env.VITE_API_URL}/pets?status=available&sort=age`)
+    if (!response.ok) throw new Error('Failed to fetch pets')
+
+    const data = await response.json()
+    // Backend returns { data: [...] } or [...] depending on structure
+    pets.value = Array.isArray(data) ? data : data.data || []
+  } catch (error) {
+    console.error('Error fetching adoptable pets:', error)
+  } finally {
+    isLoading.value = false
+  }
+}
+
+onMounted(() => {
+  fetchPets()
+})
+
 const filteredPets = computed(() => {
-  if (activeFilter.value === 'All') return mockPetsData
-  return mockPetsData.filter((p) => p.species.toLowerCase() === activeFilter.value.toLowerCase())
+  let result = pets.value
+  if (activeFilter.value !== 'All') {
+    result = result.filter((p) => p.species.toLowerCase() === activeFilter.value.toLowerCase())
+  }
+  return result
 })
 
 const setFilter = (filter: string) => {
@@ -29,8 +56,7 @@ const setFilter = (filter: string) => {
   })
 }
 
-const pets = mockPetsData // Keep for finding single pet
-const pet = computed(() => pets.find((p) => p.id === id.value))
+const pet = computed(() => pets.value.find((p) => p.id === id.value))
 </script>
 
 <template>
@@ -103,7 +129,7 @@ const pet = computed(() => pets.find((p) => p.id === id.value))
     padding: 8rem var(--layout-padding-side) 3rem;
     display: flex;
     flex-direction: column;
-    justify-content: center;
+    justify-content: flex-start;
     align-items: center;
     gap: 2rem;
     box-sizing: border-box;

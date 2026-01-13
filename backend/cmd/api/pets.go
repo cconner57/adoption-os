@@ -22,6 +22,7 @@ func (app *application) getSpotlightPets(w http.ResponseWriter, r *http.Request)
 func (app *application) getAllPets(w http.ResponseWriter, r *http.Request) {
 	status := r.URL.Query().Get("status")
 	search := r.URL.Query().Get("search")
+	sort := r.URL.Query().Get("sort")
 
 	// If no status provided, default to 'available' is handled by frontend?
 	// Or should backend default?
@@ -34,7 +35,7 @@ func (app *application) getAllPets(w http.ResponseWriter, r *http.Request) {
 	// 	status = "available"
 	// }
 
-	pets, err := app.models.Pets.GetAll(status, search)
+	pets, err := app.models.Pets.GetAll(status, search, sort)
 	if err != nil {
 		app.serverErrorResponse(w, r, err)
 		return

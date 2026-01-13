@@ -18,17 +18,47 @@ export default defineConfig(({ mode }) => {
     server: {
       allowedHosts: ['www.idohr.app'],
       proxy: {
+        // Proxy all backend routes to local backend while maintaining relative paths
+        // This allows access via localhost OR tunnel (idohr.app) transparently
         '/v1': {
           target: env.VITE_API_URL || 'http://127.0.0.1:8080',
           changeOrigin: true,
           secure: false,
-          // rewrite: (path) => path.replace(/^\/v1/, ''),
         },
         '/api': {
           target: env.VITE_API_URL || 'http://127.0.0.1:8080',
           changeOrigin: true,
           secure: false,
-          // rewrite: (path) => path.replace(/^\/api/, ''), // Don't strip /api, backend expects it
+        },
+        '/pets': {
+          target: env.VITE_API_URL || 'http://127.0.0.1:8080',
+          changeOrigin: true,
+          secure: false,
+        },
+        '/applications': {
+          target: env.VITE_API_URL || 'http://127.0.0.1:8080',
+          changeOrigin: true,
+          secure: false,
+        },
+        '/metrics': {
+          target: env.VITE_API_URL || 'http://127.0.0.1:8080',
+          changeOrigin: true,
+          secure: false,
+        },
+        '/healthz': {
+          target: env.VITE_API_URL || 'http://127.0.0.1:8080',
+          changeOrigin: true,
+          secure: false,
+        },
+        '/sitemap.xml': {
+          target: env.VITE_API_URL || 'http://127.0.0.1:8080',
+          changeOrigin: true,
+          secure: false,
+        },
+        '/uploads': {
+          target: env.VITE_API_URL || 'http://127.0.0.1:8080',
+          changeOrigin: true,
+          secure: false,
         },
       },
     },

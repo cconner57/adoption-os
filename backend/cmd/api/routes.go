@@ -47,7 +47,7 @@ func (app *application) routes() http.Handler {
 	mux.Handle("GET /uploads/", http.StripPrefix("/uploads", app.cacheControl(fileServer)))
 
 	c := cors.New(cors.Options{
-		AllowedOrigins:   []string{"http://localhost:5173", "http://127.0.0.1:5173", "https://idohr.app"},
+		AllowedOrigins:   []string{"http://localhost:5173", "http://127.0.0.1:5173", "https://idohr.app", "https://www.idohr.app"},
 		AllowedMethods:   []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
 		AllowedHeaders:   []string{"Accept", "Authorization", "Content-Type", "X-API-KEY"},
 		AllowCredentials: true,

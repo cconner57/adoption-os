@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import { ref, computed, watch } from 'vue'
 import PetItem from '../../common/pet-item/PetItem.vue'
+import { Spacer } from '../../common/ui' // Oops Spacer doesn't exist? Use div.
+import { Spinner } from '../../common/ui'
 import { useIsMobile } from '../../../utils/useIsMobile.ts'
 import type { IPet } from '../../../models/common.ts'
 
@@ -43,7 +45,10 @@ const displayedPets = computed((): IPet[] => {
 <template>
   <section class="adoption-spotlight">
     <h2>Adoption Spotlight</h2>
-    <div class="pet-list">
+    <div v-if="loading" class="loader-container">
+      <Spinner />
+    </div>
+    <div v-else class="pet-list">
       <PetItem
         v-for="pet in displayedPets"
         :key="pet.id"
@@ -58,6 +63,13 @@ const displayedPets = computed((): IPet[] => {
 </template>
 
 <style scoped lang="css">
+.loader-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 200px;
+  width: 100%;
+}
 .adoption-spotlight {
   background-color: var(--text-inverse);
   border-radius: 12px;

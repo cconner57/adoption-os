@@ -50,6 +50,13 @@ function formatList(list?: string[] | null) {
   return list.join(', ')
 }
 
+// --- Helpers ---
+function isTrue(val: boolean | string | undefined | null) {
+  if (val === 'true') return true
+  if (val === true) return true
+  return false
+}
+
 // --- Computed Properties for Expanded Data ---
 
 const hasVaccinations = computed(() => {
@@ -304,21 +311,23 @@ const vaccineSummary = computed(() => {
               <div class="settings-grid">
                 <div
                   class="setting-tag"
-                  :class="{ active: pet.profileSettings?.isSpotlightFeatured }"
+                  :class="{ active: isTrue(pet.profileSettings?.isSpotlightFeatured) }"
                 >
-                  Spotlight: {{ pet.profileSettings?.isSpotlightFeatured ? 'ON' : 'OFF' }}
+                  Spotlight: {{ isTrue(pet.profileSettings?.isSpotlightFeatured) ? 'ON' : 'OFF' }}
                 </div>
                 <div
                   class="setting-tag"
-                  :class="{ active: pet.profileSettings?.showMedicalHistory }"
+                  :class="{ active: isTrue(pet.profileSettings?.showMedicalHistory) }"
                 >
-                  Public Medical: {{ pet.profileSettings?.showMedicalHistory ? 'ON' : 'OFF' }}
+                  Public Medical:
+                  {{ isTrue(pet.profileSettings?.showMedicalHistory) ? 'ON' : 'OFF' }}
                 </div>
                 <div
                   class="setting-tag"
-                  :class="{ active: pet.profileSettings?.showAdditionalInformation }"
+                  :class="{ active: isTrue(pet.profileSettings?.showAdditionalInformation) }"
                 >
-                  Add. Info: {{ pet.profileSettings?.showAdditionalInformation ? 'ON' : 'OFF' }}
+                  Add. Info:
+                  {{ isTrue(pet.profileSettings?.showAdditionalInformation) ? 'ON' : 'OFF' }}
                 </div>
               </div>
             </div>
@@ -505,7 +514,7 @@ const vaccineSummary = computed(() => {
 }
 
 td {
-  padding: 16px 24px;
+  padding: 16px 16px;
   vertical-align: middle;
   color: var(--text-primary);
 }

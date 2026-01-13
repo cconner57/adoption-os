@@ -71,6 +71,8 @@ func main() {
 	flag.StringVar(&cfg.smtp.password, "smtp-password", os.Getenv("SMTP_KEY"), "SMTP password")
 	flag.StringVar(&cfg.smtp.sender, "smtp-sender", os.Getenv("SMTP_SENDER"), "SMTP sender email")
 
+	seed := flag.Bool("seed", false, "Seed adoption dates from CSV")
+
 	flag.Parse()
 
 	// Initialize the structured logger
@@ -106,6 +108,23 @@ func main() {
 			os.Exit(1)
 		}
 		logger.Info("migrations completed")
+		logger.Info("migrations completed")
+	}
+
+	// 3. Check Seed Flag
+	if *seed {
+		if db == nil {
+			logger.Error("Cannot seed without database connection")
+			os.Exit(1)
+		}
+		models := data.NewModels(db) // Initialize models slightly early for seeding
+		logger.Info("Starting Adoption Date Seeding...")
+		if err := models.Pets.SeedAdoptionDates(); err != nil {
+			logger.Error("Seeding failed", "error", err)
+			os.Exit(1)
+		}
+		logger.Info("Seeding completed successfully")
+		os.Exit(0)
 	}
 
 	// 👇 INITIALIZE THE APP INSTANCE

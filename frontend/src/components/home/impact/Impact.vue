@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
 import Candid from '../../common/candid-award/Candid.vue'
+import { Spinner } from '../../common/ui'
 
 const currentYear = new Date().getFullYear()
 const previousYear = currentYear - 1
@@ -10,6 +11,7 @@ const countPrevious = ref(0)
 const isLoading = ref(true)
 
 import { API_ENDPOINTS } from '../../../constants/api'
+// ... (rest of logic unchanged)
 
 const fetchCount = async (year: number) => {
   try {
@@ -51,7 +53,7 @@ onMounted(async () => {
       <div class="divider"></div>
       <div class="stats">
         <div v-if="isLoading" class="loader-container">
-          <div class="spinner"></div>
+          <Spinner />
         </div>
         <template v-else>
           <span>
@@ -78,20 +80,7 @@ onMounted(async () => {
   height: 100%;
 }
 
-.spinner {
-  width: 40px;
-  height: 40px;
-  border: 4px solid rgba(0, 0, 0, 0.1);
-  border-left-color: var(--color-primary);
-  border-radius: 50%;
-  animation: spin 1s linear infinite;
-}
-
-@keyframes spin {
-  to {
-    transform: rotate(360deg);
-  }
-}
+/* Spinner styles removed, using component */
 
 /* Main Layout Styles */
 .impact {
@@ -100,7 +89,7 @@ onMounted(async () => {
   display: flex;
   flex-direction: column;
   gap: 16px;
-  padding: 24px 32px 50px 32px;
+  padding: 24px 50px 40px 50px;
   border-radius: 12px;
   margin-top: -200px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.25);
@@ -110,7 +99,7 @@ onMounted(async () => {
   & h4 {
     font-size: 2rem;
     color: var(--text-primary);
-    margin-left: -15px;
+    margin-bottom: 24px;
   }
   & content {
     display: flex;

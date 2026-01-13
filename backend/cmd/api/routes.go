@@ -47,7 +47,7 @@ func (app *application) routes() http.Handler {
 	mux.Handle("GET /uploads/", http.StripPrefix("/uploads", app.cacheControl(fileServer)))
 
 	c := cors.New(cors.Options{
-		AllowedOrigins:   []string{"http://localhost:5173", "http://localhost:4173", "https://idohr.netlify.app", "http://192.168.12.102:5173"},
+		AllowedOrigins:   []string{"http://localhost:5173", "https://idohr.app"},
 		AllowedMethods:   []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
 		AllowedHeaders:   []string{"Accept", "Authorization", "Content-Type", "X-API-KEY"},
 		AllowCredentials: true,

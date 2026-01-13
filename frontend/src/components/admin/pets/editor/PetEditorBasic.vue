@@ -85,7 +85,12 @@ const litterOptions = computed(() => {
     </div>
 
     <div class="form-row" v-if="formData.details">
-      <InputField label="Intake Date" v-model="formData.details.intakeDate" type="date" />
+      <InputField
+        label="Intake Date"
+        v-model="formData.details.intakeDate"
+        type="date"
+        placeholder="Select date"
+      />
       <Select
         label="Environment"
         v-model="formData.details.environmentType"

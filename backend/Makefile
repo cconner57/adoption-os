@@ -2,6 +2,10 @@
 run-be::
 	go run ./cmd/api
 
+## run-be-prod: runs the api server in production mode
+run-be-prod::
+	go run ./cmd/api -env=production
+
 ## db/psql: connects to the database using psql
 db/psql:
 	docker exec -it pet_shelter_db psql -U pet_admin -d shelter_db

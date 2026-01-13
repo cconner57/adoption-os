@@ -1,4 +1,4 @@
-package data // <--- Must be 'data'
+package data
 
 import (
 	"context"
@@ -47,9 +47,6 @@ func (m PetModel) GetSpotlight() ([]*SpotlightPet, error) {
 		}
 
 		pets := []*SpotlightPet{}
-		// Basic parsing looking for "Is Spotlight Featured" in the last column (index 53 roughly, or just check last)
-		// Header is row 2 (index 2 in 0-based slice if we have empty lines at top)
-		// Let's assume we iterate and look for 'TRUE' at the end
 
 		for i, row := range records {
 			if i < 3 {
@@ -60,11 +57,6 @@ func (m PetModel) GetSpotlight() ([]*SpotlightPet, error) {
 			}
 
 			// CSV Structure: ..., Is Spotlight Featured, Spotlight Description
-			// "Is Spotlight Featured" should be the second to last column now
-			// "Spotlight Description" should be the last column
-
-			// Determine indices based on row length to be dynamic or check strict count
-			// Let's assume the last two columns we just touched are at the end.
 			lenRow := len(row)
 			if lenRow < 2 {
 				continue
@@ -72,39 +64,21 @@ func (m PetModel) GetSpotlight() ([]*SpotlightPet, error) {
 
 			// Check "Is Spotlight Featured"
 			isFeatured := strings.TrimSpace(row[lenRow-2])
-
-			// Fallback: if user didn't update all rows to have the new column,
-			// the "TRUE" might still be at the very end for other rows (though we only marked 4).
-			// But for the target 4, we added a column.
-			// Let's safe check: if row ends with TRUE, it means no description.
-			// If row ends with description, the one before is TRUE.
-
 			description := ""
 			lastCol := strings.TrimSpace(row[lenRow-1])
-
-			// Scenario A: Row has Description. [..., "TRUE", "Desc"]
-			// Scenario B: Row has no Description (not targeted). [..., "FALSE"] or [..., ""]
 
 			if strings.EqualFold(isFeatured, "TRUE") {
 				description = lastCol
 			} else if strings.EqualFold(lastCol, "TRUE") {
-				// Old format or missing description column for this row (unlikely if we just added it to header but CSV reader handles ragged lines?)
-				// Actually CSV reader with FieldsPerRecord=-1 allows variable length.
 				isFeatured = "TRUE"
-				// Description remains empty
 			} else {
-				// Not featured
 				continue
 			}
 
 			if strings.EqualFold(isFeatured, "TRUE") {
-				// Construct a basic SpotlightPet
 				id := row[0]
 				name := row[2]
 
-				// Create JSON for description
-				// escaped description to be safe? It's just simple text.
-				// We need to marshal it to be safe JSON string value.
 				descMap := map[string]string{"spotlight": description}
 				descBytes, _ := json.Marshal(descMap)
 
@@ -123,7 +97,6 @@ func (m PetModel) GetSpotlight() ([]*SpotlightPet, error) {
 		return pets, nil
 	}
 
-	// This query looks for the boolean column we updated
 	query := `
         SELECT id, name, COALESCE(descriptions, '{}'), COALESCE(photos, '[]')
         FROM pets
@@ -178,36 +151,29 @@ func parseDate(dateStr string) *time.Time {
 func (m PetModel) GetAdoptedCount(year int) (int, error) {
 	// 1. Try DB if available
 	if m.DB != nil {
-		// Ping to check connection before query (optional, but safe)
 		if err := m.DB.Ping(); err == nil {
+			ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
+			defer cancel()
+
+			yearPrefix := fmt.Sprintf("%%%d%%", year)
+
 			query := `
 				SELECT count(*)
 				FROM pets
-				WHERE status = 'adopted'
-				AND (adoption->>'date') LIKE $1
+				WHERE LOWER(status) = 'adopted'
+				AND adoption->>'date' LIKE $1
 			`
-			yearPrefix := fmt.Sprintf("%d%%", year)
 			var count int
-
-			ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
-			defer cancel()
 
 			err := m.DB.QueryRowContext(ctx, query, yearPrefix).Scan(&count)
 			if err == nil {
 				return count, nil
 			}
-			fmt.Println("DB Query failed, falling back to CSV:", err)
 		}
 	}
 
 	// 2. Fallback to CSV
-	// Assume CSV is in the root backend folder or current working dir
-	// We are running from backend/ so it should be "Master Pet List - Cats Master List.csv"
-	// Or try absolute path if needed, but relative is best.
 	fileName := "Master Pet List - Cats Master List.csv"
-
-	// If running from root, path might be backend/...
-	// Let's try opening both locations
 	file, err := os.Open(fileName)
 	if os.IsNotExist(err) {
 		file, err = os.Open("backend/" + fileName)
@@ -228,13 +194,10 @@ func (m PetModel) GetAdoptedCount(year int) (int, error) {
 	targetYear := year
 
 	for i, row := range records {
-		if i == 0 || len(row) < 39 { // Ensure enough columns
+		if i == 0 || len(row) < 39 {
 			continue
 		}
-		// status is index 36, adopted? check user diff again.
-		// User diff: "adopted" is at index 36.
-		// Date is at index 38. "1/3/2026"
-
+		// status is index 37, date is 39
 		status := strings.ToLower(strings.TrimSpace(row[37]))
 		if status != "adopted" {
 			continue
@@ -258,7 +221,6 @@ type SitemapPet struct {
 
 func (m PetModel) GetAllAvailablePets() ([]*SitemapPet, error) {
 	if m.DB == nil {
-		// Just return empty for CSV mode (simplification)
 		return []*SitemapPet{}, nil
 	}
 
@@ -297,7 +259,7 @@ type Pet struct {
 	UpdatedAt time.Time `json:"updatedAt"`
 
 	Name       string  `json:"name"`
-	Species    string  `json:"species"` // Hardcoded to 'cat' for now as DB col missing
+	Species    string  `json:"species"`
 	Sex        string  `json:"sex"`
 	LitterName *string `json:"litterName,omitempty"`
 
@@ -333,7 +295,6 @@ func (m PetModel) GetAll(status string, search string) ([]*Pet, error) {
 			COALESCE(behavior, '{}'),
 			COALESCE(medical, '{}'),
 			COALESCE(descriptions, '{}'),
-			-- Inject 'status' from the column into the details JSON
 			COALESCE(details, '{}'::jsonb) || jsonb_build_object('status', status),
 			COALESCE(adoption, '{}'),
 			COALESCE(foster, '{}'),
@@ -444,12 +405,8 @@ func (m PetModel) Update(p *Pet) error {
 		WHERE id = $15
 	`
 
-	// Extract status from Details JSON if present, otherwise keep existing or default?
-	// The frontend sends status inside details.
-	// We need to parse p.Details to get the status for the column.
 	var detailsMap map[string]interface{}
-	status := "available" // Default fall back? Or should we fetch existing?
-	// Better to try to parse.
+	status := "available"
 	if len(p.Details) > 0 {
 		if err := json.Unmarshal(p.Details, &detailsMap); err == nil {
 			if s, ok := detailsMap["status"].(string); ok {
@@ -458,17 +415,9 @@ func (m PetModel) Update(p *Pet) error {
 		}
 	}
 
-	// We should also remove 'status' from details JSON before saving to avoid duplication/confusion?
-	// Or kept it in sync?
-	// The GetAll logic injects it FROM the column.
-	// So if we save it to JSON, it gets overwritten by column on read.
-	// So it doesn't matter much if it's in JSON, but cleaner if we rely on column.
-	// Let's just save the column.
-
 	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
 	defer cancel()
 
-	// Handle standard fields arguments + JSONB arguments + ID
 	args := []interface{}{
 		p.Name,
 		p.Sex,
@@ -489,9 +438,18 @@ func (m PetModel) Update(p *Pet) error {
 		p.Species,    // $17
 	}
 
-	_, err := m.DB.ExecContext(ctx, query, args...)
+	result, err := m.DB.ExecContext(ctx, query, args...)
 	if err != nil {
 		return err
+	}
+
+	rows, err := result.RowsAffected()
+	if err != nil {
+		return err
+	}
+
+	if rows == 0 {
+		return ErrRecordNotFound
 	}
 
 	return nil
@@ -512,7 +470,6 @@ func (m PetModel) Insert(p *Pet) error {
 		RETURNING id, created_at, updated_at
 	`
 
-	// Status fallback
 	var detailsMap map[string]interface{}
 	status := "available"
 	if len(p.Details) > 0 {
@@ -545,11 +502,182 @@ func (m PetModel) Insert(p *Pet) error {
 	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
 	defer cancel()
 
-	// Scan the generated ID and timestamps back into the struct
 	err := m.DB.QueryRowContext(ctx, query, args...).Scan(&p.ID, &p.CreatedAt, &p.UpdatedAt)
 	if err != nil {
 		return err
 	}
 
+	return nil
+}
+
+type Adoption struct {
+	AdoptedBy          string  `json:"adoptedBy"`
+	Date               *string `json:"date"`
+	NewAdoptedName     string  `json:"newAdoptedName"`
+	Fee                *int    `json:"fee"`
+	SurveyCompleted    bool    `json:"surveyCompleted"`
+	AdopterContactInfo struct {
+		Name  string `json:"name"`
+		Email string `json:"email"`
+		Phone string `json:"phone"`
+	} `json:"adopterContactInfo"`
+}
+
+// SeedAdoptionDates Upsert Logic
+func (m PetModel) SeedAdoptionDates() error {
+	fmt.Println("Starting Adoption Date & DOB Seeding...")
+
+	file, err := os.Open("Master Pet List - Cats Master List.csv")
+	if err != nil {
+		return err
+	}
+	defer file.Close()
+
+	reader := csv.NewReader(file)
+	reader.FieldsPerRecord = -1
+	records, err := reader.ReadAll()
+	if err != nil {
+		return err
+	}
+
+	nameIdx := 2
+	dobIdx := 3
+	breedIdx := 5
+	sexIdx := 10
+	intakeIdx := 35
+	statusIdx := 37
+	dateIdx := 39
+
+	countUpdated := 0
+	countCreated := 0
+
+	// Helper to parse "M/D/YYYY" to "YYYY-MM-DD"
+	parseToISO := func(s string) *string {
+		s = strings.TrimSpace(s)
+		if s == "" || s == "----" || strings.Contains(s, "Due") {
+			return nil
+		}
+		t, err := time.Parse("1/2/2006", s)
+		if err != nil {
+			return nil
+		}
+		formatted := t.Format("2006-01-02")
+		return &formatted
+	}
+
+	for i, row := range records {
+		if i < 3 {
+			continue
+		}
+		if len(row) <= dateIdx || len(row) <= sexIdx || len(row) <= breedIdx {
+			continue
+		}
+
+		name := strings.TrimSpace(row[nameIdx])
+		if name == "" {
+			continue
+		}
+
+		// 1. Prepare Adoption Date
+		adoptionDatePtr := parseToISO(row[dateIdx])
+
+		// 2. Prepare DOB
+		dobPtr := parseToISO(row[dobIdx])
+
+		adoption := Adoption{Date: adoptionDatePtr}
+		adoptionJSON, _ := json.Marshal(adoption)
+
+		// Prepare partial physical update for DOB
+		// We use a map to handle explicit null if needed, or just the value
+		physicalUpdateMap := map[string]interface{}{}
+		if dobPtr != nil {
+			physicalUpdateMap["dateOfBirth"] = *dobPtr
+		} else {
+			physicalUpdateMap["dateOfBirth"] = nil
+		}
+		physicalUpdateJSON, _ := json.Marshal(physicalUpdateMap)
+
+		// 3. Try UPDATE first
+		// We use || to merge the new DOB into the existing physical JSONB object
+		// adoption column is replaced fully as per previous logic (or could be merged too, but struct implies full)
+		updateQuery := `
+			UPDATE pets
+			SET adoption = $1,
+			    physical = physical || $2
+			WHERE LOWER(name) = LOWER($3)
+		`
+		res, err := m.DB.Exec(updateQuery, adoptionJSON, physicalUpdateJSON, name)
+		if err != nil {
+			fmt.Printf("Error updating %s: %v\n", name, err)
+			continue
+		}
+
+		rows, _ := res.RowsAffected()
+		if rows > 0 {
+			countUpdated++
+			continue
+		}
+
+		// 4. If not found, INSERT new pet
+		sex := strings.ToLower(strings.TrimSpace(row[sexIdx]))
+		if sex == "" {
+			sex = "unknown"
+		}
+
+		breed := strings.TrimSpace(row[breedIdx])
+		status := strings.ToLower(strings.TrimSpace(row[statusIdx]))
+		if status == "" {
+			status = "available"
+		}
+
+		intake := ""
+		if len(row) > intakeIdx {
+			intake = strings.TrimSpace(row[intakeIdx])
+		}
+
+		// Construct full physical object for new pet
+		physicalMap := map[string]interface{}{
+			"breed":       breed,
+			"dateOfBirth": nil,
+		}
+		if dobPtr != nil {
+			physicalMap["dateOfBirth"] = *dobPtr
+		}
+		physicalJSON, _ := json.Marshal(physicalMap)
+
+		detailsJSON, _ := json.Marshal(map[string]string{"intakeDate": intake})
+
+		emptyJSON := json.RawMessage("{}")
+		emptyArray := json.RawMessage("[]")
+
+		insertQuery := `
+			INSERT INTO pets (
+				name, species, sex, status, adoption,
+				physical, details,
+				behavior, medical, descriptions, foster, returned, sponsored, photos, profile_settings,
+				created_at, updated_at
+			) VALUES (
+				$1, 'cat', $2, $3, $4,
+				$5, $6,
+				$7, $7, $7, $7, $7, $7, $8, $7,
+				NOW(), NOW()
+			)
+		`
+
+		_, err = m.DB.Exec(insertQuery,
+			name, sex, status, adoptionJSON,
+			physicalJSON, detailsJSON,
+			emptyJSON, emptyArray,
+		)
+
+		if err != nil {
+			fmt.Printf("Error inserting %s: %v\n", name, err)
+		} else {
+			countCreated++
+			fmt.Printf("Created new pet: %s\n", name)
+		}
+	}
+
+	fmt.Printf("Seeding completed. Updated: %d, Created: %d\n", countUpdated, countCreated)
 	return nil
 }

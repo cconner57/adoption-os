@@ -18,12 +18,24 @@ export const useAuthStore = defineStore('auth', () => {
         headers: {
           'Content-Type': 'application/json',
         },
+        credentials: 'include',
         body: JSON.stringify({ email, password }),
       })
 
+      const data = await response.json()
+
       if (response.ok) {
-        // Login successful, now fetch user details
-        await checkAuth()
+        // Login successful
+        if (data.token) {
+          localStorage.setItem('token', data.token)
+        }
+
+        // Also ensure user data is set immediately if returned
+        if (data.user) {
+          user.value = data.user
+        } else {
+          await checkAuth()
+        }
         return true
       }
       return false
@@ -35,7 +47,9 @@ export const useAuthStore = defineStore('auth', () => {
 
   const checkAuth = async () => {
     try {
-      const response = await fetch('/api/users/me')
+      const response = await fetch('/api/users/me', {
+        credentials: 'include',
+      })
       if (response.ok) {
         const data = await response.json()
         if (data && data.data) {
@@ -59,6 +73,7 @@ export const useAuthStore = defineStore('auth', () => {
     } catch (error) {
       console.error('Logout error:', error)
     } finally {
+      localStorage.removeItem('token')
       user.value = null
       window.location.reload() // Force reload to clear any memory/state
     }

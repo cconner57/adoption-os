@@ -27,9 +27,12 @@ func (app *application) getAllPets(w http.ResponseWriter, r *http.Request) {
 	// Or should backend default?
 	// User said "backend route where it will default to return all available".
 	// So if status is empty, imply 'available'.
-	if status == "" {
-		status = "available"
-	}
+	// User said "backend route where it will default to return all available".
+	// But if we default to "available" here, we can't get "all" unless we use a magic string.
+	// Since frontend sends explicit "available" when it defaults, we can just remove this default.
+	// if status == "" {
+	// 	status = "available"
+	// }
 
 	pets, err := app.models.Pets.GetAll(status, search)
 	if err != nil {
@@ -129,6 +132,9 @@ func (app *application) updatePet(w http.ResponseWriter, r *http.Request) {
 		fmt.Printf("DEBUG: Updating pet %s with LitterName: nil\n", id)
 	}
 
+	// DEBUG: Log adoption data
+	fmt.Printf("DEBUG: Received Adoption Payload: %s\n", input.Adoption)
+
 	// 4. Update via Model
 	err = app.models.Pets.Update(pet)
 	if err != nil {
@@ -136,8 +142,8 @@ func (app *application) updatePet(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// 5. Return success
-	app.JSONResponse(w, http.StatusOK, map[string]string{"status": "success", "message": "Pet updated successfully"})
+	// 5. Return success (with updated object for frontend state)
+	app.JSONResponse(w, http.StatusOK, pet)
 }
 
 func (app *application) createPet(w http.ResponseWriter, r *http.Request) {

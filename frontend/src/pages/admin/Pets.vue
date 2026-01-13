@@ -3,7 +3,7 @@ import { ref, computed, onMounted, watch } from 'vue'
 import type { IPet } from '../../models/common'
 import PetEditor from '../../components/admin/pets/PetEditor.vue'
 import PetRow from '../../components/admin/pets/PetRow.vue'
-import { Button, InputField, Select, Toast } from '../../components/common/ui'
+import { Button, InputField, Select, Toast, TableSkeleton } from '../../components/common/ui'
 
 // State
 // State
@@ -154,6 +154,7 @@ async function handleSavePet(petData: Partial<IPet>) {
       method: method,
       headers: {
         'Content-Type': 'application/json',
+        Authorization: `Bearer ${localStorage.getItem('token')}`,
       },
       credentials: 'include',
       body: JSON.stringify(payload),
@@ -165,8 +166,22 @@ async function handleSavePet(petData: Partial<IPet>) {
       throw new Error(text || `Failed to ${petData.id ? 'update' : 'create'} pet`)
     }
 
-    // Refetch pets to show changes
-    await fetchPets()
+    // Parse the updated/created pet from response
+    const savedPet = await response.json()
+    const finalPet = savedPet.data || savedPet // Handle { data: ... } wrapper if present
+
+    if (petData.id) {
+      // Update existing in place
+      const idx = pets.value.findIndex((p) => p.id === petData.id)
+      if (idx !== -1) {
+        pets.value[idx] = finalPet
+      }
+    } else {
+      // Add new pet to the top
+      pets.value.unshift(finalPet)
+    }
+
+    // No refetch needed
     isEditorOpen.value = false
 
     showNotification(successMessage, 'success')
@@ -287,17 +302,18 @@ function showNotification(message: string, type: 'success' | 'error' = 'success'
     </div>
 
     <!-- Pet List Table -->
-    <div class="table-container">
+    <TableSkeleton v-if="isLoading" :rows="10" :columns="11" />
+    <div v-else class="table-container">
       <table class="pets-table">
         <thead>
           <tr>
             <th class="expand-col"></th>
             <!-- Expand Arrow Column -->
-            <th v-if="visibleColumns.photo">Photo</th>
+            <th v-if="visibleColumns.photo" class="col-photo">Photo</th>
             <th v-if="visibleColumns.name">Name</th>
             <th v-if="visibleColumns.breed">Species</th>
             <th v-if="visibleColumns.sex">Sex</th>
-            <th v-if="visibleColumns.sn" class="text-center">S/N</th>
+            <th v-if="visibleColumns.sn" class="text-center col-sn">S/N</th>
             <th v-if="visibleColumns.microchip">Microchip</th>
             <th v-if="visibleColumns.age">Age</th>
             <th v-if="visibleColumns.dob">DOB</th>
@@ -307,7 +323,7 @@ function showNotification(message: string, type: 'success' | 'error' = 'success'
             <th v-if="statusFilter === 'foster'">Foster Start</th>
 
             <th v-if="visibleColumns.status">Status</th>
-            <th v-if="visibleColumns.actions">Actions</th>
+            <th v-if="visibleColumns.actions" class="col-actions">Actions</th>
           </tr>
         </thead>
         <tbody>
@@ -493,10 +509,11 @@ function showNotification(message: string, type: 'success' | 'error' = 'success'
   width: 100%;
   border-collapse: collapse;
   text-align: left;
+  table-layout: fixed; /* Force equal widths */
 
   th {
     background: hsl(from var(--color-neutral) h s 98%);
-    padding: 12px 24px;
+    padding: 12px 16px;
     font-weight: 600;
     color: hsl(from var(--color-neutral) h s 50%);
     font-size: 0.9rem;
@@ -504,9 +521,29 @@ function showNotification(message: string, type: 'success' | 'error' = 'success'
     position: sticky;
     top: 0;
     z-index: 10;
+    white-space: nowrap;
+    overflow: hidden; /* Handle overflow */
+    text-overflow: ellipsis;
   }
+}
 
-  /* Note: tr/td hover styles handled by PetRow.vue but we might want global header styling */
+/* Specific Column Widths */
+.expand-col {
+  width: 48px;
+}
+
+.col-photo {
+  width: 80px;
+}
+
+.col-sn {
+  width: 60px;
+  text-align: center;
+}
+
+.col-actions {
+  width: 100px;
+  text-align: right;
 }
 
 /* Helper class for alignment */

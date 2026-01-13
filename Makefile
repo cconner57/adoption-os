@@ -18,6 +18,12 @@ run-be:
 	@echo 'Starting Backend...'
 	make -C backend run-be
 
+## run-be-prod: run the Go backend in production mode
+.PHONY: run-be-prod
+run-be-prod:
+	@echo 'Starting Backend (Production)...'
+	make -C backend run-be-prod
+
 ## run-fe: run the Vue frontend
 .PHONY: run-fe
 run-fe:

@@ -42,7 +42,24 @@ function removeAdoptionPhoto() {
     <template v-if="formData.details?.status === 'adopted' && formData.adoption">
       <h4 class="section-title">Adoption Details</h4>
       <div class="form-row">
-        <InputField label="Adoption Date" v-model="formData.adoption.date" type="date" />
+        <!-- Debugging raw input -->
+        <div class="field">
+          <label class="label">Adoption Date (Debug)</label>
+          <div class="control">
+            <input
+              class="input"
+              type="date"
+              :value="formData.adoption.date"
+              @input="
+                (e) => {
+                  const val = (e.target as HTMLInputElement).value
+                  console.error('DEBUG: RAW INPUT UPDATE:', val)
+                  formData.adoption.date = val
+                }
+              "
+            />
+          </div>
+        </div>
         <InputField label="Adoption Fee ($)" v-model="formData.adoption.fee" type="number" />
       </div>
       <div class="form-row">

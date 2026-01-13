@@ -104,23 +104,31 @@ func (app *application) loginUserHandler(w http.ResponseWriter, r *http.Request)
 	}
 
 	// 4. Set Cookie
+	cookieMode := http.SameSiteLaxMode
+	isSecure := false
+
+	if app.config.env == "production" {
+		cookieMode = http.SameSiteNoneMode
+		isSecure = true
+	}
+
 	http.SetCookie(w, &http.Cookie{
 		Name:     "session_token",
 		Value:    token,
 		Path:     "/",
 		Expires:  time.Now().Add(ttl),
 		HttpOnly: true,
-		Secure:   false,                // Only secure in production/staging
-		SameSite: http.SameSiteLaxMode, // Relax to Lax for easier dev validation? Or keep Strict?
-		// Strict is fine for same-origin (same IP).
-		// But let's use Lax to be safe for now if they are crossing ports in some browsers (though ports usually fine).
-		// keeping Strict as originally requested but let's change Secure.
+		Secure:   isSecure,
+		SameSite: cookieMode,
 	})
 
-	// 5. Return 200 OK
-	// We can return user info if needed, but user just asked for 200 OK or token.
-	// Since cookie is set, just OK is fine.
-	err = app.writeJSON(w, http.StatusOK, envelope{"message": "authentication successful"}, nil)
+	// 5. Return 200 OK + Token/User
+	// We return the token so the frontend can use it in Authorization header if cookies fail
+	err = app.writeJSON(w, http.StatusOK, envelope{
+		"message": "authentication successful",
+		"token":   token,
+		"user":    user,
+	}, nil)
 	if err != nil {
 		app.serverErrorResponse(w, r, err)
 	}
@@ -191,6 +199,14 @@ func (app *application) updateUserHandler(w http.ResponseWriter, r *http.Request
 
 func (app *application) logoutUserHandler(w http.ResponseWriter, r *http.Request) {
 	// Clear the session cookie
+	cookieMode := http.SameSiteLaxMode
+	isSecure := false
+
+	if app.config.env == "production" {
+		cookieMode = http.SameSiteNoneMode
+		isSecure = true
+	}
+
 	http.SetCookie(w, &http.Cookie{
 		Name:     "session_token",
 		Value:    "",
@@ -198,7 +214,8 @@ func (app *application) logoutUserHandler(w http.ResponseWriter, r *http.Request
 		Expires:  time.Unix(0, 0),
 		MaxAge:   -1,
 		HttpOnly: true,
-		Secure:   false, // Match login handler
+		Secure:   isSecure,
+		SameSite: cookieMode,
 	})
 
 	app.writeJSON(w, http.StatusOK, envelope{"message": "logout successful"}, nil)

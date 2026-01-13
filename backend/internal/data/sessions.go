@@ -48,7 +48,7 @@ func (m SessionModel) Get(token string) (*Session, error) {
 	query := `
 		SELECT token, user_id, expiry, ip, user_agent
 		FROM sessions
-		WHERE token = $1 AND expiry > CURRENT_TIMESTAMP`
+		WHERE token = $1`
 
 	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
 	defer cancel()
@@ -68,6 +68,11 @@ func (m SessionModel) Get(token string) (*Session, error) {
 			return nil, nil // Return nil if no valid session found
 		}
 		return nil, err
+	}
+
+	// Check expiry in Go to avoid DB clock skew issues
+	if s.Expiry.Before(time.Now()) {
+		return nil, nil // Expired
 	}
 
 	return &s, nil

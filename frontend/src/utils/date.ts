@@ -31,7 +31,8 @@ export function formatDate(dateStr?: string | null): string {
 
 /**
  * Calculates age from a date of birth string.
- * returns strings like "2 yr 3 mo", "5 mo", "< 1 mo".
+ * - If >= 1 year: "X yr Y mo"
+ * - If < 1 year: "X mo Y days"
  */
 export function calculateAge(dateOfBirth?: string | null): string {
   if (!dateOfBirth) return '-'
@@ -43,15 +44,39 @@ export function calculateAge(dateOfBirth?: string | null): string {
 
   let years = today.getFullYear() - birthDate.getFullYear()
   let months = today.getMonth() - birthDate.getMonth()
+  let days = today.getDate() - birthDate.getDate()
 
-  if (months < 0 || (months === 0 && today.getDate() < birthDate.getDate())) {
+  // Adjust for negative days (borrow from previous month)
+  if (days < 0) {
+    months--
+    // Get days in the previous month relative to today
+    // new Date(year, monthIndex, 0) gives the last day of the *previous* month
+    const prevMonthLastDay = new Date(today.getFullYear(), today.getMonth(), 0).getDate()
+    days += prevMonthLastDay
+  }
+
+  // Adjust for negative months (borrow from year)
+  if (months < 0) {
     years--
     months += 12
   }
-  if (today.getDate() < birthDate.getDate()) months--
 
-  if (years === 0 && months === 0) return '< 1 mo'
-  if (years === 0) return `${months} mo`
-  if (months === 0) return `${years} yr`
-  return `${years} yr ${months} mo`
+  // Safety check for future dates or same day
+  if (years < 0) return '0 days'
+
+  // Logic:
+  // If >= 1 year -> Show Years + Months
+  if (years >= 1) {
+    if (months === 0) return `${years} yr`
+    return `${years} yr ${months} mo`
+  }
+
+  // If < 1 year -> Show Months + Days
+  // Edge cases: 0 mo, 0 days, etc.
+  const parts: string[] = []
+  if (months > 0) parts.push(`${months} mo`)
+  if (days > 0) parts.push(`${days} day${days === 1 ? '' : 's'}`)
+
+  if (parts.length === 0) return '0 days' // New born today
+  return parts.join(' ')
 }

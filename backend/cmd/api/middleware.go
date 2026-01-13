@@ -152,15 +152,19 @@ func (app *application) requireLogin(next http.Handler) http.Handler {
 			return
 		}
 
+		app.logger.Info("Checking session", "token_length", len(token), "source", "header_or_cookie")
+
 		// 3. Validate Session
 		session, err := app.models.Sessions.Get(token)
 		if err != nil {
+			app.logger.Error("Session lookup error", "error", err)
 			// Database error
 			app.serverErrorResponse(w, r, err)
 			return
 		}
 
 		if session == nil {
+			app.logger.Info("Session not found or expired", "token_prefix", token[:5])
 			// Invalid or expired token
 			// Clear the cookie just in case it was a cookie
 			http.SetCookie(w, &http.Cookie{

@@ -59,7 +59,7 @@ function onImgError() {
     <div class="adopt-detail__main">
       <img
         v-if="!imgError"
-        :src="`/images/${pet.photos?.find((p) => p.isPrimary)?.url ?? ''}`"
+        :src="`/pet-photos/${pet.photos?.find((p) => p.isPrimary)?.url ?? ''}`"
         :alt="pet.name"
         :style="{ viewTransitionName: 'pet-' + pet.id }"
         @error="onImgError"

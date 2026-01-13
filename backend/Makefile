@@ -1,6 +1,6 @@
 ## run: runs the api server
 run-be::
-	go run ./cmd/api
+	go run ./cmd/api -assets-dir=./assets
 
 ## run-be-prod: runs the api server in production mode
 run-be-prod::

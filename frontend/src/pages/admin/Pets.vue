@@ -479,7 +479,7 @@ function showNotification(message: string, type: 'success' | 'error' = 'success'
   background: var(--text-inverse);
   border-radius: 12px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
-  overflow: hidden;
+  overflow: auto; /* Allow both X and Y scrolling */
   flex: 1;
   overflow-y: auto;
 
@@ -542,11 +542,11 @@ function showNotification(message: string, type: 'success' | 'error' = 'success'
 }
 
 .col-species {
-  width: 100px;
+  width: 80px;
 }
 
 .col-sex {
-  width: 100px;
+  width: 80px;
 }
 
 .col-sn {
@@ -555,7 +555,7 @@ function showNotification(message: string, type: 'success' | 'error' = 'success'
 }
 
 .col-microchip {
-  width: 160px; /* Wider for ID */
+  width: 100px; /* Narrower since ID is stacked */
 }
 
 .col-age {

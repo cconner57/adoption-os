@@ -58,7 +58,7 @@ function handleAdopt() {
   <div class="pet-item" :style="{ viewTransitionName: `pet-card-${props.id}` }">
     <img
       v-if="!imgError"
-      :src="`/images/${props.photo ?? ''}`"
+      :src="`/pet-photos/${props.photo ?? ''}`"
       :alt="props.name"
       height="250"
       width="240"

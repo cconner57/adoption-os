@@ -43,8 +43,16 @@ func (app *application) routes() http.Handler {
 	mux.Handle("PUT /api/users", app.requireLogin(http.HandlerFunc(app.updateUserHandler)))
 
 	// Static Files (Uploads)
-	fileServer := http.FileServer(http.Dir("./uploads"))
-	mux.Handle("GET /uploads/", http.StripPrefix("/uploads", app.cacheControl(fileServer)))
+	// fileServer := http.FileServer(http.Dir("./uploads"))
+	// mux.Handle("GET /uploads/", http.StripPrefix("/uploads", app.cacheControl(fileServer)))
+
+	// Serve Assets (Images)
+	// We map /pet-photos/ -> app.config.assetsDir
+	assetsServer := http.FileServer(http.Dir(app.config.assetsDir))
+	mux.Handle("GET /pet-photos/", http.StripPrefix("/pet-photos/", app.cacheControl(assetsServer)))
+
+	// Upload Route
+	mux.Handle("POST /pets/{id}/photos", app.requireLogin(http.HandlerFunc(app.uploadPetPhotoHandler)))
 
 	c := cors.New(cors.Options{
 		AllowedOrigins:   []string{"http://localhost:5173", "http://127.0.0.1:5173", "https://idohr.app", "https://www.idohr.app"},

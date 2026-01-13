@@ -546,7 +546,7 @@ func (m PetModel) Update(p *Pet) error {
 		p.ID,         // $15
 		p.LitterName, // $16
 		p.Species,    // $17
-		// No slug in args yet
+		p.Slug,       // $18
 	}
 
 	result, err := m.DB.ExecContext(ctx, query, args...)

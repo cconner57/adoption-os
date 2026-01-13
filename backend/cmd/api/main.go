@@ -37,6 +37,7 @@ type config struct {
 		password string
 		sender   string
 	}
+	assetsDir string
 }
 
 type application struct {
@@ -71,6 +72,11 @@ func main() {
 	flag.StringVar(&cfg.smtp.password, "smtp-password", os.Getenv("SMTP_KEY"), "SMTP password")
 	flag.StringVar(&cfg.smtp.sender, "smtp-sender", os.Getenv("SMTP_SENDER"), "SMTP sender email")
 
+	flag.StringVar(&cfg.assetsDir, "assets-dir", os.Getenv("ASSETS_DIR"), "Directory for storing uploaded assets")
+	if cfg.assetsDir == "" {
+		cfg.assetsDir = "/mnt/nvme/adoption-os/assets" // Default for production (Raspberry Pi NVMe)
+	}
+
 	seed := flag.Bool("seed", false, "Seed adoption dates from CSV")
 	seedSlugs := flag.Bool("seed-slugs", false, "Seed slugs for existing pets")
 
@@ -92,6 +98,12 @@ func main() {
 
 	// Set as global logger (optional, but good practice)
 	slog.SetDefault(logger)
+
+	// Ensure assets directory exists
+	if err := os.MkdirAll(cfg.assetsDir, 0755); err != nil {
+		logger.Error("failed to create assets directory", "path", cfg.assetsDir, "error", err)
+		os.Exit(1)
+	}
 
 	// Create the DB connection pool
 	db, err := openDB(cfg)

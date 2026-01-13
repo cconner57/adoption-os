@@ -134,7 +134,7 @@ const colCount = computed(() => {
       <div class="pet-avatar">
         <img
           v-if="pet.photos && pet.photos.length > 0"
-          :src="`/images/${pet.photos?.find((p) => p.isPrimary)?.url ?? ''}`"
+          :src="`/pet-photos/${pet.photos?.find((p) => p.isPrimary)?.url ?? ''}`"
           alt="Pet"
         />
         <div v-else class="avatar-placeholder">

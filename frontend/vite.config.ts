@@ -19,13 +19,13 @@ export default defineConfig(({ mode }) => {
       allowedHosts: ['www.idohr.app'],
       proxy: {
         '/v1': {
-          target: env.VITE_API_URL || 'http://localhost:8080',
+          target: env.VITE_API_URL || 'http://127.0.0.1:8080',
           changeOrigin: true,
           secure: false,
           // rewrite: (path) => path.replace(/^\/v1/, ''),
         },
         '/api': {
-          target: env.VITE_API_URL || 'http://localhost:8080',
+          target: env.VITE_API_URL || 'http://127.0.0.1:8080',
           changeOrigin: true,
           secure: false,
           // rewrite: (path) => path.replace(/^\/api/, ''), // Don't strip /api, backend expects it

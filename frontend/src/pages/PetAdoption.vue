@@ -231,6 +231,14 @@ const handleReset = () => {
       justify-content: center;
       gap: 16px;
       margin-top: 20px;
+
+      @media (max-width: 600px) {
+        flex-direction: column;
+
+        button {
+          width: 100%;
+        }
+      }
     }
 
     .grid {

@@ -107,9 +107,14 @@ body {
 
 html,
 body {
-  background: var(--text-inverse);
+  background: var(--color-primary); /* Matches bottom safe area on mobile */
   color: var(--text-primary);
   min-height: 100%;
+}
+
+#app {
+  background: var(--text-inverse); /* Keeps content area white */
+  min-height: 100dvh;
 }
 
 html,

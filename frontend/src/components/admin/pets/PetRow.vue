@@ -81,6 +81,27 @@ const vaccineSummary = computed(() => {
 
   return list.length ? list.join(' • ') : 'No recent records'
 })
+
+const colCount = computed(() => {
+  let count = 1 // Start with 1 for the Expand Arrow Column
+  if (props.visibleColumns.photo) count++
+  if (props.visibleColumns.name) count++
+  if (props.visibleColumns.breed) count++
+  if (props.visibleColumns.sex) count++
+  if (props.visibleColumns.sn) count++
+  if (props.visibleColumns.microchip) count++
+  if (props.visibleColumns.age) count++
+  if (props.visibleColumns.dob) count++
+  if (props.visibleColumns.intake) count++
+
+  // Dynamic columns based on status
+  if (props.statusFilter === 'adopted') count++
+  if (props.statusFilter === 'foster') count++
+
+  if (props.visibleColumns.status) count++
+  if (props.visibleColumns.actions) count++
+  return count
+})
 </script>
 
 <template>
@@ -197,7 +218,7 @@ const vaccineSummary = computed(() => {
 
   <!-- Expanded Details Row -->
   <tr v-if="isExpanded" class="details-row">
-    <td :colspan="100">
+    <td :colspan="colCount">
       <div class="expanded-content">
         <div class="details-grid">
           <div class="detail-section">

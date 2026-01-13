@@ -15,6 +15,7 @@
 .control input,
 .control textarea {
   width: 100%;
+  max-width: 100%; /* Prevent overflow on small screens */
   border: 1px solid #e7ebf0;
   border-radius: 10px;
   padding: 10px 12px;

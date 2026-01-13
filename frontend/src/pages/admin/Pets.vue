@@ -310,19 +310,19 @@ function showNotification(message: string, type: 'success' | 'error' = 'success'
             <th class="expand-col"></th>
             <!-- Expand Arrow Column -->
             <th v-if="visibleColumns.photo" class="col-photo">Photo</th>
-            <th v-if="visibleColumns.name">Name</th>
-            <th v-if="visibleColumns.breed">Species</th>
-            <th v-if="visibleColumns.sex">Sex</th>
+            <th v-if="visibleColumns.name" class="col-name">Name</th>
+            <th v-if="visibleColumns.breed" class="col-species">Species</th>
+            <th v-if="visibleColumns.sex" class="col-sex">Sex</th>
             <th v-if="visibleColumns.sn" class="text-center col-sn">S/N</th>
-            <th v-if="visibleColumns.microchip">Microchip</th>
-            <th v-if="visibleColumns.age">Age</th>
-            <th v-if="visibleColumns.dob">DOB</th>
-            <th v-if="visibleColumns.intake">Intake</th>
+            <th v-if="visibleColumns.microchip" class="col-microchip">Microchip</th>
+            <th v-if="visibleColumns.age" class="col-age">Age</th>
+            <th v-if="visibleColumns.dob" class="col-dob">DOB</th>
+            <th v-if="visibleColumns.intake" class="col-intake">Intake</th>
             <!-- Dynamic Columns -->
-            <th v-if="statusFilter === 'adopted'">Adopted Date</th>
-            <th v-if="statusFilter === 'foster'">Foster Start</th>
+            <th v-if="statusFilter === 'adopted'" class="col-dob">Adopted Date</th>
+            <th v-if="statusFilter === 'foster'" class="col-dob">Foster Start</th>
 
-            <th v-if="visibleColumns.status">Status</th>
+            <th v-if="visibleColumns.status" class="col-status">Status</th>
             <th v-if="visibleColumns.actions" class="col-actions">Actions</th>
           </tr>
         </thead>
@@ -536,9 +536,42 @@ function showNotification(message: string, type: 'success' | 'error' = 'success'
   width: 80px;
 }
 
+.col-name {
+  width: 140px;
+  min-width: 120px;
+}
+
+.col-species {
+  width: 100px;
+}
+
+.col-sex {
+  width: 100px;
+}
+
 .col-sn {
   width: 60px;
   text-align: center;
+}
+
+.col-microchip {
+  width: 160px; /* Wider for ID */
+}
+
+.col-age {
+  width: 100px;
+}
+
+.col-dob {
+  width: 120px;
+}
+
+.col-intake {
+  width: 120px;
+}
+
+.col-status {
+  width: 140px;
 }
 
 .col-actions {

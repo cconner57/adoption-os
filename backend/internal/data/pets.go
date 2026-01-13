@@ -547,6 +547,10 @@ func (m PetModel) SeedAdoptionDates() error {
 	intakeIdx := 35
 	statusIdx := 37
 	dateIdx := 39
+	spayNeuterDateIdx := 29
+	microchipIdIdx := 12
+
+	microchipCompanyIdx := 13
 
 	countUpdated := 0
 	countCreated := 0
@@ -597,16 +601,52 @@ func (m PetModel) SeedAdoptionDates() error {
 		}
 		physicalUpdateJSON, _ := json.Marshal(physicalUpdateMap)
 
+		// 2.5 Prepare Medical Update (Microchip)
+		medicalUpdateMap := map[string]interface{}{}
+		microchipId := strings.TrimSpace(row[microchipIdIdx])
+		microchipCompany := strings.TrimSpace(row[microchipCompanyIdx])
+
+		microchipMap := map[string]interface{}{}
+
+		if microchipId != "" {
+			microchipMap["microchipID"] = microchipId
+			medicalUpdateMap["microchipped"] = true
+		} else {
+			microchipMap["microchipID"] = nil
+			// medicalUpdateMap["microchipped"] = false
+		}
+
+		if microchipCompany != "" {
+			microchipMap["microchipCompany"] = microchipCompany
+		} else {
+			microchipMap["microchipCompany"] = nil
+		}
+
+		medicalUpdateMap["microchip"] = microchipMap
+
+		// 2.6 Prepare Medical Update (Spay/Neuter)
+		spayDatePtr := parseToISO(row[spayNeuterDateIdx])
+		if spayDatePtr != nil {
+			medicalUpdateMap["spayedOrNeutered"] = true
+			medicalUpdateMap["spayedOrNeuteredDate"] = *spayDatePtr
+		} else {
+			medicalUpdateMap["spayedOrNeutered"] = false
+			medicalUpdateMap["spayedOrNeuteredDate"] = nil
+		}
+
+		medicalUpdateJSON, _ := json.Marshal(medicalUpdateMap)
+
 		// 3. Try UPDATE first
 		// We use || to merge the new DOB into the existing physical JSONB object
 		// adoption column is replaced fully as per previous logic (or could be merged too, but struct implies full)
 		updateQuery := `
 			UPDATE pets
 			SET adoption = $1,
-			    physical = physical || $2
-			WHERE LOWER(name) = LOWER($3)
+			    physical = physical || $2,
+			    medical = medical || $3
+			WHERE LOWER(name) = LOWER($4)
 		`
-		res, err := m.DB.Exec(updateQuery, adoptionJSON, physicalUpdateJSON, name)
+		res, err := m.DB.Exec(updateQuery, adoptionJSON, physicalUpdateJSON, medicalUpdateJSON, name)
 		if err != nil {
 			fmt.Printf("Error updating %s: %v\n", name, err)
 			continue
@@ -647,6 +687,8 @@ func (m PetModel) SeedAdoptionDates() error {
 
 		detailsJSON, _ := json.Marshal(map[string]string{"intakeDate": intake})
 
+		medicalJSON, _ := json.Marshal(medicalUpdateMap) // Reuse the map we built above
+
 		emptyJSON := json.RawMessage("{}")
 		emptyArray := json.RawMessage("[]")
 
@@ -659,7 +701,7 @@ func (m PetModel) SeedAdoptionDates() error {
 			) VALUES (
 				$1, 'cat', $2, $3, $4,
 				$5, $6,
-				$7, $7, $7, $7, $7, $7, $8, $7,
+				$7, $8, $7, $7, $7, $7, $9, $7,
 				NOW(), NOW()
 			)
 		`
@@ -667,7 +709,7 @@ func (m PetModel) SeedAdoptionDates() error {
 		_, err = m.DB.Exec(insertQuery,
 			name, sex, status, adoptionJSON,
 			physicalJSON, detailsJSON,
-			emptyJSON, emptyArray,
+			emptyJSON, medicalJSON, emptyArray,
 		)
 
 		if err != nil {

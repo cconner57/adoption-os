@@ -30,6 +30,12 @@ run-fe:
 	@echo 'Starting Frontend...'
 	cd frontend && npm run dev -- --host
 
+## build-fe: build the Vue frontend for production
+.PHONY: build-fe
+build-fe:
+	@echo 'Building Frontend...'
+	cd frontend && npm run build
+
 ## db/psql: connect to the database
 .PHONY: db/psql
 db/psql:

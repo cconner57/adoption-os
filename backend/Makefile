@@ -16,4 +16,4 @@ tidy:
 	go mod tidy
 
 seed:
-	go run cmd/seeder/main.go
+	go run ./cmd/api -seed

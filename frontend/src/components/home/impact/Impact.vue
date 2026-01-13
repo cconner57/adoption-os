@@ -44,7 +44,7 @@ onMounted(async () => {
 <template>
   <section class="impact">
     <h4>Our Impact</h4>
-    <content>
+    <div class="content">
       <div class="awards">
         <Candid type="Gold" year="2024" />
         <Candid type="Gold" year="2023" />
@@ -66,7 +66,7 @@ onMounted(async () => {
           </span>
         </template>
       </div>
-    </content>
+    </div>
   </section>
 </template>
 
@@ -101,7 +101,7 @@ onMounted(async () => {
     color: var(--text-primary);
     margin-bottom: 24px;
   }
-  & content {
+  & .content {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -159,7 +159,7 @@ onMounted(async () => {
       margin-bottom: 20px;
     }
 
-    & content {
+    & .content {
       flex-direction: column;
       gap: 40px;
       align-items: center;

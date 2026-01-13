@@ -81,9 +81,9 @@ async function uploadFile(file: File) {
       isSpotlight: false,
       uploadedAt: new Date().toISOString(),
     })
-  } catch (error) {
+  } catch (error: any) {
     console.error('Upload error:', error)
-    alert('Failed to upload photo')
+    alert(error.message || 'Failed to upload photo')
   }
 }
 

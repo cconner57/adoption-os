@@ -16,6 +16,7 @@ export default defineConfig(({ mode }) => {
       },
     },
     server: {
+      allowedHosts: ['www.idohr.app'],
       proxy: {
         '/v1': {
           target: env.VITE_API_URL || 'http://localhost:8080',

@@ -18,7 +18,7 @@ defineProps<{
         pet?.physical?.dateOfBirth ? formatDate(pet?.physical?.dateOfBirth ?? '', true) : '',
       ]"
       :description="pet.descriptions?.fun ?? ''"
-      :id="pet.id"
+      :id="pet.slug || pet.id"
       :key="pet.id"
       :name="pet.name"
       :photo="pet.photos?.find((p) => p.isPrimary)?.url"

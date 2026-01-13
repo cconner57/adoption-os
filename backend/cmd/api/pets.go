@@ -24,18 +24,14 @@ func (app *application) getAllPets(w http.ResponseWriter, r *http.Request) {
 	search := r.URL.Query().Get("search")
 	sort := r.URL.Query().Get("sort")
 
-	// If no status provided, default to 'available' is handled by frontend?
-	// Or should backend default?
-	// User said "backend route where it will default to return all available".
-	// So if status is empty, imply 'available'.
-	// User said "backend route where it will default to return all available".
-	// But if we default to "available" here, we can't get "all" unless we use a magic string.
-	// Since frontend sends explicit "available" when it defaults, we can just remove this default.
-	// if status == "" {
-	// 	status = "available"
-	// }
+	filters := map[string]string{
+		"age":      r.URL.Query().Get("age"),
+		"size":     r.URL.Query().Get("size"),
+		"sex":      r.URL.Query().Get("sex"),
+		"goodWith": r.URL.Query().Get("goodWith"),
+	}
 
-	pets, err := app.models.Pets.GetAll(status, search, sort)
+	pets, err := app.models.Pets.GetAll(status, search, sort, filters)
 	if err != nil {
 		app.serverErrorResponse(w, r, err)
 		return

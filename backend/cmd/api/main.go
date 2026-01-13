@@ -72,6 +72,7 @@ func main() {
 	flag.StringVar(&cfg.smtp.sender, "smtp-sender", os.Getenv("SMTP_SENDER"), "SMTP sender email")
 
 	seed := flag.Bool("seed", false, "Seed adoption dates from CSV")
+	seedSlugs := flag.Bool("seed-slugs", false, "Seed slugs for existing pets")
 
 	flag.Parse()
 
@@ -112,18 +113,30 @@ func main() {
 	}
 
 	// 3. Check Seed Flag
-	if *seed {
+	if *seed || *seedSlugs {
 		if db == nil {
 			logger.Error("Cannot seed without database connection")
 			os.Exit(1)
 		}
 		models := data.NewModels(db) // Initialize models slightly early for seeding
-		logger.Info("Starting Adoption Date Seeding...")
-		if err := models.Pets.SeedAdoptionDates(); err != nil {
-			logger.Error("Seeding failed", "error", err)
-			os.Exit(1)
+
+		if *seed {
+			logger.Info("Starting Adoption Date Seeding...")
+			if err := models.Pets.SeedAdoptionDates(); err != nil {
+				logger.Error("Seeding failed", "error", err)
+				os.Exit(1)
+			}
+			logger.Info("Adoption Date Seeding completed successfully")
 		}
-		logger.Info("Seeding completed successfully")
+
+		if *seedSlugs {
+			logger.Info("Starting Pet Slug Seeding...")
+			if err := models.Pets.SeedSlugs(); err != nil {
+				logger.Error("Pet Slug Seeding failed", "error", err)
+				os.Exit(1)
+			}
+			logger.Info("Pet Slug Seeding completed successfully")
+		}
 		os.Exit(0)
 	}
 

@@ -161,7 +161,7 @@ function handleAdopt() {
     & .info-section {
       & .capsules {
         margin-bottom: 8px;
-        gap: 2px;
+        gap: 6px;
       }
     }
   }

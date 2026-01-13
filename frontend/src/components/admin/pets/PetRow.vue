@@ -154,12 +154,14 @@ const colCount = computed(() => {
       <span v-else class="text-muted" title="Not Spayed/Neutered">❌</span>
     </td>
     <td v-if="visibleColumns.microchip">
-      <span v-if="pet.medical?.microchip?.microchipID" class="mono-text">
-        {{ pet.medical.microchip.microchipID }}
-      </span>
+      <div v-if="pet.medical?.microchip?.microchipID" class="microchip-stack mono-text">
+        <div v-for="(part, idx) in pet.medical.microchip.microchipID.split(' ')" :key="idx">
+          {{ part }}
+        </div>
+      </div>
       <span v-else class="text-muted">-</span>
     </td>
-    <td v-if="visibleColumns.age">
+    <td v-if="visibleColumns.age" style="white-space: nowrap">
       {{ calculateAge(pet.physical.dateOfBirth) }}
     </td>
     <td v-if="visibleColumns.dob">
@@ -170,7 +172,7 @@ const colCount = computed(() => {
     </td>
     <td v-if="visibleColumns.intake">
       <span v-if="pet.details?.intakeDate">
-        {{ formatDoB(pet.details.intakeDate) }}
+        {{ pet.details.intakeDate }}
       </span>
       <span v-else class="text-muted">-</span>
     </td>
@@ -305,7 +307,7 @@ const colCount = computed(() => {
             <h4>Adoption & Status</h4>
             <div class="detail-item">
               <span class="label">Intake Date:</span>
-              <span class="value">{{ formatDoB(pet.details.intakeDate) }}</span>
+              <span class="value">{{ pet.details.intakeDate || '-' }}</span>
             </div>
             <div class="detail-item">
               <span class="label">Location:</span>
@@ -763,6 +765,16 @@ td {
   padding: 2px 6px;
   border-radius: 4px;
   border: 1px solid var(--border-color);
+  display: inline-block; /* Default to inline-block for single values */
+  width: fit-content; /* Prevent stretching in flex containers */
+}
+
+.microchip-stack {
+  display: flex !important; /* Force flex */
+  flex-direction: column;
+  align-items: flex-start; /* Left align numbers */
+  width: min-content; /* Shrink to fit numbers */
+  white-space: nowrap;
 }
 
 .row-actions {

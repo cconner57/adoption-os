@@ -559,7 +559,7 @@ function showNotification(message: string, type: 'success' | 'error' = 'success'
 }
 
 .col-age {
-  width: 100px;
+  width: 140px;
 }
 
 .col-dob {

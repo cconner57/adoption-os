@@ -1,0 +1,2 @@
+ALTER TABLE pets ADD COLUMN IF NOT EXISTS slug text UNIQUE;
+CREATE INDEX IF NOT EXISTS idx_pets_slug ON pets(slug);

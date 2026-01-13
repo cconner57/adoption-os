@@ -53,7 +53,7 @@ const displayedPets = computed((): IPet[] => {
         v-for="pet in displayedPets"
         :key="pet.id"
         :name="pet.name"
-        :id="pet.id.toLowerCase()"
+        :id="(pet.slug || pet.id).toLowerCase()"
         :photo="pet.photos?.find((p) => p.isPrimary)?.url || null"
         :description="pet.descriptions?.spotlight || ''"
         :size="isMobile ? 'large' : 'medium'"

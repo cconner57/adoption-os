@@ -78,11 +78,13 @@ async function uploadFile(file: File) {
 
     if (!formData.value.photos) formData.value.photos = []
 
+    const isFirstPhoto = formData.value.photos.length === 0
+
     formData.value.photos.push({
       url: data.url,
       thumbnailUrl: data.thumbnailUrl,
-      isPrimary: formData.value.photos.length === 0,
-      isSpotlight: false,
+      isPrimary: isFirstPhoto,
+      isSpotlight: isFirstPhoto,
       uploadedAt: new Date().toISOString(),
     })
   } catch (error: any) {

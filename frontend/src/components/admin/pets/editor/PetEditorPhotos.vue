@@ -36,6 +36,8 @@ function onDrop(e: DragEvent) {
   }
 }
 
+const isUploading = ref(false)
+
 async function uploadFile(file: File) {
   // Validate Pet ID availability
   if (!formData.value.id) {
@@ -48,6 +50,8 @@ async function uploadFile(file: File) {
     alert('Maximum of 5 photos allowed.')
     return
   }
+
+  isUploading.value = true
 
   const fd = new FormData()
   fd.append('photo', file)
@@ -84,6 +88,8 @@ async function uploadFile(file: File) {
   } catch (error: any) {
     console.error('Upload error:', error)
     alert(error.message || 'Failed to upload photo')
+  } finally {
+    isUploading.value = false
   }
 }
 
@@ -145,21 +151,24 @@ function removePhoto(index: number) {
       </div>
       <div
         class="add-photo-btn"
-        :class="{ 'is-dragging': isDragging }"
-        @click="triggerFileInput"
+        :class="{ 'is-dragging': isDragging, 'is-loading': isUploading }"
+        @click="!isUploading && triggerFileInput()"
         @dragover.prevent="onDragOver"
         @dragleave.prevent="onDragLeave"
         @drop.prevent="onDrop"
         v-if="(formData.photos?.length || 0) < 5"
       >
-        <span class="plus-icon">+</span>
-        <span class="add-text">Add Photo</span>
-        <span class="sub-text">{{ isDragging ? 'Drop Here' : 'Click or Drag & Drop' }}</span>
-        <span class="count-text">{{ formData.photos?.length || 0 }}/5</span>
+        <div v-if="isUploading" class="spinner"></div>
+        <template v-else>
+          <span class="plus-icon">+</span>
+          <span class="add-text">Add Photo</span>
+          <span class="sub-text">{{ isDragging ? 'Drop Here' : 'Click or Drag & Drop' }}</span>
+          <span class="count-text">{{ formData.photos?.length || 0 }}/5</span>
+        </template>
         <input
           ref="fileInput"
           type="file"
-          accept="image/jpeg,image/png"
+          accept="image/*"
           style="display: none"
           @change="onFileSelected"
         />
@@ -298,5 +307,25 @@ function removePhoto(index: number) {
   font-size: 0.7rem;
   color: var(--text-tertiary);
   margin-top: auto; /* Push to bottom */
+}
+
+.add-photo-btn.is-loading {
+  cursor: wait;
+  opacity: 0.7;
+}
+
+.spinner {
+  width: 30px;
+  height: 30px;
+  border: 3px solid rgba(0, 0, 0, 0.1);
+  border-radius: 50%;
+  border-top-color: var(--primary-color, #3b82f6);
+  animation: spin 1s ease-in-out infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
 }
 </style>

@@ -76,7 +76,7 @@ function onImgError() {
               :label="formatDate(pet?.physical?.dateOfBirth, true)"
             />
           </div>
-          <p>{{ pet?.descriptions?.behavioral }}</p>
+          <p>{{ pet?.descriptions?.fun }}</p>
           <div class="adopt-detail__actions">
             <Button
               title="Start Adoption"
@@ -104,16 +104,16 @@ function onImgError() {
     </div>
     <div
       v-if="
-        pet.descriptions?.fun ||
+        pet.descriptions?.primary ||
         pet.descriptions?.additionalInformation?.length ||
         pet.profileSettings.showAdditionalInformation
       "
       class="adopt-detail__about"
     >
       <div class="adopt-detail__about__content">
-        <div v-if="pet.descriptions?.fun" class="adopt-detail__about__fun">
+        <div v-if="pet.descriptions?.primary" class="adopt-detail__about__fun">
           <h2>From {{ pet.name }}</h2>
-          <p>{{ pet.descriptions?.fun }}</p>
+          <p>{{ pet.descriptions?.primary }}</p>
         </div>
         <div
           class="adopt-detail__about__additional-info"

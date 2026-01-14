@@ -215,7 +215,7 @@ onUnmounted(() => {
 
     <div class="actions">
       <button class="btn btn-secondary" @click="$emit('cancel')">Cancel</button>
-      <button class="btn btn-primary" @click="crop">Upload Photo</button>
+      <button class="btn btn-primary" @click="crop">Crop Photo</button>
     </div>
   </div>
 </template>

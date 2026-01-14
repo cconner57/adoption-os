@@ -38,12 +38,12 @@ async function onCropComplete(croppedBlob: Blob) {
     type: 'image/jpeg',
   })
 
-  await uploadFile(file)
+  await uploadFile(file, false) // Suppress toast for crop
   pendingFile.value = null
   if (fileInput.value) fileInput.value.value = ''
 }
 
-async function uploadFile(file: File) {
+async function uploadFile(file: File, showSuccessToast = true) {
   // Validate Pet ID availability
   if (!formData.value.id) {
     toastMessage.value = 'Please save the pet first before uploading photos.'
@@ -93,9 +93,11 @@ async function uploadFile(file: File) {
       uploadedAt: new Date().toISOString(),
     })
 
-    toastMessage.value = 'Photo uploaded successfully'
-    toastType.value = 'success'
-    showToast.value = true
+    if (showSuccessToast) {
+      toastMessage.value = 'Photo uploaded successfully'
+      toastType.value = 'success'
+      showToast.value = true
+    }
   } catch (error: any) {
     console.error('Upload error:', error)
     toastMessage.value = error.message || 'Failed to upload photo'

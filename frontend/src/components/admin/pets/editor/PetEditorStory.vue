@@ -54,14 +54,7 @@ const additionalInfoString = computed({
         :maxChars="300"
       />
     </div>
-    <div class="form-group" v-if="formData.descriptions">
-      <InputTextArea
-        label="Behavioral Notes (Public)"
-        v-model="formData.descriptions.behavioral"
-        placeholder="Good with others? Friendly?"
-        :maxChars="300"
-      />
-    </div>
+
     <div class="form-group" v-if="formData.descriptions">
       <InputTextArea
         label="Fun Facts"

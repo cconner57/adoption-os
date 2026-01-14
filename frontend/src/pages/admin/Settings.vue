@@ -8,9 +8,10 @@ import SettingsGeneral from '../../components/admin/settings/SettingsGeneral.vue
 import SettingsWebsite from '../../components/admin/settings/SettingsWebsite.vue'
 import SettingsVolunteers from '../../components/admin/settings/SettingsVolunteers.vue'
 import SettingsOverview from '../../components/admin/settings/SettingsOverview.vue'
+import SettingsPets from '../../components/admin/settings/SettingsPets.vue'
 
-const { isDemoMode, toggleDemoMode } = useDemoMode()
-const authStore = useAuthStore()
+import { useSettingsStore } from '../../stores/settings'
+import { storeToRefs } from 'pinia'
 
 const saving = ref(false)
 const showToast = ref(false)
@@ -110,48 +111,12 @@ const categories = [
   },
 ]
 
-const settings = ref({
-  organization: {
-    name: 'Happy Tails Shelter',
-    email: 'contact@happytails.org',
-    phone: '555-0123',
-    timezone: 'PST',
-  },
-  volunteers: {
-    enableGamification: true,
-    autoApproveShifts: false,
-    minHoursForTier1: 20,
-    shiftReminderHours: '24',
-    allowTeenVolunteers: true,
-  },
-  notifications: {
-    emailDigests: 'daily',
-    incidentAlerts: true,
-    newApplicationAlerts: true,
-  },
-  forms: {
-    volunteer: {
-      enabled: true,
-      emails: ['director@happytails.org', 'volunteers@happytails.org'],
-      newEmail: '',
-    },
-    surrender: {
-      enabled: true,
-      emails: ['director@happytails.org', 'intake@happytails.org'],
-      newEmail: '',
-    },
-    adoption: {
-      enabled: true,
-      emails: ['adoptions@happytails.org'],
-      newEmail: '',
-    },
-  },
-  overview: {
-    showRecentActivity: true,
-    showPendingTasks: true,
-    showStatsGraph: true,
-  },
-})
+// ... existing imports ...
+
+const { isDemoMode, toggleDemoMode } = useDemoMode()
+const authStore = useAuthStore()
+const settingsStore = useSettingsStore()
+const { settings } = storeToRefs(settingsStore)
 
 // Account Settings Form
 const accountForm = ref({
@@ -302,11 +267,13 @@ const activeCategoryLabel = computed(
 
       <SettingsOverview v-if="activeCategory === 'overview'" v-model:settings="settings" />
 
+      <SettingsPets v-if="activeCategory === 'pets'" v-model:settings="settings" />
+
       <!-- PLACEHOLDER TABS -->
       <div
         v-if="
           activeCategory &&
-          !['general', 'website', 'volunteers', 'overview'].includes(activeCategory)
+          !['general', 'website', 'volunteers', 'overview', 'pets'].includes(activeCategory)
         "
         class="placeholder-content"
       >

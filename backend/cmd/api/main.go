@@ -79,6 +79,7 @@ func main() {
 
 	seed := flag.Bool("seed", false, "Seed adoption dates from CSV")
 	seedSlugs := flag.Bool("seed-slugs", false, "Seed slugs for existing pets")
+	seedVolunteers := flag.Bool("seed-volunteers", false, "Seed active volunteers from mock data")
 
 	flag.Parse()
 
@@ -125,7 +126,7 @@ func main() {
 	}
 
 	// 3. Check Seed Flag
-	if *seed || *seedSlugs {
+	if *seed || *seedSlugs || *seedVolunteers {
 		if db == nil {
 			logger.Error("Cannot seed without database connection")
 			os.Exit(1)
@@ -148,6 +149,24 @@ func main() {
 				os.Exit(1)
 			}
 			logger.Info("Pet Slug Seeding completed successfully")
+		}
+
+		if *seedVolunteers {
+			// We need an app instance to call seedVolunteers, or pass DB to it.
+			// seedVolunteers is a method on *application.
+			// Let's create a temporary app instance or refactor seedVolunteers to take DB.
+			// For simplicity, let's create the app instance here since we have everything except mailer,
+			// but seedVolunteers likely only needs DB and logger.
+
+			// Actually, seedVolunteers uses app.db.
+			app := &application{
+				config: cfg,
+				logger: logger,
+				db:     db,
+			}
+			logger.Info("Starting Volunteer Seeding...")
+			app.seedVolunteers()
+			logger.Info("Volunteer Seeding completed successfully")
 		}
 		os.Exit(0)
 	}

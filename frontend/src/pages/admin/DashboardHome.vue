@@ -1,14 +1,22 @@
 <script setup lang="ts">
-import { ref, computed } from 'vue'
+import { computed, onMounted } from 'vue'
 import { Capsules, Button } from '../../components/common/ui'
 import { useAuthStore } from '../../stores/auth'
-import { mockPetsData } from '../../stores/mockPetData'
+import { usePetStore } from '../../stores/pets'
+import { useActiveVolunteersStore } from '../../stores/activeVolunteers'
 
 const authStore = useAuthStore()
+const petStore = usePetStore()
+const volunteerStore = useActiveVolunteersStore()
 const userName = computed(() => authStore.user?.Name || 'Admin')
 
+onMounted(() => {
+  petStore.fetchPets()
+  volunteerStore.fetchActiveCount()
+})
+
 const adoptablePetsCount = computed(() => {
-  return mockPetsData.filter((pet) => pet.details.status === 'available').length
+  return petStore.currentPets.length
 })
 
 // Recurring Schedule Definition
@@ -101,7 +109,7 @@ const weekDays = computed(() => {
 const stats = computed(() => [
   { label: 'Pending Applications', value: 12, color: 'orange', icon: '📝' },
   { label: 'Adoptable Pets', value: adoptablePetsCount.value, color: 'green', icon: '🐾' },
-  { label: 'Volunteers', value: 28, color: 'purple', icon: '🤝' },
+  { label: 'Volunteers', value: volunteerStore.activeCount, color: 'purple', icon: '🤝' },
   { label: 'Donations (Month)', value: '$3,250', color: 'blue', icon: '❤️' },
 ])
 const medicalNeeds = [
@@ -397,11 +405,14 @@ const newIntakes = [
   display: flex;
   align-items: center;
   gap: 16px;
+  border: 1px solid var(--border-color);
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
   transition: transform 0.2s;
 
   &:hover {
     transform: translateY(-2px);
+    border-color: #cbd5e1;
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
   }
 }
 
@@ -433,22 +444,21 @@ const newIntakes = [
 }
 
 /* Color variants */
+/* Color variants - Darkened backgrounds (88% lightness) for better contrast */
 .stat-card.color-orange .stat-icon {
-  background-color: hsl(from var(--color-warning) h s 95%);
+  background-color: hsl(from var(--color-warning) h s 88%);
   color: var(--color-warning);
 }
 .stat-card.color-green .stat-icon {
-  background-color: hsl(from var(--color-primary) h s 95%);
+  background-color: hsl(from var(--color-primary) h s 88%);
   color: var(--color-primary);
 }
 .stat-card.color-purple .stat-icon {
-  background-color: hsl(from var(--color-secondary) h s 95%); /* Purple mapped to secondary */
+  background-color: hsl(from var(--color-secondary) h s 88%);
   color: var(--color-secondary);
 }
 .stat-card.color-blue .stat-icon {
-  background-color: hsl(
-    from var(--color-secondary) h s 90%
-  ); /* Blue also secondary, slightly darker tint for differentiation if needed, or same */
+  background-color: hsl(from var(--color-secondary) h s 85%);
   color: var(--color-secondary);
 }
 
@@ -476,6 +486,7 @@ const newIntakes = [
   background: var(--text-inverse);
   padding: 24px;
   border-radius: 16px;
+  border: 1px solid var(--border-color);
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
   display: flex;
   flex-direction: column;

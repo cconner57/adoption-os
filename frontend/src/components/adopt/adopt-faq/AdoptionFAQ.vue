@@ -83,6 +83,13 @@ const toggleFaq = (faqIndex: number) => {
     padding: 0;
     margin: 0;
   }
+  h2 {
+    font-size: 1.5rem;
+    margin-bottom: 16px;
+    @media (max-width: 440px) {
+      font-size: 1.25rem;
+    }
+  }
   .faq-question {
     font-weight: bold;
     cursor: pointer;

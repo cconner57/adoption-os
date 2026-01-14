@@ -99,6 +99,25 @@ const litterOptions = computed(() => {
       />
     </div>
 
+    <div class="form-row">
+      <div v-if="formData.adoption" style="flex: 1">
+        <InputField
+          label="Adoption Fee ($)"
+          v-model.number="formData.adoption.fee"
+          type="number"
+          placeholder="0.00"
+        />
+      </div>
+      <div v-if="formData.details" style="flex: 1">
+        <Select
+          label="Status"
+          v-model="formData.details.status"
+          :options="statusOptions"
+          fullWidth
+        />
+      </div>
+    </div>
+
     <div class="form-row" v-if="formData.details">
       <InputField
         label="Shelter Location"
@@ -116,13 +135,5 @@ const litterOptions = computed(() => {
         allow-create
       />
     </div>
-
-    <Select
-      v-if="formData.details"
-      label="Status"
-      v-model="formData.details.status"
-      :options="statusOptions"
-      fullWidth
-    />
   </div>
 </template>

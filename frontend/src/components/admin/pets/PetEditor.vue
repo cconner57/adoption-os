@@ -2,6 +2,7 @@
 import { ref, watch } from 'vue'
 import type { IPet } from '../../../models/common'
 import { SidebarNav } from '../../common/ui'
+import { useSettingsStore } from '../../../stores/settings'
 import PetEditorBasic from './editor/PetEditorBasic.vue'
 import PetEditorPhysical from './editor/PetEditorPhysical.vue'
 import PetEditorBehavior from './editor/PetEditorBehavior.vue'
@@ -19,6 +20,7 @@ const props = defineProps<{
 
 const emit = defineEmits(['close', 'save'])
 
+const settingsStore = useSettingsStore()
 const activeTab = ref('basic')
 const formData = ref<Partial<IPet>>({})
 
@@ -103,9 +105,18 @@ function initFormData(newPet: IPet) {
   if (!formData.value.behavior) {
     formData.value.behavior = {
       energyLevel: 'medium',
-      isGoodWithCats: null,
-      isGoodWithDogs: null,
-      isGoodWithKids: null,
+      isGoodWithCats:
+        (defaults.defaultGoodWithCats as any) === 'unknown'
+          ? null
+          : defaults.defaultGoodWithCats === 'yes',
+      isGoodWithDogs:
+        (defaults.defaultGoodWithDogs as any) === 'unknown'
+          ? null
+          : defaults.defaultGoodWithDogs === 'yes',
+      isGoodWithKids:
+        (defaults.defaultGoodWithKids as any) === 'unknown'
+          ? null
+          : defaults.defaultGoodWithKids === 'yes',
       isHouseTrained: null,
       personalityTags: [],
       bonded: { isBonded: false, bondedWith: [] },
@@ -172,13 +183,15 @@ watch(
       initFormData(newPet)
     } else {
       // Reset to Defaults for New Pet
+      const defaults = settingsStore.settings.pets || {}
+
       activeTab.value = 'basic'
       formData.value = {
         name: '',
-        species: 'cat',
+        species: (defaults.defaultSpecies as any) || 'cat',
         sex: 'unknown',
         physical: {
-          breed: 'Unknown',
+          breed: (defaults.defaultBreed as any) || 'Unknown',
           size: 'medium',
           ageGroup: 'baby',
           color: '',
@@ -192,7 +205,7 @@ watch(
             rabies: { dateAdministered: '' },
           },
           surgeries: [],
-          microchip: { microchipped: false },
+          microchip: { microchipped: defaults.requireMicrochip || false },
         },
         behavior: {
           energyLevel: 'medium',
@@ -200,7 +213,7 @@ watch(
           bonded: { isBonded: false, bondedWith: [] },
         },
         descriptions: {
-          primary: '',
+          primary: defaults.defaultBioTemplate || '',
           spotlight: '',
           behavioral: '',
           fun: '',
@@ -209,17 +222,17 @@ watch(
           specialNeeds: '',
         },
         details: {
-          status: 'available',
-          intakeDate: '',
-          shelterLocation: '',
+          status: (defaults.defaultIntakeStatus as any) || 'available',
+          intakeDate: new Date().toISOString().split('T')[0],
+          shelterLocation: defaults.defaultShelterLocation || '',
           preferredPetLitterType: '',
-          environmentType: null,
+          environmentType: (defaults.defaultEnvironment as any) || null,
         },
         adoption: {
           adoptedBy: '',
           date: '',
           newAdoptedName: '',
-          fee: null,
+          fee: defaults.defaultAdoptionFee || null,
           surveyCompleted: false,
           adopterContactInfo: {
             name: '',
@@ -246,7 +259,7 @@ watch(
         litterName: null,
         profileSettings: {
           isSpotlightFeatured: false,
-          showMedicalHistory: false,
+          showMedicalHistory: defaults.defaultShowMedical || false,
           showAdditionalInformation: false,
         },
       }
@@ -256,6 +269,16 @@ watch(
 )
 
 function handleSave() {
+  // Advanced Validation
+  const defaults = settingsStore.settings.pets || {}
+
+  if (defaults.requirePhotoForPublic && formData.value.details?.status === 'available') {
+    if (!formData.value.photos || formData.value.photos.length === 0) {
+      alert('Photo required for "Available" pets due to shelter policy.')
+      return
+    }
+  }
+
   emit('save', formData.value)
 }
 

@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+	"strings"
 
 	"github.com/cconner57/adoption-os/backend/internal/data"
 )
@@ -83,6 +84,7 @@ func (app *application) updatePet(w http.ResponseWriter, r *http.Request) {
 		Name            string          `json:"name"`
 		Sex             string          `json:"sex"`
 		Species         string          `json:"species"`
+		Slug            *string         `json:"slug"`
 		Physical        json.RawMessage `json:"physical"`
 		Behavior        json.RawMessage `json:"behavior"`
 		Medical         json.RawMessage `json:"medical"`
@@ -107,6 +109,7 @@ func (app *application) updatePet(w http.ResponseWriter, r *http.Request) {
 	pet := &data.Pet{
 		ID:              id,
 		Name:            input.Name,
+		Slug:            input.Slug,
 		Sex:             input.Sex,
 		Species:         input.Species,
 		Physical:        input.Physical,
@@ -121,6 +124,22 @@ func (app *application) updatePet(w http.ResponseWriter, r *http.Request) {
 		Photos:          input.Photos,
 		ProfileSettings: input.ProfileSettings,
 		LitterName:      input.LitterName,
+	}
+
+	// Self-healing: If slug is missing/empty, generate one from Name
+	if (pet.Slug == nil || *pet.Slug == "") && pet.Name != "" {
+		s := strings.ToLower(strings.Join(strings.Fields(pet.Name), "-"))
+		s = strings.Map(func(r rune) rune {
+			if (r >= 'a' && r <= 'z') || (r >= '0' && r <= '9') || r == '-' {
+				return r
+			}
+			return -1
+		}, s)
+		// Append first 5 chars of ID for uniqueness/safety
+		if len(id) >= 5 {
+			s = s + "-" + id[:5]
+		}
+		pet.Slug = &s
 	}
 
 	if input.LitterName != nil {

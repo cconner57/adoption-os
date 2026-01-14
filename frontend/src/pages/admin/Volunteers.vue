@@ -47,14 +47,31 @@ onMounted(async () => {
   }
 })
 
-const allShifts = ref([...mockShifts])
+const shifts = ref<IShift[]>([])
 
-const selectedShifts = computed(() => {
-  if (!selectedVolunteerId.value) return []
-  // Mock shifts likely use string IDs, our new IDs might be numbers or strings
-  // For now, loose equality or cast might be needed depending on type.
-  return allShifts.value.filter((s) => s.volunteerId == selectedVolunteerId.value)
+async function fetchShifts(volunteerId: string) {
+  try {
+    const res = await fetch(`/v1/volunteers/${volunteerId}/shifts`)
+    if (res.ok) {
+      const data = await res.json()
+      shifts.value = data.data.shifts || []
+    }
+  } catch (err) {
+    console.error('Failed to fetch shifts', err)
+  }
+}
+
+// Watch selection to fetch shifts
+import { watch } from 'vue'
+watch(selectedVolunteerId, (newId) => {
+  if (newId) {
+    fetchShifts(newId)
+  } else {
+    shifts.value = []
+  }
 })
+
+const selectedShifts = computed(() => shifts.value)
 
 const selectedIncidents = computed(() => {
   if (!selectedVolunteerId.value) return []
@@ -119,32 +136,35 @@ async function handleUpdateSave(updatedData: any) {
   }
 }
 
-function handleAddShift(shiftData: any) {
+async function handleAddShift(shiftData: any) {
   if (!selectedVolunteerId.value) return
 
-  // Basic recurring logic for prototype
-  const newShifts = []
+  // Handle recurring logic or single shift
+  // For MVP backed by API, let's start with single shift creation
+  // If recurring is needed, we would loop and create multiple, or handle in backend.
+  // The backend POST creates one shift.
+  // We'll mimic the previous loop logic but call API for each.
+
+  const shiftsToCreate = []
   const baseDate = new Date(shiftData.date)
 
   if (shiftData.isRecurring) {
-    // Generate shifts for next 3 months or until end date
     const endDate = shiftData.endDate
       ? new Date(shiftData.endDate)
       : new Date(baseDate.getTime() + 90 * 24 * 60 * 60 * 1000)
 
     let currentDate = new Date(baseDate)
-    while (currentDate <= endDate) {
-      newShifts.push({
-        id: `new-${Date.now()}-${Math.random()}`,
-        volunteerId: selectedVolunteerId.value,
+    // Safety limit
+    let count = 0
+    while (currentDate <= endDate && count < 50) {
+      shiftsToCreate.push({
+        volunteerId: parseInt(selectedVolunteerId.value), // Ensure int
         date: currentDate.toISOString().split('T')[0],
         startTime: shiftData.startTime,
         endTime: shiftData.endTime,
         role: shiftData.role,
-        status: 'scheduled',
       })
 
-      // Increment based on frequency
       if (shiftData.frequency === 'weekly') {
         currentDate.setDate(currentDate.getDate() + 7)
       } else if (shiftData.frequency === 'biweekly') {
@@ -152,23 +172,75 @@ function handleAddShift(shiftData: any) {
       } else if (shiftData.frequency === 'monthly') {
         currentDate.setMonth(currentDate.getMonth() + 1)
       } else {
-        break // Safety
+        break
       }
+      count++
     }
   } else {
-    // Single shift
-    newShifts.push({
-      id: `new-${Date.now()}`,
-      volunteerId: selectedVolunteerId.value,
+    shiftsToCreate.push({
+      volunteerId: parseInt(selectedVolunteerId.value),
       date: shiftData.date,
       startTime: shiftData.startTime,
       endTime: shiftData.endTime,
       role: shiftData.role,
-      status: 'scheduled',
     })
   }
 
-  allShifts.value.push(...newShifts)
+  // Execute requests
+  try {
+    for (const s of shiftsToCreate) {
+      await fetch('/v1/shifts', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(s),
+      })
+    }
+    // Refresh shifts
+    await fetchShifts(selectedVolunteerId.value)
+  } catch (e) {
+    console.error('Error creating shifts', e)
+    alert('Failed to create shifts')
+  }
+}
+
+async function handleUpdateShift(shiftData: any) {
+  if (!shiftData.id) return
+  try {
+    const res = await fetch(`/v1/shifts/${shiftData.id}`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(shiftData),
+    })
+
+    if (res.ok) {
+      await fetchShifts(selectedVolunteerId.value!)
+    } else {
+      const err = await res.text()
+      alert('Failed to update shift: ' + err)
+    }
+  } catch (e) {
+    console.error('Error updating shift', e)
+    alert('Error updating shift')
+  }
+}
+
+async function handleDeleteShift(shiftId: string | number) {
+  if (!confirm('Are you sure you want to delete this shift?')) return
+
+  try {
+    const res = await fetch(`/v1/shifts/${shiftId}`, {
+      method: 'DELETE',
+    })
+
+    if (res.ok) {
+      await fetchShifts(selectedVolunteerId.value!)
+    } else {
+      alert('Failed to delete shift')
+    }
+  } catch (e) {
+    console.error('Error deleting shift', e)
+    alert('Error deleting shift')
+  }
 }
 </script>
 
@@ -178,6 +250,7 @@ function handleAddShift(shiftData: any) {
     <aside class="sidebar">
       <VolunteerList
         :volunteers="allVolunteers"
+        :loading="isLoading"
         :selectedId="String(selectedVolunteerId)"
         @select="(vol) => (selectedVolunteerId = vol.id)"
         @add="handleOpenCreate"
@@ -201,6 +274,8 @@ function handleAddShift(shiftData: any) {
         :incidents="selectedIncidents"
         @add-shift="handleAddShift"
         @update="handleUpdateSave"
+        @update-shift="handleUpdateShift"
+        @delete-shift="handleDeleteShift"
       />
 
       <div v-else class="empty-selection">

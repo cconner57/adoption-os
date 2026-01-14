@@ -24,29 +24,59 @@ const canEdit = computed(() => {
 
 const isEditorOpen = ref(false)
 const isAddingShift = ref(false)
+const editingShiftData = ref<any>(null)
 const showToast = ref(false)
 
-const emit = defineEmits(['add-shift', 'update'])
+const emit = defineEmits(['add-shift', 'update', 'update-shift', 'delete-shift'])
 
 function openEditor() {
   isEditorOpen.value = true
 }
 
 function toggleAddShift() {
-  isAddingShift.value = !isAddingShift.value
+  if (isAddingShift.value) {
+    isAddingShift.value = false
+    editingShiftData.value = null
+  } else {
+    editingShiftData.value = null
+    isAddingShift.value = true
+  }
+}
+
+function editShift(shift: any) {
+  editingShiftData.value = shift
+  isAddingShift.value = true
+}
+
+function deleteShift(shift: any) {
+  emit('delete-shift', shift.id)
 }
 
 function handleShiftSave(shiftData: any) {
-  emit('add-shift', shiftData)
+  if (shiftData.id) {
+    emit('update-shift', shiftData)
+  } else {
+    emit('add-shift', shiftData)
+  }
   isAddingShift.value = false
+  editingShiftData.value = null
   showToast.value = true
 }
 
 function handleSave(updatedData: Partial<IVolunteer>) {
   emit('update', updatedData)
   isEditorOpen.value = false
-  // Toast handled by parent or shown here? Maybe parent.
-  // actually, if we want to show success here, we can, but persistence is up to parent.
+}
+
+function verifyShift(shift: IShift, status: string) {
+  const updatedShift = { ...shift, status }
+  emit('update-shift', updatedShift)
+}
+
+function markLate(shift: IShift) {
+  // Pre-fill with late status so user sees it, then open form to edit time
+  editingShiftData.value = { ...shift, status: 'late' }
+  isAddingShift.value = true
 }
 
 function handleArchive() {
@@ -63,14 +93,96 @@ const activeTab = ref<'overview' | 'schedule' | 'incidents' | 'performance' | 's
 )
 const tabs = ['overview', 'schedule', 'incidents', 'performance', 'suggestions'] as const
 
+const showAllUpcoming = ref(false)
 const upcomingShifts = computed(() => {
   const today = new Date().toISOString().split('T')[0]
-  return props.shifts.filter((s) => s.date >= today).sort((a, b) => a.date.localeCompare(b.date))
+  const all = props.shifts
+    .filter((s) => s.date >= today)
+    .sort((a, b) => a.date.localeCompare(b.date))
+  return showAllUpcoming.value ? all : all.slice(0, 2)
 })
 
-const pastShifts = computed(() => {
+const unverifiedShifts = computed(() => {
   const today = new Date().toISOString().split('T')[0]
-  return props.shifts.filter((s) => s.date < today).sort((a, b) => b.date.localeCompare(a.date))
+  return props.shifts
+    .filter((s) => s.date < today && s.status === 'scheduled')
+    .sort((a, b) => b.date.localeCompare(a.date)) // Newest to oldest
+})
+
+const verifiedPastShifts = computed(() => {
+  const today = new Date().toISOString().split('T')[0]
+  return props.shifts
+    .filter((s) => s.date < today && s.status !== 'scheduled')
+    .sort((a, b) => b.date.localeCompare(a.date))
+})
+
+const calculatedTotalHours = computed(() => {
+  return props.shifts.reduce((total, shift) => {
+    // Only count completed/all_good/late shifts (late implies partial completion)
+    if (['completed', 'all_good', 'late'].includes(shift.status)) {
+      const [startH, startM] = shift.startTime.split(':').map(Number)
+      const [endH, endM] = shift.endTime.split(':').map(Number)
+
+      // Calculate duration in hours (decimal)
+      const startDec = startH + startM / 60
+      const endDec = endH + endM / 60
+      return total + (endDec - startDec)
+    }
+    return total
+  }, 0)
+})
+
+const calculatedStreak = computed(() => {
+  // Sort all past verified shifts by date descending
+  const history = props.shifts
+    .filter((s) =>
+      ['completed', 'all_good', 'late', 'missed', 'covered', 'no_show'].includes(s.status),
+    )
+    .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
+
+  if (history.length === 0) return 0
+
+  // Check if the most recent shift was too long ago (e.g., > 14 days? User said "completed one shift per week")
+  // Let's be generous and say if they haven't volunteered in 2 weeks, streak is gone.
+  const today = new Date()
+  const lastShiftDate = new Date(history[0].date)
+  const diffTime = Math.abs(today.getTime() - lastShiftDate.getTime())
+  const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24))
+
+  if (diffDays > 14) return 0
+
+  let streak = 0
+  let prevDate = lastShiftDate
+
+  for (const shift of history) {
+    // If we hit a "bad" status, the streak chain is broken (it reset to 0 at this point in history)
+    if (['missed', 'covered', 'no_show'].includes(shift.status)) {
+      break
+    }
+
+    // Check gap between this shift and the previous one we counted
+    // If gap > 8 days (approx 1 week + grace), streak breaks
+    const currentDate = new Date(shift.date)
+    const gapTime = Math.abs(prevDate.getTime() - currentDate.getTime())
+    const gapDays = Math.ceil(gapTime / (1000 * 60 * 60 * 24))
+
+    // Note: gapDays will be 0 for the first item (prevDate initialized to it)
+    // or if multiple shifts on same day.
+    // If gap is significant verified shifts, break.
+    // Wait: if I have 2 shifts in same week, gap is small.
+    // If I have shift on Day 10 and Day 1, gap is 9. Break.
+
+    // We only check gap if we have started counting (streak > 0)
+    if (streak > 0 && gapDays > 10) {
+      // 10 days grace for "weekly" expectation
+      break
+    }
+
+    streak++
+    prevDate = currentDate
+  }
+
+  return streak
 })
 
 const yearlyStats = computed(() => {
@@ -88,15 +200,14 @@ const yearlyStats = computed(() => {
     const end = parseInt(shift.endTime.split(':')[0])
     const duration = end - start
 
-    // Logic: Only count hours if "all_good" or "late" (assuming late still worked some).
-    // Let's assume completed shifts count.
-    if (['all_good', 'late'].includes(shift.status)) {
+    // Logic: Only count hours if "all_good" or "completed" or "late"
+    if (['completed', 'all_good', 'late'].includes(shift.status)) {
       stats[year].hours += duration
     }
 
     stats[year].shifts += 1
 
-    if (['no_show'].includes(shift.status)) {
+    if (['no_show', 'missed'].includes(shift.status)) {
       stats[year].missed += 1
     }
   })
@@ -109,6 +220,11 @@ const yearlyStats = computed(() => {
     })
     .sort((a, b) => b.year.localeCompare(a.year))
 })
+
+// Helper to determine display status
+function getDisplayStatus(shift: IShift) {
+  return shift.status.replace('_', ' ')
+}
 
 const suggestions = computed(() => {
   const list: { title: string; desc: string; icon: string }[] = []
@@ -148,19 +264,33 @@ const suggestions = computed(() => {
   return list
 })
 
-function getShiftStatusColor(status: string) {
-  switch (status) {
+function getShiftStatusColor(shift: IShift) {
+  const displayStatus = getDisplayStatus(shift).toLowerCase()
+  switch (displayStatus) {
     case 'all_good':
+    case 'completed':
       return 'green'
     case 'late':
       return 'orange'
     case 'no_show':
+    case 'missed':
       return 'red'
     case 'cancelled':
       return 'gray'
+    case 'covered':
+      return 'purple'
     default:
       return 'blue'
   }
+}
+
+function formatTime(timeStr: string) {
+  if (!timeStr) return ''
+  const [hours, minutes] = timeStr.split(':')
+  const h = parseInt(hours, 10)
+  const suffix = h >= 12 ? 'PM' : 'AM'
+  const hour12 = h % 12 || 12
+  return `${hour12}:${minutes} ${suffix}`
 }
 </script>
 
@@ -189,8 +319,8 @@ function getShiftStatusColor(status: string) {
         </div>
       </div>
       <div class="actions">
-        <button v-if="canEdit" class="action-btn" @click="openEditor">Edit Profile</button>
-        <button class="action-btn outline">Message</button>
+        <Button v-if="canEdit" color="blue" @click="openEditor">Edit Profile</Button>
+        <Button color="white">Message</Button>
       </div>
     </header>
 
@@ -198,11 +328,11 @@ function getShiftStatusColor(status: string) {
     <div class="metrics-bar">
       <div class="metric-item">
         <span class="metric-label">Total Hours</span>
-        <span class="metric-value">{{ volunteer.totalHours || 0 }}</span>
+        <span class="metric-value">{{ calculatedTotalHours || 0 }}</span>
       </div>
       <div class="metric-item">
         <span class="metric-label">Streak</span>
-        <span class="metric-value">{{ volunteer.streak || 0 }} 🔥</span>
+        <span class="metric-value">{{ calculatedStreak }} 🔥</span>
       </div>
       <div class="metric-item">
         <span class="metric-label">Reliability</span>
@@ -400,15 +530,32 @@ function getShiftStatusColor(status: string) {
             "
           >
             <h3>Upcoming Shifts</h3>
-            <Button
-              size="small"
-              :color="isAddingShift ? 'white' : 'green'"
-              :title="isAddingShift ? 'Cancel' : '+ Add Shift'"
-              @click="toggleAddShift"
-            />
+            <div class="header-actions" style="display: flex; gap: 8px">
+              <button
+                v-if="
+                  !showAllUpcoming &&
+                  shifts.filter((s) => s.date >= new Date().toISOString().split('T')[0]).length > 2
+                "
+                class="text-btn"
+                @click="showAllUpcoming = true"
+              >
+                View All
+              </button>
+              <button v-if="showAllUpcoming" class="text-btn" @click="showAllUpcoming = false">
+                Show Less
+              </button>
+              <Button :color="isAddingShift ? 'white' : 'green'" @click="toggleAddShift">
+                {{ isAddingShift ? 'Cancel' : '+ Add Shift' }}
+              </Button>
+            </div>
           </div>
 
-          <ShiftForm v-if="isAddingShift" @close="isAddingShift = false" @save="handleShiftSave" />
+          <ShiftForm
+            v-if="isAddingShift"
+            :initialData="editingShiftData"
+            @close="toggleAddShift"
+            @save="handleShiftSave"
+          />
 
           <div v-if="upcomingShifts.length === 0" class="empty-msg">
             No upcoming shifts scheduled.
@@ -423,14 +570,77 @@ function getShiftStatusColor(status: string) {
               </div>
               <div class="shift-info">
                 <div class="shift-role">{{ shift.role }}</div>
-                <div class="shift-time">{{ shift.startTime }} - {{ shift.endTime }}</div>
+                <div class="shift-time">
+                  {{ formatTime(shift.startTime) }} - {{ formatTime(shift.endTime) }}
+                </div>
               </div>
               <div class="shift-status">
-                <span class="status-pill" :class="getShiftStatusColor(shift.status)">{{
-                  shift.status.replace('_', ' ')
+                <span class="status-pill" :class="getShiftStatusColor(shift)">{{
+                  getDisplayStatus(shift)
                 }}</span>
               </div>
+              <div class="shift-actions">
+                <button class="icon-btn edit-btn" @click="editShift(shift)" title="Edit">✏️</button>
+                <button class="icon-btn delete-btn" @click="deleteShift(shift)" title="Delete">
+                  🗑️
+                </button>
+              </div>
             </div>
+          </div>
+        </div>
+
+        <div v-if="unverifiedShifts.length > 0" class="section-block mt-8">
+          <h3>Shifts Needing Verification</h3>
+          <div class="table-container">
+            <table class="simple-table">
+              <thead>
+                <tr>
+                  <th>Date</th>
+                  <th>Role</th>
+                  <th>Time</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr v-for="shift in unverifiedShifts" :key="shift.id">
+                  <td>{{ formatDate(shift.date) }}</td>
+                  <td>{{ shift.role }}</td>
+                  <td>{{ formatTime(shift.startTime) }} - {{ formatTime(shift.endTime) }}</td>
+                  <td>
+                    <div class="verify-actions">
+                      <button
+                        class="action-btn small green"
+                        @click="verifyShift(shift, 'completed')"
+                        title="Mark Completed"
+                      >
+                        ✅ Complete
+                      </button>
+                      <button
+                        class="action-btn small red"
+                        @click="verifyShift(shift, 'missed')"
+                        title="Mark Missed"
+                      >
+                        ❌ Missed
+                      </button>
+                      <button
+                        class="action-btn small purple"
+                        @click="verifyShift(shift, 'covered')"
+                        title="Mark Covered"
+                      >
+                        🔄 Covered
+                      </button>
+                      <button
+                        class="action-btn small orange"
+                        @click="markLate(shift)"
+                        title="Mark Late & Edit Time"
+                      >
+                        ⚠️ Late
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
           </div>
         </div>
 
@@ -448,13 +658,13 @@ function getShiftStatusColor(status: string) {
                 </tr>
               </thead>
               <tbody>
-                <tr v-for="shift in pastShifts" :key="shift.id">
+                <tr v-for="shift in verifiedPastShifts" :key="shift.id">
                   <td>{{ formatDate(shift.date) }}</td>
                   <td>{{ shift.role }}</td>
-                  <td>{{ shift.startTime }} - {{ shift.endTime }}</td>
+                  <td>{{ formatTime(shift.startTime) }} - {{ formatTime(shift.endTime) }}</td>
                   <td>
-                    <span class="status-pill small" :class="getShiftStatusColor(shift.status)">{{
-                      shift.status.replace('_', ' ')
+                    <span class="status-pill small" :class="getShiftStatusColor(shift)">{{
+                      getDisplayStatus(shift)
                     }}</span>
                   </td>
                   <td class="notes">{{ shift.notes || '-' }}</td>
@@ -1184,5 +1394,107 @@ function getShiftStatusColor(status: string) {
   font-size: 0.9rem;
   color: hsl(from var(--color-neutral) h s 50%);
   line-height: 1.4;
+}
+</style>
+
+<style scoped>
+.shift-card {
+  display: flex;
+  align-items: center;
+}
+
+.shift-actions {
+  margin-left: auto;
+  display: flex;
+  gap: 8px;
+  /* Always show for now to ensure visibility on touch/mobile if needed, or stick to opacity */
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+
+.shift-card:hover .shift-actions {
+  opacity: 1;
+}
+
+.icon-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 1.1rem;
+  padding: 4px;
+  border-radius: 4px;
+  transition: background 0.2s;
+}
+
+.edit-btn:hover {
+  background: hsl(from var(--color-warning) h s 90%);
+}
+
+.delete-btn:hover {
+  background: hsl(from var(--color-danger) h s 90%);
+}
+
+.verify-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.action-btn.small {
+  padding: 4px 8px;
+  font-size: 0.75rem;
+  border-radius: 4px;
+}
+
+.action-btn.green {
+  background: hsl(from var(--color-primary) h s 95%);
+  color: var(--color-primary);
+  border: 1px solid var(--color-primary);
+}
+.action-btn.green:hover {
+  background: var(--color-primary);
+  color: white;
+}
+
+.action-btn.red {
+  background: hsl(from var(--color-danger) h s 95%);
+  color: var(--color-danger);
+  border: 1px solid var(--color-danger);
+}
+.action-btn.red:hover {
+  background: var(--color-danger);
+  color: white;
+}
+
+.action-btn.purple {
+  background: hsl(270 95% 95%); /* Approximating purple */
+  color: hsl(270 60% 50%);
+  border: 1px solid hsl(270 60% 50%);
+}
+.action-btn.purple:hover {
+  background: hsl(270 60% 50%);
+  color: white;
+}
+
+.action-btn.orange {
+  background: hsl(from var(--color-warning) h s 95%);
+  color: var(--color-warning);
+  border: 1px solid var(--color-warning);
+}
+.action-btn.orange:hover {
+  background: var(--color-warning);
+  color: white;
+}
+
+.text-btn {
+  background: none;
+  border: none;
+  color: var(--color-primary);
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 4px 8px;
+}
+.text-btn:hover {
+  text-decoration: underline;
 }
 </style>

@@ -1,17 +1,21 @@
 <script setup lang="ts">
-import { ref, computed } from 'vue'
+import { ref } from 'vue'
 import { Button, InputField, Select, Toggle } from '../../common/ui'
 
-const props = defineProps<{}>()
+const props = defineProps<{
+  initialData?: any
+}>()
 
 const emit = defineEmits(['close', 'save'])
 
 const formData = ref({
-  date: '',
-  startTime: '',
-  endTime: '',
-  role: 'Feeding/Cleaning',
-  isRecurring: false,
+  id: props.initialData?.id || undefined,
+  date: props.initialData?.date || '',
+  startTime: props.initialData?.startTime || '',
+  endTime: props.initialData?.endTime || '',
+  role: props.initialData?.role || 'Feeding/Cleaning',
+  status: props.initialData?.status || 'scheduled',
+  isRecurring: false, // Editing recurrence is tricky, maybe disable for edit?
   frequency: 'weekly',
   endDate: '',
 })
@@ -22,6 +26,20 @@ const roles = [
   { label: 'Dog Walking', value: 'Dog Walking' },
   { label: 'Customer Support', value: 'Customer Support' },
   { label: 'Adoption Event', value: 'Adoption Event' },
+]
+
+const statuses = [
+  { label: 'Scheduled', value: 'scheduled' },
+  { label: 'Completed', value: 'completed' }, // mapped to all_good or logic?
+  // Let's stick to the user's requested terms but map to DB values if needed or just use these keys
+  // DB has 'scheduled', 'all_good', 'late', 'no_show', 'cancelled' in current schema?
+  // I should probably map "Completed" -> "all_good", "Missed" -> "no_show".
+  // Or I can add new strings to DB since it is text.
+  // Let's use clean keys.
+  { label: 'Completed', value: 'completed' },
+  { label: 'Late', value: 'late' },
+  { label: 'Missed', value: 'missed' },
+  { label: 'Covered', value: 'covered' },
 ]
 
 const frequencies = [
@@ -61,7 +79,12 @@ function handleSave() {
         <InputField label="End Time" type="time" v-model="formData.endTime" />
       </div>
 
-      <div class="recurring-section">
+      <div v-if="formData.id" class="field-group">
+        <label class="field-label">Status</label>
+        <Select v-model="formData.status" :options="statuses" />
+      </div>
+
+      <div v-if="!formData.id" class="recurring-section">
         <div class="field-group">
           <Toggle v-model="formData.isRecurring" label="Recurring Shift?" labelPosition="left" />
         </div>
@@ -78,8 +101,10 @@ function handleSave() {
       </div>
 
       <div class="form-actions">
-        <Button color="white" title="Cancel" @click="emit('close')" />
-        <Button color="green" title="Save Shift" @click="handleSave" />
+        <Button color="white" @click="emit('close')">Cancel</Button>
+        <Button color="green" @click="handleSave">{{
+          formData.id ? 'Update Shift' : 'Save Shift'
+        }}</Button>
       </div>
     </div>
   </div>

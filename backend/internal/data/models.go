@@ -8,6 +8,7 @@ type Models struct {
 	Pets       PetModel
 	Metrics    MetricModel
 	Sessions   SessionModel
+	Shifts     ShiftModel
 }
 
 func NewModels(db *sql.DB) Models {
@@ -17,5 +18,6 @@ func NewModels(db *sql.DB) Models {
 		Pets:       PetModel{DB: db},
 		Metrics:    MetricModel{DB: db},
 		Sessions:   SessionModel{DB: db},
+		Shifts:     ShiftModel{DB: db},
 	}
 }

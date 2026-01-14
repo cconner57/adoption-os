@@ -35,6 +35,12 @@ func (app *application) routes() http.Handler {
 	mux.Handle("GET /v1/volunteers/{id}", app.requireLogin(http.HandlerFunc(app.getVolunteerHandler)))
 	mux.Handle("PUT /v1/volunteers/{id}", app.requireLogin(http.HandlerFunc(app.updateVolunteerHandler)))
 
+	// Shift Management
+	mux.Handle("POST /v1/shifts", app.requireLogin(http.HandlerFunc(app.createShiftHandler)))
+	mux.Handle("GET /v1/volunteers/{id}/shifts", app.requireLogin(http.HandlerFunc(app.listVolunteerShiftsHandler)))
+	mux.Handle("PUT /v1/shifts/{id}", app.requireLogin(http.HandlerFunc(app.updateShiftHandler)))
+	mux.Handle("DELETE /v1/shifts/{id}", app.requireLogin(http.HandlerFunc(app.deleteShiftHandler)))
+
 	// User Authentication
 	mux.HandleFunc("POST /api/users", app.registerUserHandler)
 	mux.HandleFunc("POST /api/login", app.loginUserHandler)

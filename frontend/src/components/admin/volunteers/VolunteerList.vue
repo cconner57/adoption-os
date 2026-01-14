@@ -5,6 +5,7 @@ import type { IVolunteer } from '../../../stores/mockVolunteerData'
 const props = defineProps<{
   selectedId?: string
   volunteers: IVolunteer[]
+  loading?: boolean
 }>()
 
 const emit = defineEmits<{
@@ -43,6 +44,21 @@ const filteredVolunteers = computed(() => {
     return nameA.localeCompare(nameB)
   })
 })
+
+// Auto-select first if none selected or current selection is hidden
+import { watch } from 'vue'
+
+watch(
+  () => filteredVolunteers.value,
+  (newVal) => {
+    const currentSelected = newVal.find((v) => String(v.id) === String(props.selectedId))
+    if (!currentSelected && newVal.length > 0) {
+      // Select the first one
+      emit('select', newVal[0])
+    }
+  },
+  { immediate: true },
+)
 
 function selectVolunteer(vol: IVolunteer) {
   emit('select', vol)
@@ -102,15 +118,27 @@ function selectVolunteer(vol: IVolunteer) {
     </div>
 
     <div class="vol-list">
-      <div v-if="filteredVolunteers.length === 0" class="empty-list">
+      <!-- Loading Skeleton -->
+      <div v-if="loading" class="skeleton-list">
+        <div v-for="n in 6" :key="n" class="vol-item skeleton-item">
+          <div class="skeleton-avatar"></div>
+          <div class="vol-info">
+            <div class="skeleton-text w-60"></div>
+            <div class="skeleton-text w-40"></div>
+          </div>
+        </div>
+      </div>
+
+      <div v-else-if="filteredVolunteers.length === 0" class="empty-list">
         No {{ filterType }} volunteers found.
       </div>
 
       <div
+        v-else
         v-for="vol in filteredVolunteers"
         :key="vol.id"
         class="vol-item"
-        :class="{ selected: vol.id === selectedId }"
+        :class="{ selected: String(vol.id) === selectedId }"
         @click="selectVolunteer(vol)"
       >
         <div class="vol-avatar">{{ vol.firstName[0] }}{{ vol.lastName[0] }}</div>
@@ -286,9 +314,17 @@ function selectVolunteer(vol: IVolunteer) {
   }
 
   &.selected {
-    background: hsl(from var(--color-secondary) h s 95%);
+    background: white;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    transform: scale(1.02);
+    margin-bottom: 8px; /* Add space for potentially larger item */
+    margin-top: 4px;
+    z-index: 1;
+
     .name {
-      color: var(--color-secondary);
+      color: var(
+        --text-primary
+      ); /* Keep text primary or maybe secondary? User screenshot had black text */
     }
   }
 }
@@ -358,6 +394,52 @@ function selectVolunteer(vol: IVolunteer) {
   }
   &.low {
     color: var(--color-danger);
+  }
+}
+</style>
+
+<style scoped>
+/* Skeleton Styles */
+.skeleton-item {
+  cursor: default;
+  &:hover {
+    background: transparent;
+  }
+}
+
+.skeleton-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: hsl(from var(--color-neutral) h s 90%);
+  margin-right: 12px;
+  animation: pulse 1.5s infinite;
+}
+
+.skeleton-text {
+  height: 12px;
+  background: hsl(from var(--color-neutral) h s 90%);
+  border-radius: 4px;
+  margin-bottom: 6px;
+  animation: pulse 1.5s infinite;
+
+  &.w-60 {
+    width: 60%;
+  }
+  &.w-40 {
+    width: 40%;
+  }
+}
+
+@keyframes pulse {
+  0% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+  100% {
+    opacity: 1;
   }
 }
 </style>

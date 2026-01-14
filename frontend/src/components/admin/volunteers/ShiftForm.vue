@@ -18,6 +18,8 @@ const formData = ref({
   isRecurring: false, // Editing recurrence is tricky, maybe disable for edit?
   frequency: 'weekly',
   endDate: '',
+  isCovering: false,
+  coveringName: '',
 })
 
 const roles = [
@@ -49,8 +51,16 @@ const frequencies = [
 ]
 
 function handleSave() {
-  emit('save', { ...formData.value })
-  // Reset form or keep? Resetting is better.
+  const payload = { ...formData.value }
+
+  // If covering, save to notes
+  if (payload.isCovering && payload.coveringName) {
+    payload.notes = `Covering for ${payload.coveringName}`
+  }
+
+  emit('save', payload)
+
+  // Reset form
   formData.value = {
     date: '',
     startTime: '',
@@ -59,6 +69,8 @@ function handleSave() {
     isRecurring: false,
     frequency: 'weekly',
     endDate: '',
+    isCovering: false,
+    coveringName: '',
   }
 }
 </script>
@@ -98,6 +110,22 @@ function handleSave() {
             <InputField label="End Date" type="date" v-model="formData.endDate" />
           </div>
         </div>
+      </div>
+
+      <div class="field-group mt-4">
+        <Toggle
+          v-model="formData.isCovering"
+          label="Is this covering another volunteer?"
+          labelPosition="left"
+        />
+      </div>
+
+      <div v-if="formData.isCovering" class="field-group mt-2">
+        <InputField
+          label="Who are you covering for?"
+          placeholder="Volunteer Name"
+          v-model="formData.coveringName"
+        />
       </div>
 
       <div class="form-actions">

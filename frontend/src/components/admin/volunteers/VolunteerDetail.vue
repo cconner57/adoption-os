@@ -116,83 +116,17 @@ const verifiedPastShifts = computed(() => {
     .sort((a, b) => b.date.localeCompare(a.date))
 })
 
-const calculatedTotalHours = computed(() => {
-  return props.shifts.reduce((total, shift) => {
-    // Only count completed/all_good/late shifts (late implies partial completion)
-    if (['completed', 'all_good', 'late'].includes(shift.status)) {
-      const [startH, startM] = shift.startTime.split(':').map(Number)
-      const [endH, endM] = shift.endTime.split(':').map(Number)
-
-      // Calculate duration in hours (decimal)
-      const startDec = startH + startM / 60
-      const endDec = endH + endM / 60
-      return total + (endDec - startDec)
-    }
-    return total
-  }, 0)
-})
-
-const calculatedStreak = computed(() => {
-  // Sort all past verified shifts by date descending
-  const history = props.shifts
-    .filter((s) =>
-      ['completed', 'all_good', 'late', 'missed', 'covered', 'no_show'].includes(s.status),
-    )
-    .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
-
-  if (history.length === 0) return 0
-
-  // Check if the most recent shift was too long ago (e.g., > 14 days? User said "completed one shift per week")
-  // Let's be generous and say if they haven't volunteered in 2 weeks, streak is gone.
-  const today = new Date()
-  const lastShiftDate = new Date(history[0].date)
-  const diffTime = Math.abs(today.getTime() - lastShiftDate.getTime())
-  const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24))
-
-  if (diffDays > 14) return 0
-
-  let streak = 0
-  let prevDate = lastShiftDate
-
-  for (const shift of history) {
-    // If we hit a "bad" status, the streak chain is broken (it reset to 0 at this point in history)
-    if (['missed', 'covered', 'no_show'].includes(shift.status)) {
-      break
-    }
-
-    // Check gap between this shift and the previous one we counted
-    // If gap > 8 days (approx 1 week + grace), streak breaks
-    const currentDate = new Date(shift.date)
-    const gapTime = Math.abs(prevDate.getTime() - currentDate.getTime())
-    const gapDays = Math.ceil(gapTime / (1000 * 60 * 60 * 24))
-
-    // Note: gapDays will be 0 for the first item (prevDate initialized to it)
-    // or if multiple shifts on same day.
-    // If gap is significant verified shifts, break.
-    // Wait: if I have 2 shifts in same week, gap is small.
-    // If I have shift on Day 10 and Day 1, gap is 9. Break.
-
-    // We only check gap if we have started counting (streak > 0)
-    if (streak > 0 && gapDays > 10) {
-      // 10 days grace for "weekly" expectation
-      break
-    }
-
-    streak++
-    prevDate = currentDate
-  }
-
-  return streak
-})
-
 const yearlyStats = computed(() => {
-  const stats: Record<string, { year: string; hours: number; shifts: number; missed: number }> = {}
+  const stats: Record<
+    string,
+    { year: string; hours: number; totalShifts: number; completedShifts: number; missed: number }
+  > = {}
 
   // Initialize with join year if no shifts? No, just use shift data for accuracy.
   props.shifts.forEach((shift) => {
     const year = shift.date.split('-')[0]
     if (!stats[year]) {
-      stats[year] = { year, hours: 0, shifts: 0, missed: 0 }
+      stats[year] = { year, hours: 0, totalShifts: 0, completedShifts: 0, missed: 0 }
     }
 
     // Calculate hours
@@ -203,9 +137,10 @@ const yearlyStats = computed(() => {
     // Logic: Only count hours if "all_good" or "completed" or "late"
     if (['completed', 'all_good', 'late'].includes(shift.status)) {
       stats[year].hours += duration
+      stats[year].completedShifts += 1
     }
 
-    stats[year].shifts += 1
+    stats[year].totalShifts += 1
 
     if (['no_show', 'missed'].includes(shift.status)) {
       stats[year].missed += 1
@@ -215,8 +150,16 @@ const yearlyStats = computed(() => {
   // Calculate reliability % per year
   return Object.values(stats)
     .map((s) => {
-      const reliability = s.shifts > 0 ? Math.round(((s.shifts - s.missed) / s.shifts) * 100) : 0
-      return { ...s, reliability }
+      // Reliability is based on Total Scheduled/Attempted shifts vs Missed
+      const reliability =
+        s.totalShifts > 0 ? Math.round(((s.totalShifts - s.missed) / s.totalShifts) * 100) : 0
+
+      return {
+        year: s.year,
+        hours: s.hours,
+        shifts: s.completedShifts, // Display only completed shifts in the 'Total Shifts' column
+        reliability,
+      }
     })
     .sort((a, b) => b.year.localeCompare(a.year))
 })
@@ -279,6 +222,8 @@ function getShiftStatusColor(shift: IShift) {
       return 'gray'
     case 'covered':
       return 'purple'
+    case 'covered_late':
+      return 'pink'
     default:
       return 'blue'
   }
@@ -328,11 +273,11 @@ function formatTime(timeStr: string) {
     <div class="metrics-bar">
       <div class="metric-item">
         <span class="metric-label">Total Hours</span>
-        <span class="metric-value">{{ calculatedTotalHours || 0 }}</span>
+        <span class="metric-value">{{ volunteer.totalHours || 0 }}</span>
       </div>
       <div class="metric-item">
         <span class="metric-label">Streak</span>
-        <span class="metric-value">{{ calculatedStreak }} 🔥</span>
+        <span class="metric-value">{{ volunteer.streak }} 🔥</span>
       </div>
       <div class="metric-item">
         <span class="metric-label">Reliability</span>
@@ -340,7 +285,11 @@ function formatTime(timeStr: string) {
           class="metric-val-colored"
           :style="{
             color:
-              volunteer.reliabilityScore >= 90 ? 'var(--color-primary)' : 'var(--color-warning)',
+              volunteer.reliabilityScore >= 80
+                ? 'var(--color-primary)'
+                : volunteer.reliabilityScore >= 60
+                  ? 'var(--color-warning)'
+                  : 'var(--color-danger)',
           }"
           >{{ volunteer.reliabilityScore }}%</span
         >
@@ -622,13 +571,22 @@ function formatTime(timeStr: string) {
                       >
                         ❌ Missed
                       </button>
-                      <button
-                        class="action-btn small purple"
-                        @click="verifyShift(shift, 'covered')"
-                        title="Mark Covered"
-                      >
-                        🔄 Covered
-                      </button>
+                      <div class="verify-split-btn">
+                        <button
+                          class="action-btn small purple"
+                          @click="verifyShift(shift, 'covered')"
+                          title="Covered (>24h Notice)"
+                        >
+                          🔄 >24h
+                        </button>
+                        <button
+                          class="action-btn small pink"
+                          @click="verifyShift(shift, 'covered_late')"
+                          title="Covered (<24h Notice)"
+                        >
+                          ⏰ &lt;24h
+                        </button>
+                      </div>
                       <button
                         class="action-btn small orange"
                         @click="markLate(shift)"
@@ -704,7 +662,9 @@ function formatTime(timeStr: string) {
         <div class="perf-row">
           <!-- Yearly Stats -->
           <div class="card perf-card">
-            <h3>Yearly Performance</h3>
+            <div>
+              <h3>Yearly Performance</h3>
+            </div>
             <table class="simple-table perf-table">
               <thead>
                 <tr>
@@ -723,7 +683,7 @@ function formatTime(timeStr: string) {
                     <span
                       class="status-pill small"
                       :class="
-                        stat.reliability >= 90 ? 'green' : stat.reliability >= 70 ? 'orange' : 'red'
+                        stat.reliability >= 80 ? 'green' : stat.reliability >= 60 ? 'orange' : 'red'
                       "
                     >
                       {{ stat.reliability }}%
@@ -935,6 +895,18 @@ function formatTime(timeStr: string) {
 .metric-val-colored {
   font-size: 1.2rem;
   font-weight: 700;
+}
+
+.score-badge {
+  &.high {
+    color: var(--color-primary);
+  }
+  &.mid {
+    color: var(--color-warning);
+  }
+  &.low {
+    color: var(--color-danger);
+  }
 }
 
 .mini-badge {
@@ -1482,6 +1454,16 @@ function formatTime(timeStr: string) {
 }
 .action-btn.orange:hover {
   background: var(--color-warning);
+  color: white;
+}
+
+.action-btn.pink {
+  background: hsl(330 60% 90%);
+  color: hsl(330 60% 40%);
+  border: 1px solid hsl(330 60% 40%);
+}
+.action-btn.pink:hover {
+  background: hsl(330 60% 50%);
   color: white;
 }
 

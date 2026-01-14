@@ -151,7 +151,7 @@ function selectVolunteer(vol: IVolunteer) {
         </div>
         <div
           class="vol-score"
-          :class="vol.reliabilityScore >= 90 ? 'high' : vol.reliabilityScore >= 70 ? 'mid' : 'low'"
+          :class="vol.reliabilityScore >= 80 ? 'high' : vol.reliabilityScore >= 60 ? 'mid' : 'low'"
         >
           {{ vol.reliabilityScore }}%
         </div>

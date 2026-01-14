@@ -52,6 +52,9 @@ func (app *application) createShiftHandler(w http.ResponseWriter, r *http.Reques
 		return
 	}
 
+	// Recalculate stats in bg or sync? Sync is fine for now.
+	app.recalculateVolunteerStats(shift.VolunteerID)
+
 	app.JSONResponse(w, http.StatusCreated, envelope{"shift": shift})
 }
 
@@ -163,11 +166,20 @@ func (app *application) updateShiftHandler(w http.ResponseWriter, r *http.Reques
 		return
 	}
 
+	app.recalculateVolunteerStats(shift.VolunteerID)
+
 	app.JSONResponse(w, http.StatusOK, envelope{"shift": shift})
 }
 
 func (app *application) deleteShiftHandler(w http.ResponseWriter, r *http.Request) {
 	id, err := app.readIDParam(r)
+	if err != nil {
+		app.notFoundResponse(w, r)
+		return
+	}
+
+	// Get shift first to preserve VolunteerID for recalc
+	shift, err := app.models.Shifts.Get(id)
 	if err != nil {
 		app.notFoundResponse(w, r)
 		return
@@ -183,6 +195,8 @@ func (app *application) deleteShiftHandler(w http.ResponseWriter, r *http.Reques
 		}
 		return
 	}
+
+	app.recalculateVolunteerStats(shift.VolunteerID)
 
 	app.JSONResponse(w, http.StatusOK, envelope{"message": "shift deleted successfully"})
 }

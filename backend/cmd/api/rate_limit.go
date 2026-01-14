@@ -51,9 +51,9 @@ func (app *application) rateLimit(next http.Handler) http.Handler {
 		mu.Lock()
 
 		if _, found := clients[ip]; !found {
-			// Create a new limiter: 1 request per second, with burst of 5.
+			// Create a new limiter: 2 requests per second, with burst of 20.
 			clients[ip] = &client{
-				limiter: rate.NewLimiter(1, 5),
+				limiter: rate.NewLimiter(2, 20),
 			}
 		}
 

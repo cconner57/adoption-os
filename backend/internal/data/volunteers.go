@@ -328,3 +328,16 @@ func (m VolunteerModel) Update(v *Volunteer) error {
 	}
 	return nil
 }
+
+func (m VolunteerModel) UpdateStats(id int64, reliability int, hours int, streak int) error {
+	query := `
+		UPDATE volunteers
+		SET reliability_score = $1, total_hours = $2, streak = $3, updated_at = NOW(), version = version + 1
+		WHERE id = $4`
+
+	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
+	defer cancel()
+
+	_, err := m.DB.ExecContext(ctx, query, reliability, hours, streak, id)
+	return err
+}

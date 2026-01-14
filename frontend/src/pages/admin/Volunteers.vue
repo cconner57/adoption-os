@@ -197,6 +197,8 @@ async function handleAddShift(shiftData: any) {
     }
     // Refresh shifts
     await fetchShifts(selectedVolunteerId.value)
+    // Refresh volunteers to get updated stats (reliability, etc)
+    await fetchVolunteers()
   } catch (e) {
     console.error('Error creating shifts', e)
     alert('Failed to create shifts')
@@ -214,6 +216,7 @@ async function handleUpdateShift(shiftData: any) {
 
     if (res.ok) {
       await fetchShifts(selectedVolunteerId.value!)
+      await fetchVolunteers() // Stats update
     } else {
       const err = await res.text()
       alert('Failed to update shift: ' + err)
@@ -234,6 +237,7 @@ async function handleDeleteShift(shiftId: string | number) {
 
     if (res.ok) {
       await fetchShifts(selectedVolunteerId.value!)
+      await fetchVolunteers()
     } else {
       alert('Failed to delete shift')
     }

@@ -3,6 +3,7 @@ import { ref, computed, onMounted, watch } from 'vue'
 import type { IPet } from '../../models/common'
 import PetEditor from '../../components/admin/pets/PetEditor.vue'
 import PetRow from '../../components/admin/pets/PetRow.vue'
+import PetCard from '../../components/admin/pets/PetCard.vue'
 import { Button, InputField, Select, Toast, TableSkeleton } from '../../components/common/ui'
 
 // State
@@ -248,62 +249,64 @@ function showNotification(message: string, type: 'success' | 'error' = 'success'
           <Select v-model="statusFilter" :options="statusOptions" />
         </div>
 
-        <div class="search-wrapper">
-          <InputField v-model="searchQuery" placeholder="Search pets..." />
-        </div>
+        <div class="search-row">
+          <div class="search-wrapper">
+            <InputField v-model="searchQuery" placeholder="Search pets..." />
+          </div>
 
-        <!-- Column Settings -->
-        <div class="settings-dropdown-wrapper">
-          <button
-            class="icon-btn settings-btn"
-            @click="isSettingsOpen = !isSettingsOpen"
-            title="Table Settings"
-          >
-            ⚙️
-          </button>
+          <!-- Column Settings -->
+          <div class="settings-dropdown-wrapper">
+            <button
+              class="icon-btn settings-btn"
+              @click="isSettingsOpen = !isSettingsOpen"
+              title="Table Settings"
+            >
+              ⚙️
+            </button>
 
-          <div v-if="isSettingsOpen" class="settings-dropdown">
-            <div class="dropdown-header">Visible Columns</div>
-            <label class="dropdown-item">
-              <input type="checkbox" v-model="visibleColumns.age" /> Age
-            </label>
-            <label class="dropdown-item">
-              <input type="checkbox" v-model="visibleColumns.breed" /> Species
-            </label>
-            <label class="dropdown-item">
-              <input type="checkbox" v-model="visibleColumns.dob" /> Date of Birth
-            </label>
-            <label class="dropdown-item">
-              <input type="checkbox" v-model="visibleColumns.intake" /> Intake Date
-            </label>
-            <label class="dropdown-item">
-              <input type="checkbox" v-model="visibleColumns.microchip" /> Microchip
-            </label>
-            <label class="dropdown-item">
-              <input type="checkbox" v-model="visibleColumns.name" /> Name
-            </label>
-            <label class="dropdown-item">
-              <input type="checkbox" v-model="visibleColumns.photo" /> Photo
-            </label>
-            <label class="dropdown-item">
-              <input type="checkbox" v-model="visibleColumns.sex" /> Sex
-            </label>
-            <label class="dropdown-item">
-              <input type="checkbox" v-model="visibleColumns.sn" /> Spayed/Neutered
-            </label>
-            <label class="dropdown-item">
-              <input type="checkbox" v-model="visibleColumns.status" /> Status
-            </label>
+            <div v-if="isSettingsOpen" class="settings-dropdown">
+              <div class="dropdown-header">Visible Columns</div>
+              <label class="dropdown-item">
+                <input type="checkbox" v-model="visibleColumns.age" /> Age
+              </label>
+              <label class="dropdown-item">
+                <input type="checkbox" v-model="visibleColumns.breed" /> Species
+              </label>
+              <label class="dropdown-item">
+                <input type="checkbox" v-model="visibleColumns.dob" /> Date of Birth
+              </label>
+              <label class="dropdown-item">
+                <input type="checkbox" v-model="visibleColumns.intake" /> Intake Date
+              </label>
+              <label class="dropdown-item">
+                <input type="checkbox" v-model="visibleColumns.microchip" /> Microchip
+              </label>
+              <label class="dropdown-item">
+                <input type="checkbox" v-model="visibleColumns.name" /> Name
+              </label>
+              <label class="dropdown-item">
+                <input type="checkbox" v-model="visibleColumns.photo" /> Photo
+              </label>
+              <label class="dropdown-item">
+                <input type="checkbox" v-model="visibleColumns.sex" /> Sex
+              </label>
+              <label class="dropdown-item">
+                <input type="checkbox" v-model="visibleColumns.sn" /> Spayed/Neutered
+              </label>
+              <label class="dropdown-item">
+                <input type="checkbox" v-model="visibleColumns.status" /> Status
+              </label>
+            </div>
           </div>
         </div>
 
-        <Button title="Add New Pet +" color="green" :onClick="handleAddPet" />
+        <Button title="New Pet +" color="green" :onClick="handleAddPet" />
       </div>
     </div>
 
     <!-- Pet List Table -->
     <TableSkeleton v-if="isLoading" :rows="10" :columns="11" />
-    <div v-else class="table-container">
+    <div v-if="!isLoading" class="table-container">
       <table class="pets-table">
         <thead>
           <tr>
@@ -343,6 +346,18 @@ function showNotification(message: string, type: 'success' | 'error' = 'success'
       </table>
     </div>
 
+    <!-- Mobile Card View -->
+    <div v-if="!isLoading" class="mobile-pet-list">
+      <template v-for="pet in filteredPets" :key="pet.id">
+        <PetCard
+          :pet="pet"
+          :status-filter="statusFilter"
+          @edit="handleEditPet"
+          @archive="handleArchivePet"
+        />
+      </template>
+    </div>
+
     <!-- Editor Drawer -->
     <PetEditor
       :is-open="isEditorOpen"
@@ -350,6 +365,7 @@ function showNotification(message: string, type: 'success' | 'error' = 'success'
       :available-pets="pets"
       @close="isEditorOpen = false"
       @save="handleSavePet"
+      @archive="handleArchivePet"
     />
 
     <Toast :show="showToast" :message="toastMessage" :type="toastType" @close="showToast = false" />
@@ -590,5 +606,50 @@ function showNotification(message: string, type: 'success' | 'error' = 'success'
 
 .search-wrapper :deep(.field) {
   margin-bottom: 0;
+}
+/* Responsive Design */
+@media (max-width: 768px) {
+  .page-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+  }
+
+  .header-actions {
+    width: 100%;
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .filter-group {
+    width: 100%;
+    overflow-x: auto;
+    padding-bottom: 4px;
+  }
+
+  .search-row {
+    display: flex;
+    gap: 8px;
+    width: 100%;
+  }
+
+  .search-wrapper {
+    flex: 1;
+  }
+
+  .table-container {
+    display: none;
+  }
+
+  .mobile-pet-list {
+    display: block;
+    padding-bottom: 24px;
+  }
+}
+
+@media (min-width: 769px) {
+  .mobile-pet-list {
+    display: none;
+  }
 }
 </style>

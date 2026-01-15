@@ -18,7 +18,7 @@ const props = defineProps<{
   availablePets?: IPet[]
 }>()
 
-const emit = defineEmits(['close', 'save'])
+const emit = defineEmits(['close', 'save', 'archive'])
 
 const settingsStore = useSettingsStore()
 const activeTab = ref('basic')
@@ -308,17 +308,7 @@ const tabs = [
       </div>
 
       <div class="drawer-body">
-        <SidebarNav
-          :items="tabs"
-          v-model="activeTab"
-          variant="editor"
-          style="
-            width: 200px;
-            background: hsl(from var(--color-neutral) h s 98%);
-            border-right: 1px solid var(--border-color);
-            padding-top: 16px;
-          "
-        />
+        <SidebarNav :items="tabs" v-model="activeTab" variant="editor" class="editor-sidebar" />
 
         <div class="tab-content" v-if="formData">
           <form @submit.prevent>
@@ -337,7 +327,11 @@ const tabs = [
             <PetEditorStatus v-if="activeTab === 'status'" v-model="formData" />
             <PetEditorStory v-if="activeTab === 'descriptions'" v-model="formData" />
             <PetEditorPhotos v-if="activeTab === 'photos'" v-model="formData" />
-            <PetEditorSettings v-if="activeTab === 'settings'" v-model="formData" />
+            <PetEditorSettings
+              v-if="activeTab === 'settings'"
+              v-model="formData"
+              @archive="emit('archive', pet)"
+            />
           </form>
         </div>
       </div>
@@ -419,6 +413,15 @@ const tabs = [
   flex-direction: row; /* Horizontal Layout */
 }
 
+/* Sidebar Styling */
+.editor-sidebar {
+  width: 200px;
+  background: hsl(from var(--color-neutral) h s 98%);
+  border-right: 1px solid var(--border-color);
+  padding-top: 16px;
+  flex-shrink: 0;
+}
+
 .tab-content {
   flex: 1;
   padding: 32px;
@@ -468,5 +471,56 @@ const tabs = [
 .tab-content::-webkit-scrollbar-thumb {
   background-color: var(--border-color);
   border-radius: 3px;
+}
+
+/* Mobile Responsive */
+@media (max-width: 768px) {
+  .pet-editor-drawer {
+    width: 100vw;
+    max-width: 100vw;
+  }
+
+  .drawer-body {
+    flex-direction: column;
+  }
+
+  .editor-sidebar {
+    width: 100%;
+    height: auto;
+    border-right: none;
+    border-bottom: 1px solid var(--border-color);
+    padding: 0;
+
+    /* Horizontal Scroll Layout */
+    display: flex;
+    flex-direction: row;
+    overflow-x: auto;
+    white-space: nowrap;
+    gap: 0;
+    background: white;
+  }
+
+  /* Target the nav items inside */
+  :deep(.nav-item) {
+    flex: 0 0 auto;
+    width: auto;
+    margin: 0;
+    border-left: none;
+    border-bottom: 3px solid transparent;
+    padding: 12px 16px;
+    justify-content: center;
+    border-radius: 0;
+  }
+
+  :deep(.nav-item.active) {
+    background: transparent;
+    border-left: none;
+    border-bottom-color: var(--color-secondary);
+    color: var(--color-secondary);
+  }
+
+  .tab-content {
+    padding: 16px;
+  }
 }
 </style>

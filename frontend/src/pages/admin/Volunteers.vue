@@ -4,10 +4,16 @@ import { mockShifts, mockIncidents } from '../../stores/mockVolunteerData'
 import VolunteerList from '../../components/admin/volunteers/VolunteerList.vue'
 import VolunteerDetail from '../../components/admin/volunteers/VolunteerDetail.vue'
 import VolunteerEditor from '../../components/admin/volunteers/VolunteerEditor.vue'
+import {
+  calculateReliabilityScore,
+  calculateTotalHours,
+  calculateStreak,
+} from '../../utils/reliability'
 
 // Stores
 const allVolunteers = ref<IVolunteer[]>([])
 const isLoading = ref(true)
+const isSaving = ref(false)
 
 // Fetch Volunteers
 async function fetchVolunteers() {
@@ -51,10 +57,22 @@ const shifts = ref<IShift[]>([])
 
 async function fetchShifts(volunteerId: string) {
   try {
-    const res = await fetch(`/v1/volunteers/${volunteerId}/shifts`)
+    const res = await fetch(`/v1/volunteers/${volunteerId}/shifts?_t=${Date.now()}`)
     if (res.ok) {
       const data = await res.json()
       shifts.value = data.data.shifts || []
+
+      // Update reliability score in local state (Current Year Only)
+      const currentYear = new Date().getFullYear().toString()
+      const currentYearShifts = shifts.value.filter((s) => s.date.startsWith(currentYear))
+
+      const volIndex = allVolunteers.value.findIndex((v) => v.id == volunteerId)
+      if (volIndex !== -1) {
+        allVolunteers.value[volIndex].reliabilityScore =
+          calculateReliabilityScore(currentYearShifts)
+        allVolunteers.value[volIndex].totalHours = calculateTotalHours(currentYearShifts)
+        allVolunteers.value[volIndex].streak = calculateStreak(currentYearShifts)
+      }
     }
   } catch (err) {
     console.error('Failed to fetch shifts', err)
@@ -82,16 +100,27 @@ const selectedIncidents = computed(() => {
 
 const isCreating = ref(false)
 
+// Helper to sanitize date fields
+function sanitizeVolunteerData(data: any) {
+  const payload = { ...data }
+  // Use loose check to catch empty strings, undefined, null
+  if (!payload.birthday) payload.birthday = null
+  if (!payload.joinDate) payload.joinDate = null
+  console.log('Sanitized payload:', payload)
+  return payload
+}
+
 function handleOpenCreate() {
   isCreating.value = true
 }
 
 async function handleCreateSave(newVolunteer: any) {
+  isSaving.value = true
   try {
     const res = await fetch('/v1/volunteers', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(newVolunteer),
+      body: JSON.stringify(sanitizeVolunteerData(newVolunteer)),
     })
 
     if (res.ok) {
@@ -109,17 +138,20 @@ async function handleCreateSave(newVolunteer: any) {
   } catch (e) {
     console.error(e)
     alert('Error creating volunteer')
+  } finally {
+    isSaving.value = false
   }
 }
 
 async function handleUpdateSave(updatedData: any) {
   if (!selectedVolunteerId.value) return
 
+  isSaving.value = true
   try {
     const res = await fetch(`/v1/volunteers/${selectedVolunteerId.value}`, {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(updatedData),
+      body: JSON.stringify(sanitizeVolunteerData(updatedData)),
     })
 
     if (res.ok) {
@@ -133,6 +165,8 @@ async function handleUpdateSave(updatedData: any) {
   } catch (e) {
     console.error('Error updating volunteer', e)
     alert('Error updating volunteer')
+  } finally {
+    isSaving.value = false
   }
 }
 
@@ -158,7 +192,7 @@ async function handleAddShift(shiftData: any) {
     let count = 0
     while (currentDate <= endDate && count < 50) {
       shiftsToCreate.push({
-        volunteerId: parseInt(selectedVolunteerId.value), // Ensure int
+        volunteerId: selectedVolunteerId.value,
         date: currentDate.toISOString().split('T')[0],
         startTime: shiftData.startTime,
         endTime: shiftData.endTime,
@@ -178,7 +212,7 @@ async function handleAddShift(shiftData: any) {
     }
   } else {
     shiftsToCreate.push({
-      volunteerId: parseInt(selectedVolunteerId.value),
+      volunteerId: selectedVolunteerId.value,
       date: shiftData.date,
       startTime: shiftData.startTime,
       endTime: shiftData.endTime,
@@ -195,6 +229,8 @@ async function handleAddShift(shiftData: any) {
         body: JSON.stringify(s),
       })
     }
+    // Small delay to ensure DB write consistency
+    await new Promise((resolve) => setTimeout(resolve, 300))
     // Refresh shifts
     await fetchShifts(selectedVolunteerId.value)
     // Refresh volunteers to get updated stats (reliability, etc)
@@ -208,10 +244,22 @@ async function handleAddShift(shiftData: any) {
 async function handleUpdateShift(shiftData: any) {
   if (!shiftData.id) return
   try {
+    // Sanitize payload
+    const payload = {
+      id: shiftData.id,
+      volunteerId: shiftData.volunteerId,
+      date: shiftData.date,
+      startTime: shiftData.startTime,
+      endTime: shiftData.endTime,
+      role: shiftData.role,
+      status: shiftData.status,
+      notes: shiftData.notes,
+    }
+
     const res = await fetch(`/v1/shifts/${shiftData.id}`, {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(shiftData),
+      body: JSON.stringify(payload),
     })
 
     if (res.ok) {
@@ -265,6 +313,7 @@ async function handleDeleteShift(shiftId: string | number) {
     <VolunteerEditor
       :volunteer="null"
       :isOpen="isCreating"
+      :isSaving="isSaving"
       @close="isCreating = false"
       @save="handleCreateSave"
     />
@@ -274,8 +323,10 @@ async function handleDeleteShift(shiftId: string | number) {
       <VolunteerDetail
         v-if="selectedVolunteer"
         :volunteer="selectedVolunteer"
+        :volunteers="allVolunteers"
         :shifts="selectedShifts"
         :incidents="selectedIncidents"
+        :isSaving="isSaving"
         @add-shift="handleAddShift"
         @update="handleUpdateSave"
         @update-shift="handleUpdateShift"

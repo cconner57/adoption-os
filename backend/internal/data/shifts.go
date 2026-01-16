@@ -179,3 +179,35 @@ func (m ShiftModel) Delete(id int64) error {
 
 	return nil
 }
+
+func (m ShiftModel) GetRoleCounts() (map[string]int, error) {
+	query := `
+		SELECT role, COUNT(*) as count
+		FROM shifts
+		GROUP BY role`
+
+	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
+	defer cancel()
+
+	rows, err := m.DB.QueryContext(ctx, query)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	counts := make(map[string]int)
+	for rows.Next() {
+		var role string
+		var count int
+		if err := rows.Scan(&role, &count); err != nil {
+			return nil, err
+		}
+		counts[role] = count
+	}
+
+	if err = rows.Err(); err != nil {
+		return nil, err
+	}
+
+	return counts, nil
+}

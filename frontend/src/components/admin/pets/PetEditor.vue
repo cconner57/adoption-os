@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref, watch } from 'vue'
 import type { IPet } from '../../../models/common'
-import { SidebarNav } from '../../common/ui'
+import { SidebarNav, Button } from '../../common/ui'
 import { useSettingsStore } from '../../../stores/settings'
 import PetEditorBasic from './editor/PetEditorBasic.vue'
 import PetEditorPhysical from './editor/PetEditorPhysical.vue'
@@ -304,7 +304,10 @@ const tabs = [
     <div class="pet-editor-drawer">
       <div class="drawer-header">
         <h2>{{ pet ? `Edit ${pet.name}` : 'Add New Pet' }}</h2>
-        <button class="close-btn" @click="handleClose">✕</button>
+        <div class="header-actions">
+          <Button color="white" title="Cancel" @click="handleClose" />
+          <Button color="green" title="Save Pet" @click="handleSave" />
+        </div>
       </div>
 
       <div class="drawer-body">
@@ -334,11 +337,6 @@ const tabs = [
             />
           </form>
         </div>
-      </div>
-
-      <div class="drawer-footer">
-        <button class="btn-cancel" @click="handleClose">Cancel</button>
-        <button class="btn-save" @click="handleSave">Save Pet</button>
       </div>
     </div>
   </div>
@@ -382,7 +380,7 @@ const tabs = [
 }
 
 .drawer-header {
-  padding: 20px 24px;
+  padding: 24px 32px;
   border-bottom: 1px solid var(--border-color);
   display: flex;
   justify-content: space-between;
@@ -398,12 +396,9 @@ const tabs = [
   color: var(--text-primary);
 }
 
-.close-btn {
-  background: none;
-  border: none;
-  font-size: 1.5rem;
-  cursor: pointer;
-  color: hsl(from var(--color-neutral) h s 50%);
+.header-actions {
+  display: flex;
+  gap: 12px;
 }
 
 .drawer-body {
@@ -431,37 +426,6 @@ const tabs = [
 
 /* Form Sections are now inside components but layout styling remains generic */
 
-.drawer-footer {
-  padding: 16px 24px;
-  border-top: 1px solid var(--border-color);
-  background: white;
-  display: flex;
-  justify-content: flex-end;
-  gap: 12px;
-  z-index: 10;
-}
-
-.btn-cancel {
-  background: none;
-  border: 1px solid var(--border-color);
-  padding: 10px 20px;
-  border-radius: 8px;
-  cursor: pointer;
-  font-weight: 500;
-  color: var(--text-primary);
-}
-
-.btn-save {
-  background: var(--color-primary);
-  color: white;
-  border: none;
-  padding: 10px 24px;
-  border-radius: 8px;
-  cursor: pointer;
-  font-weight: 600;
-  box-shadow: 0 2px 4px hsla(from var(--color-primary) h s l / 0.3);
-}
-
 /* Scrollbar Styling */
 .sidebar-nav::-webkit-scrollbar,
 .tab-content::-webkit-scrollbar {
@@ -478,6 +442,10 @@ const tabs = [
   .pet-editor-drawer {
     width: 100vw;
     max-width: 100vw;
+  }
+
+  .drawer-header {
+    padding: 16px;
   }
 
   .drawer-body {

@@ -200,3 +200,13 @@ func (app *application) deleteShiftHandler(w http.ResponseWriter, r *http.Reques
 
 	app.JSONResponse(w, http.StatusOK, envelope{"message": "shift deleted successfully"})
 }
+
+func (app *application) getShiftRoleStatsHandler(w http.ResponseWriter, r *http.Request) {
+	counts, err := app.models.Shifts.GetRoleCounts()
+	if err != nil {
+		app.serverErrorResponse(w, r, err)
+		return
+	}
+
+	app.JSONResponse(w, http.StatusOK, envelope{"roleCounts": counts})
+}

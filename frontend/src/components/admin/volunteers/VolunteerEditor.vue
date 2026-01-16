@@ -19,6 +19,7 @@ import Availability from '../../volunteer/availability/Availability.vue'
 const props = defineProps<{
   volunteer: IVolunteer | null
   isOpen: boolean
+  isSaving?: boolean
 }>()
 
 const emit = defineEmits(['close', 'save', 'archive'])
@@ -73,7 +74,7 @@ function handleSave() {
         <h2>{{ volunteer ? `Edit ${volunteer.firstName}` : 'Add New Volunteer' }}</h2>
         <div class="header-actions">
           <Button color="white" title="Cancel" @click="emit('close')" />
-          <Button color="green" title="Save Changes" @click="handleSave" />
+          <Button color="green" title="Save Changes" @click="handleSave" :loading="isSaving" />
         </div>
       </header>
 

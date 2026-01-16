@@ -66,7 +66,7 @@ func (app *application) createVolunteerHandler(w http.ResponseWriter, r *http.Re
 		PositionPreferences:   input.PositionPreferences,
 		Availability:          input.Availability,
 		Allergies:             input.Allergies,
-		ReliabilityScore:      100, // Default
+		ReliabilityScore:      0, // Default starts at 0 now
 		Badges:                []string{"New Recruit"},
 		Birthday:              input.Birthday,
 		EmergencyContactName:  input.EmergencyContactName,

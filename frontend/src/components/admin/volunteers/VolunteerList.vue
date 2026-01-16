@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue'
 import type { IVolunteer } from '../../../stores/mockVolunteerData'
-
+import { InputField, ButtonToggle, Capsules } from '../../common/ui'
 const props = defineProps<{
   selectedId?: string
   volunteers: IVolunteer[]
@@ -74,45 +74,65 @@ function selectVolunteer(vol: IVolunteer) {
       </div>
 
       <div class="search-box">
-        <input v-model="searchQuery" type="text" placeholder="Search volunteers..." />
+        <InputField
+          v-model="searchQuery"
+          placeholder="Search volunteers..."
+          style="margin-bottom: 0"
+        />
       </div>
 
       <!-- Filter Tabs -->
       <div class="list-tabs">
-        <button
-          class="list-tab"
-          :class="{ active: filterType === 'active' }"
-          @click="filterType = 'active'"
-        >
-          Active
-        </button>
-        <button
-          class="list-tab"
-          :class="{ active: filterType === 'archived' }"
-          @click="filterType = 'archived'"
-        >
-          Archived
-        </button>
+        <ButtonToggle
+          label=""
+          v-model="filterType"
+          true-value="active"
+          false-value="archived"
+          true-label="Active"
+          false-label="Archived"
+        />
       </div>
 
       <!-- Sort Controls -->
       <div class="sort-row">
         <span class="sort-label">Sort by:</span>
         <div class="sort-options">
-          <button
-            class="sort-chip"
-            :class="{ active: sortType === 'alphabetical' }"
+          <Capsules
+            label="A-Z"
+            :color="
+              sortType === 'alphabetical' ? 'hsl(from var(--color-secondary) h s 90%)' : 'white'
+            "
+            :text-color="
+              sortType === 'alphabetical'
+                ? 'var(--color-secondary)'
+                : 'hsl(from var(--color-neutral) h s 50%)'
+            "
+            style="cursor: pointer"
+            :style="{
+              borderColor:
+                sortType === 'alphabetical'
+                  ? 'hsl(from var(--color-secondary) h s 90%)'
+                  : 'var(--border-color)',
+            }"
             @click="sortType = 'alphabetical'"
-          >
-            A-Z
-          </button>
-          <button
-            class="sort-chip"
-            :class="{ active: sortType === 'level' }"
+          />
+          <Capsules
+            label="Level"
+            :color="sortType === 'level' ? 'hsl(from var(--color-secondary) h s 90%)' : 'white'"
+            :text-color="
+              sortType === 'level'
+                ? 'var(--color-secondary)'
+                : 'hsl(from var(--color-neutral) h s 50%)'
+            "
+            style="cursor: pointer"
+            :style="{
+              borderColor:
+                sortType === 'level'
+                  ? 'hsl(from var(--color-secondary) h s 90%)'
+                  : 'var(--border-color)',
+            }"
             @click="sortType = 'level'"
-          >
-            Level
-          </button>
+          />
         </div>
       </div>
     </div>
@@ -151,7 +171,15 @@ function selectVolunteer(vol: IVolunteer) {
         </div>
         <div
           class="vol-score"
-          :class="vol.reliabilityScore >= 80 ? 'high' : vol.reliabilityScore >= 60 ? 'mid' : 'low'"
+          :class="
+            vol.reliabilityScore >= 80
+              ? 'high'
+              : vol.reliabilityScore > 0
+                ? 'mid'
+                : vol.reliabilityScore === 0
+                  ? 'neutral'
+                  : 'low'
+          "
         >
           {{ vol.reliabilityScore }}%
         </div>
@@ -206,46 +234,8 @@ function selectVolunteer(vol: IVolunteer) {
   }
 }
 
-.search-box input {
-  width: 100%;
-  padding: 10px 12px;
-  border: 1px solid var(--border-color);
-  border-radius: 8px;
-  background: hsl(from var(--color-neutral) h s 98%);
-  font-size: 0.9rem;
-
-  &:focus {
-    outline: none;
-    border-color: var(--color-secondary);
-    background: var(--text-inverse);
-  }
-}
-
 .list-tabs {
-  display: flex;
-  margin-top: 12px;
-  background: hsl(from var(--color-neutral) h s 95%);
-  padding: 4px;
-  border-radius: 8px;
-}
-
-.list-tab {
-  flex: 1;
-  border: none;
-  background: none;
-  padding: 6px;
-  font-size: 0.85rem;
-  font-weight: 600;
-  color: hsl(from var(--color-neutral) h s 50%);
-  border-radius: 6px;
-  cursor: pointer;
-  transition: all 0.2s;
-
-  &.active {
-    background: var(--text-inverse);
-    color: var(--text-primary);
-    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
-  }
+  margin-top: 8px;
 }
 
 .sort-row {
@@ -263,28 +253,6 @@ function selectVolunteer(vol: IVolunteer) {
 .sort-options {
   display: flex;
   gap: 8px;
-}
-
-.sort-chip {
-  background: none;
-  border: 1px solid var(--border-color);
-  padding: 4px 10px;
-  border-radius: 12px;
-  font-size: 0.75rem;
-  color: hsl(from var(--color-neutral) h s 50%);
-  cursor: pointer;
-  transition: all 0.2s;
-
-  &:hover {
-    background: hsl(from var(--color-neutral) h s 98%);
-  }
-
-  &.active {
-    background: hsl(from var(--color-secondary) h s 90%);
-    color: var(--color-secondary);
-    border-color: hsl(from var(--color-secondary) h s 90%);
-    font-weight: 600;
-  }
 }
 
 .vol-list {
@@ -391,6 +359,9 @@ function selectVolunteer(vol: IVolunteer) {
   }
   &.mid {
     color: var(--color-warning);
+  }
+  &.neutral {
+    color: hsl(from var(--color-neutral) h s 50%);
   }
   &.low {
     color: var(--color-danger);

@@ -2,24 +2,36 @@
 import { ref, computed } from 'vue'
 import type { IVolunteer, IShift, IIncident } from '../../../stores/mockVolunteerData'
 import { availableBadges } from '../../../stores/mockVolunteerData'
-import { Tag, Toast, Button } from '../../common/ui'
+import { Tag, Toast, Button, Capsules, Tabs } from '../../common/ui'
 
 import VolunteerEditor from './VolunteerEditor.vue'
 import ShiftForm from './ShiftForm.vue'
 import { useAuthStore } from '../../../stores/auth'
 import { formatPhoneNumber } from '../../../utils/formatters'
 import { formatDate } from '../../../utils/date'
+import { calculateReliabilityScore, calculateMaxStreak } from '../../../utils/reliability'
 
 const props = defineProps<{
   volunteer: IVolunteer
   shifts: IShift[]
   incidents: IIncident[]
+  isSaving?: boolean
+  volunteers?: IVolunteer[]
 }>()
 
 const authStore = useAuthStore()
 const canEdit = computed(() => {
   if (!authStore.user?.Role) return true
   return ['admin', 'super_admin'].includes(authStore.user.Role.toLowerCase())
+})
+
+const sortedVolunteerOptions = computed(() => {
+  if (!props.volunteers) return []
+  const opts = props.volunteers.map((v) => ({
+    label: `${v.firstName} ${v.lastName}`,
+    value: `${v.firstName} ${v.lastName}`,
+  }))
+  return opts.sort((a, b) => a.label.localeCompare(b.label))
 })
 
 const isEditorOpen = ref(false)
@@ -93,6 +105,20 @@ const activeTab = ref<'overview' | 'schedule' | 'incidents' | 'performance' | 's
 )
 const tabs = ['overview', 'schedule', 'incidents', 'performance', 'suggestions'] as const
 
+const tabItems = computed(() =>
+  tabs.map((t) => ({
+    id: t,
+    label: t.charAt(0).toUpperCase() + t.slice(1),
+  })),
+)
+
+// Helper to parse YYYY-MM-DD as local date to prevent timezone shifts
+function parseLocalDate(dateStr: string) {
+  if (!dateStr) return new Date()
+  const [y, m, d] = dateStr.split('-').map(Number)
+  return new Date(y, m - 1, d)
+}
+
 const showAllUpcoming = ref(false)
 const upcomingShifts = computed(() => {
   const today = new Date().toISOString().split('T')[0]
@@ -104,35 +130,40 @@ const upcomingShifts = computed(() => {
 
 const unverifiedShifts = computed(() => {
   const today = new Date().toISOString().split('T')[0]
+  const currentYear = new Date().getFullYear().toString()
   return props.shifts
-    .filter((s) => s.date < today && s.status === 'scheduled')
+    .filter((s) => s.date < today && s.status === 'scheduled' && s.date.startsWith(currentYear))
     .sort((a, b) => b.date.localeCompare(a.date)) // Newest to oldest
 })
 
 const verifiedPastShifts = computed(() => {
   const today = new Date().toISOString().split('T')[0]
+  const currentYear = new Date().getFullYear().toString()
   return props.shifts
-    .filter((s) => s.date < today && s.status !== 'scheduled')
+    .filter((s) => s.date < today && s.status !== 'scheduled' && s.date.startsWith(currentYear))
     .sort((a, b) => b.date.localeCompare(a.date))
 })
 
 const yearlyStats = computed(() => {
   const stats: Record<
     string,
-    { year: string; hours: number; totalShifts: number; completedShifts: number; missed: number }
+    { year: string; hours: number; totalShifts: number; completedShifts: number; score: number }
   > = {}
 
-  // Initialize with join year if no shifts? No, just use shift data for accuracy.
   props.shifts.forEach((shift) => {
+    // Skip future shifts for stats
+    if (shift.status === 'scheduled') return
+
     const year = shift.date.split('-')[0]
     if (!stats[year]) {
-      stats[year] = { year, hours: 0, totalShifts: 0, completedShifts: 0, missed: 0 }
+      stats[year] = { year, hours: 0, totalShifts: 0, completedShifts: 0, score: 0 }
     }
 
     // Calculate hours
     const start = parseInt(shift.startTime.split(':')[0])
     const end = parseInt(shift.endTime.split(':')[0])
-    const duration = end - start
+    let duration = end - start
+    if (duration < 0) duration += 24 // Handle overnight simplified
 
     // Logic: Only count hours if "all_good" or "completed" or "late"
     if (['completed', 'all_good', 'late'].includes(shift.status)) {
@@ -141,32 +172,87 @@ const yearlyStats = computed(() => {
     }
 
     stats[year].totalShifts += 1
-
-    if (['no_show', 'missed'].includes(shift.status)) {
-      stats[year].missed += 1
-    }
   })
 
-  // Calculate reliability % per year
-  return Object.values(stats)
-    .map((s) => {
-      // Reliability is based on Total Scheduled/Attempted shifts vs Missed
-      const reliability =
-        s.totalShifts > 0 ? Math.round(((s.totalShifts - s.missed) / s.totalShifts) * 100) : 0
+  // Calculate scores per year using utility
+  props.shifts.forEach((shift) => {
+    if (shift.status === 'scheduled') return
+    const year = shift.date.split('-')[0]
+    // We need to pass array of shifts to utility, so we might need to group first
+    // Refactor: grouping shifts by year first is cleaner
+  })
 
+  // Re-write of yearlyStats logic to be cleaner and use utility
+  const shiftsByYear: Record<string, IShift[]> = {}
+  props.shifts.forEach((s) => {
+    if (s.status === 'scheduled') return
+    const year = s.date.split('-')[0]
+    if (!shiftsByYear[year]) shiftsByYear[year] = []
+    shiftsByYear[year].push(s)
+  })
+
+  return Object.keys(stats)
+    .map((year) => {
+      const yearShifts = shiftsByYear[year] || []
+      const yearlyScore = calculateReliabilityScore(yearShifts)
+      const yearlyMaxStreak = calculateMaxStreak(yearShifts)
       return {
-        year: s.year,
-        hours: s.hours,
-        shifts: s.completedShifts, // Display only completed shifts in the 'Total Shifts' column
-        reliability,
+        year,
+        hours: stats[year].hours,
+        shifts: stats[year].completedShifts,
+        reliability: yearlyScore,
+        maxStreak: yearlyMaxStreak,
       }
     })
     .sort((a, b) => b.year.localeCompare(a.year))
 })
 
+const totalReliabilityScore = computed(() => {
+  return props.volunteer.reliabilityScore
+})
+
 // Helper to determine display status
 function getDisplayStatus(shift: IShift) {
-  return shift.status.replace('_', ' ')
+  if (shift.status === 'covered_24h') return 'Covered More 24h'
+  return shift.status.replace(/_/g, ' ')
+}
+
+// Helper for Capsules component colors
+function getShiftCapsuleConfig(shift: IShift | { status: string }) {
+  const displayStatus = (shift.status || '').toLowerCase()
+
+  switch (displayStatus) {
+    case 'all_good':
+    case 'completed':
+      return { color: 'hsl(from var(--color-primary) h s 95%)', textColor: 'var(--color-primary)' }
+    case 'late':
+      return { color: 'hsl(from var(--color-warning) h s 95%)', textColor: 'var(--color-warning)' }
+    case 'no_show':
+    case 'missed':
+      return { color: 'hsl(from var(--color-danger) h s 95%)', textColor: 'var(--color-danger)' }
+    case 'cancelled':
+      return {
+        color: 'hsl(from var(--color-neutral) h s 95%)',
+        textColor: 'hsl(from var(--color-neutral) h s 50%)',
+      }
+    case 'covered':
+    case 'covered 24h':
+    case 'covered_24h':
+      return { color: 'hsl(270 95% 95%)', textColor: 'hsl(270 60% 50%)' }
+    case 'covered late':
+    case 'covered_late':
+    case 'covered_less_24h':
+    case 'covered <24h notice':
+    case 'covered_less_1h':
+    case 'covered <1h notice':
+      return { color: 'hsl(330 60% 90%)', textColor: 'hsl(330 60% 40%)' }
+    default:
+      // Scheduled / Blue
+      return {
+        color: 'hsl(from var(--color-secondary) h s 95%)',
+        textColor: 'var(--color-secondary)',
+      }
+  }
 }
 
 const suggestions = computed(() => {
@@ -176,7 +262,7 @@ const suggestions = computed(() => {
   if (props.volunteer.reliabilityScore < 100) {
     list.push({
       title: 'Boost Reliability',
-      desc: 'Ensure you check in for every shift on time. Consistent attendance over 3 months will restore your score.',
+      desc: 'Ensure you check in for every shift on time. Each completed shift earns +20 points to restore your score.',
       icon: '📈',
     })
   }
@@ -221,8 +307,15 @@ function getShiftStatusColor(shift: IShift) {
     case 'cancelled':
       return 'gray'
     case 'covered':
+    case 'covered 24h':
+    case 'covered_24h':
       return 'purple'
+    case 'covered late':
     case 'covered_late':
+    case 'covered_less_24h':
+    case 'covered <24h notice':
+    case 'covered_less_1h':
+    case 'covered <1h notice':
       return 'pink'
     default:
       return 'blue'
@@ -237,6 +330,23 @@ function formatTime(timeStr: string) {
   const hour12 = h % 12 || 12
   return `${hour12}:${minutes} ${suffix}`
 }
+
+function getRoleColors(role: string) {
+  const r = role.toLowerCase()
+  if (r.includes('tier 2')) return { bg: '#FFF7ED', text: '#C2410C' } // Orange-ish
+  if (r.includes('tier 1')) return { bg: '#EFF6FF', text: '#1D4ED8' } // Blue-ish
+  if (r.includes('teen')) return { bg: '#F0FDFA', text: '#0F766E' } // Teal
+  if (r.includes('admin')) return { bg: '#FEF2F2', text: '#B91C1C' } // Red
+  return { bg: '#F3F4F6', text: '#374151' } // Gray
+}
+
+function getStatusColors(status: string) {
+  const s = status.toLowerCase()
+  if (s === 'active') return { bg: '#ECFDF5', text: '#047857' } // Green
+  if (s === 'inactive') return { bg: '#F3F4F6', text: '#374151' } // Gray
+  if (s === 'archived') return { bg: '#FEF2F2', text: '#B91C1C' } // Red
+  return { bg: '#F3F4F6', text: '#374151' }
+}
 </script>
 
 <template>
@@ -244,6 +354,7 @@ function formatTime(timeStr: string) {
     <VolunteerEditor
       :volunteer="volunteer"
       :isOpen="isEditorOpen"
+      :isSaving="isSaving"
       @close="isEditorOpen = false"
       @save="handleSave"
       @archive="handleArchive"
@@ -256,10 +367,16 @@ function formatTime(timeStr: string) {
         <div class="header-text">
           <h1>{{ volunteer.firstName }} {{ volunteer.lastName }}</h1>
           <div class="badges">
-            <span class="role-badge" :class="volunteer.role.toLowerCase().replace(' ', '-')">{{
-              volunteer.role
-            }}</span>
-            <span class="status-badge" :class="volunteer.status">{{ volunteer.status }}</span>
+            <Capsules
+              :label="volunteer.role"
+              :color="getRoleColors(volunteer.role).bg"
+              :text-color="getRoleColors(volunteer.role).text"
+            />
+            <Capsules
+              :label="volunteer.status"
+              :color="getStatusColors(volunteer.status).bg"
+              :text-color="getStatusColors(volunteer.status).text"
+            />
           </div>
         </div>
       </div>
@@ -285,13 +402,15 @@ function formatTime(timeStr: string) {
           class="metric-val-colored"
           :style="{
             color:
-              volunteer.reliabilityScore >= 80
+              totalReliabilityScore >= 80
                 ? 'var(--color-primary)'
-                : volunteer.reliabilityScore >= 60
+                : totalReliabilityScore > 0
                   ? 'var(--color-warning)'
-                  : 'var(--color-danger)',
+                  : totalReliabilityScore === 0
+                    ? 'hsl(from var(--color-neutral) h s 50%)' // Neutral
+                    : 'var(--color-danger)',
           }"
-          >{{ volunteer.reliabilityScore }}%</span
+          >{{ totalReliabilityScore }}%</span
         >
       </div>
       <div class="metric-item badges-metric">
@@ -305,44 +424,20 @@ function formatTime(timeStr: string) {
       </div>
     </div>
 
-    <!-- Tabs -->
-    <div class="tabs">
-      <button
-        class="tab-btn"
-        :class="{ active: activeTab === 'overview' }"
-        @click="activeTab = 'overview'"
-      >
-        Overview
-      </button>
-      <button
-        class="tab-btn"
-        :class="{ active: activeTab === 'schedule' }"
-        @click="activeTab = 'schedule'"
-      >
-        Schedule
-      </button>
-      <button
-        class="tab-btn"
-        :class="{ active: activeTab === 'incidents' }"
-        @click="activeTab = 'incidents'"
-      >
-        Incidents
-      </button>
-      <button
-        class="tab-btn"
-        :class="{ active: activeTab === 'performance' }"
-        @click="activeTab = 'performance'"
-      >
-        Performance
-      </button>
-      <button
-        class="tab-btn"
-        :class="{ active: activeTab === 'suggestions' }"
-        @click="activeTab = 'suggestions'"
-      >
-        Suggestions
-      </button>
+    <!-- Warning Banner -->
+    <div v-if="totalReliabilityScore < 0" class="warning-banner">
+      <div class="warning-icon">⚠️</div>
+      <div class="warning-content">
+        <h3>Reliability Alert</h3>
+        <p>
+          The reliability score is negative. A check-in is recommended to discuss support or
+          schedule adjustments.
+        </p>
+      </div>
     </div>
+
+    <!-- Tabs -->
+    <Tabs :items="tabItems" v-model="activeTab" />
 
     <!-- Content -->
     <div class="tab-content">
@@ -493,8 +588,8 @@ function formatTime(timeStr: string) {
               <button v-if="showAllUpcoming" class="text-btn" @click="showAllUpcoming = false">
                 Show Less
               </button>
-              <Button :color="isAddingShift ? 'white' : 'green'" @click="toggleAddShift">
-                {{ isAddingShift ? 'Cancel' : '+ Add Shift' }}
+              <Button v-if="!isAddingShift" color="green" @click="toggleAddShift">
+                + Add Shift
               </Button>
             </div>
           </div>
@@ -502,6 +597,7 @@ function formatTime(timeStr: string) {
           <ShiftForm
             v-if="isAddingShift"
             :initialData="editingShiftData"
+            :volunteerOptions="sortedVolunteerOptions"
             @close="toggleAddShift"
             @save="handleShiftSave"
           />
@@ -512,9 +608,9 @@ function formatTime(timeStr: string) {
           <div v-else class="shift-list">
             <div v-for="shift in upcomingShifts" :key="shift.id" class="shift-card">
               <div class="shift-date">
-                <span class="day">{{ new Date(shift.date).getDate() }}</span>
+                <span class="day">{{ parseLocalDate(shift.date).getDate() }}</span>
                 <span class="month">{{
-                  new Date(shift.date).toLocaleDateString('en-US', { month: 'short' })
+                  parseLocalDate(shift.date).toLocaleDateString('en-US', { month: 'short' })
                 }}</span>
               </div>
               <div class="shift-info">
@@ -524,9 +620,11 @@ function formatTime(timeStr: string) {
                 </div>
               </div>
               <div class="shift-status">
-                <span class="status-pill" :class="getShiftStatusColor(shift)">{{
-                  getDisplayStatus(shift)
-                }}</span>
+                <Capsules
+                  :label="getDisplayStatus(shift)"
+                  :color="getShiftCapsuleConfig(shift).color"
+                  :textColor="getShiftCapsuleConfig(shift).textColor"
+                />
               </div>
               <div class="shift-actions">
                 <button class="icon-btn edit-btn" @click="editShift(shift)" title="Edit">✏️</button>
@@ -574,14 +672,14 @@ function formatTime(timeStr: string) {
                       <div class="verify-split-btn">
                         <button
                           class="action-btn small purple"
-                          @click="verifyShift(shift, 'covered')"
+                          @click="verifyShift(shift, 'covered_24h')"
                           title="Covered (>24h Notice)"
                         >
                           🔄 >24h
                         </button>
                         <button
                           class="action-btn small pink"
-                          @click="verifyShift(shift, 'covered_late')"
+                          @click="verifyShift(shift, 'covered_less_24h')"
                           title="Covered (<24h Notice)"
                         >
                           ⏰ &lt;24h
@@ -613,6 +711,7 @@ function formatTime(timeStr: string) {
                   <th>Time</th>
                   <th>Status</th>
                   <th>Notes</th>
+                  <th></th>
                 </tr>
               </thead>
               <tbody>
@@ -621,11 +720,19 @@ function formatTime(timeStr: string) {
                   <td>{{ shift.role }}</td>
                   <td>{{ formatTime(shift.startTime) }} - {{ formatTime(shift.endTime) }}</td>
                   <td>
-                    <span class="status-pill small" :class="getShiftStatusColor(shift)">{{
-                      getDisplayStatus(shift)
-                    }}</span>
+                    <Capsules
+                      :label="getDisplayStatus(shift)"
+                      :color="getShiftCapsuleConfig(shift).color"
+                      :textColor="getShiftCapsuleConfig(shift).textColor"
+                      size="sm"
+                    />
                   </td>
                   <td class="notes">{{ shift.notes || '-' }}</td>
+                  <td>
+                    <button class="icon-btn edit-btn" @click="editShift(shift)" title="Edit Shift">
+                      ✏️
+                    </button>
+                  </td>
                 </tr>
               </tbody>
             </table>
@@ -671,6 +778,7 @@ function formatTime(timeStr: string) {
                   <th>Year</th>
                   <th>Total Shifts</th>
                   <th>Hours</th>
+                  <th>Highest Streak</th>
                   <th>Reliability</th>
                 </tr>
               </thead>
@@ -679,11 +787,18 @@ function formatTime(timeStr: string) {
                   <td class="year-cell">{{ stat.year }}</td>
                   <td>{{ stat.shifts }}</td>
                   <td>{{ stat.hours }} hrs</td>
+                  <td>{{ stat.maxStreak }} 🔥</td>
                   <td>
                     <span
                       class="status-pill small"
                       :class="
-                        stat.reliability >= 80 ? 'green' : stat.reliability >= 60 ? 'orange' : 'red'
+                        stat.reliability >= 80
+                          ? 'green'
+                          : stat.reliability > 0
+                            ? 'orange'
+                            : stat.reliability === 0
+                              ? 'neutral'
+                              : 'red'
                       "
                     >
                       {{ stat.reliability }}%
@@ -691,7 +806,7 @@ function formatTime(timeStr: string) {
                   </td>
                 </tr>
                 <tr v-if="yearlyStats.length === 0">
-                  <td colspan="4" class="text-center">No data available yet.</td>
+                  <td colspan="5" class="text-center">No data available yet.</td>
                 </tr>
               </tbody>
             </table>
@@ -783,50 +898,6 @@ function formatTime(timeStr: string) {
   gap: 8px;
 }
 
-.role-badge {
-  background: hsl(from var(--color-neutral) h s 95%);
-  padding: 4px 12px;
-  border-radius: 16px;
-  font-size: 0.85rem;
-  font-weight: 600;
-  text-transform: capitalize;
-  color: var(--text-primary);
-
-  &.teen {
-    background: hsl(from var(--color-secondary) h s 90%);
-    color: var(--color-secondary);
-  }
-  &.tier-2 {
-    background: hsl(from var(--color-warning) h s 90%);
-    color: var(--color-warning);
-  }
-  &.tier-1 {
-    background: hsl(from var(--color-neutral) h s 90%);
-    color: hsl(from var(--color-neutral) h s 30%);
-  }
-}
-
-.status-badge {
-  padding: 4px 12px;
-  border-radius: 16px;
-  font-size: 0.85rem;
-  font-weight: 600;
-  text-transform: capitalize;
-
-  &.active {
-    background: hsl(from var(--color-primary) h s 90%);
-    color: var(--color-primary);
-  }
-  &.inactive {
-    background: hsl(from var(--color-danger) h s 90%);
-    color: var(--color-danger);
-  }
-  &.pending {
-    background: hsl(from var(--color-warning) h s 90%);
-    color: var(--color-warning);
-  }
-}
-
 .actions {
   display: flex;
   gap: 12px;
@@ -912,30 +983,6 @@ function formatTime(timeStr: string) {
 .mini-badge {
   font-size: 1.2rem;
   cursor: help;
-}
-
-.tabs {
-  display: flex;
-  gap: 24px;
-  border-bottom: 1px solid var(--border-color);
-  margin-bottom: 24px;
-}
-
-.tab-btn {
-  background: none;
-  border: none;
-  padding: 12px 0;
-  font-size: 1rem;
-  color: hsl(from var(--color-neutral) h s 50%);
-  cursor: pointer;
-  border-bottom: 2px solid transparent;
-  text-transform: capitalize;
-
-  &.active {
-    color: var(--color-secondary);
-    border-bottom-color: var(--color-secondary);
-    font-weight: 600;
-  }
 }
 
 /* Overview Grid */
@@ -1134,6 +1181,18 @@ function formatTime(timeStr: string) {
   &.blue {
     background: hsl(from var(--color-secondary) h s 95%);
     color: var(--color-secondary);
+  }
+  &.purple {
+    background: hsl(270 95% 95%);
+    color: hsl(270 60% 50%);
+  }
+  &.pink {
+    background: hsl(330 60% 90%);
+    color: hsl(330 60% 40%);
+  }
+  &.neutral {
+    background: hsl(from var(--color-neutral) h s 95%);
+    color: hsl(from var(--color-neutral) h s 50%);
   }
 
   &.small {
@@ -1398,6 +1457,16 @@ function formatTime(timeStr: string) {
   transition: background 0.2s;
 }
 
+.notes {
+  max-width: 250px;
+  white-space: normal;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  line-height: 1.4;
+}
+
 .edit-btn:hover {
   background: hsl(from var(--color-warning) h s 90%);
 }
@@ -1478,5 +1547,33 @@ function formatTime(timeStr: string) {
 }
 .text-btn:hover {
   text-decoration: underline;
+}
+
+.warning-banner {
+  background: #fef2f2;
+  border: 1px solid #fee2e2;
+  border-radius: 12px;
+  padding: 16px;
+  margin-bottom: 24px;
+  display: flex;
+  gap: 16px;
+  align-items: flex-start;
+}
+
+.warning-icon {
+  font-size: 1.5rem;
+}
+
+.warning-content h3 {
+  margin: 0 0 4px 0;
+  color: #991b1b;
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.warning-content p {
+  margin: 0;
+  color: #b91c1c;
+  font-size: 0.95rem;
 }
 </style>

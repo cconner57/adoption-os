@@ -9,16 +9,18 @@ const props = withDefaults(
     label?: string
     hasError?: boolean
     fullWidth?: boolean
+    multiple?: boolean
   }>(),
   {
     placeholder: 'Select an option',
     fullWidth: false,
     hasError: false,
+    multiple: false,
   },
 )
 
 const emit = defineEmits<{
-  'update:modelValue': [value: string | number | null]
+  'update:modelValue': [value: string | number | null | (string | number)[]]
 }>()
 
 const isOpen = ref(false)
@@ -35,6 +37,16 @@ const normalizedOptions = computed(() => {
 })
 
 const selectedLabel = computed(() => {
+  if (props.multiple) {
+    if (!Array.isArray(props.modelValue) || props.modelValue.length === 0) {
+      return props.placeholder
+    }
+    const selected = normalizedOptions.value.filter((opt) =>
+      (props.modelValue as any[]).includes(opt.value),
+    )
+    return selected.map((s) => s.label).join(', ')
+  }
+
   const selected = normalizedOptions.value.find((opt) => opt.value === props.modelValue)
   return selected ? selected.label : props.placeholder
 })
@@ -44,8 +56,20 @@ const toggleDropdown = () => {
 }
 
 const selectOption = (value: string | number) => {
-  emit('update:modelValue', value)
-  isOpen.value = false
+  if (props.multiple) {
+    const current = Array.isArray(props.modelValue) ? [...props.modelValue] : []
+    const index = current.indexOf(value)
+    if (index > -1) {
+      current.splice(index, 1)
+    } else {
+      current.push(value)
+    }
+    emit('update:modelValue', current)
+    // Don't close on selection for multi-select
+  } else {
+    emit('update:modelValue', value)
+    isOpen.value = false
+  }
 }
 
 // Click outside to close
@@ -91,11 +115,23 @@ onUnmounted(() => {
           v-for="option in normalizedOptions"
           :key="option.value"
           class="option-item"
-          :class="{ 'is-selected': option.value === modelValue }"
+          :class="{
+            'is-selected': multiple
+              ? Array.isArray(modelValue) && modelValue.includes(option.value)
+              : option.value === modelValue,
+          }"
           @click="selectOption(option.value)"
         >
           {{ option.label }}
-          <span v-if="option.value === modelValue" class="check">✓</span>
+          <span
+            v-if="
+              multiple
+                ? Array.isArray(modelValue) && modelValue.includes(option.value)
+                : option.value === modelValue
+            "
+            class="check"
+            >✓</span
+          >
         </div>
       </div>
     </transition>
@@ -149,6 +185,13 @@ onUnmounted(() => {
 
 .select-trigger.is-placeholder .selected-text {
   opacity: 0.8;
+}
+
+.selected-text {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin-right: 8px;
 }
 
 .chevron {

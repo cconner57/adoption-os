@@ -169,11 +169,21 @@ func (m VolunteerModel) InsertGetId(v *Volunteer) error {
 		VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20, $21, $22, $23, $24, $25)
 		RETURNING id, created_at, updated_at, version`
 
+	// Helper to handle empty strings for dates
+	var joinDate any = v.JoinDate
+	if v.JoinDate == "" {
+		joinDate = nil
+	}
+	var birthday any = v.Birthday
+	if v.Birthday == "" {
+		birthday = nil
+	}
+
 	args := []any{
 		v.FirstName, v.LastName, v.Email, v.Phone, v.Address, v.City, v.Zip, v.Role, v.Status,
-		v.Bio, v.PhotoURL, v.ReliabilityScore, v.TotalHours, v.Streak, v.JoinDate, v.Allergies,
+		v.Bio, v.PhotoURL, v.ReliabilityScore, v.TotalHours, v.Streak, joinDate, v.Allergies,
 		pq.Array(v.Skills), pq.Array(v.PositionPreferences), pq.Array(v.Availability), pq.Array(v.Badges),
-		v.Birthday, v.EmergencyContactName, v.EmergencyContactPhone, v.InterestReason, v.VolunteerExperience,
+		birthday, v.EmergencyContactName, v.EmergencyContactPhone, v.InterestReason, v.VolunteerExperience,
 	}
 
 	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
@@ -305,12 +315,22 @@ func (m VolunteerModel) Update(v *Volunteer) error {
 		WHERE id = $26 AND version = $27
 		RETURNING updated_at, version`
 
+	// Helper to handle empty strings for dates
+	var joinDate any = v.JoinDate
+	if v.JoinDate == "" {
+		joinDate = nil
+	}
+	var birthday any = v.Birthday
+	if v.Birthday == "" {
+		birthday = nil
+	}
+
 	args := []any{
 		v.FirstName, v.LastName, v.Email, v.Phone, v.Address, v.City, v.Zip,
 		v.Role, v.Status, v.Bio, v.PhotoURL, v.ReliabilityScore, v.TotalHours,
-		v.Streak, v.JoinDate, v.Allergies, pq.Array(v.Skills), pq.Array(v.PositionPreferences),
+		v.Streak, joinDate, v.Allergies, pq.Array(v.Skills), pq.Array(v.PositionPreferences),
 		pq.Array(v.Availability), pq.Array(v.Badges),
-		v.Birthday, v.EmergencyContactName, v.EmergencyContactPhone, v.InterestReason, v.VolunteerExperience,
+		birthday, v.EmergencyContactName, v.EmergencyContactPhone, v.InterestReason, v.VolunteerExperience,
 		v.ID, v.Version,
 	}
 

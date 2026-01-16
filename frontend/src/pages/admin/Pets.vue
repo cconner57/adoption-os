@@ -607,6 +607,13 @@ function showNotification(message: string, type: 'success' | 'error' = 'success'
 .search-wrapper :deep(.field) {
   margin-bottom: 0;
 }
+
+.search-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
 /* Responsive Design */
 @media (max-width: 768px) {
   .page-header {

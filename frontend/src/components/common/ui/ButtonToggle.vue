@@ -36,7 +36,7 @@ const displayFalseLabel = computed(() => {
 
 <template>
   <div class="field-group">
-    <label class="field-label">{{ props.label }}</label>
+    <label v-if="props.label" class="field-label">{{ props.label }}</label>
     <div
       class="toggle-container"
       :class="{ 'has-error': props.hasError }"

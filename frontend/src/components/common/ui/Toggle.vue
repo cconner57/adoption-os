@@ -7,11 +7,13 @@ const props = withDefaults(
     label?: string
     disabled?: boolean
     labelPosition?: 'left' | 'right'
+    fullWidth?: boolean
   }>(),
   {
     modelValue: false,
     disabled: false,
     labelPosition: 'right',
+    fullWidth: false,
   },
 )
 
@@ -32,6 +34,7 @@ function toggle() {
     :class="{
       disabled: props.disabled,
       'label-left': props.labelPosition === 'left',
+      'full-width': props.fullWidth,
     }"
     @click="toggle"
   >
@@ -57,9 +60,18 @@ function toggle() {
   user-select: none;
 }
 
+.toggle-wrapper.full-width {
+  width: 100%;
+  justify-content: space-between;
+}
+
 .toggle-wrapper.label-left {
   flex-direction: row-reverse;
   justify-content: flex-end;
+}
+
+.toggle-wrapper.label-left.full-width {
+  justify-content: space-between;
 }
 
 .toggle-wrapper.disabled {

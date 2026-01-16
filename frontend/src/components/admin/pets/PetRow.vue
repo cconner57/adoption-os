@@ -3,6 +3,7 @@ import { computed } from 'vue'
 import type { IPet } from '../../../models/common'
 import { useRouter } from 'vue-router'
 import { formatDate, calculateAge } from '../../../utils/date'
+import { Button } from '../../common/ui'
 
 const props = defineProps<{
   pet: IPet
@@ -195,25 +196,14 @@ const colCount = computed(() => {
 
     <!-- Actions -->
     <td v-if="visibleColumns.actions" align="right">
-      <div class="row-actions">
-        <button class="icon-btn edit" @click.stop="emit('edit', pet)" title="Edit">✎</button>
-        <button class="icon-btn archive" @click.stop="emit('archive', pet)" title="Archive">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="18"
-            height="18"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="2"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-          >
-            <rect width="20" height="5" x="2" y="3" rx="1" />
-            <path d="M4 8v11a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8" />
-            <path d="M10 12h4" />
-          </svg>
-        </button>
+      <div class="row-actions" @click.stop>
+        <Button
+          title="Edit"
+          color="white"
+          size="small"
+          :onClick="() => emit('edit', pet)"
+          style="min-width: auto; padding: 4px 12px; height: 32px"
+        />
       </div>
     </td>
   </tr>

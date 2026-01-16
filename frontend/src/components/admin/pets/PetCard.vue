@@ -3,6 +3,7 @@ import { ref, computed } from 'vue'
 import type { IPet } from '../../../models/common'
 import { useRouter } from 'vue-router'
 import { formatDate, calculateAge } from '../../../utils/date'
+import { Button } from '../../common/ui'
 
 const props = defineProps<{
   pet: IPet
@@ -192,7 +193,7 @@ const vaccineSummary = computed(() => {
 
       <!-- Actions Footer -->
       <div class="card-actions">
-        <button class="action-btn edit" @click.stop="emit('edit', pet)">Edit Pet</button>
+        <Button title="Edit Pet" color="blue" full-width :onClick="() => emit('edit', pet)" />
       </div>
     </div>
   </div>

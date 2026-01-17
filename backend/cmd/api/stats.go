@@ -2,6 +2,7 @@ package main
 
 import (
 	"sort"
+	"strings"
 	"time"
 )
 
@@ -11,50 +12,15 @@ func (app *application) recalculateVolunteerStats(volunteerID int64) error {
 		return err
 	}
 
-	// 1. Calculate Total Hours
-	var totalHours float64
-	for _, s := range shifts {
-		if s.Status == "completed" || s.Status == "all_good" || s.Status == "late" {
-			// Try parsing 24h first (most common in this app)
-			start, err1 := time.Parse("15:04", s.StartTime)
-			end, err2 := time.Parse("15:04", s.EndTime)
+	currentYear := time.Now().Year()
 
-			// Fallback to 12h if needed
-			if err1 != nil {
-				start, err1 = time.Parse("3:04 PM", s.StartTime)
-			}
-			if err2 != nil {
-				end, err2 = time.Parse("3:04 PM", s.EndTime)
-			}
-
-			if err1 == nil && err2 == nil {
-				duration := end.Sub(start).Hours()
-				// Handle overnight shifts if negative? Assuming single day for now as per requirement complexity.
-				if duration < 0 {
-					duration += 24
-				}
-				if duration > 0 {
-					totalHours += duration
-				}
-			}
-		}
-	}
-
-	// 2. Calculate Reliability
-	// Base: 0
-	// Completed: +20
-	// Late: +10
-	// Covered >24h: -5
-	// Covered <24h: -10
-	// Covered <1h: -20
-	// Missed: -50
-	// Cap at 100. Allow negatives.
-
-	score := 0.0
-	// 3. Calculate Streak
-	var pastShifts []struct {
+	// Filter shifts for current year only
+	var currentYearShifts []struct {
 		Timestamp time.Time
 		Status    string
+		StartTime string
+		EndTime   string
+		Notes     string
 	}
 
 	for _, s := range shifts {
@@ -69,12 +35,17 @@ func (app *application) recalculateVolunteerStats(volunteerID int64) error {
 			continue
 		}
 
+		// Strictly filter for current year
+		if date.Year() != currentYear {
+			continue
+		}
+
 		// Parse Time (Attempt 24h then 12h)
 		t, err := time.Parse("15:04", s.StartTime)
 		if err != nil {
 			t, err = time.Parse("3:04 PM", s.StartTime)
 		}
-		// If time fails, default to midnight (00:00) so it at least works
+		// If time fails, default to midnight
 		if err != nil {
 			t = time.Date(0, 0, 0, 0, 0, 0, 0, time.UTC)
 		}
@@ -83,15 +54,61 @@ func (app *application) recalculateVolunteerStats(volunteerID int64) error {
 		timestamp := time.Date(
 			date.Year(), date.Month(), date.Day(),
 			t.Hour(), t.Minute(), 0, 0,
-			time.Local, // Use Local to align with user expectation
+			time.Local,
 		)
 
-		pastShifts = append(pastShifts, struct {
+		currentYearShifts = append(currentYearShifts, struct {
 			Timestamp time.Time
 			Status    string
-		}{Timestamp: timestamp, Status: s.Status})
+			StartTime string
+			EndTime   string
+			Notes     string
+		}{
+			Timestamp: timestamp,
+			Status:    s.Status,
+			StartTime: s.StartTime,
+			EndTime:   s.EndTime,
+			Notes:     s.Notes,
+		})
+	}
 
-		// Calculate Reliability Score
+	// 1. Calculate Total Hours (Current Year)
+	var totalHours float64
+	for _, s := range currentYearShifts {
+		if s.Status == "completed" || s.Status == "all_good" || s.Status == "late" {
+			start, err1 := time.Parse("15:04", s.StartTime)
+			end, err2 := time.Parse("15:04", s.EndTime)
+
+			if err1 != nil {
+				start, err1 = time.Parse("3:04 PM", s.StartTime)
+			}
+			if err2 != nil {
+				end, err2 = time.Parse("3:04 PM", s.EndTime)
+			}
+
+			if err1 == nil && err2 == nil {
+				duration := end.Sub(start).Hours()
+				if duration < 0 {
+					duration += 24
+				}
+				if duration > 0 {
+					totalHours += duration
+				}
+			}
+		}
+	}
+
+	// 2. Calculate Reliability (Current Year)
+	score := 0.0
+	// Base points
+	// Completed: +20
+	// Late: +10
+	// Missed: -50
+	// Covered: -5 / -10 / -20
+	// Bonus: +10 / +20
+
+	for _, s := range currentYearShifts {
+		// Base Score
 		switch s.Status {
 		case "completed", "all_good":
 			score += 20
@@ -101,30 +118,39 @@ func (app *application) recalculateVolunteerStats(volunteerID int64) error {
 			score -= 50
 		case "covered", "covered_24h", "covered 24h":
 			score -= 5
-		case "covered_less_24h", "covered_late", "covered <24h notice":
+		case "covered_less_24h", "covered_late", "covered <24h notice", "covered late":
 			score -= 10
 		case "covered_less_1h", "covered <1h notice":
 			score -= 20
 		}
-	}
 
-	// Sort descending (Most recent first)
-	sort.Slice(pastShifts, func(i, j int) bool {
-		return pastShifts[i].Timestamp.After(pastShifts[j].Timestamp)
-	})
-
-	streak := 0
-	if len(pastShifts) > 0 {
-		for _, s := range pastShifts {
-			if s.Status == "completed" || s.Status == "all_good" {
-				streak++
-			} else {
-				// Any other status (late, missed, covered) breaks the streak
-				break
+		// Bonus Points from Notes via "Covering for"
+		// Logic matches src/utils/reliability.ts
+		if strings.Contains(s.Notes, "Covering for") {
+			if strings.Contains(s.Notes, ">24h notice") {
+				score += 10
+			} else if strings.Contains(s.Notes, "<24h notice") {
+				score += 20
 			}
 		}
 	}
 
+	// 3. Calculate Streak (Current Year)
+	// Sort descending for streak calc
+	sort.Slice(currentYearShifts, func(i, j int) bool {
+		return currentYearShifts[i].Timestamp.After(currentYearShifts[j].Timestamp)
+	})
+
+	streak := 0
+	for _, s := range currentYearShifts {
+		if s.Status == "completed" || s.Status == "all_good" || s.Status == "late" {
+			streak++
+		} else {
+			break
+		}
+	}
+
+	// Cap at 100 on the upper end (allow negatives? Frontend doesn't explicitly clamp negatives but display might. We'll leave as is)
 	if score > 100 {
 		score = 100
 	}

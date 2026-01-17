@@ -180,6 +180,21 @@ func main() {
 		db:     db,
 	}
 
+	// Start Background Worker for Retention Policy
+	go func() {
+		ticker := time.NewTicker(1 * time.Hour)
+		defer ticker.Stop()
+
+		for range ticker.C {
+			ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+			err := app.models.Applications.ArchiveOldPending(ctx)
+			if err != nil {
+				app.logger.Error("Background Worker: Failed to archive old pending applications", "error", err)
+			}
+			cancel()
+		}
+	}()
+
 	// Start the server
 	srv := &http.Server{
 		Addr:         fmt.Sprintf(":%d", cfg.port),

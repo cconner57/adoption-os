@@ -4,43 +4,66 @@ import { ref } from 'vue'
 export const useActiveVolunteersStore = defineStore('activeVolunteers', () => {
   const activeCount = ref(0)
   const isFetching = ref(false)
+  const weeklyShifts = ref<any[]>([])
+  const error = ref<string | null>(null)
 
   const fetchActiveCount = async () => {
     isFetching.value = true
+    error.value = null
     try {
-      // Fetch all volunteers. The API supports pagination but defaults to 20.
-      // We likely want a count of ALL active volunteers.
-      // If the API supports a 'status' filter, we should use it.
-      // Looking at the handler, it supports ?status=...
-
-      const response = await fetch(
-        `${import.meta.env.VITE_API_URL}/v1/volunteers?status=active&page_size=1000`,
-        {
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${localStorage.getItem('token')}`,
-          },
+      const apiUrl = import.meta.env.VITE_API_URL || ''
+      // Request only 1 item since we just need the count from metadata
+      const response = await fetch(`${apiUrl}/v1/volunteers?status=active&page_size=1`, {
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${localStorage.getItem('token')}`,
         },
-      )
+      })
 
-      if (!response.ok) throw new Error('Failed to fetch volunteers')
+      if (!response.ok) throw new Error(`vols: ${response.status} ${response.statusText}`)
 
-      const data = await response.json()
-      // Structure is { volunteers: [], metadata: {} }
-      const volunteers = data.volunteers || []
+      const json = await response.json()
+      // Unwrap envelope: { status: "success", data: { volunteers: [], metadata: {} } }
+      const data = json.data || {}
 
-      activeCount.value = volunteers.length
-    } catch (error) {
-      console.error('Error fetching active volunteers:', error)
-      // Fallback or leave as 0
+      // Use the totalRecords from metadata instead of counting the array
+      activeCount.value = data.metadata?.totalRecords || 0
+    } catch (e: any) {
+      console.error('Error fetching active volunteers:', e)
+      error.value = e.message
     } finally {
       isFetching.value = false
+    }
+  }
+
+  const fetchWeeklyShifts = async (start: string, end: string) => {
+    try {
+      const apiUrl = import.meta.env.VITE_API_URL || ''
+      const response = await fetch(`${apiUrl}/v1/shifts?start=${start}&end=${end}`, {
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${localStorage.getItem('token')}`,
+        },
+      })
+
+      if (!response.ok) throw new Error(`shifts: ${response.status}`)
+      const json = await response.json()
+      // Unwrap: { status: "success", data: { shifts: [] } }
+      const data = json.data || {}
+      weeklyShifts.value = data.shifts || []
+    } catch (e: any) {
+      console.error('Error fetching weekly shifts:', e)
+      error.value = error.value ? `${error.value} | ${e.message}` : e.message
+      weeklyShifts.value = []
     }
   }
 
   return {
     activeCount,
     isFetching,
+    weeklyShifts,
+    error,
     fetchActiveCount,
+    fetchWeeklyShifts,
   }
 })

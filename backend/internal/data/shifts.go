@@ -7,15 +7,16 @@ import (
 )
 
 type Shift struct {
-	ID          int64  `json:"id"`
-	VolunteerID int64  `json:"volunteerId"`
-	Date        string `json:"date"` // Keeping as string YYYY-MM-DD for simplicity as requested
-	StartTime   string `json:"startTime"`
-	EndTime     string `json:"endTime"`
-	Role        string `json:"role"`
-	Status      string `json:"status"`
-	Notes       string `json:"notes"`
-	Version     int    `json:"-"` // Not using version yet but good practice
+	ID            int64  `json:"id"`
+	VolunteerID   int64  `json:"volunteerId"`
+	Date          string `json:"date"` // Keeping as string YYYY-MM-DD for simplicity as requested
+	StartTime     string `json:"startTime"`
+	EndTime       string `json:"endTime"`
+	Role          string `json:"role"`
+	Status        string `json:"status"`
+	Notes         string `json:"notes"`
+	VolunteerName string `json:"volunteerName,omitempty"` // Added for dashboard
+	Version       int    `json:"-"`                       // Not using version yet but good practice
 }
 
 type ShiftModel struct {
@@ -76,6 +77,67 @@ func (m ShiftModel) GetForVolunteer(volunteerID int64) ([]*Shift, error) {
 		if err != nil {
 			return nil, err
 		}
+		shifts = append(shifts, &s)
+	}
+
+	if err = rows.Err(); err != nil {
+		return nil, err
+	}
+
+	return shifts, nil
+}
+
+func (m ShiftModel) GetAll(start, end string) ([]*Shift, error) {
+	// Query to fetch shifts including volunteer name by joining volunteers table
+	query := `
+		SELECT s.id, s.volunteer_id, TO_CHAR(s.date, 'YYYY-MM-DD'), s.start_time, s.end_time, s.role, s.status, s.notes, v.first_name, v.last_name
+		FROM shifts s
+		JOIN volunteers v ON s.volunteer_id = v.id
+		WHERE s.date >= $1 AND s.date <= $2
+		ORDER BY s.date ASC, s.start_time ASC`
+
+	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
+	defer cancel()
+
+	rows, err := m.DB.QueryContext(ctx, query, start, end)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	var shifts []*Shift
+	for rows.Next() {
+		var s Shift
+		// We need extended struct or just map dynamic data?
+		// For simplicity, let's just return Shift and maybe add a transparent "VolunteerName" field to the struct?
+		// Or strictly use Shift and let frontend fetch volunteers?
+		// Better: Add VolunteerName to Shift struct temporarily or permanently.
+		// Let's modify Shift struct first to include VolunteerName!
+		// Wait, I can't modify Shift struct in this tool call easily without context issues.
+		// I'll stick to returning Shift and handle the name join.
+		// Actually, simpler: The dashboard needs the name. "Leanne (10-12)".
+		// So I MUST return the name.
+		// I will modify the Shift struct in a separate step or just use a temporary struct here?
+		// No, Go is strict.
+		// I will modify Shift struct definition in `shifts.go` first?
+		// Yes, let's modify Shift struct to include `VolunteerName` (json:"volunteerName,omitempty").
+		var firstName, lastName string
+		err := rows.Scan(
+			&s.ID,
+			&s.VolunteerID,
+			&s.Date,
+			&s.StartTime,
+			&s.EndTime,
+			&s.Role,
+			&s.Status,
+			&s.Notes,
+			&firstName,
+			&lastName,
+		)
+		if err != nil {
+			return nil, err
+		}
+		s.VolunteerName = firstName + " " + lastName
 		shifts = append(shifts, &s)
 	}
 

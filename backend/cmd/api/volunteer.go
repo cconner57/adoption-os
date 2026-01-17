@@ -2,6 +2,7 @@ package main
 
 import (
 	"encoding/base64"
+	"encoding/json"
 	"fmt"
 	"net/http"
 	"os"
@@ -73,19 +74,41 @@ func (app *application) submitVolunteerApplication(w http.ResponseWriter, r *htt
 		return t.Format("Jan 02, 2006")
 	}
 
-	// Helper to read logo
-	readLogo := func() []byte {
-		// Path relative to backend root where binary runs
-		data, err := os.ReadFile("../frontend/public/images/idohr-logo.jpg")
-		if err != nil {
-			app.logger.Error("Failed to read logo", "error", err)
-			return nil
+	// Helper to read logo as Base64
+	readLogoBase64 := func() string {
+		cwd, _ := os.Getwd()
+		app.logger.Info("Current working directory", "cwd", cwd)
+
+		candidates := []string{
+			"../frontend/public/images/idohr-logo.jpg",
+			"../../frontend/public/images/idohr-logo.jpg",
+			"./frontend/public/images/idohr-logo.jpg",
+			"/Users/conner/Desktop/adoption-os/frontend/public/images/idohr-logo.jpg", // Fallback absolute
 		}
-		return data
+
+		var data []byte
+		var err error
+
+		for _, path := range candidates {
+			data, err = os.ReadFile(path)
+			if err == nil {
+				app.logger.Info("Found logo at", "path", path)
+				return base64.StdEncoding.EncodeToString(data)
+			}
+		}
+
+		app.logger.Error("Failed to read logo from any candidate path", "error", err)
+		return ""
+	}
+
+	logoBase64 := readLogoBase64()
+	logoSrc := ""
+	if logoBase64 != "" {
+		logoSrc = fmt.Sprintf("data:image/jpeg;base64,%s", logoBase64)
 	}
 
 	var sb strings.Builder
-	sb.WriteString(`<!DOCTYPE html>
+	sb.WriteString(fmt.Sprintf(`<!DOCTYPE html>
 <html>
 <head>
 <style>
@@ -103,10 +126,10 @@ func (app *application) submitVolunteerApplication(w http.ResponseWriter, r *htt
 <body>
 <div class="container">
   <div class="header">
-    <img src="cid:logo" alt="IDOHR Logo" class="logo">
+    <img src="%s" alt="IDOHR Logo" class="logo">
   </div>
   <h1>New Volunteer Application</h1>
-`)
+`, logoSrc))
 
 	sb.WriteString(`<h2>Personal Information</h2>`)
 	fmt.Fprintf(&sb, `<div class="field"><span class="label">Name:</span> %s %s</div>`, input.FirstName, input.LastName)
@@ -151,6 +174,24 @@ func (app *application) submitVolunteerApplication(w http.ResponseWriter, r *htt
 
 	body := sb.String()
 
+	// Save to Database
+	appRecord := &data.Application{
+		Type:         "volunteer",
+		Status:       "pending",
+		Data:         []byte("{}"),
+		OriginalHTML: body,
+	}
+
+	jsonData, err := json.Marshal(input)
+	if err == nil {
+		appRecord.Data = jsonData
+	}
+
+	err = app.models.Applications.Insert(appRecord)
+	if err != nil {
+		app.logger.Error("Failed to persist volunteer application", "error", err)
+	}
+
 	// Send to the configured sender address (acting as Admin)
 	// Or you could read a specific recipient from config.
 	recipient := app.config.smtp.sender
@@ -161,11 +202,8 @@ func (app *application) submitVolunteerApplication(w http.ResponseWriter, r *htt
 	// Prepare attachments
 	attachments := make(map[string][]byte)
 
-	// Attach Logo
-	logoData := readLogo()
-	if logoData != nil {
-		attachments["logo.jpg"] = logoData
-	}
+	// Note: Logo is now embedded, so no need to attach unless standard email requires it.
+	// For simplicity and fixing the 'Link Broken' in View Original, embedding is best.
 
 	if input.SignatureData != nil && *input.SignatureData != "" {
 		// signatureData is likely "data:image/png;base64,....."

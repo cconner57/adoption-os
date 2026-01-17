@@ -210,3 +210,30 @@ func (app *application) getShiftRoleStatsHandler(w http.ResponseWriter, r *http.
 
 	app.JSONResponse(w, http.StatusOK, envelope{"roleCounts": counts})
 }
+
+func (app *application) listShiftsHandler(w http.ResponseWriter, r *http.Request) {
+	qs := r.URL.Query()
+	start := app.readString(qs, "start", "")
+	end := app.readString(qs, "end", "")
+
+	v := validator.New()
+	if start == "" {
+		v.AddError("start", "must be provided")
+	}
+	if end == "" {
+		v.AddError("end", "must be provided")
+	}
+
+	if !v.Valid() {
+		app.failedValidationResponse(w, r, v.Errors)
+		return
+	}
+
+	shifts, err := app.models.Shifts.GetAll(start, end)
+	if err != nil {
+		app.serverErrorResponse(w, r, err)
+		return
+	}
+
+	app.JSONResponse(w, http.StatusOK, envelope{"shifts": shifts})
+}

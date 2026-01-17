@@ -10,98 +10,81 @@ const petStore = usePetStore()
 const volunteerStore = useActiveVolunteersStore()
 const userName = computed(() => authStore.user?.Name || 'Admin')
 
+// Helper format time
+const formatTime = (timeStr: string) => {
+  if (!timeStr) return ''
+  // Handle 14:30:00 or 14:30
+  const [h, m] = timeStr.split(':')
+  const hour = parseInt(h)
+  const ampm = hour >= 12 ? 'PM' : 'AM'
+  const hour12 = hour % 12 || 12
+  return `${hour12}:${m} ${ampm}`
+}
+
+// Calculate week start (Monday)
+const getWeekRange = () => {
+  const today = new Date()
+  const day = today.getDay() // 0 = Sun
+  const diff = today.getDate() - day + (day === 0 ? -6 : 1) // Adjust when day is Sunday
+  const monday = new Date(today.setDate(diff))
+  const sunday = new Date(today.setDate(diff + 6))
+
+  return {
+    start: monday.toISOString().split('T')[0],
+    end: sunday.toISOString().split('T')[0],
+    mondayObject: monday,
+  }
+}
+
 onMounted(() => {
   petStore.fetchPets()
   volunteerStore.fetchActiveCount()
+  const { start, end } = getWeekRange()
+  volunteerStore.fetchWeeklyShifts(start, end)
 })
 
 const adoptablePetsCount = computed(() => {
   return petStore.currentPets.length
 })
 
-// Recurring Schedule Definition
-const recurringShifts: Record<number, Array<{ time: string; title: string; type: string }>> = {
-  0: [
-    // Sunday
-    { time: '10:00 AM', title: 'Allison (10-12)', type: 'volunteer' },
-    { time: '4:00 PM', title: 'Brandon (4-6)', type: 'volunteer' },
-  ],
-  1: [
-    // Monday
-    { time: '10:00 AM', title: 'Leanne (10-12)', type: 'volunteer' },
-    { time: '6:00 PM', title: 'Arianna (6-8)', type: 'volunteer' },
-  ],
-  2: [
-    // Tuesday
-    { time: '10:00 AM', title: 'Sonia (10-12)', type: 'volunteer' },
-    { time: '6:00 PM', title: 'Lynn (6-8)', type: 'volunteer' },
-  ],
-  3: [
-    // Wednesday
-    { time: '10:00 AM', title: 'Bella (10-12)', type: 'volunteer' },
-    { time: '6:00 PM', title: 'Katelyn (6-8)', type: 'volunteer' },
-  ],
-  4: [
-    // Thursday
-    { time: '10:00 AM', title: 'Alejandra (10-12)', type: 'volunteer' },
-    { time: '6:00 PM', title: 'Nathan (6-8)', type: 'volunteer' },
-  ],
-  5: [
-    // Friday
-    { time: '10:00 AM', title: 'Linda (10-12)', type: 'volunteer' },
-    { time: '6:00 PM', title: 'Katie (6-8)', type: 'volunteer' },
-  ],
-  6: [
-    // Saturday
-    { time: '10:00 AM', title: 'Lindsey & Celina (10-12)', type: 'volunteer' },
-    { time: '6:00 PM', title: 'Chris (6-8)', type: 'volunteer' },
-  ],
+// Helper to determine event style based on role
+const getEventType = (role: string = '') => {
+  const r = role.toLowerCase()
+  if (r.includes('feeding')) return 'feeding'
+  if (r.includes('adoption')) return 'adoption'
+  if (r.includes('pickup') || r.includes('dropoff') || r.includes('transport')) return 'transport'
+  if (r.includes('vet') && !r.includes('pickup') && !r.includes('dropoff')) return 'vet'
+  return 'default'
 }
 
-// Mock Calendar Data
+// Real Calendar Data
 const weekDays = computed(() => {
   const days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
-  const today = new Date()
-
-  // Find Monday of current week
-  const day = today.getDay()
-  const diff = today.getDate() - day + (day === 0 ? -6 : 1)
-  const monday = new Date(today.setDate(diff))
+  const { mondayObject } = getWeekRange()
+  const shifts = volunteerStore.weeklyShifts || []
 
   return days.map((name, index) => {
-    const date = new Date(monday)
-    date.setDate(monday.getDate() + index)
+    // Clone monday to avoid mutation issues
+    const currentDay = new Date(mondayObject)
+    currentDay.setDate(mondayObject.getDate() + index)
+    const dateStr = currentDay.toISOString().split('T')[0]
 
-    // Mock events based on day index
-    const dayOfWeek = date.getDay()
-    const events = []
-
-    // Add recurring shifts
-    const shifts = recurringShifts[dayOfWeek] || []
-    shifts.forEach((shift, idx) => {
-      events.push({ id: `v-${index}-${idx}`, ...shift })
-    })
-
-    // Add mock vet appointments
-    if (dayOfWeek === 2) {
-      // Tuesday
-      events.push({
-        id: `vet-${index}`,
-        type: 'vet',
-        time: '2:00 PM',
-        title: 'Amari - Vaccination',
-      })
-    }
-    if (dayOfWeek === 4) {
-      // Thursday
-      events.push({ id: `vet-${index}`, type: 'vet', time: '11:30 AM', title: 'Review: Apollo' })
-    }
+    // Filter shifts for this day
+    const dayShifts = shifts
+      .filter((s) => s.date === dateStr)
+      .map((s) => ({
+        id: s.id,
+        name: s.volunteerName,
+        time: `${formatTime(s.startTime)} - ${formatTime(s.endTime)}`,
+        type: getEventType(s.role),
+        role: s.role,
+      }))
 
     return {
       name,
-      date: date.getDate(),
-      isToday: date.toDateString() === new Date().toDateString(),
-      events,
+      date: currentDay.getDate(),
+      isToday: currentDay.toDateString() === new Date().toDateString(),
+      events: dayShifts,
     }
   })
 })
@@ -112,6 +95,7 @@ const stats = computed(() => [
   { label: 'Volunteers', value: volunteerStore.activeCount, color: 'purple', icon: '🤝' },
   { label: 'Donations (Month)', value: '$3,250', color: 'blue', icon: '❤️' },
 ])
+
 const medicalNeeds = [
   { id: 1, pet: 'Apollo', issue: 'Neuter Surgery', date: 'Tomorrow', status: 'urgent' },
   { id: 2, pet: 'Luna', issue: 'Rabies Booster', date: 'Overdue', status: 'critical' },
@@ -157,6 +141,19 @@ const newIntakes = [
     </div>
 
     <div class="stats-grid">
+      <div
+        v-if="volunteerStore.error"
+        style="
+          grid-column: 1 / -1;
+          background: #fee2e2;
+          color: #b91c1c;
+          padding: 12px;
+          border-radius: 8px;
+          margin-bottom: 16px;
+        "
+      >
+        Error loading data: {{ volunteerStore.error }}
+      </div>
       <div v-for="stat in stats" :key="stat.label" class="stat-card" :class="`color-${stat.color}`">
         <div class="stat-icon">{{ stat.icon }}</div>
         <div class="stat-info">
@@ -171,8 +168,11 @@ const newIntakes = [
         <div class="widget-header">
           <h3>Weekly Schedule</h3>
           <div class="legend">
-            <span class="legend-item"><span class="dot volunteer"></span> Volunteer</span>
-            <span class="legend-item"><span class="dot vet"></span> Vet</span>
+            <span class="legend-item">Feeding <span class="dot feeding"></span></span>
+            <span class="legend-item">Adoption <span class="dot adoption"></span></span>
+            <span class="legend-item">Transport <span class="dot transport"></span></span>
+            <span class="legend-item">Vet <span class="dot vet"></span></span>
+            <span class="legend-item">Other <span class="dot default"></span></span>
           </div>
         </div>
 
@@ -193,10 +193,10 @@ const newIntakes = [
                 :key="event.id"
                 class="event-pill"
                 :class="event.type"
-                :title="event.title"
+                :title="`${event.name} (${event.time})`"
               >
+                <span class="event-name">{{ event.name }}</span>
                 <span class="event-time">{{ event.time }}</span>
-                <span class="event-title">{{ event.title }}</span>
               </div>
             </div>
           </div>
@@ -206,12 +206,18 @@ const newIntakes = [
       <div class="widget quick-actions">
         <h3>Quick Actions</h3>
         <div class="action-buttons">
-          <Button color="white" fullWidth align="between"> New Pet Profile <span>→</span> </Button>
-          <Button color="white" fullWidth align="between">
+          <Button variant="secondary" fullWidth align="between">
+            New Pet Profile <span>→</span>
+          </Button>
+          <Button variant="secondary" fullWidth align="between">
             Review Applications <span>→</span>
           </Button>
-          <Button color="white" fullWidth align="between"> Send Newsletter <span>→</span> </Button>
-          <Button color="white" fullWidth align="between"> Log Incident <span>→</span> </Button>
+          <Button variant="secondary" fullWidth align="between">
+            Send Newsletter <span>→</span>
+          </Button>
+          <Button variant="secondary" fullWidth align="between">
+            Log Incident <span>→</span>
+          </Button>
         </div>
       </div>
     </div>
@@ -377,8 +383,6 @@ const newIntakes = [
   display: flex;
   flex-direction: column;
   gap: 32px;
-  max-width: 1200px;
-  margin: 0 auto;
 }
 
 .welcome-section h1 {
@@ -464,7 +468,7 @@ const newIntakes = [
 
 .dashboard-widgets {
   display: grid;
-  grid-template-columns: 2fr 1fr;
+  grid-template-columns: repeat(4, 1fr);
   gap: 24px;
 
   @media (max-width: 900px) {
@@ -512,6 +516,15 @@ const newIntakes = [
 /* Calendar Styles */
 .weekly-schedule {
   min-height: 340px;
+  grid-column: span 3;
+
+  @media (max-width: 900px) {
+    grid-column: span 1;
+  }
+}
+
+.quick-actions {
+  grid-column: span 1;
 }
 
 .legend {
@@ -533,11 +546,20 @@ const newIntakes = [
   border-radius: 50%;
 }
 
-.dot.volunteer {
+.dot.feeding {
   background-color: var(--color-secondary);
 }
+.dot.adoption {
+  background-color: var(--color-tertiary);
+}
+.dot.transport {
+  background-color: var(--color-warning);
+}
 .dot.vet {
-  background-color: var(--color-primary);
+  background-color: var(--color-danger);
+}
+.dot.default {
+  background-color: var(--text-secondary);
 }
 
 .calendar-grid {
@@ -602,31 +624,49 @@ const newIntakes = [
   gap: 1px;
   border-left: 2px solid transparent;
 
-  &.volunteer {
-    background-color: hsl(from var(--color-secondary) h s 95%);
+  &.feeding {
+    background-color: hsl(from var(--color-secondary) h s 96%);
     color: var(--color-secondary);
     border-left-color: var(--color-secondary);
   }
 
+  &.adoption {
+    background-color: hsl(from var(--color-tertiary) h s 96%);
+    color: var(--color-tertiary);
+    border-left-color: var(--color-tertiary);
+  }
+
+  &.transport {
+    background-color: hsl(from var(--color-warning) h s 96%);
+    color: hsl(from var(--color-warning) h s 40%);
+    border-left-color: var(--color-warning);
+  }
+
   &.vet {
-    background-color: hsl(from var(--color-primary) h s 95%);
-    color: var(--color-primary);
-    border-left-color: var(--color-primary);
+    background-color: hsl(from var(--color-danger) h s 96%);
+    color: var(--color-danger);
+    border-left-color: var(--color-danger);
+  }
+
+  &.default {
+    background-color: #f3f4f6;
+    color: var(--text-secondary);
+    border-left-color: var(--text-secondary);
+  }
+
+  .event-name {
+    font-weight: 600;
+    font-size: 0.75rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    line-height: 1.2;
   }
 
   .event-time {
-    font-weight: 700;
-    opacity: 0.8;
     font-size: 0.65rem;
-  }
-
-  .event-title {
-    line-height: 1.2;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    display: -webkit-box;
-    -webkit-line-clamp: 2;
-    -webkit-box-orient: vertical;
+    opacity: 0.85;
+    font-weight: 400;
   }
 }
 
@@ -641,6 +681,7 @@ const newIntakes = [
   flex-direction: column;
   gap: 12px;
   flex: 1;
+  margin-top: 16px;
 }
 
 /* List Widgets (Medical, Inventory, Volunteers) */

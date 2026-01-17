@@ -4,22 +4,152 @@ import { mockApplications, type IApplication } from '../../stores/mockApplicatio
 import { Capsules, InputSelectGroup } from '../../components/common/ui'
 import Button from '../../components/common/ui/Button.vue'
 
-const activeTab = ref<'volunteer' | 'surrender' | 'adoption'>('volunteer')
-const filterStatus = ref<'all' | 'pending' | 'approved' | 'denied' | 'needs_info'>('all')
+const activeTab = ref<'volunteer' | 'surrender' | 'adoption' | 'history'>('adoption') // Reordered default? User said prioritize Adoption.
+const filterStatus = ref<'all' | 'pending' | 'approved' | 'denied' | 'needs_info' | 'autodeleted'>(
+  'all',
+)
 const expandedId = ref<string | null>(null)
+const currentYear = new Date().getFullYear()
+const selectedYear = ref(currentYear)
+
+const applications = ref<any[]>([])
+const loading = ref(true)
 
 const tabs = [
+  { id: 'adoption', label: 'Adoption', icon: '🐾' },
   { id: 'volunteer', label: 'Volunteer', icon: '🤝' },
   { id: 'surrender', label: 'Surrender', icon: '🏠' },
-  { id: 'adoption', label: 'Adoption', icon: '🐾' },
+  { id: 'history', label: 'Past Years', icon: '🕰️' },
 ] as const
 
+const API_url = import.meta.env.VITE_API_URL || ''
+
 const filteredApplications = computed(() => {
-  return mockApplications.value.filter((app) => {
-    const typeMatch = app.type === activeTab.value
+  return applications.value.filter((app) => {
+    // Map backend 'type' to tab id (lowercase is fine, but backend stores 'adoption', 'volunteer', 'surrender')
+    // Backend status: 'pending', 'approved', 'denied', 'needs_info'
+    const typeMatch = activeTab.value === 'history' ? true : app.type === activeTab.value
     const statusMatch = filterStatus.value === 'all' || app.status === filterStatus.value
     return typeMatch && statusMatch
   })
+})
+
+const fetchApplications = async (autoFocus = false) => {
+  loading.value = true
+  try {
+    const token = localStorage.getItem('token')
+    // Pass Year Filter
+    const yearParam = activeTab.value === 'history' ? selectedYear.value : currentYear
+
+    const res = await fetch(`${API_url}/v1/applications?page_size=100&year=${yearParam}`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    })
+    if (res.ok) {
+      const json = await res.json()
+      const rawApps = json.applications || []
+
+      applications.value = rawApps.map((app: any) => {
+        const d = app.data || {}
+        let name = 'Unknown'
+        // ... (normalization) ...
+        if (app.type === 'volunteer') {
+          name =
+            d.firstName && d.lastName
+              ? `${d.firstName} ${d.lastName}`
+              : d.nameFull || 'Volunteer Applicant'
+        } else if (app.type === 'adoption') {
+          name = d.firstName && d.lastName ? `${d.firstName} ${d.lastName}` : 'Adoption Applicant'
+        } else if (app.type === 'surrender') {
+          name = d.firstName && d.lastName ? `${d.firstName} ${d.lastName}` : 'Surrender Applicant'
+        }
+
+        return {
+          id: app.id,
+          type: app.type,
+          status: app.status,
+          date: app.created_at,
+          applicantName: name,
+          email: d.email || d.Email || '',
+          details: {
+            petName:
+              d.catPreferenceName ||
+              d.animalName ||
+              (d.catPreferenceBreed ? `Breed: ${d.catPreferenceBreed}` : null),
+            role: d.positionPreferences
+              ? Array.isArray(d.positionPreferences)
+                ? d.positionPreferences.join(', ')
+                : d.positionPreferences
+              : null,
+            reason: d.interestReason || d.adoptionReason || d.animalWhySurrendered,
+          },
+          fullApplication: { ...d, createdAt: app.created_at },
+        }
+      })
+
+      // Auto-Focus Logic (Only on initial load or explicit request)
+      if (autoFocus && activeTab.value !== 'history') {
+        // Don't redirect if we are specifically looking at history
+        const adoptionCount = applications.value.filter((a) => a.type === 'adoption').length
+        const volunteerCount = applications.value.filter((a) => a.type === 'volunteer').length
+        const surrenderCount = applications.value.filter((a) => a.type === 'surrender').length
+
+        if (adoptionCount > 0) {
+          activeTab.value = 'adoption'
+        } else if (volunteerCount > 0) {
+          activeTab.value = 'volunteer'
+        } else if (surrenderCount > 0) {
+          activeTab.value = 'surrender'
+        } else {
+          // Default to Past Years if all current year tabs are empty
+          selectTab('history')
+          return // selectTab triggers fetch, so return
+        }
+      }
+
+      // Auto-Focus for History Tab (If switched to history and it's empty?)
+      if (autoFocus && activeTab.value === 'history' && applications.value.length === 0) {
+        // "If the past years tab has no applications, then lets default to focus on the adoption tab"
+        // This prevents being stuck on empty history if auto-switched.
+        activeTab.value = 'adoption'
+        // Note: We might infinite loop if Adoption is also empty.
+        // But our first block handles Adoption=Empty -> ... -> History.
+        // Logic:
+        // 1. Load Current Year. A=0, V=0, S=0. Switch to History.
+        // 2. Fetch History (Previous Year).
+        // 3. If History=0. Switch back to Adoption?
+        // This creates a cycle if 2025 and 2024 are both empty.
+        // Safety: Don't auto-switch back to Adoption if we *just* came from there?
+        // Simplification: Just stay on History if it's empty, or default to Adoption if *specifically* requested.
+        // The user requirement: "If the past years tab has no applications, then lets default to focus on the adoption tab"
+        // Let's implement it but be careful.
+
+        // Actually, if we just switched to history via `selectTab('history')`, we triggered a fetch.
+        // If that fetch comes back empty, we go to Adoption.
+        // Ideally we stop there.
+        // But if Adoption is empty, the first block triggers again?
+        // We need to avoid infinite loop.
+        // Pass autoFocus=false when falling back to Adoption to stop the loop.
+        // We can't pass params to activeTab change.
+        // We just set activeTab='adoption' and call fetchApplications(false).
+
+        activeTab.value = 'adoption'
+        selectedYear.value = currentYear // Reset year?
+        fetchApplications(false)
+        return
+      }
+    }
+  } catch (e) {
+    console.error('Failed to fetch applications', e)
+  } finally {
+    loading.value = false
+  }
+}
+
+import { onMounted } from 'vue'
+onMounted(() => {
+  fetchApplications(true)
 })
 
 const getStatusColor = (status: IApplication['status']) => {
@@ -68,17 +198,177 @@ const selectTab = (tabId: typeof activeTab.value) => {
   activeTab.value = tabId
   expandedId.value = null
   filterStatus.value = 'all' // Reset filter when changing tabs
+
+  if (tabId === 'history') {
+    selectedYear.value = currentYear - 1
+  } else {
+    selectedYear.value = currentYear
+  }
+  fetchApplications() // Re-fetch based on new tab rules (year)
 }
 
 // Mock Actions
 const updateStatus = (app: IApplication, status: IApplication['status']) => {
-  app.status = status
-  // In real app, call API here
+  // app.status = status
+  // Call API
+  const token = localStorage.getItem('token')
+  fetch(`${API_url}/v1/applications/${app.id}`, {
+    method: 'PUT',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify({ status }),
+  }).then((res) => {
+    if (res.ok) {
+      app.status = status
+    }
+  })
+}
+
+const getDaysPending = (dateStr: string) => {
+  if (!dateStr) return 0
+  const created = new Date(dateStr)
+  const now = new Date()
+  const diffTime = Math.abs(now.getTime() - created.getTime())
+  return Math.ceil(diffTime / (1000 * 60 * 60 * 24))
+}
+
+const viewOriginal = async (appId: string) => {
+  try {
+    const token = localStorage.getItem('token')
+    const res = await fetch(`${API_url}/v1/applications/${appId}/original`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    })
+    if (res.ok) {
+      const text = await res.text()
+      const blob = new Blob([text], { type: 'text/html' })
+      const url = URL.createObjectURL(blob)
+      window.open(url, '_blank')
+      // Cleanup after a delay? Browsers handle blob URLs well enough usually if opened.
+    } else {
+      console.error('Failed to fetch original application')
+    }
+  } catch (e) {
+    console.error(e)
+  }
 }
 
 const formatKey = (key: string) => {
-  // Simple check to just return the key, or could capitalize/format
-  return key
+  // Split camelCase and underscores, capitalize words
+  const withSpaces = key.replace(/([a-z])([A-Z])/g, '$1 $2').replace(/_/g, ' ')
+  return withSpaces
+    .split(' ')
+    .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
+    .join(' ')
+}
+
+const getDisplayFields = (data: any) => {
+  if (!data) return []
+  const entries = Object.entries(data)
+
+  // Filter
+  const filtered = entries.filter(([key, value]) => {
+    // Hidden fields
+    if (key === 'id') return false
+    // Hide parent signature fields if empty
+    if ((key === 'parentSignatureData' || key === 'parentSignatureDate') && !value) return false
+    // Hide signatures from text list (shown as images)
+    if (key === 'signatureData' || key === 'parentSignatureData') return false
+
+    // Legacy generic empty check (keep or relax?)
+    // User requested specifically to hide parent fields if not existing.
+    // But previously I had `value !== null && value !== ''`.
+    // I'll stick to hiding empty values generally to keep it clean, as per previous logic.
+    if (value === null || value === '' || value === undefined) return false
+    return true
+  })
+
+  // Sort
+  filtered.sort(([keyA], [keyB]) => {
+    const priority = [
+      'firstName',
+      'lastName',
+      'age',
+      'birthday',
+      'address',
+      'city',
+      'zip',
+      'createdAt',
+      'nameFull',
+      'signatureDate',
+      'allergies',
+      'phoneNumber',
+      'availability',
+      'positionPreferences',
+      'interestReason',
+      'volunteerExperience',
+      'emergencyContactName',
+      'emergencyContactPhone',
+    ]
+    const idxA = priority.indexOf(keyA)
+    const idxB = priority.indexOf(keyB)
+
+    if (idxA !== -1 && idxB !== -1) return idxA - idxB
+    if (idxA !== -1) return -1
+    if (idxB !== -1) return 1
+
+    return 0 // Keep original order for rest
+  })
+
+  return filtered.map(([key, value]) => {
+    let label = formatKey(key)
+    let displayValue: any = value
+
+    // Rename
+    if (key === 'createdAt') {
+      label = 'Submitted At'
+    }
+
+    // Format Dates
+    const dateKeys = ['birthday', 'signatureDate', 'parentSignatureDate']
+    if (dateKeys.includes(key) && typeof value === 'string') {
+      if (value.startsWith('0001-01-01')) {
+        displayValue = 'N/A'
+      } else {
+        displayValue = formatDate(value)
+      }
+    }
+
+    if (key === 'createdAt' && typeof value === 'string') {
+      if (value.startsWith('0001-01-01')) {
+        displayValue = 'N/A'
+      } else {
+        const date = new Date(value)
+        // "Jan 17, 2026 at 10:24 AM"
+        displayValue = `${formatDate(value)} at ${date.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' })}`
+      }
+    }
+
+    // Format Booleans
+    if (value === true || value === 'true') displayValue = 'Yes'
+    if (value === false || value === 'false') displayValue = 'No'
+
+    return {
+      key,
+      label,
+      value: displayValue,
+    }
+  })
+}
+
+const getSignatureSrc = (data: string) => {
+  if (!data) return ''
+  // If it's the test data string, return a mock signature (SVG squiggle)
+  if (data === 'base64data') {
+    return 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMDAiIGhlaWdodD0iNTAiPjxwYXRoIGQ9Ik0xMCwyNSBRNDAsNSA3MCwyNSBUMTMwLDI1IiBzdHJva2U9ImJsYWNrIiBzdHJva2Utd2lkdGg9IjIiIGZpbGw9Im5vbmUiLz48L3N2Zz4='
+  }
+
+  if (data.length < 50) return '' // Ignore other short dummy text
+  if (data.startsWith('data:image')) return data
+  return `data:image/png;base64,${data}`
 }
 </script>
 
@@ -96,8 +386,15 @@ const formatKey = (key: string) => {
             { label: 'Approved', value: 'approved' },
             { label: 'Denied', value: 'denied' },
             { label: 'Needs Info', value: 'needs_info' },
+            { label: 'Auto-Deleted', value: 'autodeleted' },
           ]"
         />
+        <!-- Year Selector for History Tab -->
+        <div v-if="activeTab === 'history'" class="ml-4">
+          <select v-model="selectedYear" @change="fetchApplications" class="p-2 border rounded-md">
+            <option v-for="y in 5" :key="y" :value="currentYear - y">{{ currentYear - y }}</option>
+          </select>
+        </div>
       </div>
     </div>
 
@@ -113,7 +410,7 @@ const formatKey = (key: string) => {
         <span class="tab-icon">{{ tab.icon }}</span>
         {{ tab.label }}
         <span class="count-badge">
-          {{ mockApplications.filter((a) => a.type === tab.id && a.status === 'pending').length }}
+          {{ applications.filter((a) => a.type === tab.id && a.status === 'pending').length }}
         </span>
       </button>
     </div>
@@ -172,33 +469,78 @@ const formatKey = (key: string) => {
             <Button
               title="Approve"
               size="small"
-              color="green"
+              variant="primary"
+              theme="primary"
               :disabled="app.status === 'approved'"
               :onClick="() => updateStatus(app, 'approved')"
             />
             <Button
               title="Request Info"
               size="small"
-              color="orange"
+              variant="primary"
+              theme="warning"
               :disabled="app.status === 'needs_info'"
               :onClick="() => updateStatus(app, 'needs_info')"
             />
             <Button
               title="Deny"
               size="small"
-              color="white"
-              style="color: #ef4444; border-color: #fee2e2"
+              variant="secondary"
+              theme="danger"
               :disabled="app.status === 'denied'"
               :onClick="() => updateStatus(app, 'denied')"
             />
+            <Button
+              title="View Original Application"
+              size="small"
+              variant="tertiary"
+              :onClick="() => viewOriginal(app.id)"
+            />
           </div>
 
-          <div class="full-application">
-            <h4>Original Application</h4>
+          <!-- Auto-Delete Warning -->
+          <div
+            v-if="app.status === 'pending' && getDaysPending(app.date) > 5"
+            class="mt-4 p-3 bg-red-50 border border-red-200 rounded-md text-sm text-red-700 flex items-center gap-2"
+            style="margin-bottom: 20px"
+          >
+            ⚠️ <strong>Warning:</strong> This application will be automatically denied and deleted
+            in {{ 7 - getDaysPending(app.date) }} day(s) due to the 7-day retention policy.
+          </div>
+
+          <div class="full-application" v-if="app.fullApplication">
+            <h4>Application Information</h4>
             <div class="qa-grid">
-              <div v-for="(value, key) in app.fullApplication" :key="key" class="qa-item">
-                <span class="question">{{ formatKey(key) }}</span>
-                <span class="answer">{{ value }}</span>
+              <div
+                v-for="field in getDisplayFields(app.fullApplication)"
+                :key="field.key"
+                class="qa-item"
+              >
+                <span class="question">{{ field.label }}</span>
+                <span class="answer">
+                  {{ Array.isArray(field.value) ? field.value.join(', ') : field.value }}
+                </span>
+              </div>
+
+              <!-- Signatures Section (Moved inside Grid) -->
+              <div v-if="app.fullApplication.signatureData" class="qa-item span-full">
+                <span class="question">Signature</span>
+                <img
+                  v-if="getSignatureSrc(app.fullApplication.signatureData)"
+                  :src="getSignatureSrc(app.fullApplication.signatureData)"
+                  class="max-h-24 w-auto border rounded bg-white p-2 mt-1"
+                />
+                <p v-else class="text-sm text-gray-400 italic">Invalid Signature Data</p>
+              </div>
+
+              <div v-if="app.fullApplication.parentSignatureData" class="qa-item span-full">
+                <span class="question">Parent Signature</span>
+                <img
+                  v-if="getSignatureSrc(app.fullApplication.parentSignatureData)"
+                  :src="getSignatureSrc(app.fullApplication.parentSignatureData)"
+                  class="max-h-24 w-auto border rounded bg-white p-2 mt-1"
+                />
+                <p v-else class="text-sm text-gray-400 italic">Invalid Signature Data</p>
               </div>
             </div>
           </div>
@@ -407,6 +749,12 @@ const formatKey = (key: string) => {
   display: flex;
   gap: 12px;
   margin-bottom: 24px;
+  align-items: center; /* Ensure alignment */
+}
+
+/* Push the last button (View Original) to the right */
+.action-bar > :last-child {
+  margin-left: auto;
 }
 
 .full-application {
@@ -425,14 +773,24 @@ const formatKey = (key: string) => {
 
 .qa-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  display: grid;
+  grid-template-columns: repeat(4, 1fr); /* Force 4 columns for explicit row layout */
   gap: 20px;
+
+  @media (max-width: 1200px) {
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  }
 }
 
 .qa-item {
   display: flex;
   flex-direction: column;
   gap: 4px;
+}
+
+.span-full {
+  grid-column: 1 / span 2; /* Start at col 1 (new row), span 2 cols */
+  margin-top: 16px;
 }
 
 .question {

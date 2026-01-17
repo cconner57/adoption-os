@@ -192,20 +192,22 @@ func (m VolunteerModel) InsertGetId(v *Volunteer) error {
 	return m.DB.QueryRowContext(ctx, query, args...).Scan(&v.ID, &v.CreatedAt, &v.UpdatedAt, &v.Version)
 }
 
-func (m VolunteerModel) GetAll(firstName string, lastName string, role string, STATUS string, filters Filters) ([]*Volunteer, Metadata, error) {
-	// Basic implementation, filters to be added specifically if needed
+func (m VolunteerModel) GetAll(firstName string, lastName string, role string, status string, filters Filters) ([]*Volunteer, Metadata, error) {
+	// Updated query to include filters
 	query := `
 		SELECT count(*) OVER(), id, created_at, updated_at, first_name, last_name, email, phone, address, city, zip, role, status,
 		bio, photo_url, reliability_score, total_hours, streak, join_date, allergies, skills, position_preferences, availability, badges,
 		COALESCE(TO_CHAR(birthday, 'YYYY-MM-DD'), '') as birthday, emergency_contact_name, emergency_contact_phone, interest_reason, volunteer_experience, version
 		FROM volunteers
 		WHERE (to_tsvector('simple', first_name) @@ plainto_tsquery('simple', $1) OR $1 = '')
+		AND (LOWER(role) = LOWER($2) OR $2 = '')
+		AND (LOWER(status) = LOWER($3) OR $3 = '')
 		ORDER BY id DESC`
 
 	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
 	defer cancel()
 
-	args := []any{firstName} // Simplified for now
+	args := []any{firstName, role, status}
 
 	rows, err := m.DB.QueryContext(ctx, query, args...)
 	if err != nil {

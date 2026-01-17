@@ -1,6 +1,7 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
 	"net/http"
 	"strings"
@@ -61,6 +62,24 @@ func (app *application) submitSurrenderApplication(w http.ResponseWriter, r *htt
 	body.WriteString(fmt.Sprintf("Vet/Groomer Behavior: %s\n", input.AnimalVetOrGroomerBehavior))
 
 	body.WriteString(fmt.Sprintf("\nFull Request Data:\n%+v\n", input))
+
+	// Save to Database
+	appRecord := &data.Application{
+		Type:         "surrender",
+		Status:       "pending",
+		Data:         []byte("{}"),
+		OriginalHTML: body.String(),
+	}
+
+	jsonData, err := json.Marshal(input)
+	if err == nil {
+		appRecord.Data = jsonData
+	}
+
+	err = app.models.Applications.Insert(appRecord)
+	if err != nil {
+		app.logger.Error("Failed to persist surrender application", "error", err)
+	}
 
 	sender := app.config.smtp.sender
 	err = app.mailer.Send(sender, "New Surrender Application - "+input.AnimalName, body.String(), nil)

@@ -29,6 +29,11 @@ func (app *application) routes() http.Handler {
 	mux.Handle("POST /applications/surrender", app.requireAuthentication(http.HandlerFunc(app.submitSurrenderApplication)))
 	mux.Handle("POST /metrics", app.requireAuthentication(http.HandlerFunc(app.submitMetric)))
 
+	// Application Management
+	mux.Handle("GET /v1/applications", app.requireLogin(http.HandlerFunc(app.listApplicationsHandler)))
+	mux.Handle("PUT /v1/applications/{id}", app.requireLogin(http.HandlerFunc(app.updateApplicationStatusHandler)))
+	mux.Handle("GET /v1/applications/{id}/original", app.requireLogin(http.HandlerFunc(app.getApplicationOriginalHandler)))
+
 	// Volunteer Management
 	mux.Handle("POST /v1/volunteers", app.requireLogin(http.HandlerFunc(app.createVolunteerHandler)))
 	mux.Handle("GET /v1/volunteers", app.requireLogin(http.HandlerFunc(app.listVolunteersHandler)))
@@ -37,6 +42,7 @@ func (app *application) routes() http.Handler {
 
 	// Shift Management
 	mux.Handle("POST /v1/shifts", app.requireLogin(http.HandlerFunc(app.createShiftHandler)))
+	mux.Handle("GET /v1/shifts", app.requireLogin(http.HandlerFunc(app.listShiftsHandler))) // Added
 	mux.Handle("GET /v1/volunteers/{id}/shifts", app.requireLogin(http.HandlerFunc(app.listVolunteerShiftsHandler)))
 	mux.Handle("PUT /v1/shifts/{id}", app.requireLogin(http.HandlerFunc(app.updateShiftHandler)))
 	mux.Handle("DELETE /v1/shifts/{id}", app.requireLogin(http.HandlerFunc(app.deleteShiftHandler)))

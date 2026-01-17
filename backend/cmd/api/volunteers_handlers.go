@@ -122,8 +122,8 @@ func (app *application) listVolunteersHandler(w http.ResponseWriter, r *http.Req
 		return
 	}
 
-	// Call Model (simplified GetAll for now)
-	volunteers, metadata, err := app.models.Volunteers.GetAll(input.Name, "", "", "", input.Filters)
+	// Call Model
+	volunteers, metadata, err := app.models.Volunteers.GetAll(input.Name, "", input.Role, input.Status, input.Filters)
 	if err != nil {
 		app.serverErrorResponse(w, r, err)
 		return

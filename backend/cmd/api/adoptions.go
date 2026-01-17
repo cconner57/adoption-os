@@ -2,6 +2,7 @@ package main
 
 import (
 	"encoding/base64"
+	"encoding/json"
 	"fmt"
 	"net/http"
 	"os"
@@ -63,19 +64,41 @@ func (app *application) submitAdoptionApplication(w http.ResponseWriter, r *http
 			return *s
 		}
 
-		// Helper to read logo
-		readLogo := func() []byte {
-			// Path relative to backend root where binary runs
-			data, err := os.ReadFile("../frontend/public/images/idohr-logo.jpg")
-			if err != nil {
-				app.logger.Error("Failed to read logo", "error", err)
-				return nil
+		// Helper to read logo as Base64
+		readLogoBase64 := func() string {
+			cwd, _ := os.Getwd()
+			app.logger.Info("Current working directory", "cwd", cwd)
+
+			candidates := []string{
+				"../frontend/public/images/idohr-logo.jpg",
+				"../../frontend/public/images/idohr-logo.jpg",
+				"./frontend/public/images/idohr-logo.jpg",
+				"/Users/conner/Desktop/adoption-os/frontend/public/images/idohr-logo.jpg", // Fallback absolute
 			}
-			return data
+
+			var data []byte
+			var err error
+
+			for _, path := range candidates {
+				data, err = os.ReadFile(path)
+				if err == nil {
+					app.logger.Info("Found logo at", "path", path)
+					return base64.StdEncoding.EncodeToString(data)
+				}
+			}
+
+			app.logger.Error("Failed to read logo from any candidate path", "error", err)
+			return ""
+		}
+
+		logoBase64 := readLogoBase64()
+		logoSrc := ""
+		if logoBase64 != "" {
+			logoSrc = fmt.Sprintf("data:image/jpeg;base64,%s", logoBase64)
 		}
 
 		var sb strings.Builder
-		sb.WriteString(`<!DOCTYPE html>
+		sb.WriteString(fmt.Sprintf(`<!DOCTYPE html>
 <html>
 <head>
 <style>
@@ -97,10 +120,10 @@ func (app *application) submitAdoptionApplication(w http.ResponseWriter, r *http
 <body>
 <div class="container">
   <div class="header">
-    <img src="cid:logo" alt="IDOHR Logo" class="logo">
+    <img src="%s" alt="IDOHR Logo" class="logo">
   </div>
   <h1>New Adoption Application</h1>
-`)
+`, logoSrc))
 
 		// --- Personal Information ---
 		sb.WriteString(`<h2>Personal Information</h2>`)
@@ -120,15 +143,6 @@ func (app *application) submitAdoptionApplication(w http.ResponseWriter, r *http
 
 		// --- Household Information ---
 		sb.WriteString(`<h2>Household & Residence</h2>`)
-		// --- Agreements & Signatures (Fixed Context) ---
-		// ... (previous lines unchanged in actual file, just ensuring context match)
-
-		// Fix for PrimaryOwner format (was %t, now %s)
-		// This block needs to match lines 122-127 approx in the buffer view above to target correctly.
-		// Wait, I see the PrimaryOwner block at lines 112-117. Let me target that specifically.
-
-		// Actually, let's fix the PrimaryOwner block first.
-
 		if input.HomeOwnership != nil && *input.HomeOwnership == "Rent" {
 			fmt.Fprintf(&sb, `<div class="field"><span class="label">Landlord Name:</span> %s</div>`, safeStr(input.LandlordName))
 			fmt.Fprintf(&sb, `<div class="field"><span class="label">Landlord Phone:</span> %s</div>`, safeStr(input.LandlordPhoneNumber))
@@ -234,6 +248,26 @@ func (app *application) submitAdoptionApplication(w http.ResponseWriter, r *http
 
 		body := sb.String()
 
+		// Save to Database
+		appRecord := &data.Application{
+			Type:         "adoption",
+			Status:       "pending",
+			Data:         []byte("{}"), // We should marshal input to JSON, but 'input' is struct.
+			OriginalHTML: body,
+		}
+		// Marshal input
+		jsonData, err := json.Marshal(input)
+		if err == nil {
+			appRecord.Data = jsonData
+		}
+
+		err = app.models.Applications.Insert(appRecord)
+		if err != nil {
+			app.logger.Error("Failed to persist adoption application", "error", err)
+			// We continue to send email even if DB fails? Or fail?
+			// Better to log and try to email, as email is critical path historically.
+		}
+
 		// Send email
 
 		// Configure Recipient
@@ -245,11 +279,7 @@ func (app *application) submitAdoptionApplication(w http.ResponseWriter, r *http
 		// Attachments (Logo + Signature)
 		attachments := make(map[string][]byte)
 
-		// Attach Logo
-		logoData := readLogo()
-		if logoData != nil {
-			attachments["logo.jpg"] = logoData
-		}
+		// Logo is embedded now.
 
 		// Attach Final Signature Image
 		if input.SignatureData != nil && *input.SignatureData != "" {

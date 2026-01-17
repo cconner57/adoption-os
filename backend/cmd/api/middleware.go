@@ -146,6 +146,11 @@ func (app *application) requireLogin(next http.Handler) http.Handler {
 			}
 		}
 
+		// 3. Fallback to Query Param (e.g. for window.open / downloads)
+		if token == "" {
+			token = r.URL.Query().Get("token")
+		}
+
 		if token == "" {
 			// No token provided via header or cookie
 			app.JSONError(w, http.StatusUnauthorized, "Authentication required")

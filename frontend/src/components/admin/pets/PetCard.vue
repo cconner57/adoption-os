@@ -13,6 +13,7 @@ const props = defineProps<{
 const emit = defineEmits<{
   (e: 'edit', pet: IPet): void
   (e: 'archive', pet: IPet): void
+  (e: 'mark-adopted', pet: IPet): void
 }>()
 
 const isExpanded = ref(false)
@@ -193,7 +194,14 @@ const vaccineSummary = computed(() => {
 
       <!-- Actions Footer -->
       <div class="card-actions">
-        <Button title="Edit Pet" color="blue" full-width :onClick="() => emit('edit', pet)" />
+        <Button
+          v-if="pet.details.status === 'available'"
+          title="Adopted"
+          color="blue"
+          full-width
+          :onClick="() => emit('mark-adopted', pet)"
+        />
+        <Button title="Edit Pet" color="white" full-width :onClick="() => emit('edit', pet)" />
       </div>
     </div>
   </div>

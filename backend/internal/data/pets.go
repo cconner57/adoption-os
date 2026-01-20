@@ -100,8 +100,10 @@ func (m PetModel) GetSpotlight() ([]*SpotlightPet, error) {
 	query := `
         SELECT id, name, COALESCE(descriptions, '{}'), COALESCE(photos, '[]')
         FROM pets
-        WHERE profile_settings->>'is_spotlight_featured' = 'true'
-           OR profile_settings->>'isSpotlightFeatured' = 'true'
+        FROM pets
+        WHERE (profile_settings->>'is_spotlight_featured' = 'true'
+           OR profile_settings->>'isSpotlightFeatured' = 'true')
+		   AND status = 'available'
         LIMIT 4`
 
 	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
@@ -589,10 +591,51 @@ func (m PetModel) Update(p *Pet) error {
 		}
 	}
 
+	var detailsMap map[string]interface{}
+	status := "available"
+	if len(p.Details) > 0 {
+		if err := json.Unmarshal(p.Details, &detailsMap); err == nil {
+			if s, ok := detailsMap["status"].(string); ok {
+				status = s
+			}
+		}
+	}
+
+	// Auto-disable spotlight if adopted
+	if strings.ToLower(status) == "adopted" && isSpotlight {
+		isSpotlight = false
+		settingsMap["isSpotlightFeatured"] = false
+		newSettings, _ := json.Marshal(settingsMap)
+		p.ProfileSettings = json.RawMessage(newSettings)
+	}
+
+	// Auto-set Adoption Date if missing
+	if strings.ToLower(status) == "adopted" {
+		var adoptionMap map[string]interface{}
+		if len(p.Adoption) > 0 {
+			if err := json.Unmarshal(p.Adoption, &adoptionMap); err == nil {
+				date, ok := adoptionMap["date"].(string)
+				if !ok || date == "" {
+					// Default to today using M/D/YYYY format to match CSV/existing data
+					adoptionMap["date"] = time.Now().Format("1/2/2006")
+					newAdoption, _ := json.Marshal(adoptionMap)
+					p.Adoption = json.RawMessage(newAdoption)
+				}
+			}
+		} else {
+			// Create new adoption block if completely missing (unlikely but safe)
+			adoptionMap = map[string]interface{}{
+				"date": time.Now().Format("1/2/2006"),
+			}
+			newAdoption, _ := json.Marshal(adoptionMap)
+			p.Adoption = json.RawMessage(newAdoption)
+		}
+	}
+
 	// Validate max 4 spotlight pets
 	if isSpotlight {
-		// Count OTHER pets that are featured
-		countQuery := `SELECT count(*) FROM pets WHERE profile_settings->>'isSpotlightFeatured' = 'true' AND id != $1`
+		// Count OTHER pets that are featured AND available
+		countQuery := `SELECT count(*) FROM pets WHERE profile_settings->>'isSpotlightFeatured' = 'true' AND id != $1 AND status = 'available'`
 		var count int
 		ctxCount, cancelCount := context.WithTimeout(context.Background(), 3*time.Second)
 		defer cancelCount()
@@ -744,16 +787,6 @@ func (m PetModel) Update(p *Pet) error {
 			slug = $18
 		WHERE id = $15
 	`
-
-	var detailsMap map[string]interface{}
-	status := "available"
-	if len(p.Details) > 0 {
-		if err := json.Unmarshal(p.Details, &detailsMap); err == nil {
-			if s, ok := detailsMap["status"].(string); ok {
-				status = s
-			}
-		}
-	}
 
 	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
 	defer cancel()

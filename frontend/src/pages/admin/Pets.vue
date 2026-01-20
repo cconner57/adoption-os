@@ -192,6 +192,17 @@ async function handleSavePet(petData: Partial<IPet>) {
   }
 }
 
+async function handleQuickAdopt(pet: IPet) {
+  if (!confirm(`Mark ${pet.name} as Adopted?`)) return
+
+  // Create a copy with updated status
+  // Backend will handle the date if missing
+  const updatedPet = JSON.parse(JSON.stringify(pet))
+  updatedPet.details.status = 'adopted'
+
+  await handleSavePet(updatedPet)
+}
+
 function handleArchivePet(pet: IPet) {
   if (confirm(`Are you sure you want to archive ${pet.name}?`)) {
     // API call needed here
@@ -340,6 +351,7 @@ function showNotification(message: string, type: 'success' | 'error' = 'success'
               @toggle-expand="handleToggleExpand"
               @edit="handleEditPet"
               @archive="handleArchivePet"
+              @mark-adopted="handleQuickAdopt"
             />
           </template>
         </tbody>
@@ -354,6 +366,7 @@ function showNotification(message: string, type: 'success' | 'error' = 'success'
           :status-filter="statusFilter"
           @edit="handleEditPet"
           @archive="handleArchivePet"
+          @mark-adopted="handleQuickAdopt"
         />
       </template>
     </div>
@@ -412,6 +425,7 @@ function showNotification(message: string, type: 'success' | 'error' = 'success'
   gap: 16px;
   position: relative;
   align-items: center;
+  z-index: 20; /* Ensure this is higher than table */
 }
 
 .filter-group {
@@ -421,12 +435,6 @@ function showNotification(message: string, type: 'success' | 'error' = 'success'
 }
 
 /* Settings Dropdown */
-.filter-group {
-  display: flex;
-  gap: 12px;
-  align-items: center;
-}
-
 .settings-dropdown-wrapper {
   position: relative;
 }
@@ -498,6 +506,7 @@ function showNotification(message: string, type: 'success' | 'error' = 'success'
   overflow: auto; /* Allow both X and Y scrolling */
   flex: 1;
   overflow-y: auto;
+  z-index: 1;
 
   /* Custom Scrollbar */
   &::-webkit-scrollbar {
@@ -626,12 +635,16 @@ function showNotification(message: string, type: 'success' | 'error' = 'success'
     width: 100%;
     flex-direction: column;
     align-items: stretch;
+    isolation: isolate; /* Create new stacking context */
   }
 
   .filter-group {
     width: 100%;
-    overflow-x: auto;
+    /* overflow-x: auto; */
     padding-bottom: 4px;
+    flex-wrap: wrap; /* Allow wrapping so dropdowns don't get cut off */
+    /* Ensure visible overflow */
+    overflow: visible;
   }
 
   .search-row {

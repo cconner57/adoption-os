@@ -17,6 +17,7 @@ const emit = defineEmits<{
   (e: 'toggle-expand', pet: IPet): void
   (e: 'edit', pet: IPet): void
   (e: 'archive', pet: IPet): void
+  (e: 'mark-adopted', pet: IPet): void
 }>()
 
 const router = useRouter()
@@ -198,11 +199,19 @@ const colCount = computed(() => {
     <td v-if="visibleColumns.actions" align="right">
       <div class="row-actions" @click.stop>
         <Button
+          v-if="pet.details.status === 'available'"
+          title="Adopted"
+          color="blue"
+          size="small"
+          :onClick="() => emit('mark-adopted', pet)"
+          style="padding: 4px 10px; height: 30px; font-size: 0.85rem"
+        />
+        <Button
           title="Edit"
           color="white"
           size="small"
           :onClick="() => emit('edit', pet)"
-          style="min-width: auto; padding: 4px 12px; height: 32px"
+          style="padding: 4px 10px; height: 30px; font-size: 0.85rem"
         />
       </div>
     </td>
@@ -769,8 +778,10 @@ td {
 
 .row-actions {
   display: flex;
+  flex-direction: column;
   gap: 8px;
-  justify-content: flex-end;
+  justify-content: center;
+  align-items: stretch;
 }
 
 .icon-btn {

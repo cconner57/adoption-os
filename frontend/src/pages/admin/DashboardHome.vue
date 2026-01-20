@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, onMounted } from 'vue'
+import { computed, onMounted, ref } from 'vue'
 import { Capsules, Button } from '../../components/common/ui'
 import { useAuthStore } from '../../stores/auth'
 import { usePetStore } from '../../stores/pets'
@@ -9,6 +9,8 @@ const authStore = useAuthStore()
 const petStore = usePetStore()
 const volunteerStore = useActiveVolunteersStore()
 const userName = computed(() => authStore.user?.Name || 'Admin')
+const pendingCount = ref(0)
+const API_URL = import.meta.env.VITE_API_URL
 
 // Helper format time
 const formatTime = (timeStr: string) => {
@@ -41,7 +43,24 @@ onMounted(() => {
   volunteerStore.fetchActiveCount()
   const { start, end } = getWeekRange()
   volunteerStore.fetchWeeklyShifts(start, end)
+  fetchPendingCount()
 })
+
+const fetchPendingCount = async () => {
+  try {
+    const token = localStorage.getItem('token')
+    const res = await fetch(`${API_URL}/v1/applications?status=pending&page_size=1`, {
+      // Page size 1 is enough to get metadata total
+      headers: { Authorization: `Bearer ${token}` },
+    })
+    if (res.ok) {
+      const data = await res.json()
+      pendingCount.value = data.metadata.total_records
+    }
+  } catch (e) {
+    console.error('Failed to fetch pending count', e)
+  }
+}
 
 const adoptablePetsCount = computed(() => {
   return petStore.currentPets.length
@@ -90,7 +109,7 @@ const weekDays = computed(() => {
 })
 
 const stats = computed(() => [
-  { label: 'Pending Applications', value: 12, color: 'orange', icon: '📝' },
+  { label: 'Pending Applications', value: pendingCount.value, color: 'orange', icon: '📝' },
   { label: 'Adoptable Pets', value: adoptablePetsCount.value, color: 'green', icon: '🐾' },
   { label: 'Volunteers', value: volunteerStore.activeCount, color: 'purple', icon: '🤝' },
   { label: 'Donations (Month)', value: '$3,250', color: 'blue', icon: '❤️' },

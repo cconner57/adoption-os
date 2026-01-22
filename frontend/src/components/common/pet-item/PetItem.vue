@@ -101,14 +101,14 @@ function handleAdopt() {
     width: 100%;
     object-fit: cover;
     height: 180px;
-    background: url('/images/paw.svg') 90px 60px/100px 100px no-repeat #add8e6;
+    background: url('/images/paw.svg') 90px 60px/100px 100px no-repeat #f9fafb;
     cursor: pointer;
   }
 
   .img-fallback {
     width: 100%;
     height: 180px;
-    background: url('/images/paw.svg') 90px 60px/100px 100px no-repeat #add8e6;
+    background: url('/images/paw.svg') 90px 60px/100px 100px no-repeat #f9fafb;
     cursor: pointer;
   }
 
@@ -139,7 +139,7 @@ function handleAdopt() {
   }
 
   p {
-    font-size: 1rem;
+    font-size: 0.925rem;
     flex-grow: 0;
     margin-bottom: 8px;
     display: -webkit-box;

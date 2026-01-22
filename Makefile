@@ -46,3 +46,23 @@ db/psql:
 seed:
 	@echo 'Seeding the database...'
 	make -C backend seed
+
+## flash: flash the firmware to the Pico W
+.PHONY: flash
+flash:
+	@echo 'Flashing firmware to Pico W...'
+	tinygo flash --target=pico2-w .
+
+## update: zero downtime server update
+.PHONY: update-be
+update-be:
+	@echo "1. Pulling latest code..."
+	git pull
+	@echo "2. Building new binary (while old one keeps running)..."
+	go build -o adoption-server-new ./backend/cmd/api
+	@echo "3. Swapping binaries..."
+	mv adoption-server-new adoption-server
+	@echo "4. Restarting server..."
+	@-pkill adoption-server || true
+	@nohup ./adoption-server > server.log 2>&1 &
+	@echo "✅ Success! New server is running."

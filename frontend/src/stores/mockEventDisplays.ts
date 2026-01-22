@@ -3,9 +3,10 @@ import { ref } from 'vue'
 export interface IEventDevice {
   id: string
   name: string
+  model: string
   batteryLevel: number
   status: 'online' | 'offline' | 'updating'
-  template: 'featured-grid' | 'welcome-sign' | 'wayfinding'
+  template: 'featured-grid' | 'welcome-sign' | 'wayfinding' | 'kennel-card'
   config: {
     title: string
     subtitle?: string
@@ -18,6 +19,7 @@ export const mockEventDisplays = ref<IEventDevice[]>([
   {
     id: 'disp-ev-1',
     name: 'Lobby Sign A (Large)',
+    model: '13.3" E-Ink',
     batteryLevel: 94,
     status: 'online',
     template: 'welcome-sign',
@@ -31,6 +33,7 @@ export const mockEventDisplays = ref<IEventDevice[]>([
   {
     id: 'disp-ev-2',
     name: 'Table Sign 1',
+    model: '13.3" E-Ink',
     batteryLevel: 78,
     status: 'online',
     template: 'featured-grid',
@@ -43,6 +46,7 @@ export const mockEventDisplays = ref<IEventDevice[]>([
   {
     id: 'disp-ev-3',
     name: 'Pop-up Wayfinding',
+    model: '13.3" E-Ink',
     batteryLevel: 25,
     status: 'offline',
     template: 'wayfinding',
@@ -51,6 +55,18 @@ export const mockEventDisplays = ref<IEventDevice[]>([
       subtitle: 'Meet the kittens!',
       featuredPetIds: [],
       direction: 'right',
+    },
+  },
+  {
+    id: 'disp-ev-4',
+    name: 'Kennel Card 01',
+    model: '4.2" E-Ink',
+    batteryLevel: 100,
+    status: 'online',
+    template: 'kennel-card',
+    config: {
+      title: 'Kennel Card', // Not used in this layout but kept for type safety
+      featuredPetIds: ['5'], // Pre-select a pet (e.g., '5' is usually a cat or dog in mocks)
     },
   },
 ])

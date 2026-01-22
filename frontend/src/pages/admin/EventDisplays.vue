@@ -3,6 +3,7 @@ import { ref, computed } from 'vue'
 import { mockEventDisplays } from '../../stores/mockEventDisplays'
 import { mockPetsData } from '../../stores/mockPetData'
 import { Button, InputField, InputSelectGroup } from '../../components/common/ui'
+import { formatDate, calculateAge } from '../../utils/date'
 
 const selectedId = ref<string | null>(null)
 const selectedDevice = computed(() =>
@@ -10,6 +11,7 @@ const selectedDevice = computed(() =>
 )
 
 const allPets = ref(mockPetsData)
+const availablePets = computed(() => allPets.value.filter((p) => p.details.status === 'available'))
 
 const selectDevice = (id: string) => {
   selectedId.value = id
@@ -44,6 +46,7 @@ const templateOptions = [
   { label: 'Welcome Sign', value: 'welcome-sign' },
   { label: 'Featured Pets Grid', value: 'featured-grid' },
   { label: 'Wayfinding Arrow', value: 'wayfinding' },
+  { label: 'Kennel Card', value: 'kennel-card' },
 ]
 
 const directionOptions = [
@@ -95,6 +98,11 @@ const directionOptions = [
           </div>
 
           <div class="form-group">
+            <label>Device Name</label>
+            <InputField v-model="selectedDevice.name" />
+          </div>
+
+          <div class="form-group">
             <InputSelectGroup
               label="Template"
               v-model="selectedDevice.template"
@@ -112,11 +120,33 @@ const directionOptions = [
             <InputField v-model="selectedDevice.config.subtitle" />
           </div>
 
+          <!-- Kennel Card Pet Selection (Single) -->
+          <div v-if="selectedDevice.template === 'kennel-card'" class="form-group">
+            <label>Select Pet</label>
+            <div class="pet-picker">
+              <div
+                v-for="pet in availablePets"
+                :key="pet.id"
+                class="pet-chip"
+                :class="{ selected: selectedDevice.config.featuredPetIds.includes(pet.id) }"
+                @click="
+                  () => {
+                    // Toggle: if selected, deselect. If not, select ONLY this one.
+                    const isSelected = selectedDevice.config.featuredPetIds.includes(pet.id)
+                    selectedDevice.config.featuredPetIds = isSelected ? [] : [pet.id]
+                  }
+                "
+              >
+                {{ pet.name }}
+              </div>
+            </div>
+          </div>
+
           <div v-if="selectedDevice.template === 'featured-grid'" class="form-group">
             <label>Select Pets (Max 4)</label>
             <div class="pet-picker">
               <div
-                v-for="pet in allPets"
+                v-for="pet in availablePets"
                 :key="pet.id"
                 class="pet-chip"
                 :class="{ selected: selectedDevice.config.featuredPetIds.includes(pet.id) }"
@@ -137,7 +167,7 @@ const directionOptions = [
         </div>
 
         <div class="preview-panel">
-          <p class="preview-lbl">Live Preview (13.3" E-Ink)</p>
+          <p class="preview-lbl">Live Preview ({{ selectedDevice.model }})</p>
           <div class="e-ink-canvas">
             <div v-if="selectedDevice.template === 'welcome-sign'" class="layout-welcome">
               <div class="logo-area">🐾 Paws & Claws</div>
@@ -181,6 +211,52 @@ const directionOptions = [
               </div>
               <h1 class="way-title">{{ selectedDevice.config.title }}</h1>
               <p class="way-sub">{{ selectedDevice.config.subtitle }}</p>
+            </div>
+
+            <div v-if="selectedDevice.template === 'kennel-card'" class="layout-kennel-card">
+              <div v-if="selectedDevice.config.featuredPetIds.length" class="kc-container">
+                <!-- We assume single pet for kennel card -->
+                <div
+                  v-for="pid in selectedDevice.config.featuredPetIds.slice(0, 1)"
+                  :key="pid"
+                  class="kc-content"
+                >
+                  <div class="kc-left">
+                    <h1 class="kc-name">{{ getPetById(pid)?.name }}</h1>
+                    <div class="kc-stats">
+                      <div>Age: {{ calculateAge(getPetById(pid)?.physical.dateOfBirth) }}</div>
+                      <div>DOB: {{ formatDate(getPetById(pid)?.physical.dateOfBirth) }}</div>
+                      <div>Sex: {{ getPetById(pid)?.sex }}</div>
+                    </div>
+                    <div class="kc-breed">
+                      {{ getPetById(pid)?.physical.color || getPetById(pid)?.species }}
+                    </div>
+
+                    <div class="kc-personality">
+                      <div class="kc-lbl">Personality:</div>
+                      <div class="kc-tags-text">
+                        {{
+                          getPetById(pid)?.behavior?.personalityTags?.join(', ') ||
+                          'Playful, Loving'
+                        }}
+                      </div>
+                    </div>
+                  </div>
+                  <div class="kc-right">
+                    <div class="kc-qr">
+                      <img
+                        :src="`https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://adoption-os.com/adopt/${pid}`"
+                        alt="QR"
+                        style="width: 100%; height: 100%; image-rendering: pixelated"
+                      />
+                    </div>
+                    <div class="kc-cta">Adopt Me!</div>
+                  </div>
+                </div>
+              </div>
+              <div v-else class="empty-msg" style="color: black; padding-top: 40px">
+                Select a pet to view card
+              </div>
             </div>
           </div>
         </div>
@@ -497,6 +573,92 @@ const directionOptions = [
         .way-sub {
           font-size: 1.5rem;
           color: #444;
+        }
+      }
+
+      .layout-kennel-card {
+        height: 100%;
+        background: white;
+        color: black;
+        font-family: 'Courier New', Courier, monospace; /* Monospace for that printed label look */
+        padding: 16px;
+        box-sizing: border-box;
+
+        .kc-container,
+        .kc-content {
+          height: 100%;
+        }
+
+        .kc-content {
+          display: flex;
+          justify-content: space-between;
+        }
+
+        .kc-left {
+          flex: 1;
+          display: flex;
+          flex-direction: column;
+          gap: 12px;
+        }
+
+        .kc-name {
+          font-size: 3rem;
+          font-weight: 800;
+          margin: 0;
+          line-height: 1;
+          letter-spacing: -1px;
+        }
+
+        .kc-stats {
+          font-size: 1.2rem;
+          font-weight: 600;
+          display: flex;
+          flex-direction: column;
+          gap: 4px;
+        }
+
+        .kc-breed {
+          font-size: 1.1rem;
+          margin-top: 8px;
+        }
+
+        .kc-personality {
+          margin-top: auto;
+          margin-bottom: 8px;
+
+          .kc-lbl {
+            font-weight: 800;
+            font-size: 1.1rem;
+            margin-bottom: 4px;
+          }
+          .kc-tags-text {
+            font-size: 1rem;
+            line-height: 1.3;
+          }
+        }
+
+        .kc-right {
+          width: 140px;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: flex-start;
+          gap: 8px;
+        }
+
+        .kc-qr {
+          width: 130px;
+          height: 130px;
+          background: white;
+          border: 2px solid black;
+          padding: 4px;
+        }
+
+        .kc-cta {
+          font-size: 1.2rem;
+          font-weight: 800;
+          text-align: center;
+          font-family: 'Courier New', Courier, monospace;
         }
       }
     }

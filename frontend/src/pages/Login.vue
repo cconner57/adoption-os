@@ -1,9 +1,10 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
-import { useAuthStore } from '../stores/auth'
-import InputField from '../components/common/ui/InputField.vue'
+
 import Button from '../components/common/ui/Button.vue'
+import InputField from '../components/common/ui/InputField.vue'
+import { useAuthStore } from '../stores/auth'
 
 const email = ref('')
 const password = ref('')

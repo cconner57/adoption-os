@@ -1,15 +1,16 @@
 <script setup lang="ts">
-import { ref, computed } from 'vue'
-import type { IVolunteer, IShift, IIncident } from '../../../stores/mockVolunteerData'
-import { availableBadges } from '../../../stores/mockVolunteerData'
-import { Tag, Toast, Button, Capsules, Tabs } from '../../common/ui'
+/* eslint-disable max-lines */
+import { computed,ref } from 'vue'
 
-import VolunteerEditor from './VolunteerEditor.vue'
-import ShiftForm from './ShiftForm.vue'
 import { useAuthStore } from '../../../stores/auth'
-import { formatPhoneNumber } from '../../../utils/formatters'
+import type { IIncident,IShift, IVolunteer } from '../../../stores/mockVolunteerData'
+import { availableBadges } from '../../../stores/mockVolunteerData'
 import { formatDate } from '../../../utils/date'
-import { calculateReliabilityScore, calculateMaxStreak } from '../../../utils/reliability'
+import { formatPhoneNumber } from '../../../utils/formatters'
+import { calculateMaxStreak,calculateReliabilityScore } from '../../../utils/reliability'
+import { Button, Capsules, Tabs,Tag, Toast } from '../../common/ui'
+import ShiftForm from './ShiftForm.vue'
+import VolunteerEditor from './VolunteerEditor.vue'
 
 const props = defineProps<{
   volunteer: IVolunteer
@@ -36,7 +37,7 @@ const sortedVolunteerOptions = computed(() => {
 
 const isEditorOpen = ref(false)
 const isAddingShift = ref(false)
-const editingShiftData = ref<any>(null)
+const editingShiftData = ref<any>(null) // eslint-disable-line @typescript-eslint/no-explicit-any
 const showToast = ref(false)
 
 const emit = defineEmits(['add-shift', 'update', 'update-shift', 'delete-shift'])
@@ -55,16 +56,16 @@ function toggleAddShift() {
   }
 }
 
-function editShift(shift: any) {
+function editShift(shift: any) { // eslint-disable-line @typescript-eslint/no-explicit-any
   editingShiftData.value = shift
   isAddingShift.value = true
 }
 
-function deleteShift(shift: any) {
+function deleteShift(shift: any) { // eslint-disable-line @typescript-eslint/no-explicit-any
   emit('delete-shift', shift.id)
 }
 
-function handleShiftSave(shiftData: any) {
+function handleShiftSave(shiftData: any) { // eslint-disable-line @typescript-eslint/no-explicit-any
   if (shiftData.id) {
     emit('update-shift', shiftData)
   } else {
@@ -175,12 +176,7 @@ const yearlyStats = computed(() => {
   })
 
   // Calculate scores per year using utility
-  props.shifts.forEach((shift) => {
-    if (shift.status === 'scheduled') return
-    const year = shift.date.split('-')[0]
-    // We need to pass array of shifts to utility, so we might need to group first
-    // Refactor: grouping shifts by year first is cleaner
-  })
+
 
   // Re-write of yearlyStats logic to be cleaner and use utility
   const shiftsByYear: Record<string, IShift[]> = {}
@@ -293,34 +289,7 @@ const suggestions = computed(() => {
   return list
 })
 
-function getShiftStatusColor(shift: IShift) {
-  const displayStatus = getDisplayStatus(shift).toLowerCase()
-  switch (displayStatus) {
-    case 'all_good':
-    case 'completed':
-      return 'green'
-    case 'late':
-      return 'orange'
-    case 'no_show':
-    case 'missed':
-      return 'red'
-    case 'cancelled':
-      return 'gray'
-    case 'covered':
-    case 'covered 24h':
-    case 'covered_24h':
-      return 'purple'
-    case 'covered late':
-    case 'covered_late':
-    case 'covered_less_24h':
-    case 'covered <24h notice':
-    case 'covered_less_1h':
-    case 'covered <1h notice':
-      return 'pink'
-    default:
-      return 'blue'
-  }
-}
+
 
 function formatTime(timeStr: string) {
   if (!timeStr) return ''

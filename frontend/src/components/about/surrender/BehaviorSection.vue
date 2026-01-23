@@ -1,10 +1,11 @@
 <script setup lang="ts">
 import { onMounted } from 'vue'
-import InputTextArea from '../../common/ui/InputTextArea.vue'
+
+import type { SurrenderFormState } from '../../../models/surrender-form.ts'
 import ButtonToggle from '../../common/ui/ButtonToggle.vue'
 import InputGrid from '../../common/ui/InputGrid.vue'
 import InputSelectGroup from '../../common/ui/InputSelectGroup.vue'
-import type { SurrenderFormState } from '../../../models/surrender-form.ts'
+import InputTextArea from '../../common/ui/InputTextArea.vue'
 
 const { formState, touched, handleBlur, hasAttemptedSubmit, selectedAnimal } = defineProps<{
   formState: SurrenderFormState

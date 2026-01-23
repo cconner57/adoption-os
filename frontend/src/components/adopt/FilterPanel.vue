@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import { ref, watch, onMounted } from 'vue'
+import { ref, watch } from 'vue'
+
 import Button from '../common/ui/Button.vue'
 
 const props = defineProps<{
@@ -13,9 +14,9 @@ const props = defineProps<{
 }>()
 
 const emit = defineEmits<{
-  (e: 'close'): void
-  (e: 'apply', filters: typeof props.currentFilters): void
-  (e: 'clear'): void
+  close: []
+  apply: [filters: typeof props.currentFilters]
+  clear: []
 }>()
 
 const localFilters = ref({

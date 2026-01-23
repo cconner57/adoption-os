@@ -1,20 +1,19 @@
 <script setup lang="ts">
-import { ref, watch, reactive } from 'vue'
-import type { IVolunteer } from '../../../stores/mockVolunteerData'
-import {
-  SidebarNav,
-  InputField,
-  InputTextArea,
-  Tag,
-  Button,
-  Toggle,
-  InputFileUpload,
-  Select,
-} from '../../common/ui'
-import { formatPhoneInput, formatZipInput } from '../../../utils/formatters'
-import PositionPreferences from '../../volunteer/preferences/PositionPreferences.vue'
+import { ref, watch } from 'vue'
 
+import type { IVolunteer } from '../../../stores/mockVolunteerData'
+import { formatPhoneInput, formatZipInput } from '../../../utils/formatters'
+import {
+  Button,
+  InputField,
+  InputFileUpload,
+  InputTextArea,
+  Select,
+  SidebarNav,
+  Toggle,
+} from '../../common/ui'
 import Availability from '../../volunteer/availability/Availability.vue'
+import PositionPreferences from '../../volunteer/preferences/PositionPreferences.vue'
 
 const props = defineProps<{
   volunteer: IVolunteer | null

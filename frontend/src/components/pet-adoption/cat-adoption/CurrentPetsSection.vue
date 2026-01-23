@@ -1,7 +1,7 @@
 <script setup lang="ts">
+import type { FormState } from '../../../models/adopt-form.ts'
 import InputField from '../../common/ui/InputField.vue'
 import InputSelectGroup from '../../common/ui/InputSelectGroup.vue'
-import type { FormState } from '../../../models/adopt-form.ts'
 
 const { modelValue } = defineProps<{
   modelValue: FormState

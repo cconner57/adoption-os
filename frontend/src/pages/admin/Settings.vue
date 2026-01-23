@@ -1,17 +1,16 @@
 <script setup lang="ts">
-import { ref, computed } from 'vue'
-import { useDemoMode } from '../../composables/useDemoMode'
-import { useAuthStore } from '../../stores/auth'
+import { storeToRefs } from 'pinia'
+import { computed,ref } from 'vue'
 
 // Components
 import SettingsGeneral from '../../components/admin/settings/SettingsGeneral.vue'
-import SettingsWebsite from '../../components/admin/settings/SettingsWebsite.vue'
-import SettingsVolunteers from '../../components/admin/settings/SettingsVolunteers.vue'
 import SettingsOverview from '../../components/admin/settings/SettingsOverview.vue'
 import SettingsPets from '../../components/admin/settings/SettingsPets.vue'
-
+import SettingsVolunteers from '../../components/admin/settings/SettingsVolunteers.vue'
+import SettingsWebsite from '../../components/admin/settings/SettingsWebsite.vue'
+import { useDemoMode } from '../../composables/useDemoMode'
+import { useAuthStore } from '../../stores/auth'
 import { useSettingsStore } from '../../stores/settings'
-import { storeToRefs } from 'pinia'
 
 const saving = ref(false)
 const showToast = ref(false)

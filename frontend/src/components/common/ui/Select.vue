@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, computed, onMounted, onUnmounted } from 'vue'
+import { computed, onMounted, onUnmounted,ref } from 'vue'
 
 const props = withDefaults(
   defineProps<{
@@ -42,7 +42,7 @@ const selectedLabel = computed(() => {
       return props.placeholder
     }
     const selected = normalizedOptions.value.filter((opt) =>
-      (props.modelValue as any[]).includes(opt.value),
+      Array.isArray(props.modelValue) && props.modelValue.includes(opt.value)
     )
     return selected.map((s) => s.label).join(', ')
   }

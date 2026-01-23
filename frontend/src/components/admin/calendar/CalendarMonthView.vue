@@ -13,7 +13,9 @@ const props = defineProps<{
 const parseTime = (timeStr: string): number => {
   if (!timeStr) return 0
   const [time, modifier] = timeStr.split(' ')
-  let [hours, minutes] = time.split(':').map(Number)
+  const timeParts = time.split(':').map(Number)
+  let hours = timeParts[0]
+  const minutes = timeParts[1]
   if (modifier === 'PM' && hours < 12) hours += 12
   if (modifier === 'AM' && hours === 12) hours = 0
   return hours * 60 + minutes

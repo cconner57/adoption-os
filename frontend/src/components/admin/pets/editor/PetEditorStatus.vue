@@ -1,7 +1,8 @@
 <script setup lang="ts">
 import { computed } from 'vue'
-import { InputField, ButtonToggle } from '../../../common/ui'
+
 import type { IPet } from '../../../../../models/common'
+import { ButtonToggle,InputField } from '../../../common/ui'
 
 const props = defineProps<{
   modelValue: Partial<IPet>

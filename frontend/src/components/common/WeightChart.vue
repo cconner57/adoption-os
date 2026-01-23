@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, ref, defineProps } from 'vue'
+import { computed, defineProps,ref } from 'vue'
 
 const props = defineProps<{
   data: { date: string; value: number }[]
@@ -11,7 +11,7 @@ const width = 600
 const height = props.height || 300
 const padding = 60
 
-const hoveredPoint = ref<any>(null)
+const hoveredPoint = ref<{ x: number; y: number; value: number; date: string } | null>(null)
 
 const sortedData = computed(() => {
   return [...props.data].sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime())

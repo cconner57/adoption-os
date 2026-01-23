@@ -9,10 +9,19 @@ const props = defineProps<{
 }>()
 
 const emit = defineEmits<{
-  (e: 'close'): void
+  close: []
 }>()
 
 let timer: number
+
+function startTimer() {
+  clearTimeout(timer)
+  if (props.duration !== 0) {
+    timer = window.setTimeout(() => {
+      emit('close')
+    }, props.duration || 6000)
+  }
+}
 
 onMounted(() => {
   if (props.show) {
@@ -35,14 +44,7 @@ watch(
   },
 )
 
-function startTimer() {
-  clearTimeout(timer)
-  if (props.duration !== 0) {
-    timer = window.setTimeout(() => {
-      emit('close')
-    }, props.duration || 6000)
-  }
-}
+
 
 onUnmounted(() => {
   clearTimeout(timer)

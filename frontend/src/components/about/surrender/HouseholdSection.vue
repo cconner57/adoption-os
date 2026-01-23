@@ -1,17 +1,17 @@
 <script setup lang="ts">
-import InputField from '../../common/ui/InputField.vue'
 import type { SurrenderFormState } from '../../../models/surrender-form.ts'
-import InputTextArea from '../../common/ui/InputTextArea.vue'
-import InputSelectGroup from '../../common/ui/InputSelectGroup.vue'
-import ButtonToggle from '../../common/ui/ButtonToggle.vue'
-import HoneypotField from '../../common/ui/HoneypotField.vue'
 import {
   formatPhoneNumber,
-  sanitizeName,
-  sanitizeCity,
-  sanitizeZip,
   sanitizeAddress,
+  sanitizeCity,
+  sanitizeName,
+  sanitizeZip,
 } from '../../../utils/validators.ts'
+import ButtonToggle from '../../common/ui/ButtonToggle.vue'
+import HoneypotField from '../../common/ui/HoneypotField.vue'
+import InputField from '../../common/ui/InputField.vue'
+import InputSelectGroup from '../../common/ui/InputSelectGroup.vue'
+import InputTextArea from '../../common/ui/InputTextArea.vue'
 
 const { formState, touched, handleBlur, hasAttemptedSubmit, selectedAnimal } = defineProps<{
   formState: SurrenderFormState

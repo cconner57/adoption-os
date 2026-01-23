@@ -1,4 +1,13 @@
 <script setup lang="ts">
+import { storeToRefs } from 'pinia'
+import { nextTick,onMounted, reactive } from 'vue'
+import { useRouter } from 'vue-router'
+
+import FormSubmitted from '../components/common/form-submitted/FormSubmitted.vue'
+import Button from '../components/common/ui/Button.vue'
+import HoneypotField from '../components/common/ui/HoneypotField.vue'
+import InputField from '../components/common/ui/InputField.vue'
+import InputTextArea from '../components/common/ui/InputTextArea.vue'
 import {
   Agreement,
   Allergies,
@@ -6,17 +15,9 @@ import {
   Availability,
   PositionPreferences,
 } from '../components/volunteer/index.ts'
-import Button from '../components/common/ui/Button.vue'
-import InputField from '../components/common/ui/InputField.vue'
-import InputTextArea from '../components/common/ui/InputTextArea.vue'
-import HoneypotField from '../components/common/ui/HoneypotField.vue'
-import { reactive, onMounted, ref, nextTick } from 'vue'
-import FormSubmitted from '../components/common/form-submitted/FormSubmitted.vue'
-import { storeToRefs } from 'pinia'
-import { useVolunteerStore } from '../stores/volunteer.ts'
-import { useRouter } from 'vue-router'
 import { useMetrics } from '../composables/useMetrics'
 import { useScrollReveal } from '../composables/useScrollReveal.ts'
+import { useVolunteerStore } from '../stores/volunteer.ts'
 
 const { submitMetric } = useMetrics()
 const { vScrollReveal } = useScrollReveal()
@@ -111,7 +112,7 @@ const handleReset = () => {
         <fieldset class="volunteer-grid" aria-labelledby="pi" v-scroll-reveal>
           <legend id="pi" class="section-title">Personal Information</legend>
 
-          <HoneypotField v-model="formState.fax_number" />
+          <HoneypotField v-model="formState.fax_number as string" />
 
           <InputField
             :modelValue="formState.firstName"

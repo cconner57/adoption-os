@@ -1,17 +1,18 @@
 <script setup lang="ts">
-import { defineProps, defineEmits } from 'vue'
-import { InputField, ButtonToggle, Capsules } from '../../common/ui'
+import { defineEmits,defineProps } from 'vue'
+
+import { ButtonToggle, Capsules,InputField } from '../../common/ui'
 import Button from '../../common/ui/Button.vue'
 import SettingsCard from './SettingsCard.vue'
 
 const props = defineProps<{
-  settings: any
+  settings: any // eslint-disable-line @typescript-eslint/no-explicit-any
   isDemoMode: boolean
 }>()
 
 const emit = defineEmits<{
-  (e: 'update:settings', value: any): void
-  (e: 'toggleDemoMode'): void
+  'update:settings': [value: any] // eslint-disable-line @typescript-eslint/no-explicit-any
+  'toggleDemoMode': []
 }>()
 
 function addEmail(type: 'volunteer' | 'surrender' | 'adoption') {

@@ -1,21 +1,22 @@
 <script setup lang="ts">
-import { useRouter } from 'vue-router'
 import { storeToRefs } from 'pinia'
-import { useSurrenderStore } from '../stores/surrender'
+import { computed, onMounted,reactive } from 'vue'
+import { useRouter } from 'vue-router'
+
 import {
   AggressiveSection,
+  BehaviorSection,
   FeedingSection,
   HouseholdSection,
   MedicalSection,
-  BehaviorSection,
   OtherSection,
 } from '../components/about/surrender/index.ts'
-import Button from '../components/common/ui/Button.vue'
-import SurrenderSteps from '../components/about/surrender/SurrenderSteps.vue'
 import PetSelectSection from '../components/about/surrender/PetSelectSection.vue'
+import SurrenderSteps from '../components/about/surrender/SurrenderSteps.vue'
 import FormSubmitted from '../components/common/form-submitted/FormSubmitted.vue'
-import { reactive, computed, onMounted } from 'vue'
+import Button from '../components/common/ui/Button.vue'
 import { useMetrics } from '../composables/useMetrics'
+import { useSurrenderStore } from '../stores/surrender'
 
 const { submitMetric } = useMetrics()
 

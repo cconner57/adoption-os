@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { useAttrs, ref, watch, nextTick } from 'vue'
+import { nextTick,ref, useAttrs, watch } from 'vue'
 
 defineOptions({
   inheritAttrs: false,

@@ -1,16 +1,17 @@
 <script setup lang="ts">
-import { defineProps, defineEmits } from 'vue'
-import { InputField, ButtonToggle, InputSelectGroup } from '../../common/ui'
+import { defineEmits,defineProps } from 'vue'
+
+import { ButtonToggle, InputField, InputSelectGroup } from '../../common/ui'
 import SettingsCard from './SettingsCard.vue'
 
 defineProps<{
-  settings: any
-  accountForm: any
+  settings: Record<string, unknown>
+  accountForm: Record<string, unknown>
 }>()
 
-const emit = defineEmits<{
-  (e: 'update:settings', value: any): void
-  (e: 'update:accountForm', value: any): void
+defineEmits<{
+  'update:settings': [value: Record<string, unknown>]
+  'update:accountForm': [value: Record<string, unknown>]
 }>()
 </script>
 

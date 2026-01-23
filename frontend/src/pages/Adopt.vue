@@ -1,16 +1,17 @@
 <script setup lang="ts">
-import FilterPanel from '../components/adopt/FilterPanel.vue'
+import { storeToRefs } from 'pinia'
+import { computed, nextTick, onMounted,ref } from 'vue'
+import { useRoute } from 'vue-router'
+
 import AdoptDetail from '../components/adopt/adopt-view/AdoptDetail.vue'
 import AdoptSummary from '../components/adopt/adopt-view/AdoptSummary.vue'
-import { computed, ref, nextTick, onMounted } from 'vue'
-import { useRoute } from 'vue-router'
+import FilterPanel from '../components/adopt/FilterPanel.vue'
 import { usePetStore } from '../stores/pets'
-import { storeToRefs } from 'pinia'
 
 const props = defineProps<{ id?: string }>()
 const route = useRoute()
 const store = usePetStore()
-const { currentPets, isFetching } = storeToRefs(store)
+const { currentPets } = storeToRefs(store)
 
 const id = computed(() => props.id ?? (route.params.id as string | undefined))
 const isFilterPanelOpen = ref(false)

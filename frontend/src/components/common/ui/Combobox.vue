@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, watch, computed, onMounted, onUnmounted, nextTick } from 'vue'
+import { computed, onMounted, onUnmounted,ref, watch } from 'vue'
 
 const props = withDefaults(
   defineProps<{
@@ -29,14 +29,7 @@ const searchQuery = ref('')
 const containerRef = ref<HTMLElement | null>(null)
 const inputRef = ref<HTMLInputElement | null>(null)
 
-const selectedLabels = computed(() => {
-  if (props.multiple) {
-    const vals = (props.modelValue as string[]) || []
-    return vals.map((v) => props.options.find((o) => o.value === v)?.label || v)
-  }
-  const val = props.modelValue as string
-  return props.options.find((o) => o.value === val)?.label || val
-})
+
 
 const filteredOptions = computed(() => {
   if (!searchQuery.value) return props.options
@@ -108,7 +101,7 @@ function removeTag(value: string) {
   }
 }
 
-function handleInput(e: Event) {
+function handleInput() {
   isOpen.value = true
 }
 

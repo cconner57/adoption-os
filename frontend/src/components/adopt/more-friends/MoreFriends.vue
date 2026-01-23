@@ -1,9 +1,10 @@
 <script setup lang="ts">
 import { defineProps } from 'vue'
+
 import type { IPet } from '../../../models/common'
-import PetItem from '../../common/pet-item/PetItem.vue'
-import { useIsMobile } from '../../../utils/useIsMobile'
 import { formatDate } from '../../../utils/common'
+import { useIsMobile } from '../../../utils/useIsMobile'
+import PetItem from '../../common/pet-item/PetItem.vue'
 
 defineProps<{
   pet: IPet

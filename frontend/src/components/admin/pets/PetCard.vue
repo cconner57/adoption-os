@@ -1,23 +1,22 @@
 <script setup lang="ts">
-import { ref, computed } from 'vue'
+import { ref } from 'vue'
+
 import type { IPet } from '../../../models/common'
-import { useRouter } from 'vue-router'
-import { formatDate, calculateAge } from '../../../utils/date'
+import { calculateAge,formatDate } from '../../../utils/date'
 import { Button } from '../../common/ui'
 
-const props = defineProps<{
+defineProps<{
   pet: IPet
   statusFilter: string
 }>()
 
 const emit = defineEmits<{
-  (e: 'edit', pet: IPet): void
-  (e: 'archive', pet: IPet): void
-  (e: 'mark-adopted', pet: IPet): void
+  edit: [pet: IPet]
+  archive: [pet: IPet]
+  'mark-adopted': [pet: IPet]
 }>()
 
 const isExpanded = ref(false)
-const router = useRouter()
 
 // --- Helpers ---
 function getStatusColor(status: string) {
@@ -36,35 +35,6 @@ function getStatusColor(status: string) {
 function formatDoB(dateString?: string | null) {
   return formatDate(dateString)
 }
-
-function formatCurrency(amount?: number | null) {
-  if (amount == null) return '-'
-  return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(amount)
-}
-
-function formatList(list?: string[] | null) {
-  if (!list || list.length === 0) return '-'
-  return list.join(', ')
-}
-
-function isTrue(val: boolean | string | undefined | null) {
-  return val === 'true' || val === true
-}
-
-// --- Computed ---
-const vaccineSummary = computed(() => {
-  const v = props.pet.medical?.vaccinations
-  if (!v) return 'No recent records'
-  const list: string[] = []
-  if (v.rabies?.dateAdministered) list.push(`Rabies: ${formatDoB(v.rabies.dateAdministered)}`)
-  if (v.bordetella?.dateAdministered)
-    list.push(`Bordetella: ${formatDoB(v.bordetella.dateAdministered)}`)
-  if (v.canineDistemper?.round1?.dateAdministered)
-    list.push(`Distemper: ${formatDoB(v.canineDistemper.round1.dateAdministered)}`)
-  if (v.felineDistemper?.round1?.dateAdministered)
-    list.push(`FVRCP: ${formatDoB(v.felineDistemper.round1.dateAdministered)}`)
-  return list.length ? list.join(' • ') : 'No recent records'
-})
 </script>
 
 <template>

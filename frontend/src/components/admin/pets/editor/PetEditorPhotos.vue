@@ -1,7 +1,8 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue'
+
 import type { IPet } from '../../../../../models/common'
-import { Toast, ImageCropper } from '../../../common/ui'
+import { ImageCropper,Toast } from '../../../common/ui'
 
 const props = defineProps<{
   modelValue: Partial<IPet>
@@ -32,17 +33,6 @@ function onCancelCrop() {
   if (fileInput.value) fileInput.value.value = ''
 }
 
-async function onCropComplete(croppedBlob: Blob) {
-  // Convert blob to File
-  const file = new File([croppedBlob], pendingFile.value?.name || 'photo.jpg', {
-    type: 'image/jpeg',
-  })
-
-  await uploadFile(file, false) // Suppress toast for crop
-  pendingFile.value = null
-  if (fileInput.value) fileInput.value.value = ''
-}
-
 async function uploadFile(file: File, showSuccessToast = true) {
   // Validate Pet ID availability
   if (!formData.value.id) {
@@ -51,10 +41,6 @@ async function uploadFile(file: File, showSuccessToast = true) {
     showToast.value = true
     return
   }
-
-  // note: max photos check moved to selection time or here?
-  // If we check here, user might crop then get rejected. Better to check before crop.
-  // But redundant check is fine safety.
 
   isUploading.value = true
 
@@ -98,7 +84,7 @@ async function uploadFile(file: File, showSuccessToast = true) {
       toastType.value = 'success'
       showToast.value = true
     }
-  } catch (error: any) {
+  } catch (error: any) { // eslint-disable-line @typescript-eslint/no-explicit-any
     console.error('Upload error:', error)
     toastMessage.value = error.message || 'Failed to upload photo'
     toastType.value = 'error'
@@ -108,13 +94,37 @@ async function uploadFile(file: File, showSuccessToast = true) {
   }
 }
 
+function handleFileSelection(file: File) {
+  // Validate Max Photos BEFORE cropping
+  if ((formData.value.photos?.length || 0) >= 5) {
+    toastMessage.value = 'Maximum of 5 photos allowed.'
+    toastType.value = 'error'
+    showToast.value = true
+    if (fileInput.value) fileInput.value.value = ''
+    return
+  }
+
+  pendingFile.value = file
+}
+
+async function onCropComplete(croppedBlob: Blob) {
+  // Convert blob to File
+  const file = new File([croppedBlob], pendingFile.value?.name || 'photo.jpg', {
+    type: 'image/jpeg',
+  })
+
+  await uploadFile(file, false) // Suppress toast for crop
+  pendingFile.value = null
+  if (fileInput.value) fileInput.value.value = ''
+}
+
 const isDragging = ref(false)
 
-function onDragOver(e: DragEvent) {
+function onDragOver() {
   isDragging.value = true
 }
 
-function onDragLeave(e: DragEvent) {
+function onDragLeave() {
   isDragging.value = false
 }
 
@@ -131,19 +141,6 @@ async function onFileSelected(event: Event) {
   const file = target.files?.[0]
   if (!file) return
   handleFileSelection(file)
-}
-
-function handleFileSelection(file: File) {
-  // Validate Max Photos BEFORE cropping
-  if ((formData.value.photos?.length || 0) >= 5) {
-    toastMessage.value = 'Maximum of 5 photos allowed.'
-    toastType.value = 'error'
-    showToast.value = true
-    if (fileInput.value) fileInput.value.value = ''
-    return
-  }
-
-  pendingFile.value = file
 }
 
 function setPrimaryPhoto(index: number) {

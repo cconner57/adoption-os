@@ -1,9 +1,10 @@
 <script setup lang="ts">
 import { reactive } from 'vue'
-import Drawer from '../../common/drawer/Drawer.vue'
+
 import type { IPet } from '../../../models/common.ts'
-import InputField from '../../common/ui/InputField.vue'
+import Drawer from '../../common/drawer/Drawer.vue'
 import Button from '../../common/ui/Button.vue'
+import InputField from '../../common/ui/InputField.vue'
 
 const { pet, isDrawerOpen } = defineProps<{
   pet: IPet

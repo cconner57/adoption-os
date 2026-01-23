@@ -1,7 +1,8 @@
 <script setup lang="ts">
-import { ref, computed } from 'vue'
-import { mockInventory, inventoryStats, type IInventoryItem } from '../../stores/mockInventory'
-import { Capsules, InputField, InputSelectGroup, Button } from '../../components/common/ui'
+import { computed,ref } from 'vue'
+
+import { Button,Capsules, InputField } from '../../components/common/ui'
+import { type IInventoryItem,inventoryStats, mockInventory } from '../../stores/mockInventory'
 
 const searchQuery = ref('')
 const filterCategory = ref<'All' | string>('All')
@@ -51,24 +52,24 @@ const getStockWidth = (item: IInventoryItem) => {
   return `${Math.min((item.quantity / max) * 100, 100)  }%`
 }
 
+import StockAdjustmentModal from '../../components/admin/inventory/StockAdjustmentModal.vue'
+
+// ...
+
 // Actions
 const showEditModal = ref(false)
 const editingItem = ref<IInventoryItem | null>(null)
-const tempQuantity = ref(0) // For adjustment
 
 const openEditModal = (item: IInventoryItem) => {
   editingItem.value = item
-  tempQuantity.value = item.quantity
   showEditModal.value = true
 }
 
-const saveStock = () => {
-  if (editingItem.value) {
-    editingItem.value.quantity = tempQuantity.value
-    editingItem.value.lastUpdated = new Date().toISOString().split('T')[0]
-    showEditModal.value = false
-    editingItem.value = null
-  }
+const handleSaveStock = (item: IInventoryItem, quantity: number) => {
+  item.quantity = quantity
+  item.lastUpdated = new Date().toISOString().split('T')[0]
+  showEditModal.value = false
+  editingItem.value = null
 }
 
 // Add Item Mock
@@ -207,33 +208,12 @@ const addItem = () => {
     </div>
 
     <!-- EDIT ADJUST MODAL -->
-    <div
-      v-if="showEditModal && editingItem"
-      class="modal-overlay"
-      @click.self="showEditModal = false"
-    >
-      <div class="modal-card">
-        <h3>Adjust Stock: {{ editingItem.name }}</h3>
-        <p class="subtitle">Update current quantity on hand.</p>
-
-        <div class="stock-adjuster">
-          <button class="adjust-btn" @click="tempQuantity = Math.max(0, tempQuantity - 1)">
-            -
-          </button>
-          <input v-model.number="tempQuantity" type="number" class="qty-input" />
-          <button class="adjust-btn" @click="tempQuantity++">+</button>
-        </div>
-
-        <p class="threshold-info">
-          Minimum Threshold: {{ editingItem.minThreshold }} {{ editingItem.unit }}
-        </p>
-
-        <div class="modal-actions">
-          <Button title="Cancel" color="white" :onClick="() => (showEditModal = false)" />
-          <Button title="Save Changes" color="black" :onClick="saveStock" />
-        </div>
-      </div>
-    </div>
+    <StockAdjustmentModal
+      :isOpen="showEditModal"
+      :item="editingItem"
+      @close="showEditModal = false"
+      @save="handleSaveStock"
+    />
   </div>
 </template>
 
@@ -427,78 +407,5 @@ const addItem = () => {
   color: hsl(from var(--color-neutral) h s 50%);
 }
 
-/* MODAL */
-.modal-overlay {
-  position: fixed;
-  inset: 0;
-  background: rgba(0, 0, 0, 0.5);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 100;
-}
-
-.modal-card {
-  background: white;
-  padding: 24px;
-  border-radius: 12px;
-  width: 100%;
-  max-width: 400px;
-  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
-  text-align: center;
-
-  h3 {
-    margin: 0 0 8px 0;
-  }
-  .subtitle {
-    margin: 0 0 24px 0;
-    color: hsl(from var(--color-neutral) h s 50%);
-  }
-}
-
-.stock-adjuster {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 16px;
-  margin-bottom: 16px;
-}
-
-.adjust-btn {
-  width: 40px;
-  height: 40px;
-  border-radius: 8px;
-  border: 1px solid #e5e7eb;
-  background: white;
-  font-size: 1.5rem;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  &:hover {
-    background: hsl(from var(--color-neutral) h s 98%);
-  }
-}
-
-.qty-input {
-  width: 80px;
-  text-align: center;
-  font-size: 1.5rem;
-  font-weight: 700;
-  border: none;
-  border-bottom: 2px solid var(--color-secondary);
-  outline: none;
-}
-
-.threshold-info {
-  font-size: 0.85rem;
-  color: hsl(from var(--color-neutral) h s 50%);
-  margin-bottom: 24px;
-}
-
-.modal-actions {
-  display: flex;
-  justify-content: flex-end;
-  gap: 12px;
-}
+/* MODAL STYLES REMOVED */
 </style>

@@ -1,10 +1,11 @@
 <script setup lang="ts">
-import { ref, computed, watch } from 'vue'
-import { mockPetsData } from '../../stores/mockPetData'
-import { mockHealthLogs } from '../../stores/mockHealthLogs'
-import WeightChart from '../../components/common/WeightChart.vue'
-import VitalsCard from '../../components/admin/pet-health/VitalsCard.vue'
+import { computed, ref, watch } from 'vue'
+
 import RecentLogsTable from '../../components/admin/pet-health/RecentLogsTable.vue'
+import VitalsCard from '../../components/admin/pet-health/VitalsCard.vue'
+import WeightChart from '../../components/common/WeightChart.vue'
+import { mockHealthLogs } from '../../stores/mockHealthLogs'
+import { mockPetsData } from '../../stores/mockPetData'
 
 const searchQuery = ref('')
 const selectedPetId = ref<string | null>(null)

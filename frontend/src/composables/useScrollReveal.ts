@@ -1,4 +1,4 @@
-import { onMounted, onUnmounted } from 'vue'
+
 
 export function useScrollReveal(className = 'reveal', threshold = 0.1) {
   const observer = new IntersectionObserver(

@@ -1,10 +1,10 @@
 <script setup lang="ts">
-import { ref, computed, onMounted } from 'vue'
+import { computed, onMounted,ref } from 'vue'
+
 import { Button, InputField, InputTextArea, Select, Toggle } from '../../common/ui'
 
 const props = defineProps<{
-  initialData?: any
-  initialData?: any
+  initialData?: any // eslint-disable-line @typescript-eslint/no-explicit-any
   volunteerOptions?: { label: string; value: string }[]
   currentVolunteerName?: string
 }>()

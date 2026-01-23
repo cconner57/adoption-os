@@ -1,14 +1,13 @@
 <script setup lang="ts">
 import { ref } from 'vue'
+
+import { Button,Capsules } from '../../components/common/ui'
 import {
-  mockCampaigns,
-  mockNewsletters,
-  mockHappyTails,
-  type ICampaign,
-  type INewsletter,
   type IHappyTail,
+  mockCampaigns,
+  mockHappyTails,
+  mockNewsletters,
 } from '../../stores/mockMarketing'
-import { Capsules, Button, InputField } from '../../components/common/ui'
 
 const activeTab = ref<'campaigns' | 'newsletters' | 'stories'>('campaigns')
 
@@ -128,7 +127,7 @@ const approveStory = (story: IHappyTail) => {
     <div v-if="activeTab === 'newsletters'" class="tab-content">
       <div class="actions-row">
         <h2>Email Blasts</h2>
-        <Button title="Compose New" color="black" />
+        <Button title="Compose New" color="white" />
       </div>
 
       <div class="list-container">
@@ -176,7 +175,7 @@ const approveStory = (story: IHappyTail) => {
               v-if="story.status === 'pending'"
               title="Approve"
               size="small"
-              color="black"
+              color="white"
               :onClick="() => approveStory(story)"
             />
           </div>

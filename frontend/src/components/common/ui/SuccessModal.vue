@@ -7,9 +7,7 @@ defineProps<{
   message?: string
 }>()
 
-const emit = defineEmits<{
-  (e: 'close'): void
-}>()
+const emit = defineEmits(['close'])
 </script>
 
 <template>

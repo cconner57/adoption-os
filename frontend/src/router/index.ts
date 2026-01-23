@@ -6,8 +6,9 @@ const KioskDailyCare = () => import('../pages/kiosk/KioskDailyCare.vue')
 const KioskPetList = () => import('../pages/kiosk/KioskPetList.vue')
 const KioskVetSchedule = () => import('../pages/kiosk/KioskVetSchedule.vue')
 
-import { useMetrics } from '../composables/useMetrics'
 import { nextTick } from 'vue'
+
+import { useMetrics } from '../composables/useMetrics'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -19,9 +20,11 @@ const router = createRouter({
     {
       path: '/login',
       component: () => import('../pages/Login.vue'),
+      meta: { hideNavbar: true },
     },
     {
       path: '/kiosk',
+      meta: { hideNavbar: true },
       component: KioskLayout,
       children: [
         { path: '', name: 'kiosk-home', component: KioskHome },
@@ -32,6 +35,7 @@ const router = createRouter({
     },
     {
       path: '/admin',
+      meta: { hideNavbar: true },
       component: () => import('../layouts/AdminLayout.vue'),
       children: [
         {
@@ -165,10 +169,30 @@ interface ViewTransition {
   ready: Promise<void>
   updateCallbackDone: Promise<void>
   skipTransition(): void
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  types?: any
 }
 
-type ViewTransitionUpdateCallback = () => Promise<void> | void
-type StartViewTransitionOptions = Record<string, unknown>
+/* eslint-disable no-unused-vars */
+interface ViewTransitionTypeSet {
+  add(type: string): void
+  delete(type: string): boolean
+  has(type: string): boolean
+  clear(): void
+  readonly size: number
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  forEach(callbackfn: (value: string, value2: string, set: Set<string>) => void, thisArg?: any): void
+  entries(): IterableIterator<[string, string]>
+  keys(): IterableIterator<string>
+  values(): IterableIterator<string>
+  [Symbol.iterator](): IterableIterator<string>
+  readonly [Symbol.toStringTag]: string
+}
+
+type StartViewTransitionOptions = {
+  update?: ViewTransitionUpdateCallback
+  types?: string[]
+}
 
 interface ViewTransitionDocument extends Document {
   startViewTransition(
@@ -176,11 +200,17 @@ interface ViewTransitionDocument extends Document {
     options?: StartViewTransitionOptions,
   ): ViewTransition
 }
+/* eslint-enable no-unused-vars */
 
 import { useAuthStore } from '../stores/auth'
+import { useUIStore } from '../stores/ui'
 
 router.beforeEach(async (to, from, next) => {
   const authStore = useAuthStore()
+  const uiStore = useUIStore()
+
+  // Start global page loader
+  uiStore.startLoading()
 
   // Ensure auth is initialized explicitly
   if (!authStore.initialized) {
@@ -231,7 +261,15 @@ router.beforeResolve((to, from, next) => {
 
 router.afterEach((to) => {
   const { submitMetric } = useMetrics()
+  const uiStore = useUIStore()
+
+  uiStore.stopLoading()
   submitMetric('page_view', { path: to.fullPath })
+})
+
+router.onError(() => {
+  const uiStore = useUIStore()
+  uiStore.stopLoading()
 })
 
 export default router

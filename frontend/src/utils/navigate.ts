@@ -1,4 +1,4 @@
-import { useRouter, type Router } from 'vue-router'
+import { type Router,useRouter } from 'vue-router'
 
 export const goToAdopt = (router: Router, id?: string) => {
   return id ? router.push({ name: 'adopt-pet', params: { id } }) : router.push('/adopt')

@@ -1,7 +1,7 @@
-import { computed } from 'vue'
-import type { IPet } from '../models/common.ts'
-import { usePetStore } from '../stores/pets'
 import { storeToRefs } from 'pinia'
+import { computed } from 'vue'
+
+import { usePetStore } from '../stores/pets'
 
 export function usePets() {
   const store = usePetStore()

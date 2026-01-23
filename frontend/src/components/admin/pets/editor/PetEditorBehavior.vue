@@ -1,7 +1,8 @@
 <script setup lang="ts">
 import { computed } from 'vue'
-import { InputSelectGroup, ButtonToggle, Combobox, InputTextArea } from '../../../common/ui'
+
 import type { IPet } from '../../../../../models/common'
+import { ButtonToggle, Combobox, InputSelectGroup, InputTextArea } from '../../../common/ui'
 
 const props = defineProps<{
   modelValue: Partial<IPet>

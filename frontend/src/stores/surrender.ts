@@ -1,10 +1,10 @@
 import { defineStore } from 'pinia'
-import { ref, reactive, computed } from 'vue'
-import type { SurrenderFormState } from '../models/surrender-form'
-import { API_ENDPOINTS } from '../constants/api'
-import { useMetrics } from '../composables/useMetrics'
+import { computed,reactive, ref } from 'vue'
 
 import { useDemoMode } from '../composables/useDemoMode'
+import { useMetrics } from '../composables/useMetrics'
+import { API_ENDPOINTS } from '../constants/api'
+import type { SurrenderFormState } from '../models/surrender-form'
 
 export const useSurrenderStore = defineStore('surrender', () => {
   const { isDemoMode } = useDemoMode()

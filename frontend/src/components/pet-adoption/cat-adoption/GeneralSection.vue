@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import InputField from '../../common/ui/InputField.vue'
 import ButtonToggle from '../../common/ui/ButtonToggle.vue'
-import HoneypotField from '../../common/ui/HoneypotField.vue'
+import ButtonToggle from '../../common/ui/ButtonToggle.vue'
+import InputField from '../../common/ui/InputField.vue'
 
 const { modelValue } = defineProps<{
   modelValue: {

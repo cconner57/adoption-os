@@ -40,7 +40,23 @@ export interface IShift {
   startTime: string // "09:00"
   endTime: string // "13:00"
   role: string // "Dog Walking", "Cleaning", etc.
-  status: 'scheduled' | 'all_good' | 'late' | 'no_show' | 'cancelled'
+  status:
+    | 'scheduled'
+    | 'all_good'
+    | 'late'
+    | 'no_show'
+    | 'cancelled'
+    | 'completed'
+    | 'missed'
+    | 'covered'
+    | 'covered 24h'
+    | 'covered_24h'
+    | 'covered late'
+    | 'covered_late'
+    | 'covered <24h notice'
+    | 'covered_less_24h'
+    | 'covered <1h notice'
+    | 'covered_less_1h'
   notes?: string
 }
 

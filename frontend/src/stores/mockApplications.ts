@@ -8,8 +8,8 @@ export interface IApplication {
   date: string
   status: 'pending' | 'approved' | 'denied' | 'needs_info'
   notes?: string
-  details: Record<string, any>
-  fullApplication: Record<string, any> // The raw form data
+  details: Record<string, unknown>
+  fullApplication: Record<string, unknown> // The raw form data
 }
 
 export const mockApplications = ref<IApplication[]>([

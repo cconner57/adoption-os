@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import InputSelectGroup from '../../common/ui/InputSelectGroup.vue'
 import InputField from '../../common/ui/InputField.vue'
+import InputSelectGroup from '../../common/ui/InputSelectGroup.vue'
 import InputTextArea from '../../common/ui/InputTextArea.vue'
 
 const { modelValue } = defineProps<{

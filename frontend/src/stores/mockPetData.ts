@@ -1,7 +1,7 @@
 /* eslint-disable max-lines */
 import type { IPet } from '../models/common.js'
 
-export const mockPetsData: IPet[] = [
+export const mockPetsData: IPet[] = ([
   {
     id: '1',
     name: 'Amari',
@@ -8841,4 +8841,4 @@ export const mockPetsData: IPet[] = [
     createdAt: new Date().toISOString(),
     updatedAt: new Date().toISOString(),
   },
-]
+] as any) as IPet[] // eslint-disable-line @typescript-eslint/no-explicit-any

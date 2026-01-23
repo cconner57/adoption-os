@@ -1,11 +1,12 @@
 <script setup lang="ts">
 import { ref, watch } from 'vue'
-import InputTextArea from '../../common/ui/InputTextArea.vue'
+
+import type { SurrenderFormState } from '../../../models/surrender-form.ts'
 import ButtonToggle from '../../common/ui/ButtonToggle.vue'
 import InputGrid from '../../common/ui/InputGrid.vue'
-import type { SurrenderFormState } from '../../../models/surrender-form.ts'
+import InputTextArea from '../../common/ui/InputTextArea.vue'
 
-const { formState, touched, handleBlur, hasAttemptedSubmit } = defineProps<{
+const { formState } = defineProps<{
   formState: SurrenderFormState
   touched: Record<string, boolean>
   handleBlur: (_field: string) => void // eslint-disable-line no-unused-vars

@@ -1,7 +1,8 @@
 <script setup lang="ts">
 import { computed } from 'vue'
-import { InputField, Select } from '../../../common/ui'
+
 import type { IPet } from '../../../../../models/common'
+import { InputField, Select } from '../../../common/ui'
 
 const props = defineProps<{
   modelValue: Partial<IPet>

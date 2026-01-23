@@ -1,10 +1,10 @@
 <script setup lang="ts">
-import { ref, computed, watch } from 'vue'
-import PetItem from '../../common/pet-item/PetItem.vue'
-import { Spacer } from '../../common/ui' // Oops Spacer doesn't exist? Use div.
-import { Spinner } from '../../common/ui'
-import { useIsMobile } from '../../../utils/useIsMobile.ts'
+import { computed, ref, watch } from 'vue'
+
 import type { IPet } from '../../../models/common.ts'
+import { useIsMobile } from '../../../utils/useIsMobile.ts'
+import PetItem from '../../common/pet-item/PetItem.vue'
+import { Spinner } from '../../common/ui'
 
 const props = defineProps<{
   pets: IPet[]

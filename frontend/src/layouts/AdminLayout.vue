@@ -1,11 +1,12 @@
 <script setup lang="ts">
-import { ref, computed } from 'vue'
-import { useRouter, useRoute } from 'vue-router'
-import { useAuthStore } from '../stores/auth'
+import { computed,ref } from 'vue'
+import { useRouter } from 'vue-router'
+
 import { SidebarNav } from '../components/common/ui'
+import { useAuthStore } from '../stores/auth'
 
 const router = useRouter()
-const route = useRoute()
+// const route = useRoute()
 const authStore = useAuthStore()
 
 const isMobileMenuOpen = ref(false)

@@ -1,7 +1,8 @@
 <script setup lang="ts">
-import { ref, computed } from 'vue'
+import { computed,ref } from 'vue'
+
 import type { IVolunteer } from '../../../stores/mockVolunteerData'
-import { InputField, ButtonToggle, Capsules } from '../../common/ui'
+import { ButtonToggle, Capsules,InputField } from '../../common/ui'
 const props = defineProps<{
   selectedId?: string
   volunteers: IVolunteer[]
@@ -9,8 +10,8 @@ const props = defineProps<{
 }>()
 
 const emit = defineEmits<{
-  (e: 'select', volunteer: IVolunteer): void
-  (e: 'add'): void
+  select: [volunteer: IVolunteer]
+  add: []
 }>()
 
 const searchQuery = ref('')

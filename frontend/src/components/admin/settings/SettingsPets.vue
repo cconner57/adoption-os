@@ -1,9 +1,10 @@
 <script setup lang="ts">
 import { computed } from 'vue'
-import { Select, ButtonToggle, InputField, InputTextArea } from '../../common/ui'
+
+import { ButtonToggle, InputField, InputTextArea,Select } from '../../common/ui'
 
 const props = defineProps<{
-  settings: any
+  settings: Record<string, any> // eslint-disable-line @typescript-eslint/no-explicit-any
 }>()
 
 const emit = defineEmits(['update:settings'])

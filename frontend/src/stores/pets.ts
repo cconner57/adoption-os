@@ -1,5 +1,6 @@
 import { defineStore } from 'pinia'
-import { ref, computed } from 'vue'
+import { ref } from 'vue'
+
 import type { IPet } from '../models/common'
 
 export const usePetStore = defineStore('pets', () => {

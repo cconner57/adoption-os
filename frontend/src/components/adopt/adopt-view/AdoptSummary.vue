@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import type { IPet } from '../../../models/common.ts'
-import PetItem from '../../common/pet-item/PetItem.vue'
 import { formatDate } from '../../../utils/common.ts'
+import PetItem from '../../common/pet-item/PetItem.vue'
 
 defineProps<{
   pets: IPet[]

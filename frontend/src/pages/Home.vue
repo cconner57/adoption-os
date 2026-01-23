@@ -1,15 +1,15 @@
 <script setup lang="ts">
-import { useRouter } from 'vue-router'
 import { onMounted } from 'vue'
+import { useRouter } from 'vue-router'
+
+import Footer from '../components/common/footer/Footer.vue'
+import BannerButton from '../components/common/ui/BannerButton.vue'
+import HeroSection from '../components/home/hero-section/HeroSection.vue'
+import Impact from '../components/home/impact/Impact.vue'
+import Mission from '../components/home/mission/Mission.vue'
+import AdoptionSpotlight from '../components/home/spotlight/AdoptionSpotlight.vue'
 import { usePets } from '../composables/usePets.ts'
 import { useScrollReveal } from '../composables/useScrollReveal.ts'
-
-import BannerButton from '../components/common/ui/BannerButton.vue'
-import Footer from '../components/common/footer/Footer.vue'
-import AdoptionSpotlight from '../components/home/spotlight/AdoptionSpotlight.vue'
-import HeroSection from '../components/home/hero-section/HeroSection.vue'
-import Mission from '../components/home/mission/Mission.vue'
-import Impact from '../components/home/impact/Impact.vue'
 
 const router = useRouter()
 

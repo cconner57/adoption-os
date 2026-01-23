@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, watch, onMounted, onUnmounted } from 'vue'
+import { onUnmounted,ref, watch } from 'vue'
 
 const props = defineProps<{
   imageFile: File
@@ -17,12 +17,16 @@ const scale = ref(1)
 const position = ref({ x: 0, y: 0 })
 const isDragging = ref(false)
 const dragStart = ref({ x: 0, y: 0 })
-const imgSize = ref({ width: 0, height: 0 })
-const viewportSize = ref({ width: 0, height: 0 }) // The size of the crop box
+
 
 // Config
 const MIN_SCALE = 1
 const MAX_SCALE = 3
+
+function resetState() {
+  scale.value = 1
+  position.value = { x: 0, y: 0 }
+}
 
 // Load image
 watch(
@@ -37,23 +41,40 @@ watch(
   { immediate: true },
 )
 
-function resetState() {
-  scale.value = 1
-  position.value = { x: 0, y: 0 }
-}
 
-function onImageLoad(e: Event) {
-  const img = e.target as HTMLImageElement
-  imgSize.value = { width: img.naturalWidth, height: img.naturalHeight }
-  fitImage()
-}
 
-function fitImage() {
-  // Initial fit logic could go here if we needed to pre-scale
-  // But for now CSS 'contain' or similar starts us off, and we control via transform
-}
+
 
 // --- Drag Logic ---
+function onMouseMove(e: MouseEvent | TouchEvent) {
+  if (!isDragging.value) return
+  e.preventDefault() // prevent scroll on touch
+
+  const clientX = 'touches' in e ? e.touches[0].clientX : e.clientX
+  const clientY = 'touches' in e ? e.touches[0].clientY : e.clientY
+
+  const newX = clientX - dragStart.value.x
+  const newY = clientY - dragStart.value.y
+
+  position.value = { x: newX, y: newY }
+}
+
+function onMouseUp() {
+  isDragging.value = false
+  window.removeEventListener('mousemove', onMouseMove)
+  window.removeEventListener('mouseup', onMouseUp)
+  window.removeEventListener('touchmove', onMouseMove)
+  window.removeEventListener('touchend', onMouseUp)
+
+  // Snap back bounds check could happen here or continuously in draw
+
+  // Simply clamping:
+  /*
+     Ideally we want the image to fill the crop box.
+     Implementation detail: clamp position so edges don't come inside crop box if scale allows covering
+  */
+}
+
 function onMouseDown(e: MouseEvent | TouchEvent) {
   e.preventDefault()
   isDragging.value = true
@@ -67,39 +88,7 @@ function onMouseDown(e: MouseEvent | TouchEvent) {
   window.addEventListener('touchend', onMouseUp)
 }
 
-function onMouseMove(e: MouseEvent | TouchEvent) {
-  if (!isDragging.value) return
-  e.preventDefault() // prevent scroll on touch
 
-  const clientX = 'touches' in e ? e.touches[0].clientX : e.clientX
-  const clientY = 'touches' in e ? e.touches[0].clientY : e.clientY
-
-  let newX = clientX - dragStart.value.x
-  let newY = clientY - dragStart.value.y
-
-  position.value = { x: newX, y: newY }
-}
-
-function onMouseUp() {
-  isDragging.value = false
-  window.removeEventListener('mousemove', onMouseMove)
-  window.removeEventListener('mouseup', onMouseUp)
-  window.removeEventListener('touchmove', onMouseMove)
-  window.removeEventListener('touchend', onMouseUp)
-
-  // Snap back bounds check could happen here or continuously in draw
-  const bounds = calculateBounds()
-  // Simply clamping:
-  /*
-     Ideally we want the image to fill the crop box.
-     Implementation detail: clamp position so edges don't come inside crop box if scale allows covering
-  */
-}
-
-function calculateBounds() {
-  // Not fully implementing strict bounds clamping for this MVP step to keep it simple drag
-  // User sees what they get.
-}
 
 // --- Crop Logic ---
 function crop() {
@@ -131,7 +120,7 @@ function crop() {
   // 1. Get viewport size in pixels
   const rect = containerRef.value.getBoundingClientRect()
   const vw = rect.width
-  const vh = rect.height
+
 
   // 2. Map coordinates relative to image center/origin?
   // Easier: The image is drawn at `position` with size `naturalWidth * scale` ? No.

@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
+import { onMounted,ref } from 'vue'
+
 import Candid from '../../common/candid-award/Candid.vue'
 import { Spinner } from '../../common/ui'
 

@@ -1,10 +1,11 @@
 <script setup lang="ts">
+import { type PropType,ref } from 'vue'
 import { useRouter } from 'vue-router'
+
+import { useMetrics } from '../../../composables/useMetrics'
 import { goToAdopt } from '../../../utils/navigate.ts'
 import Button from '../ui/Button.vue'
-import { ref, type PropType } from 'vue'
 import Capsules from '../ui/Capsules.vue'
-import { useMetrics } from '../../../composables/useMetrics'
 
 const props = defineProps({
   name: {
@@ -99,8 +100,9 @@ function handleAdopt() {
 
   img {
     width: 100%;
+    height: 260px;
     object-fit: cover;
-    height: 180px;
+    object-position: top center;
     background: url('/images/paw.svg') 90px 60px/100px 100px no-repeat #f9fafb;
     cursor: pointer;
   }

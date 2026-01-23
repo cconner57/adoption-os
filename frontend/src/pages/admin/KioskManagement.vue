@@ -1,7 +1,8 @@
 <script setup lang="ts">
 import { ref, watch } from 'vue'
+
+import { Button,InputField } from '../../components/common/ui'
 import { mockKioskSettings } from '../../stores/mockKiosk'
-import { InputField, Button, ButtonToggle, InputSelectGroup } from '../../components/common/ui'
 
 // Mock saving state
 const isSaving = ref(false)
@@ -44,10 +45,10 @@ watch(
           <h2>General</h2>
           <div class="form-stack">
             <label>Kiosk Name</label>
-            <InputField v-model="mockKioskSettings.general.kioskName" />
+            <InputField v-model="mockKioskSettings.general.kioskName" placeholder="Enter Kiosk Name" />
 
             <label>Welcome Message</label>
-            <InputField v-model="mockKioskSettings.general.welcomeMessage" />
+            <InputField v-model="mockKioskSettings.general.welcomeMessage" placeholder="Welcome Message" />
 
             <label>Screen Timeout (Seconds)</label>
             <input
@@ -76,7 +77,7 @@ watch(
             </div>
 
             <label>Background Image URL</label>
-            <InputField v-model="mockKioskSettings.theme.backgroundImage" />
+            <InputField v-model="mockKioskSettings.theme.backgroundImage" placeholder="https://..." />
           </div>
         </div>
 

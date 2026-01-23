@@ -1,10 +1,12 @@
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
 
+import type { IShift } from '../models/volunteers'
+
 export const useActiveVolunteersStore = defineStore('activeVolunteers', () => {
   const activeCount = ref(0)
   const isFetching = ref(false)
-  const weeklyShifts = ref<any[]>([])
+  const weeklyShifts = ref<IShift[]>([])
   const error = ref<string | null>(null)
 
   const fetchActiveCount = async () => {
@@ -28,9 +30,13 @@ export const useActiveVolunteersStore = defineStore('activeVolunteers', () => {
 
       // Use the totalRecords from metadata instead of counting the array
       activeCount.value = data.metadata?.totalRecords || 0
-    } catch (e: any) {
+    } catch (e: unknown) {
       console.error('Error fetching active volunteers:', e)
-      error.value = e.message
+      if (e instanceof Error) {
+        error.value = e.message
+      } else {
+        error.value = String(e)
+      }
     } finally {
       isFetching.value = false
     }
@@ -51,9 +57,10 @@ export const useActiveVolunteersStore = defineStore('activeVolunteers', () => {
       // Unwrap: { status: "success", data: { shifts: [] } }
       const data = json.data || {}
       weeklyShifts.value = data.shifts || []
-    } catch (e: any) {
+    } catch (e: unknown) {
       console.error('Error fetching weekly shifts:', e)
-      error.value = error.value ? `${error.value} | ${e.message}` : e.message
+      const msg = e instanceof Error ? e.message : String(e)
+      error.value = error.value ? `${error.value} | ${msg}` : msg
       weeklyShifts.value = []
     }
   }

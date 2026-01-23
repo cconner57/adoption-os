@@ -1,8 +1,10 @@
 <script setup lang="ts">
+/* eslint-disable max-lines */
 import { computed } from 'vue'
+
 import type { IPet } from '../../../models/common'
-import { useRouter } from 'vue-router'
-import { formatDate, calculateAge } from '../../../utils/date'
+import type { IPet } from '../../../models/common'
+import { calculateAge,formatDate } from '../../../utils/date'
 import { Button } from '../../common/ui'
 
 const props = defineProps<{
@@ -14,13 +16,11 @@ const props = defineProps<{
 }>()
 
 const emit = defineEmits<{
-  (e: 'toggle-expand', pet: IPet): void
-  (e: 'edit', pet: IPet): void
-  (e: 'archive', pet: IPet): void
-  (e: 'mark-adopted', pet: IPet): void
+  'toggle-expand': [pet: IPet]
+  edit: [pet: IPet]
+  archive: [pet: IPet]
+  'mark-adopted': [pet: IPet]
 }>()
-
-const router = useRouter()
 
 // --- Helpers (moved from Pets.vue or similar) ---
 
@@ -61,11 +61,7 @@ function isTrue(val: boolean | string | undefined | null) {
 
 // --- Computed Properties for Expanded Data ---
 
-const hasVaccinations = computed(() => {
-  const v = props.pet.medical?.vaccinations
-  if (!v) return false
-  return !!(v.rabies || v.bordetella || v.canineDistemper || v.felineDistemper)
-})
+
 
 const vaccineSummary = computed(() => {
   const v = props.pet.medical?.vaccinations

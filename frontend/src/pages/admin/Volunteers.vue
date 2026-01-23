@@ -1,13 +1,14 @@
 <script setup lang="ts">
-import { ref, computed, onMounted } from 'vue'
-import { mockShifts, mockIncidents } from '../../stores/mockVolunteerData'
-import VolunteerList from '../../components/admin/volunteers/VolunteerList.vue'
+import { computed, onMounted,ref } from 'vue'
+
 import VolunteerDetail from '../../components/admin/volunteers/VolunteerDetail.vue'
 import VolunteerEditor from '../../components/admin/volunteers/VolunteerEditor.vue'
+import VolunteerList from '../../components/admin/volunteers/VolunteerList.vue'
+import { type IShift, type IVolunteer, mockIncidents } from '../../stores/mockVolunteerData'
 import {
   calculateReliabilityScore,
-  calculateTotalHours,
   calculateStreak,
+  calculateTotalHours,
 } from '../../utils/reliability'
 
 // Stores
@@ -101,7 +102,7 @@ const selectedIncidents = computed(() => {
 const isCreating = ref(false)
 
 // Helper to sanitize date fields
-function sanitizeVolunteerData(data: any) {
+function sanitizeVolunteerData(data: any) { // eslint-disable-line @typescript-eslint/no-explicit-any
   const payload = { ...data }
   // Use loose check to catch empty strings, undefined, null
   if (!payload.birthday) payload.birthday = null
@@ -114,7 +115,7 @@ function handleOpenCreate() {
   isCreating.value = true
 }
 
-async function handleCreateSave(newVolunteer: any) {
+async function handleCreateSave(newVolunteer: any) { // eslint-disable-line @typescript-eslint/no-explicit-any
   isSaving.value = true
   try {
     const res = await fetch('/v1/volunteers', {
@@ -143,7 +144,7 @@ async function handleCreateSave(newVolunteer: any) {
   }
 }
 
-async function handleUpdateSave(updatedData: any) {
+async function handleUpdateSave(updatedData: any) { // eslint-disable-line @typescript-eslint/no-explicit-any
   if (!selectedVolunteerId.value) return
 
   isSaving.value = true
@@ -170,7 +171,7 @@ async function handleUpdateSave(updatedData: any) {
   }
 }
 
-async function handleAddShift(shiftData: any) {
+async function handleAddShift(shiftData: any) { // eslint-disable-line @typescript-eslint/no-explicit-any
   if (!selectedVolunteerId.value) return
 
   // Handle recurring logic or single shift
@@ -187,7 +188,7 @@ async function handleAddShift(shiftData: any) {
       ? new Date(shiftData.endDate)
       : new Date(baseDate.getTime() + 90 * 24 * 60 * 60 * 1000)
 
-    let currentDate = new Date(baseDate)
+    const currentDate = new Date(baseDate)
     // Safety limit
     let count = 0
     while (currentDate <= endDate && count < 50) {
@@ -241,7 +242,7 @@ async function handleAddShift(shiftData: any) {
   }
 }
 
-async function handleUpdateShift(shiftData: any) {
+async function handleUpdateShift(shiftData: any) { // eslint-disable-line @typescript-eslint/no-explicit-any
   if (!shiftData.id) return
   try {
     // Sanitize payload
@@ -267,7 +268,7 @@ async function handleUpdateShift(shiftData: any) {
       await fetchVolunteers() // Stats update
     } else {
       const err = await res.text()
-      alert('Failed to update shift: ' + err)
+      alert(`Failed to update shift: ${  err}`)
     }
   } catch (e) {
     console.error('Error updating shift', e)

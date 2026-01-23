@@ -1,12 +1,13 @@
 <script setup lang="ts">
 import { ref } from 'vue'
+
 import type { IPet } from '../../../models/common.ts'
+import { formatDate } from '../../../utils/common.ts'
 import Button from '../../common/ui/Button.vue'
 import Capsules from '../../common/ui/Capsules.vue'
+import AdditionalInfo from '../additional-info/AdditionalInfo.vue'
 import AdoptionFAQ from '../adopt-faq/AdoptionFAQ.vue'
 import AdoptionProcess from '../adopt-process/AdoptionProcess.vue'
-import { formatDate } from '../../../utils/common.ts'
-import AdditionalInfo from '../additional-info/AdditionalInfo.vue'
 import AdoptDrawer from './AdoptDrawer.vue'
 
 const props = defineProps<{
@@ -205,10 +206,11 @@ function onImgError() {
 
     img {
       flex: 3;
-      width: 0;
+      width: 100%;
       min-width: 0;
       height: 600px;
       object-fit: cover;
+      object-position: top center;
       border-radius: 16px;
       box-shadow: 0 4px 6px rgba(0, 0, 0, 0.25);
     }

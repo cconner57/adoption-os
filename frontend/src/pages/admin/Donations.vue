@@ -1,7 +1,8 @@
 <script setup lang="ts">
-import { ref, computed } from 'vue'
-import { mockTransactions, donationStats, type ITransaction } from '../../stores/mockDonations'
-import { Capsules, InputField, InputSelectGroup, Button } from '../../components/common/ui'
+import { computed,ref } from 'vue'
+
+import { Button,Capsules, InputField, InputSelectGroup } from '../../components/common/ui'
+import { donationStats, type ITransaction,mockTransactions } from '../../stores/mockDonations'
 
 const searchQuery = ref('')
 const filterType = ref<'all' | ITransaction['type']>('all')
@@ -76,7 +77,7 @@ const handleLogDonation = () => {
     donorName: newDonation.value.donorName,
     amount: parseFloat(newDonation.value.amount),
     type: 'donation',
-    method: newDonation.value.method as any,
+    method: newDonation.value.method as any, // eslint-disable-line @typescript-eslint/no-explicit-any
     status: 'completed',
     notes: newDonation.value.notes,
   })

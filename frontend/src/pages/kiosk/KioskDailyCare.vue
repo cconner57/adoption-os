@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import { ref, computed } from 'vue'
+import { computed,ref } from 'vue'
 import { useRouter } from 'vue-router'
-import { mockDailyLogs, type IDailyLog } from '../../stores/mockDailyCare'
-import { InputField, BooleanCapsule } from '../../components/common/ui'
+
+import { mockDailyLogs } from '../../stores/mockDailyCare'
 
 const router = useRouter()
 
@@ -17,8 +17,8 @@ const currentTasks = computed(() => {
 })
 
 const currentVolunteerName = computed({
-  get: () => (shift.value === 'AM' ? todayLog.value.amVolunteer : todayLog.value.pmVolunteer),
-  set: (val) => {
+  get: () => (shift.value === 'AM' ? todayLog.value.amVolunteer : todayLog.value.pmVolunteer) || '',
+  set: (val: string) => {
     if (shift.value === 'AM') todayLog.value.amVolunteer = val
     else todayLog.value.pmVolunteer = val
   },
@@ -31,7 +31,7 @@ const columns = [
   { key: 'poo', label: 'Poo', icon: '💩' },
   { key: 'clean', label: 'Clean', icon: '🧹' },
   { key: 'play', label: 'Play', icon: '🧸' },
-]
+] as const
 
 const generalChecklist = [
   { key: 'sweep', label: 'Sweep Floor' },
@@ -41,7 +41,7 @@ const generalChecklist = [
   { key: 'trash', label: 'Empty Trash / Clean Bag' },
   { key: 'windows', label: 'Clean Windows' },
   { key: 'mop', label: 'Mop Floor' },
-]
+] as const
 
 const goHome = () => router.push('/kiosk')
 </script>
@@ -102,7 +102,7 @@ const goHome = () => router.push('/kiosk')
             <td v-for="col in columns" :key="col.key" class="check-cell">
               <input
                 type="checkbox"
-                v-model="entry[shift.toLowerCase()][col.key]"
+                v-model="(entry[shift.toLowerCase() as 'am' | 'pm'] as any)[col.key]"
                 class="big-checkbox"
               />
             </td>
@@ -111,7 +111,7 @@ const goHome = () => router.push('/kiosk')
             <td class="notes-cell">
               <input
                 type="text"
-                v-model="entry[shift.toLowerCase()].notes"
+                v-model="entry[shift.toLowerCase() as 'am' | 'pm'].notes"
                 class="table-input"
                 placeholder="Enter notes..."
               />
@@ -131,9 +131,9 @@ const goHome = () => router.push('/kiosk')
             v-for="task in generalChecklist"
             :key="task.key"
             class="task-row"
-            :class="{ checked: currentTasks[task.key] }"
+            :class="{ checked: (currentTasks as any)[task.key] }"
           >
-            <input type="checkbox" v-model="currentTasks[task.key]" class="big-checkbox" />
+            <input type="checkbox" v-model="(currentTasks as any)[task.key]" class="big-checkbox" />
             <span>{{ task.label }}</span>
           </label>
         </div>

@@ -1,7 +1,8 @@
-import { API_ENDPOINTS } from '../constants/api'
+
 
 export function useMetrics() {
-  const submitMetric = async (eventType: string, eventData: Record<string, unknown> = {}) => {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars, no-unused-vars
+  const submitMetric = async (eventType: string, eventData?: unknown) => {
     // Metrics disabled for now to prevent auth confusion
     return
     /*

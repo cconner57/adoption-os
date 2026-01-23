@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia'
-import { ref, computed } from 'vue'
+import { computed,ref } from 'vue'
 
 export const useAuthStore = defineStore('auth', () => {
   const user = ref<{
@@ -10,6 +10,25 @@ export const useAuthStore = defineStore('auth', () => {
   } | null>(null)
 
   const isAuthenticated = computed(() => !!user.value)
+
+  const checkAuth = async () => {
+    try {
+      const response = await fetch('/api/users/me', {
+        credentials: 'include',
+      })
+      if (response.ok) {
+        const data = await response.json()
+        if (data && data.data) {
+          user.value = data.data
+        }
+      } else {
+        user.value = null
+      }
+    } catch (error) {
+      console.error('Check auth error:', error)
+      user.value = null
+    }
+  }
 
   const login = async (email: string, password: string): Promise<boolean> => {
     try {
@@ -45,24 +64,7 @@ export const useAuthStore = defineStore('auth', () => {
     }
   }
 
-  const checkAuth = async () => {
-    try {
-      const response = await fetch('/api/users/me', {
-        credentials: 'include',
-      })
-      if (response.ok) {
-        const data = await response.json()
-        if (data && data.data) {
-          user.value = data.data
-        }
-      } else {
-        user.value = null
-      }
-    } catch (error) {
-      console.error('Check auth error:', error)
-      user.value = null
-    }
-  }
+// ... moving checkAuth up ...
 
   const logout = async () => {
     try {

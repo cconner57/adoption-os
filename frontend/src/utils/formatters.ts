@@ -8,7 +8,7 @@ export function formatPhoneNumber(phone?: string | null): string {
   if (!phone) return '-'
 
   // Strip all non-numeric characters
-  const cleaned = ('' + phone).replace(/\D/g, '')
+  const cleaned = (`${  phone}`).replace(/\D/g, '')
 
   // Check if it looks like a standard US number (10 digits)
   // If messy or not 10 digits, just return original or cleaned?

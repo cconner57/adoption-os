@@ -8,18 +8,16 @@ import { type ITrip,mockTrips } from '../../stores/mockTransport'
 const selectedTripId = ref<string | null>(null)
 const loadingAction = ref<string | null>(null)
 
-// Computed
 const filteredTrips = computed(() => {
-  // Sort by time
+  
   return [...mockTrips.value].sort((a, b) => {
-    // Put active statuses first
+    
     const activeStatuses = ['en_route_vet', 'en_route_shelter']
     const aActive = activeStatuses.includes(a.status)
     const bActive = activeStatuses.includes(b.status)
     if (aActive && !bActive) return -1
     if (!aActive && bActive) return 1
 
-    // Then sort by Date + Time
     const dateA = new Date(`${a.date} ${a.pickupTime}`).getTime()
     const dateB = new Date(`${b.date} ${b.pickupTime}`).getTime()
     return dateA - dateB
@@ -30,17 +28,10 @@ const selectedTrip = computed(() => {
   return mockTrips.value.find((t) => t.id === selectedTripId.value)
 })
 
-
-
-
-
-// Actions
-// Actions
 const updateStatus = (newStatus: ITrip['status']) => {
   if (!selectedTrip.value) return
   loadingAction.value = newStatus
 
-  // Simulate network delay
   setTimeout(() => {
     if (selectedTrip.value) selectedTrip.value.status = newStatus
     loadingAction.value = null
@@ -68,11 +59,10 @@ const reportIssue = (issueType: string) => {
       break
     case 'pet_issue':
       message = '🤢 Pet is having an issue (anxiety/sickness) in transit.'
-      newStatus = 'incident' // or keep current status but log warning? Let's say incident for visibility
+      newStatus = 'incident' 
       break
   }
 
-  // Push Urgent Message
   selectedTrip.value.messages.push({
     id: `m-${Date.now()}`,
     sender: 'driver',
@@ -80,24 +70,18 @@ const reportIssue = (issueType: string) => {
     timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
   })
 
-  // Update Status
   updateStatus(newStatus)
   alert('Incident reported! Dispatch has been notified.')
 }
 
 const selectTrip = (trip: ITrip) => {
   selectedTripId.value = trip.id
-  // We'll let the ActionCenter component handle initializing its own local state for vehicle/eta
-  // via props/emits if needed, or it can manage it locally since it's transient form data.
-  // Actually, for vehicle info, if it persists, we might want to pass it down.
-  // The original code initialized vehicleInput from trip.driverNotes or currentDriver.value?.vehicle
-  // The ActionCenter component can read this from the `selectedTrip` prop.
+  
 }
 
 const sendEta = (eta: string) => {
   if (!selectedTrip.value) return
 
-  // Mock sending Notification
   selectedTrip.value.messages.push({
     id: `m-${Date.now()}`,
     sender: 'driver',
@@ -107,10 +91,6 @@ const sendEta = (eta: string) => {
 
   alert('ETA notification sent to Director and Adopters!')
 }
-
-
-
-
 
 const updateVehicleInfo = (info: string) => {
   if (!selectedTrip.value) return
@@ -129,14 +109,13 @@ const updateVehicleInfo = (info: string) => {
     </div>
 
     <div class="content-grid">
-      <!-- Left: My Shifts / Available Shifts -->
+      
       <ShiftList
         :trips="filteredTrips"
         :selected-trip-id="selectedTripId"
         @select="selectTrip"
       />
 
-      <!-- Right: Action Center -->
       <ActionCenter
         :selected-trip="selectedTrip"
         :loading-action="loadingAction"

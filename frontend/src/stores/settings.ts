@@ -62,13 +62,11 @@ export const useSettingsStore = defineStore('settings', () => {
     },
   })
 
-  // Load from LocalStorage
   const saved = localStorage.getItem('appSettings')
   if (saved) {
     try {
       const parsed = JSON.parse(saved)
-      // Deep merge or just Object.assign?
-      // Simple merge for top-level keys to allow schema evolution if we add new keys
+      
       Object.keys(parsed).forEach((key) => {
         const target = settings.value as any // eslint-disable-line @typescript-eslint/no-explicit-any
         if (target[key] && typeof target[key] === 'object') {
@@ -82,7 +80,6 @@ export const useSettingsStore = defineStore('settings', () => {
     }
   }
 
-  // Persist to LocalStorage
   watch(
     settings,
     (newVal) => {

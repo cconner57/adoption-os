@@ -56,7 +56,7 @@ const statusOptions = [
 
 const litterOptions = computed(() => {
   if (!props.availablePets) return []
-  // Extract unique litter names
+  
   const litters = new Set(props.availablePets.map((p) => p.litterName).filter(Boolean))
   return Array.from(litters).map((l) => ({ label: l!, value: l! }))
 })

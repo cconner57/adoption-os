@@ -10,14 +10,13 @@ const filterType = ref<'all' | ITransaction['type']>('all')
 const filteredTransactions = computed(() => {
   return mockTransactions.value
     .filter((tx) => {
-      // 1. Search Query
+      
       const searchMatch =
         !searchQuery.value ||
         tx.donorName.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
         tx.relatedPetName?.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
         tx.notes?.toLowerCase().includes(searchQuery.value.toLowerCase())
 
-      // 2. Type Filter
       const typeMatch = filterType.value === 'all' || tx.type === filterType.value
 
       return searchMatch && typeMatch
@@ -59,7 +58,6 @@ const getStatusColor = (status: ITransaction['status']) => {
   }
 }
 
-// LOG DONATION MODAL
 const showLogModal = ref(false)
 const newDonation = ref({
   donorName: '',
@@ -89,13 +87,12 @@ const handleLogDonation = () => {
 
 <template>
   <div class="donations-page">
-    <!-- HEADER -->
+    
     <div class="page-header">
       <h1>Donations & Revenue</h1>
       <Button title="Log Manual Donation" color="purple" :onClick="() => (showLogModal = true)" />
     </div>
 
-    <!-- STATS CARDS -->
     <div class="stats-grid">
       <div class="stat-card">
         <span class="stat-label">Total Revenue</span>
@@ -111,7 +108,6 @@ const handleLogDonation = () => {
       </div>
     </div>
 
-    <!-- FILTERS -->
     <div class="filters-bar">
       <div class="search-wrap">
         <InputField v-model="searchQuery" placeholder="Search donors, pets, or notes..." />
@@ -128,7 +124,6 @@ const handleLogDonation = () => {
       />
     </div>
 
-    <!-- TRANSACTIONS TABLE -->
     <div class="table-container">
       <table class="data-table">
         <thead>
@@ -165,7 +160,6 @@ const handleLogDonation = () => {
       <div v-if="filteredTransactions.length === 0" class="empty-state">No transactions found.</div>
     </div>
 
-    <!-- MODAL -->
     <div v-if="showLogModal" class="modal-overlay" @click.self="showLogModal = false">
       <div class="modal-card">
         <h3>Log Manual Donation</h3>
@@ -222,7 +216,6 @@ const handleLogDonation = () => {
   }
 }
 
-/* STATS */
 .stats-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
@@ -257,7 +250,6 @@ const handleLogDonation = () => {
   }
 }
 
-/* FILTERS */
 .filters-bar {
   display: flex;
   justify-content: space-between;
@@ -268,7 +260,6 @@ const handleLogDonation = () => {
   width: 320px;
 }
 
-/* TABLE */
 .table-container {
   background: white;
   border-radius: 12px;
@@ -347,7 +338,6 @@ const handleLogDonation = () => {
   color: hsl(from var(--color-neutral) h s 50%);
 }
 
-/* MODAL */
 .modal-overlay {
   position: fixed;
   inset: 0;

@@ -4,7 +4,6 @@ import { useRouter } from 'vue-router'
 
 const router = useRouter()
 
-// Mock Kiosk Vet Data (Simpler than full calendar)
 const appointments = ref([
   { id: 1, time: '09:00 AM', pet: 'Rex', type: 'Check-up', vet: 'Dr. Smith', urgent: false },
   { id: 2, time: '10:30 AM', pet: 'Luna', type: 'Vaccination', vet: 'Dr. Smith', urgent: false },

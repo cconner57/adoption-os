@@ -202,5 +202,5 @@ const directionOptions = [
   gap: 24px;
   min-height: 0;
 }
-/* STYLES MOVED TO COMPONENTS */
+
 </style>

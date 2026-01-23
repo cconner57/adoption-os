@@ -376,7 +376,7 @@ const { formState, touched, handleBlur, hasAttemptedSubmit, selectedAnimal } = d
     .age-group,
     .quantity-group {
       flex: 1;
-      width: 0; /* Ensures flex-basis work correctly for equal widths */
+      width: 0; 
 
       @media (max-width: 640px) {
         width: 100%;
@@ -402,7 +402,7 @@ const { formState, touched, handleBlur, hasAttemptedSubmit, selectedAnimal } = d
       border: 1px solid var(--border-color);
       border-radius: 8px;
       padding: 4px;
-      height: 48px; /* Match typical input height */
+      height: 48px; 
 
       .toggle-btn {
         flex: 1;
@@ -442,7 +442,7 @@ const { formState, touched, handleBlur, hasAttemptedSubmit, selectedAnimal } = d
       cursor: pointer;
       transition: all 0.2s;
       flex-shrink: 0;
-      margin-top: 29px; /* Align with input fields */
+      margin-top: 29px; 
 
       &:hover {
         background: hsl(from var(--color-danger) h s 98%);
@@ -479,11 +479,11 @@ const { formState, touched, handleBlur, hasAttemptedSubmit, selectedAnimal } = d
     }
   }
 }
-/* Add error styles for fieldsets */
+
 fieldset.has-error .chips {
   outline: 2px solid var(--color-danger);
   border-color: var(--color-danger);
-  border-radius: 12px; /* Add some radius */
-  padding: 8px; /* Add padding so border doesn't hug chips too tight */
+  border-radius: 12px; 
+  padding: 8px; 
 }
 </style>

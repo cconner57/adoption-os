@@ -91,7 +91,7 @@ const isBondedComputed = computed({
 
 const bondedWithOptions = computed(() => {
   const all = props.availablePets || []
-  // Filter out self AND archived pets
+  
   const currentId = props.modelValue.id
   return all
     .filter((p) => p.id !== currentId && p.details?.status !== 'archived')

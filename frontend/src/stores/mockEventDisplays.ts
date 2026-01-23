@@ -40,7 +40,7 @@ export const mockEventDisplays = ref<IEventDevice[]>([
     config: {
       title: 'Meet Our Seniors',
       subtitle: 'Gentle companions looking for love',
-      featuredPetIds: ['2', '4', '8'], // IDs from mockPets
+      featuredPetIds: ['2', '4', '8'], 
     },
   },
   {
@@ -65,8 +65,8 @@ export const mockEventDisplays = ref<IEventDevice[]>([
     status: 'online',
     template: 'kennel-card',
     config: {
-      title: 'Kennel Card', // Not used in this layout but kept for type safety
-      featuredPetIds: ['5'], // Pre-select a pet (e.g., '5' is usually a cat or dog in mocks)
+      title: 'Kennel Card', 
+      featuredPetIds: ['5'], 
     },
   },
 ])

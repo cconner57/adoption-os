@@ -7,8 +7,8 @@ export interface ICampaign {
   startDate: string
   endDate: string
   goal: string
-  progress: number // 0-100
-  metric: string // e.g., "$ raised" or "adoptions"
+  progress: number 
+  metric: string 
 }
 
 export interface INewsletter {
@@ -27,7 +27,7 @@ export interface IHappyTail {
   story: string
   date: string
   status: 'published' | 'pending' | 'rejected'
-  photoUrl?: string // Placeholder for now
+  photoUrl?: string 
 }
 
 export const mockCampaigns = ref<ICampaign[]>([

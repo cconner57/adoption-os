@@ -11,21 +11,17 @@ import {
   calculateTotalHours,
 } from '../../utils/reliability'
 
-// Stores
 const allVolunteers = ref<IVolunteer[]>([])
 const isLoading = ref(true)
 const isSaving = ref(false)
 
-// Fetch Volunteers
 async function fetchVolunteers() {
   isLoading.value = true
   try {
     const res = await fetch('/v1/volunteers?page_size=100')
     if (res.ok) {
       const data = await res.json()
-      // Backend returns { volunteers: [], metadata: {} }
-      // Map backend fields to frontend interface if needed
-      // Currently backend uses camelCase JSON tags so it should match mostly
+      
       allVolunteers.value = data.data.volunteers || []
     }
   } catch (err) {
@@ -40,7 +36,7 @@ const selectedVolunteerId = ref<string | null>(null)
 const selectedVolunteer = computed(() => {
   return (
     allVolunteers.value.find(
-      (v) => v.id == selectedVolunteerId.value /* loose match for string/int ids */,
+      (v) => v.id == selectedVolunteerId.value ,
     ) || null
   )
 })
@@ -49,7 +45,7 @@ onMounted(async () => {
   await fetchVolunteers()
 
   if (!selectedVolunteerId.value && allVolunteers.value.length > 0) {
-    // Default select first (logic similar to before but simpler)
+    
     selectedVolunteerId.value = allVolunteers.value[0].id
   }
 })
@@ -63,7 +59,6 @@ async function fetchShifts(volunteerId: string) {
       const data = await res.json()
       shifts.value = data.data.shifts || []
 
-      // Update reliability score in local state (Current Year Only)
       const currentYear = new Date().getFullYear().toString()
       const currentYearShifts = shifts.value.filter((s) => s.date.startsWith(currentYear))
 
@@ -80,7 +75,6 @@ async function fetchShifts(volunteerId: string) {
   }
 }
 
-// Watch selection to fetch shifts
 import { watch } from 'vue'
 watch(selectedVolunteerId, (newId) => {
   if (newId) {
@@ -101,10 +95,9 @@ const selectedIncidents = computed(() => {
 
 const isCreating = ref(false)
 
-// Helper to sanitize date fields
 function sanitizeVolunteerData(data: any) { // eslint-disable-line @typescript-eslint/no-explicit-any
   const payload = { ...data }
-  // Use loose check to catch empty strings, undefined, null
+  
   if (!payload.birthday) payload.birthday = null
   if (!payload.joinDate) payload.joinDate = null
   console.log('Sanitized payload:', payload)
@@ -157,7 +150,7 @@ async function handleUpdateSave(updatedData: any) { // eslint-disable-line @type
 
     if (res.ok) {
       await fetchVolunteers()
-      // No need to reset selectedVolunteerId as it persists
+      
     } else {
       const errText = await res.text()
       console.error('Update failed:', res.status, errText)
@@ -174,12 +167,6 @@ async function handleUpdateSave(updatedData: any) { // eslint-disable-line @type
 async function handleAddShift(shiftData: any) { // eslint-disable-line @typescript-eslint/no-explicit-any
   if (!selectedVolunteerId.value) return
 
-  // Handle recurring logic or single shift
-  // For MVP backed by API, let's start with single shift creation
-  // If recurring is needed, we would loop and create multiple, or handle in backend.
-  // The backend POST creates one shift.
-  // We'll mimic the previous loop logic but call API for each.
-
   const shiftsToCreate = []
   const baseDate = new Date(shiftData.date)
 
@@ -189,7 +176,7 @@ async function handleAddShift(shiftData: any) { // eslint-disable-line @typescri
       : new Date(baseDate.getTime() + 90 * 24 * 60 * 60 * 1000)
 
     const currentDate = new Date(baseDate)
-    // Safety limit
+    
     let count = 0
     while (currentDate <= endDate && count < 50) {
       shiftsToCreate.push({
@@ -221,7 +208,6 @@ async function handleAddShift(shiftData: any) { // eslint-disable-line @typescri
     })
   }
 
-  // Execute requests
   try {
     for (const s of shiftsToCreate) {
       await fetch('/v1/shifts', {
@@ -230,11 +216,11 @@ async function handleAddShift(shiftData: any) { // eslint-disable-line @typescri
         body: JSON.stringify(s),
       })
     }
-    // Small delay to ensure DB write consistency
+    
     await new Promise((resolve) => setTimeout(resolve, 300))
-    // Refresh shifts
+    
     await fetchShifts(selectedVolunteerId.value)
-    // Refresh volunteers to get updated stats (reliability, etc)
+    
     await fetchVolunteers()
   } catch (e) {
     console.error('Error creating shifts', e)
@@ -245,7 +231,7 @@ async function handleAddShift(shiftData: any) { // eslint-disable-line @typescri
 async function handleUpdateShift(shiftData: any) { // eslint-disable-line @typescript-eslint/no-explicit-any
   if (!shiftData.id) return
   try {
-    // Sanitize payload
+    
     const payload = {
       id: shiftData.id,
       volunteerId: shiftData.volunteerId,
@@ -265,7 +251,7 @@ async function handleUpdateShift(shiftData: any) { // eslint-disable-line @types
 
     if (res.ok) {
       await fetchShifts(selectedVolunteerId.value!)
-      await fetchVolunteers() // Stats update
+      await fetchVolunteers() 
     } else {
       const err = await res.text()
       alert(`Failed to update shift: ${  err}`)
@@ -299,7 +285,7 @@ async function handleDeleteShift(shiftId: string | number) {
 
 <template>
   <div class="volunteers-page">
-    <!-- Sidebar -->
+    
     <aside class="sidebar">
       <VolunteerList
         :volunteers="allVolunteers"
@@ -310,7 +296,6 @@ async function handleDeleteShift(shiftId: string | number) {
       />
     </aside>
 
-    <!-- Create Modal/Drawer -->
     <VolunteerEditor
       :volunteer="null"
       :isOpen="isCreating"
@@ -319,7 +304,6 @@ async function handleDeleteShift(shiftId: string | number) {
       @save="handleCreateSave"
     />
 
-    <!-- Main Content -->
     <main class="main-content">
       <VolunteerDetail
         v-if="selectedVolunteer"
@@ -464,7 +448,7 @@ async function handleDeleteShift(shiftId: string | number) {
 }
 
 .add-btn {
-  background-color: var(--color-secondary); /* Assuming purple mapped to secondary */
+  background-color: var(--color-secondary); 
   color: var(--text-inverse);
   border: none;
   padding: 10px 20px;

@@ -53,7 +53,7 @@ function removeEmail(type: 'volunteer' | 'surrender' | 'adoption', email: string
 
     <SettingsCard title="Applications & Forms" icon="📝">
       <div class="forms-grid">
-        <!-- Volunteer Form -->
+        
         <div class="form-config-col">
           <div class="config-header">
             <h4>Volunteer Application</h4>
@@ -98,7 +98,6 @@ function removeEmail(type: 'volunteer' | 'surrender' | 'adoption', email: string
           </div>
         </div>
 
-        <!-- Surrender Form -->
         <div class="form-config-col">
           <div class="config-header">
             <h4>Surrender Request</h4>
@@ -143,7 +142,6 @@ function removeEmail(type: 'volunteer' | 'surrender' | 'adoption', email: string
           </div>
         </div>
 
-        <!-- Adoption Form -->
         <div class="form-config-col">
           <div class="config-header">
             <h4>Adoption Application</h4>
@@ -201,10 +199,9 @@ function removeEmail(type: 'volunteer' | 'surrender' | 'adoption', email: string
 }
 .settings-grid.single-col {
   grid-template-columns: 1fr;
-  max-width: 800px; /* Optional, keep readable width */
+  max-width: 800px; 
 }
 
-/* Row & Setting Row (Shared) */
 .setting-row {
   display: flex;
   justify-content: space-between;
@@ -228,7 +225,6 @@ function removeEmail(type: 'volunteer' | 'surrender' | 'adoption', email: string
   line-height: 1.4;
 }
 
-/* Forms Grid */
 .forms-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));

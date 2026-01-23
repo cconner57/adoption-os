@@ -308,7 +308,7 @@ svg[data-open='true'] .hx-bot {
   transform: translateX(4px);
 }
 .nav-link.router-link-active {
-  background-color: hsl(from var(--color-primary) h s 95%); /* Light green tint */
+  background-color: hsl(from var(--color-primary) h s 95%); 
   color: var(--color-primary);
 }
 

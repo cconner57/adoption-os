@@ -15,7 +15,7 @@ watch(
   (newValue) => {
     open.value = newValue
   },
-  { immediate: true }, // Ensure the watcher runs immediately to sync the initial state
+  { immediate: true }, 
 )
 
 function closeDrawer() {

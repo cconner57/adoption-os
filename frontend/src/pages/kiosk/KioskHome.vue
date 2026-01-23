@@ -9,7 +9,7 @@ const menuItems = [
     icon: '🕒',
     route: '/admin/time-logs',
     desc: 'Start or end your volunteer shift.',
-  }, // Reusing Admin UI for now as it mock works well
+  }, 
   {
     title: 'Daily Care Sheet',
     icon: '📋',
@@ -33,7 +33,7 @@ const menuItems = [
     icon: '⚠️',
     route: '/admin/inventory',
     desc: 'Log low supplies or maintenance issues.',
-  }, // Reusing Admin Inventory
+  }, 
 ]
 </script>
 

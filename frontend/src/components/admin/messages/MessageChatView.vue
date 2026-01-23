@@ -51,7 +51,7 @@ watch(
 
 <template>
   <div class="main-chat">
-    <!-- HEADER -->
+    
     <div class="chat-header" v-if="activeThread">
       <div class="header-info">
         <h3>
@@ -74,7 +74,6 @@ watch(
       </div>
     </div>
 
-    <!-- MESSAGES -->
     <div class="messages-container" ref="chatContainer">
       <div v-if="activeThread" class="message-stream">
         <div class="intro-message">
@@ -111,7 +110,6 @@ watch(
       </div>
     </div>
 
-    <!-- INPUT AREA -->
     <div class="input-area">
       <div class="input-wrapper">
         <input

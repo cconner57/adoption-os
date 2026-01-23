@@ -59,7 +59,6 @@ const device = computed({
       />
     </div>
 
-    <!-- Kennel Card Pet Selection (Single) -->
     <div v-if="device.template === 'kennel-card'" class="form-group">
       <label>Select Pet</label>
       <div class="pet-picker">

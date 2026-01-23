@@ -39,14 +39,12 @@ const filteredVolunteers = computed(() => {
       if (weightA !== weightB) return weightB - weightA
     }
 
-    // Default / Tie-breaker is alphabetical
     const nameA = a.firstName.toLowerCase()
     const nameB = b.firstName.toLowerCase()
     return nameA.localeCompare(nameB)
   })
 })
 
-// Auto-select first if none selected or current selection is hidden
 import { watch } from 'vue'
 
 watch(
@@ -54,7 +52,7 @@ watch(
   (newVal) => {
     const currentSelected = newVal.find((v) => String(v.id) === String(props.selectedId))
     if (!currentSelected && newVal.length > 0) {
-      // Select the first one
+      
       emit('select', newVal[0])
     }
   },
@@ -82,7 +80,6 @@ function selectVolunteer(vol: IVolunteer) {
         />
       </div>
 
-      <!-- Filter Tabs -->
       <div class="list-tabs">
         <ButtonToggle
           label=""
@@ -94,7 +91,6 @@ function selectVolunteer(vol: IVolunteer) {
         />
       </div>
 
-      <!-- Sort Controls -->
       <div class="sort-row">
         <span class="sort-label">Sort by:</span>
         <div class="sort-options">
@@ -139,7 +135,7 @@ function selectVolunteer(vol: IVolunteer) {
     </div>
 
     <div class="vol-list">
-      <!-- Loading Skeleton -->
+      
       <div v-if="loading" class="skeleton-list">
         <div v-for="n in 6" :key="n" class="vol-item skeleton-item">
           <div class="skeleton-avatar"></div>
@@ -286,14 +282,14 @@ function selectVolunteer(vol: IVolunteer) {
     background: white;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
     transform: scale(1.02);
-    margin-bottom: 8px; /* Add space for potentially larger item */
+    margin-bottom: 8px; 
     margin-top: 4px;
     z-index: 1;
 
     .name {
       color: var(
         --text-primary
-      ); /* Keep text primary or maybe secondary? User screenshot had black text */
+      ); 
     }
   }
 }
@@ -371,7 +367,7 @@ function selectVolunteer(vol: IVolunteer) {
 </style>
 
 <style scoped>
-/* Skeleton Styles */
+
 .skeleton-item {
   cursor: default;
   &:hover {

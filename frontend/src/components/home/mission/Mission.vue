@@ -71,7 +71,6 @@
     }
   }
 
-  /* Mobile: 321px - 430px (and generally small screens) */
   @media (max-width: 768px) {
     & h4 {
       font-size: 2rem;
@@ -94,7 +93,6 @@
     }
   }
 
-  /* Tablet: 769px - 1024px */
   @media (min-width: 769px) and (max-width: 1024px) {
     & h4 {
       font-size: 2.25rem;
@@ -113,7 +111,6 @@
     }
   }
 
-  /* Desktop Large: 1025px - 1440px */
   @media (min-width: 1025px) and (max-width: 1440px) {
     & h4 {
       font-size: 2.5rem;

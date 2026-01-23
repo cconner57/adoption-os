@@ -68,19 +68,18 @@ const { formStep, selectedAnimal } = defineProps<{
   width: 100%;
   max-width: 600px;
   margin: 0 auto 20px;
-  align-items: center; /* Vertically align steps */
-  position: relative; /* Establish positioning context for line */
+  align-items: center; 
+  position: relative; 
 
-  /* The continuous line */
   &::before {
     content: '';
     position: absolute;
-    top: 15px; /* Center of 30px circle */
-    left: 27px; /* 12px margin + 15px half circle */
-    right: 27px; /* Match left offset */
+    top: 15px; 
+    left: 27px; 
+    right: 27px; 
     height: 2px;
     background-color: var(--color-primary);
-    z-index: 0; /* Behind step numbers */
+    z-index: 0; 
   }
 
   @media (max-width: 600px) {
@@ -89,13 +88,11 @@ const { formStep, selectedAnimal } = defineProps<{
     gap: 16px;
     padding-left: 16px;
 
-    /* Hide line on mobile */
     &::before {
       display: none;
     }
   }
 
-  /* Hide scrollbar */
   -ms-overflow-style: none;
   scrollbar-width: none;
   &::-webkit-scrollbar {
@@ -128,7 +125,7 @@ const { formStep, selectedAnimal } = defineProps<{
       justify-content: center;
       align-items: center;
       margin-bottom: 8px;
-      z-index: 5; /* Above the line */
+      z-index: 5; 
 
       @media (max-width: 600px) {
         margin-bottom: 0;

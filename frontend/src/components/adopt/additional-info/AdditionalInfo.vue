@@ -96,8 +96,8 @@ const houseTrainedText = () => {
     }
     p:last-child {
       text-wrap: wrap;
-      width: auto; /* Allow flexible width */
-      flex: 1;    /* Take remaining space */
+      width: auto; 
+      flex: 1;    
     }
   }
 }

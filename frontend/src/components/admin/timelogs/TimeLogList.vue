@@ -21,17 +21,16 @@ const toggleMenu = (id: string) => {
   activeMenuId.value = activeMenuId.value === id ? null : id
 }
 
-// Close menu when clicking outside (simple implementation)
 const closeIds = () => (activeMenuId.value = null)
 
 const getLogStatusColor = (status: ITimeLog['status']) => {
   switch (status) {
     case 'approved':
-      return '#d1fae5' // Green
+      return '#d1fae5' 
     case 'flagged':
-      return '#fee2e2' // Red
+      return '#fee2e2' 
     default:
-      return '#f3f4f6' // Gray (Pending)
+      return '#f3f4f6' 
   }
 }
 
@@ -121,7 +120,6 @@ const handleAction = (action: string, log: ITimeLog) => {
   align-items: center;
 }
 
-/* DATA TABLE STYLES */
 .logs-table-container {
   background: white;
   border-radius: 12px;

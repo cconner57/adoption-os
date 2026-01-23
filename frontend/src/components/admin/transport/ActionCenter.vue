@@ -60,7 +60,7 @@ const updateVehicle = () => {
     </div>
 
     <div class="panel-scroll">
-      <!-- 1. Vehicle Info for Adopters -->
+      
       <section class="action-section">
         <div class="section-label">🚗 My Vehicle (Visible to Adopters)</div>
         <div class="vehicle-input-row">
@@ -69,11 +69,9 @@ const updateVehicle = () => {
         </div>
       </section>
 
-      <!-- 2. Workflow Actions -->
       <section class="action-section">
         <div class="section-label">⚡ Quick Actions</div>
 
-        <!-- Context: En Route to Vet -->
         <div v-if="selectedTrip.status === 'en_route_vet'" class="button-grid">
           <div class="eta-sender">
             <InputField v-model="etaInput" placeholder="ETA (e.g. 15 mins)" />
@@ -87,7 +85,6 @@ const updateVehicle = () => {
           />
         </div>
 
-        <!-- Context: At Vet -->
         <div v-else-if="selectedTrip.status === 'at_vet'" class="button-grid">
           <p class="status-helper">Wait for vet to finish intake/procedures.</p>
           <Button
@@ -104,7 +101,6 @@ const updateVehicle = () => {
           />
         </div>
 
-        <!-- Context: En Route to Shelter -->
         <div v-else-if="selectedTrip.status === 'en_route_shelter'" class="button-grid">
           <div class="eta-sender">
             <InputField v-model="etaInput" placeholder="ETA to Shelter" />
@@ -118,7 +114,6 @@ const updateVehicle = () => {
           />
         </div>
 
-        <!-- Default / Pending -->
         <div v-else class="button-grid">
           <Button
             v-if="selectedTrip.status === 'pending'"
@@ -176,7 +171,6 @@ const updateVehicle = () => {
         </div>
       </section>
 
-      <!-- 3. Manifest -->
       <section class="action-section">
         <div class="section-label">📋 Passenger Manifest</div>
         <div class="passenger-list">
@@ -197,7 +191,6 @@ const updateVehicle = () => {
         </div>
       </section>
 
-      <!-- 4. Communication -->
       <section class="action-section">
         <div class="section-label">💬 Updates Log</div>
         <div class="log-entries">

@@ -29,13 +29,6 @@ onMounted(() => {
   }
 })
 
-// Correct way to watch props in script setup if needed, but simplistic approach:
-// The parent controls 'show'. When 'show' becomes true, we should start timer.
-// But usually, Toast is conditionally rendered v-if="show" from parent.
-// If v-if is used, onMounted works.
-// If v-show is used, we need to watch `props.show`.
-// Let's assume parent uses `v-if` for simplicity or we watch.
-
 import { watch } from 'vue'
 watch(
   () => props.show,
@@ -43,8 +36,6 @@ watch(
     if (val) startTimer()
   },
 )
-
-
 
 onUnmounted(() => {
   clearTimeout(timer)

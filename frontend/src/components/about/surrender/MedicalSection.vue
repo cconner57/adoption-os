@@ -333,7 +333,7 @@ fieldset.field {
   border: 0;
   padding: 0;
   margin: 0;
-  /* Ensure it doesn't break flex layout if needed, though mostly grid items */
+  
   min-width: 0;
 }
 

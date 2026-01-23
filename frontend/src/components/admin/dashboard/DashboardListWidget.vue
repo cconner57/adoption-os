@@ -5,7 +5,7 @@ export interface IListItem {
   id: number | string
   title: string
   subtitle: string
-  // Badge/Capsule props
+  
   statusLabel?: string
   statusColor?: string
   statusTextColor?: string
@@ -29,7 +29,7 @@ defineProps<{
           <span class="item-title">{{ item.title }}</span>
           <span class="item-subtitle">{{ item.subtitle }}</span>
         </div>
-        <!-- Default Capsule display if statusLabel exists -->
+        
         <slot name="action" :item="item">
           <Capsules
             v-if="item.statusLabel"

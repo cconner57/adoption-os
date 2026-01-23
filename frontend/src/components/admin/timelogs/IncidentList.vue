@@ -21,19 +21,18 @@ const toggleMenu = (id: string) => {
   activeMenuId.value = activeMenuId.value === id ? null : id
 }
 
-// Close menu when clicking outside (simple implementation)
 const closeIds = () => (activeMenuId.value = null)
 
 const getSeverityColor = (severity: IIncident['severity']) => {
   switch (severity) {
     case 'critical':
-      return '#b91c1c' // Deep Red
+      return '#b91c1c' 
     case 'high':
-      return '#ef4444' // Red
+      return '#ef4444' 
     case 'medium':
-      return '#f97316' // Orange
+      return '#f97316' 
     case 'low':
-      return '#eab308' // Yellow
+      return '#eab308' 
     default:
       return '#9ca3af'
   }
@@ -127,7 +126,6 @@ const handleAction = (action: string, inc: IIncident) => {
   align-items: center;
 }
 
-/* INCIDENTS CARD STYLES */
 .incidents-list {
   display: flex;
   flex-direction: column;

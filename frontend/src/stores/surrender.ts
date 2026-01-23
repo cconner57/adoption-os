@@ -146,7 +146,6 @@ export const useSurrenderStore = defineStore('surrender', () => {
     return true
   })
 
-  /* Init Metrics */
   const { submitMetric } = useMetrics()
 
   const nextStep = () => {
@@ -193,7 +192,7 @@ export const useSurrenderStore = defineStore('surrender', () => {
       }
 
       isSubmitted.value = false
-      // Import API_ENDPOINTS if not already available in scope (adding import at top of file)
+      
       const response = await fetch(API_ENDPOINTS.SURRENDER_APPLICATION, {
         method: 'POST',
         headers: {

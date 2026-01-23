@@ -14,7 +14,7 @@ export const useActiveVolunteersStore = defineStore('activeVolunteers', () => {
     error.value = null
     try {
       const apiUrl = import.meta.env.VITE_API_URL || ''
-      // Request only 1 item since we just need the count from metadata
+      
       const response = await fetch(`${apiUrl}/v1/volunteers?status=active&page_size=1`, {
         headers: {
           'Content-Type': 'application/json',
@@ -25,10 +25,9 @@ export const useActiveVolunteersStore = defineStore('activeVolunteers', () => {
       if (!response.ok) throw new Error(`vols: ${response.status} ${response.statusText}`)
 
       const json = await response.json()
-      // Unwrap envelope: { status: "success", data: { volunteers: [], metadata: {} } }
+      
       const data = json.data || {}
 
-      // Use the totalRecords from metadata instead of counting the array
       activeCount.value = data.metadata?.totalRecords || 0
     } catch (e: unknown) {
       console.error('Error fetching active volunteers:', e)
@@ -54,7 +53,7 @@ export const useActiveVolunteersStore = defineStore('activeVolunteers', () => {
 
       if (!response.ok) throw new Error(`shifts: ${response.status}`)
       const json = await response.json()
-      // Unwrap: { status: "success", data: { shifts: [] } }
+      
       const data = json.data || {}
       weeklyShifts.value = data.shifts || []
     } catch (e: unknown) {

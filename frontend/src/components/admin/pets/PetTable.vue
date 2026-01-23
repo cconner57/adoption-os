@@ -63,12 +63,11 @@ defineEmits<{
   background: var(--text-inverse);
   border-radius: 12px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
-  overflow: auto; /* Allow both X and Y scrolling */
+  overflow: auto; 
   flex: 1;
   overflow-y: auto;
   z-index: 1;
 
-  /* Custom Scrollbar */
   &::-webkit-scrollbar {
     width: 8px;
     height: 8px;
@@ -92,7 +91,7 @@ defineEmits<{
   width: 100%;
   border-collapse: collapse;
   text-align: left;
-  table-layout: fixed; /* Force equal widths */
+  table-layout: fixed; 
 
   th {
     background: hsl(from var(--color-neutral) h s 98%);
@@ -105,12 +104,11 @@ defineEmits<{
     top: 0;
     z-index: 10;
     white-space: nowrap;
-    overflow: hidden; /* Handle overflow */
+    overflow: hidden; 
     text-overflow: ellipsis;
   }
 }
 
-/* Specific Column Widths */
 .expand-col {
   width: 48px;
 }

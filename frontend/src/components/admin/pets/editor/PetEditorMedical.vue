@@ -108,7 +108,6 @@ const medicalConcernOptions = [
 
     <hr class="divider" />
 
-    <!-- Detailed Medical Fields -->
     <div class="form-group">
       <Combobox
         label="Health Concerns / Conditions"
@@ -135,7 +134,7 @@ const medicalConcernOptions = [
     <hr class="divider" />
     <h4 class="section-title">Vaccinations</h4>
     <div v-if="formData.medical.vaccinations">
-      <!-- Fixed: Rabies -->
+      
       <div class="form-row">
         <InputField
           label="Rabies Date"
@@ -146,7 +145,6 @@ const medicalConcernOptions = [
         />
       </div>
 
-      <!-- Custom / Other Vaccinations -->
       <div style="display: flex; flex-direction: column; gap: 10px; margin-top: 10px">
         <label class="input-label">Other Vaccinations</label>
         <div

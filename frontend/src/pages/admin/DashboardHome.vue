@@ -16,11 +16,10 @@ const userName = computed(() => authStore.user?.Name || 'Admin')
 const pendingCount = ref(0)
 const API_URL = import.meta.env.VITE_API_URL
 
-// Calculate week start (Monday) for initial fetch
 const getWeekRange = () => {
   const today = new Date()
-  const day = today.getDay() // 0 = Sun
-  const diff = today.getDate() - day + (day === 0 ? -6 : 1) // Adjust when day is Sunday
+  const day = today.getDay() 
+  const diff = today.getDate() - day + (day === 0 ? -6 : 1) 
   const monday = new Date(today.setDate(diff))
   const sunday = new Date(today.setDate(diff + 6))
 
@@ -56,8 +55,6 @@ onMounted(() => {
 const adoptablePetsCount = computed(() => {
   return petStore.currentPets.length
 })
-
-// --- List Widget Data Adapters ---
 
 const medicalNeedsItems = computed(() => [
   {
@@ -241,14 +238,12 @@ const newIntakesItems = computed(() => [
       </div>
     </div>
 
-    <!-- Secondary Widgets Row -->
     <div class="widgets-row-three">
       <DashboardListWidget title="🏥 Urgent Medical" :items="medicalNeedsItems" />
       <DashboardListWidget title="⚠️ Low Inventory" :items="inventoryAlertsItems" />
       <DashboardListWidget title="📍 Active Now" :items="activeVolunteersItems" />
     </div>
 
-    <!-- Third Widgets Row -->
     <div class="widgets-row-three">
       <DashboardListWidget title="📝 Recent Applications" :items="recentApplicationsItems" />
       <DashboardListWidget title="💰 Recent Donations" :items="recentDonationsItems" />
@@ -295,7 +290,6 @@ const newIntakesItems = computed(() => [
   }
 }
 
-/* Quick Actions Widget Styles (Specific override for this special widget) */
 .widget {
   background: var(--text-inverse);
   padding: 24px;

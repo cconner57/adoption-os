@@ -112,7 +112,6 @@ const updateCol = (key: string, val: boolean) => {
       </label>
     </div>
 
-    <!-- Click outside handler could be added but simpler relies on parent click -->
     <div v-if="isOpen" class="overlay" @click="isOpen = false"></div>
   </div>
 </template>
@@ -131,7 +130,7 @@ const updateCol = (key: string, val: boolean) => {
 .settings-btn {
   background: var(--text-inverse);
   border: 1px solid var(--border-color);
-  width: 46px; /* Increased to match input height */
+  width: 46px; 
   height: 46px;
   font-size: 1.2rem;
   border-radius: 6px;

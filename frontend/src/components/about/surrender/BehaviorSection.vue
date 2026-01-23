@@ -39,7 +39,6 @@ onMounted(() => {
     }
   })
 
-
   const gridInits: { field: 'animalsBehaviorTowardsKnownPeople' | 'animalsBehaviorTowardsStrangers' | 'animalsBehaviorTowardsKnownAnimals'; rows: string[] }[] = [
     { field: 'animalsBehaviorTowardsKnownPeople', rows: peopleRows },
     { field: 'animalsBehaviorTowardsStrangers', rows: unknownsRows },

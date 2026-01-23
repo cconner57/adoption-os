@@ -111,7 +111,7 @@ const toggleOption = (value: string) => {
   @media (max-width: 440px) {
     flex-direction: column;
     text-align: center;
-    /* Center chips content */
+    
     align-items: stretch;
   }
 }
@@ -159,7 +159,6 @@ const toggleOption = (value: string) => {
   pointer-events: none;
 }
 
-/* Selected State */
 .chip:has(> input:checked) {
   background: color-mix(in srgb, var(--color-primary) 10%, white);
   border: 1px solid var(--color-primary);
@@ -171,7 +170,6 @@ const toggleOption = (value: string) => {
   box-shadow: 0 0 0 3px rgba(from var(--color-secondary) r g b / 0.4);
 }
 
-/* Fallback for browsers without :has support */
 @supports not (selector(:has(*))) {
   .chip > input:checked + span {
     background: hsl(from var(--color-primary) h s 95%);
@@ -185,7 +183,6 @@ const toggleOption = (value: string) => {
   }
 }
 
-/* Error State */
 .field.has-error .chips {
   outline: 2px solid var(--color-danger);
   border-color: var(--color-danger);

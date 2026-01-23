@@ -183,12 +183,11 @@ const removePet = (index: number) => {
 
 .pet-divider {
   border: 0;
-  border-top: 2px solid #cbd5e1; /* Darker and slightly thicker for contrast */
-  margin: 2rem 0; /* More spacing to separate distinct pets */
+  border-top: 2px solid #cbd5e1; 
+  margin: 2rem 0; 
   grid-column: 1 / -1;
 }
 
-/* Button styles */
 .add-btn,
 .remove-btn {
   width: 40px;

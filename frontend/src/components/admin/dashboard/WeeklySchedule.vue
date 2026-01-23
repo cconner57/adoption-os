@@ -5,10 +5,9 @@ import { useActiveVolunteersStore } from '../../../stores/activeVolunteers'
 
 const volunteerStore = useActiveVolunteersStore()
 
-// Helper format time
 const formatTime = (timeStr: string) => {
   if (!timeStr) return ''
-  // Handle 14:30:00 or 14:30
+  
   const [h, m] = timeStr.split(':')
   const hour = parseInt(h)
   const ampm = hour >= 12 ? 'PM' : 'AM'
@@ -16,11 +15,10 @@ const formatTime = (timeStr: string) => {
   return `${hour12}:${m} ${ampm}`
 }
 
-// Calculate week start (Monday)
 const getWeekRange = () => {
   const today = new Date()
-  const day = today.getDay() // 0 = Sun
-  const diff = today.getDate() - day + (day === 0 ? -6 : 1) // Adjust when day is Sunday
+  const day = today.getDay() 
+  const diff = today.getDate() - day + (day === 0 ? -6 : 1) 
   const monday = new Date(today.setDate(diff))
   const sunday = new Date(today.setDate(diff + 6))
 
@@ -31,7 +29,6 @@ const getWeekRange = () => {
   }
 }
 
-// Helper to determine event style based on role
 const getEventType = (role: string = '') => {
   const r = role.toLowerCase()
   if (r.includes('feeding')) return 'feeding'
@@ -41,19 +38,17 @@ const getEventType = (role: string = '') => {
   return 'default'
 }
 
-// Real Calendar Data
 const weekDays = computed(() => {
   const days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
   const { mondayObject } = getWeekRange()
   const shifts = volunteerStore.weeklyShifts || []
 
   return days.map((name, index) => {
-    // Clone monday to avoid mutation issues
+    
     const currentDay = new Date(mondayObject)
     currentDay.setDate(mondayObject.getDate() + index)
     const dateStr = currentDay.toISOString().split('T')[0]
 
-    // Filter shifts for this day
     const dayShifts = shifts
       .filter((s) => s.date === dateStr)
       .map((s) => ({

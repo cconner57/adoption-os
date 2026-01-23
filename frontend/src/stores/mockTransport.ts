@@ -4,7 +4,7 @@ export interface IDriver {
   id: string
   name: string
   phone: string
-  vehicle: string // "Toyota RAV4 (Silver)"
+  vehicle: string 
   status: 'available' | 'busy' | 'offline'
   rating: number
   avatar?: string
@@ -20,14 +20,14 @@ export interface IChatMessage {
 export interface IPetPassenger {
   id: string
   name: string
-  reason: string // e.g. "Surgery", "Checkup", "Dental"
+  reason: string 
   status: 'adopted' | 'shelter'
   description: string
 }
 
 export interface ITrip {
   id: string
-  direction: 'to_vet' | 'from_vet' // Morning vs Afternoon
+  direction: 'to_vet' | 'from_vet' 
   status:
     | 'pending'
     | 'assigned'
@@ -39,10 +39,10 @@ export interface ITrip {
     | 'delayed'
     | 'incident'
   date: string
-  pickupTime: string // "08:00 AM" or "04:00 PM"
+  pickupTime: string 
   pets: IPetPassenger[]
   driverId?: string
-  driverNotes?: string // For vehicle description updates specific to this trip
+  driverNotes?: string 
   estimatedDuration: string
   messages: IChatMessage[]
 }
@@ -127,7 +127,7 @@ export const mockTrips = ref<ITrip[]>([
         description: 'Small Beagle.',
       },
     ],
-    driverId: undefined, // Needs volunteer sign up
+    driverId: undefined, 
     estimatedDuration: '25 mins',
     messages: [],
   },

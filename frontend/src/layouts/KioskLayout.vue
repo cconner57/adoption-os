@@ -12,7 +12,7 @@ const exitKiosk = () => {
 
 <template>
   <div class="kiosk-layout">
-    <!-- Top Bar -->
+    
     <header class="kiosk-header">
       <div class="logo-area">
         <span class="logo-emoji">🐾</span>
@@ -26,7 +26,6 @@ const exitKiosk = () => {
       <button class="exit-btn" @click="exitKiosk">Exit</button>
     </header>
 
-    <!-- Main Content -->
     <main class="kiosk-main">
       <RouterView v-slot="{ Component }">
         <transition name="fade" mode="out-in">

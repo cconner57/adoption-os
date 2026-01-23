@@ -15,7 +15,6 @@ watch(viewMode, (newMode) => {
 const today = new Date()
 const activeDate = ref(new Date())
 
-// Navigation Logic
 const prev = () => {
   const d = new Date(activeDate.value)
   if (viewMode.value === 'month') {
@@ -43,40 +42,39 @@ const goToday = () => {
 const currentMonth = computed(() => activeDate.value.getMonth())
 const currentYear = computed(() => activeDate.value.getFullYear())
 
-// Recurring Volunteer Schedule
 const recurringShifts: Record<number, Array<{ time: string; title: string; type: string }>> = {
   0: [
-    // Sunday
+    
     { time: '10:00 AM', title: 'Allison (10AM-12PM)', type: 'volunteer' },
     { time: '4:00 PM', title: 'Brandon (4PM-6PM)', type: 'volunteer' },
   ],
   1: [
-    // Monday
+    
     { time: '10:00 AM', title: 'Leanne (10AM-12PM)', type: 'volunteer' },
     { time: '6:00 PM', title: 'Arianna (6PM-8PM)', type: 'volunteer' },
   ],
   2: [
-    // Tuesday
+    
     { time: '10:00 AM', title: 'Sonia (10AM-12PM)', type: 'volunteer' },
     { time: '6:00 PM', title: 'Lynn (6PM-8PM)', type: 'volunteer' },
   ],
   3: [
-    // Wednesday
+    
     { time: '10:00 AM', title: 'Bella (10AM-12PM)', type: 'volunteer' },
     { time: '6:00 PM', title: 'Katelyn (6PM-8PM)', type: 'volunteer' },
   ],
   4: [
-    // Thursday
+    
     { time: '10:00 AM', title: 'Alejandra (10AM-12PM)', type: 'volunteer' },
     { time: '6:00 PM', title: 'Nathan (6PM-8PM)', type: 'volunteer' },
   ],
   5: [
-    // Friday
+    
     { time: '10:00 AM', title: 'Linda (10AM-12PM)', type: 'volunteer' },
     { time: '6:00 PM', title: 'Katie (6PM-8PM)', type: 'volunteer' },
   ],
   6: [
-    // Saturday
+    
     { time: '10:00 AM', title: 'Lindsey & Celina (10AM-12PM)', type: 'volunteer' },
     { time: '6:00 PM', title: 'Chris (6PM-8PM)', type: 'volunteer' },
   ],
@@ -89,7 +87,7 @@ const monthName = computed(() => {
       year: 'numeric',
     })
   } else {
-    // For week view, show "Jan 2026" or "Jan - Feb 2026"
+    
     const start = new Date(activeDate.value)
     const day = start.getDay()
     const diff = start.getDate() - day + (day === 0 ? -6 : 1)
@@ -141,13 +139,11 @@ const monthName = computed(() => {
       </div>
     </div>
 
-    <!-- Legend -->
     <div class="legend-bar">
       <span class="legend-item"><span class="dot volunteer"></span> Volunteer Shift</span>
       <span class="legend-item"><span class="dot vet"></span> Vet Appointment</span>
     </div>
 
-    <!-- Month View -->
     <CalendarMonthView
       v-if="viewMode === 'month'"
       :current-year="currentYear"
@@ -157,7 +153,6 @@ const monthName = computed(() => {
       :recurring-shifts="recurringShifts"
     />
 
-    <!-- Week View -->
     <CalendarWeekView v-else :active-date="activeDate" :recurring-shifts="recurringShifts" />
   </div>
 </template>

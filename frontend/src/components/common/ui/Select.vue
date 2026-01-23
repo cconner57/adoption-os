@@ -26,7 +26,6 @@ const emit = defineEmits<{
 const isOpen = ref(false)
 const containerRef = ref<HTMLElement | null>(null)
 
-// Normalize options to { label, value }
 const normalizedOptions = computed(() => {
   return props.options.map((opt) => {
     if (typeof opt === 'object' && opt !== null && 'label' in opt && 'value' in opt) {
@@ -65,14 +64,13 @@ const selectOption = (value: string | number) => {
       current.push(value)
     }
     emit('update:modelValue', current)
-    // Don't close on selection for multi-select
+    
   } else {
     emit('update:modelValue', value)
     isOpen.value = false
   }
 }
 
-// Click outside to close
 const handleClickOutside = (event: MouseEvent) => {
   if (containerRef.value && !containerRef.value.contains(event.target as Node)) {
     isOpen.value = false
@@ -144,7 +142,7 @@ onUnmounted(() => {
   display: flex;
   flex-direction: column;
   gap: 8px;
-  width: 200px; /* Default width */
+  width: 200px; 
 }
 
 .select-container.is-fullwidth {
@@ -246,7 +244,6 @@ onUnmounted(() => {
   font-size: 0.8rem;
 }
 
-/* Transitions */
 .fade-enter-active,
 .fade-leave-active {
   transition: opacity 0.1s ease;

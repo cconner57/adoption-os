@@ -8,7 +8,6 @@ import TableSettings from '../../components/admin/pets/TableSettings.vue'
 import { Button, InputField, Select, TableSkeleton,Toast } from '../../components/common/ui'
 import type { IPet } from '../../models/common'
 
-// Toast State
 const showToast = ref(false)
 const toastMessage = ref('')
 const toastType = ref<'success' | 'error'>('success')
@@ -18,7 +17,7 @@ function showNotification(message: string, type: 'success' | 'error' = 'success'
   toastType.value = type
   showToast.value = true
 }
-// State
+
 const pets = ref<IPet[]>([])
 const isLoading = ref(false)
 const isEditorOpen = ref(false)
@@ -28,7 +27,6 @@ const statusFilter = ref('available')
 const speciesFilter = ref('all')
 const expandedPetId = ref<string | null>(null)
 
-// Configurable Columns
 const visibleColumns = ref({
   photo: true,
   name: true,
@@ -43,7 +41,6 @@ const visibleColumns = ref({
   actions: true,
 })
 
-// Fetch Data
 async function fetchPets() {
   isLoading.value = true
   try {
@@ -58,14 +55,13 @@ async function fetchPets() {
     const response = await fetch(`${import.meta.env.VITE_API_URL}/pets?${params.toString()}`, {
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token')}`, // Ensure auth if needed
+        Authorization: `Bearer ${localStorage.getItem('token')}`, 
       },
     })
 
     if (!response.ok) throw new Error('Failed to fetch pets')
     const data = await response.json()
-    // Backend returns wrapped { data: [...] } or { message: ... }
-    // If it's an array, use it directly (legacy fallback), otherwise checks data.data
+    
     pets.value = Array.isArray(data) ? data : data.data || []
   } catch (error) {
     console.error('Error fetching pets:', error)
@@ -74,7 +70,6 @@ async function fetchPets() {
   }
 }
 
-// Load from LocalStorage & Initial Fetch
 onMounted(() => {
   const saved = localStorage.getItem('petTableColumns')
   if (saved) {
@@ -88,13 +83,11 @@ onMounted(() => {
   fetchPets()
 })
 
-// Watch Filters to Refetch
 watch([statusFilter, searchQuery], () => {
-  // Debounce search if needed, but for now direct call
+  
   fetchPets()
 })
 
-// Save to LocalStorage
 watch(
   visibleColumns,
   (newVal) => {
@@ -103,9 +96,8 @@ watch(
   { deep: true },
 )
 
-// Computed
 const filteredPets = computed(() => {
-  // Client-side Species filtering (since API doesn't support it yet)
+  
   let result = pets.value
 
   if (speciesFilter.value !== 'all') {
@@ -114,7 +106,6 @@ const filteredPets = computed(() => {
   return result
 })
 
-// Actions
 function handleAddPet() {
   selectedPet.value = null
   isEditorOpen.value = true
@@ -133,7 +124,7 @@ async function handleSavePet(petData: Partial<IPet>) {
     let successMessage = 'Pet added successfully!'
 
     if (petData.id) {
-      // Update Mode
+      
       url = `${import.meta.env.VITE_API_URL}/pets/${petData.id}`
       method = 'PUT'
       successMessage = 'Pet updated successfully!'
@@ -155,22 +146,20 @@ async function handleSavePet(petData: Partial<IPet>) {
       throw new Error(text || `Failed to ${petData.id ? 'update' : 'create'} pet`)
     }
 
-    // Parse the updated/created pet from response
     const savedPet = await response.json()
-    const finalPet = savedPet.data || savedPet // Handle { data: ... } wrapper if present
+    const finalPet = savedPet.data || savedPet 
 
     if (petData.id) {
-      // Update existing in place
+      
       const idx = pets.value.findIndex((p) => p.id === petData.id)
       if (idx !== -1) {
         pets.value[idx] = finalPet
       }
     } else {
-      // Add new pet to the top
+      
       pets.value.unshift(finalPet)
     }
 
-    // No refetch needed
     isEditorOpen.value = false
 
     showNotification(successMessage, 'success')
@@ -183,8 +172,6 @@ async function handleSavePet(petData: Partial<IPet>) {
 async function handleQuickAdopt(pet: IPet) {
   if (!confirm(`Mark ${pet.name} as Adopted?`)) return
 
-  // Create a copy with updated status
-  // Backend will handle the date if missing
   const updatedPet = JSON.parse(JSON.stringify(pet))
   updatedPet.details.status = 'adopted'
 
@@ -193,8 +180,7 @@ async function handleQuickAdopt(pet: IPet) {
 
 function handleArchivePet(pet: IPet) {
   if (confirm(`Are you sure you want to archive ${pet.name}?`)) {
-    // API call needed here
-
+    
     console.log('Archive logic pending API implementation')
   }
 }
@@ -224,7 +210,6 @@ const statusOptions = [
   { label: 'Archived', value: 'archived' },
 ]
 
-
 </script>
 
 <template>
@@ -252,7 +237,6 @@ const statusOptions = [
       </div>
     </div>
 
-    <!-- Pet List Table -->
     <TableSkeleton v-if="isLoading" :rows="10" :columns="11" />
     <PetTable
       v-else
@@ -266,7 +250,6 @@ const statusOptions = [
       @mark-adopted="handleQuickAdopt"
     />
 
-    <!-- Mobile Card View -->
     <div v-if="!isLoading" class="mobile-pet-list">
       <template v-for="pet in filteredPets" :key="pet.id">
         <PetCard
@@ -279,7 +262,6 @@ const statusOptions = [
       </template>
     </div>
 
-    <!-- Editor Drawer -->
     <PetEditor
       :is-open="isEditorOpen"
       :pet="selectedPet"
@@ -333,7 +315,7 @@ const statusOptions = [
   gap: 16px;
   position: relative;
   align-items: center;
-  z-index: 20; /* Ensure this is higher than table */
+  z-index: 20; 
 }
 
 .filter-group {
@@ -356,7 +338,6 @@ const statusOptions = [
   gap: 8px;
 }
 
-/* Responsive Design */
 @media (max-width: 768px) {
   .page-header {
     flex-direction: column;
@@ -368,15 +349,15 @@ const statusOptions = [
     width: 100%;
     flex-direction: column;
     align-items: stretch;
-    isolation: isolate; /* Create new stacking context */
+    isolation: isolate; 
   }
 
   .filter-group {
     width: 100%;
-    /* overflow-x: auto; */
+    
     padding-bottom: 4px;
-    flex-wrap: wrap; /* Allow wrapping so dropdowns don't get cut off */
-    /* Ensure visible overflow */
+    flex-wrap: wrap; 
+    
     overflow: visible;
   }
 
@@ -390,8 +371,6 @@ const statusOptions = [
     flex: 1;
   }
 
-  /* Hide table container on mobile since we show cards */
-  /* This targets the component root of PetTable? No, PetTable has .table-container */
   :deep(.table-container) {
     display: none;
   }

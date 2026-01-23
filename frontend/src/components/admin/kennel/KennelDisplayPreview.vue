@@ -13,7 +13,7 @@ defineProps<{
     <div class="e-ink-frame">
       <div class="e-ink-screen" :class="selectedDevice.template">
         <template v-if="previewPet">
-          <!-- STANDARD LAYOUT -->
+          
           <div class="screen-content">
             <div class="screen-header">
               <span class="p-name">{{ previewPet.name }}</span>
@@ -78,10 +78,10 @@ defineProps<{
 .e-ink-screen {
   width: 400px;
   height: 300px;
-  background: #f4f4f4; /* Paper-ish white */
+  background: #f4f4f4; 
   border: 1px solid #d4d4d4;
   color: black;
-  font-family: 'Georgia', serif; /* E-ink often uses serifs or simple sans */
+  font-family: 'Georgia', serif; 
   display: flex;
   flex-direction: column;
   padding: 16px;

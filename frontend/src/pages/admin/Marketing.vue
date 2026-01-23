@@ -11,11 +11,10 @@ import {
 
 const activeTab = ref<'campaigns' | 'newsletters' | 'stories'>('campaigns')
 
-// Helpers
 const getProgressColor = (progress: number) => {
-  if (progress >= 100) return '#10b981' // Green
-  if (progress >= 50) return '#3b82f6' // Blue
-  return '#f59e0b' // Orange
+  if (progress >= 100) return '#10b981' 
+  if (progress >= 50) return '#3b82f6' 
+  return '#f59e0b' 
 }
 
 const getStatusColor = (status: string) => {
@@ -38,7 +37,6 @@ const getStatusColor = (status: string) => {
   }
 }
 
-// Actions
 const createCampaign = () => {
   const name = prompt('Campaign Name:')
   if (name) {
@@ -63,7 +61,7 @@ const approveStory = (story: IHappyTail) => {
 
 <template>
   <div class="marketing-page">
-    <!-- HEADER -->
+    
     <div class="page-header">
       <h1>Marketing Center</h1>
       <div class="tabs">
@@ -91,7 +89,6 @@ const approveStory = (story: IHappyTail) => {
       </div>
     </div>
 
-    <!-- CAMPAIGNS TAB -->
     <div v-if="activeTab === 'campaigns'" class="tab-content">
       <div class="actions-row">
         <h2>Active Campaigns</h2>
@@ -123,7 +120,6 @@ const approveStory = (story: IHappyTail) => {
       </div>
     </div>
 
-    <!-- NEWSLETTERS TAB -->
     <div v-if="activeTab === 'newsletters'" class="tab-content">
       <div class="actions-row">
         <h2>Email Blasts</h2>
@@ -153,7 +149,6 @@ const approveStory = (story: IHappyTail) => {
       </div>
     </div>
 
-    <!-- HAPPY TAILS TAB -->
     <div v-if="activeTab === 'stories'" class="tab-content">
       <div class="actions-row">
         <h2>Submitted Stories</h2>
@@ -237,7 +232,6 @@ const approveStory = (story: IHappyTail) => {
   }
 }
 
-/* CAMPAIGNS */
 .campaigns-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
@@ -287,7 +281,6 @@ const approveStory = (story: IHappyTail) => {
   font-size: 0.9rem;
 }
 
-/* NEWSLETTERS */
 .list-container {
   background: white;
   border-radius: 12px;
@@ -343,7 +336,6 @@ const approveStory = (story: IHappyTail) => {
   color: hsl(from var(--color-neutral) h s 50%);
 }
 
-/* STORIES */
 .stories-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));

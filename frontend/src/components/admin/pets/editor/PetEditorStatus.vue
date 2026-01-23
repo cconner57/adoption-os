@@ -43,7 +43,7 @@ function removeAdoptionPhoto() {
     <template v-if="formData.details?.status === 'adopted' && formData.adoption">
       <h4 class="section-title">Adoption Details</h4>
       <div class="form-row">
-        <!-- Debugging raw input -->
+        
         <div class="field">
           <label class="label">Adoption Date (Debug)</label>
           <div class="control">
@@ -100,7 +100,6 @@ function removeAdoptionPhoto() {
         />
       </div>
 
-      <!-- Adoption Photo -->
       <div class="form-group">
         <label class="input-label">Adoption Photo (Family)</label>
         <div style="display: flex; gap: 12px; align-items: flex-start; margin-top: 8px">
@@ -217,7 +216,7 @@ function removeAdoptionPhoto() {
       />
     </div>
     <div class="form-row" v-if="formData.returned?.isReturned">
-      <!-- Helper to add new return -->
+      
       <div style="width: 100%; display: flex; flex-direction: column; gap: 12px">
         <h5 style="margin: 0; font-size: 0.9rem; color: var(--text-secondary)">History</h5>
 

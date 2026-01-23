@@ -50,10 +50,10 @@ const selectTab = (id: typeof activeTab.value) => {
   activeTab.value = id
   expandedId.value = null
   if (id !== 'history') {
-    // maybe refresh or filter
+    
   }
 }
-// function declarations for hoisting
+
 async function fetchApplications(autoFocus = false) {
   loading.value = true
   try {
@@ -115,7 +115,7 @@ async function fetchApplications(autoFocus = false) {
         } else if (surrenderCount > 0) {
           activeTab.value = 'surrender'
         } else {
-          // Manual toggle to history instead of calling selectTab to avoid circular dep
+          
           activeTab.value = 'history'
           expandedId.value = null
           filterStatus.value = 'all'
@@ -139,10 +139,6 @@ async function fetchApplications(autoFocus = false) {
   }
 }
 
-// ... moving fetchApplications up ...
-
-
-// Actions
 const updateStatus = (app: IApplicationItem, status: IApplicationItem['status']) => {
   const token = localStorage.getItem('token')
   fetch(`${API_url}/v1/applications/${app.id}`, {
@@ -180,7 +176,6 @@ const viewOriginal = async (appId: string) => {
   }
 }
 
-
 </script>
 
 <template>
@@ -208,7 +203,6 @@ const viewOriginal = async (appId: string) => {
       </div>
     </div>
 
-    <!-- Tabs -->
     <div class="tabs">
       <button
         v-for="tab in tabs"
@@ -225,7 +219,6 @@ const viewOriginal = async (appId: string) => {
       </button>
     </div>
 
-    <!-- List View -->
     <div class="applications-list">
       <div v-if="loading" class="loading-state">
         <p>Loading applications...</p>
@@ -269,7 +262,6 @@ const viewOriginal = async (appId: string) => {
   margin: 0;
 }
 
-/* Tabs */
 .tabs {
   display: flex;
   gap: 16px;
@@ -319,7 +311,6 @@ const viewOriginal = async (appId: string) => {
   color: var(--color-secondary);
 }
 
-/* List */
 .applications-list {
   display: flex;
   flex-direction: column;

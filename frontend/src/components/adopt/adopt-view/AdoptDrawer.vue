@@ -27,7 +27,7 @@ const closeDrawer = () => {
 }
 
 const submitForm = () => {
-  // Handle form submission logic here
+  
   console.log('Form submitted:', formData)
   closeDrawer()
 }

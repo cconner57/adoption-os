@@ -79,7 +79,6 @@ onMounted(() => {
   width: 100%;
 }
 
-/* Scroll Reveal Base Styles */
 :deep(.reveal) {
   opacity: 0;
   transform: translateY(30px);
@@ -99,7 +98,6 @@ onMounted(() => {
   transition-delay: 0.2s;
 }
 
-/* Hover Scale Effect */
 :deep(.hover-scale) {
   transition: transform 0.3s ease;
 }
@@ -124,7 +122,6 @@ main {
   width: 100%;
 }
 
-/* Move gap media queries to content-wrapper */
 .content-wrapper {
   display: flex;
   flex-direction: column;
@@ -145,13 +142,11 @@ main {
 }
 
 .section-1 {
-  background-color: var(--color-primary); /* Restored colored background */
+  background-color: var(--color-primary); 
   padding: 0 var(--layout-padding-side) 220px;
   margin-top: -20px;
   min-height: auto;
 
-  /* Media queries for padding/margin */
-  /* 0px - 320px */
   @media (min-width: 0px) and (max-width: 320px) {
     margin-top: 0;
     padding-bottom: 40px;
@@ -174,7 +169,6 @@ main {
   padding: 60px var(--layout-padding-side) 80px;
   height: auto;
 
-  /* Media queries for padding/margin */
   @media (min-width: 0px) and (max-width: 320px) {
     padding-top: 40px;
     padding-bottom: 24px;
@@ -204,27 +198,23 @@ main {
     flex: 1;
   }
 
-  /* 0px - 320px */
   @media (min-width: 0px) and (max-width: 320px) {
     flex-direction: column;
     gap: 16px;
     margin: 20px 0 0;
   }
 
-  /* 321px - 430px */
   @media (min-width: 321px) and (max-width: 430px) {
     flex-direction: column;
     gap: 20px;
     margin: 20px 0 0;
   }
 
-  /* 431px - 768px */
   @media (min-width: 431px) and (max-width: 768px) {
     flex-direction: column;
     gap: 32px;
   }
 
-  /* 769px - 1024px */
   @media (min-width: 769px) and (max-width: 1024px) {
     gap: 40px;
   }

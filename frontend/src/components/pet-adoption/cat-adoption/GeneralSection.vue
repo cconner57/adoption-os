@@ -55,7 +55,6 @@ function handleAgreementUpdate(val: string | number | boolean | null) {
     <div>
       <h2>Applicant Information</h2>
 
-      <!-- Honeypot Field (Hidden) -->
       <div class="fax-field" aria-hidden="true">
         <label for="fax_number">Fax Number</label>
         <input
@@ -318,7 +317,6 @@ function handleAgreementUpdate(val: string | number | boolean | null) {
     grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 16px;
 
-    /* Use nearest container (likely .form-card or .page-shell) */
     @container (max-width: 768px) {
       grid-template-columns: 1fr;
     }
@@ -352,7 +350,6 @@ function handleAgreementUpdate(val: string | number | boolean | null) {
       display: none;
     }
 
-    /* Remove any margin from the control to ensure perfect centering */
     :deep(.control) {
       gap: 0;
     }
@@ -396,7 +393,6 @@ function handleAgreementUpdate(val: string | number | boolean | null) {
     background-color: hsl(from var(--color-danger) h s 95%);
   }
 
-  /* Children specific overrides */
   @container (max-width: 480px) {
     .children .dynamic-input-row {
       flex-wrap: wrap;

@@ -26,14 +26,13 @@ const emit = defineEmits(['close', 'save', 'archive'])
 const activeTab = ref('general')
 const formData = ref<Partial<IVolunteer>>({})
 
-// Init data
 watch(
   () => props.volunteer,
   (newVal) => {
     if (newVal) {
       formData.value = JSON.parse(JSON.stringify(newVal))
     } else {
-      // Defaults for new volunteer
+      
       formData.value = {
         firstName: '',
         lastName: '',
@@ -68,7 +67,7 @@ function handleSave() {
 <template>
   <div v-if="isOpen" class="editor-overlay" @click.self="emit('close')">
     <div class="editor-drawer">
-      <!-- Header -->
+      
       <header class="editor-header">
         <h2>{{ volunteer ? `Edit ${volunteer.firstName}` : 'Add New Volunteer' }}</h2>
         <div class="header-actions">
@@ -77,7 +76,6 @@ function handleSave() {
         </div>
       </header>
 
-      <!-- Body -->
       <div class="editor-body">
         <SidebarNav
           variant="editor"
@@ -93,7 +91,7 @@ function handleSave() {
         />
 
         <div class="editor-content">
-          <!-- General Tab -->
+          
           <div v-if="activeTab === 'general'" class="form-section">
             <h3 class="section-title">General Information</h3>
             <div class="form-grid">
@@ -124,12 +122,10 @@ function handleSave() {
                 <InputField label="Address" placeholder="Address" :model-value="formData.address || ''" @update:model-value="val => formData.address = (val as string)" class="full-width" />
               </div>
 
-              <!-- City has its own row for more space -->
               <div class="row-full">
                 <InputField label="City" placeholder="City" :model-value="formData.city || ''" @update:model-value="val => formData.city = (val as string)" class="full-width" />
               </div>
 
-              <!-- Zip moved next to Birthday -->
               <div class="row-2 full-width">
                 <InputField
                   label="Zip"
@@ -171,7 +167,6 @@ function handleSave() {
             </div>
           </div>
 
-          <!-- Bio & Skills Tab -->
           <div v-else-if="activeTab === 'bio'" class="form-section">
             <h3 class="section-title">Bio & Skills</h3>
             <div class="stack">
@@ -198,7 +193,6 @@ function handleSave() {
             </div>
           </div>
 
-          <!-- Preferences Tab -->
           <div v-else-if="activeTab === 'preferences'" class="form-section">
             <h3 class="section-title">Application Details</h3>
             <div class="stack">
@@ -213,7 +207,6 @@ function handleSave() {
             </div>
           </div>
 
-          <!-- Settings Tab -->
           <div v-else-if="activeTab === 'settings'" class="form-section">
             <h3 class="section-title">Settings</h3>
 
@@ -277,7 +270,7 @@ function handleSave() {
 }
 
 .editor-drawer {
-  width: 800px; /* Match PetEditor width logic roughly, or slightly smaller */
+  width: 800px; 
   background: #fff;
   height: 100%;
   box-shadow: -4px 0 24px rgba(0, 0, 0, 0.15);
@@ -377,7 +370,6 @@ function handleSave() {
   gap: 20px;
 }
 
-/* Reused input styles (consider making global shared CSS) */
 .field-group {
   display: flex;
   flex-direction: column;
@@ -436,7 +428,6 @@ function handleSave() {
   width: 100%;
 }
 
-/* Force deep width override for Inputs in grid cells */
 .row-2 :deep(input),
 .row-full :deep(input) {
   width: 100% !important;
@@ -449,23 +440,23 @@ function handleSave() {
 }
 
 .panel.danger-zone {
-  border-color: #fca5a5; /* red-300 */
+  border-color: #fca5a5; 
 }
 
 .danger-zone .panel-header {
-  background: #fef2f2; /* red-50 */
+  background: #fef2f2; 
   padding: 16px;
   border-bottom: 1px solid #fca5a5;
 }
 
 .danger-zone h4 {
-  color: #991b1b; /* red-800 */
+  color: #991b1b; 
   font-weight: 600;
   margin-bottom: 4px;
 }
 
 .danger-zone p {
-  color: #b91c1c; /* red-700 */
+  color: #b91c1c; 
   font-size: 0.9rem;
   margin: 0;
 }

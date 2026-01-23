@@ -16,12 +16,12 @@ const tripDirectionLabel = (direction: ITrip['direction']) => {
 }
 
 const getStatusColor = (status: ITrip['status']) => {
-  if (status === 'incident') return '#fee2e2' // Red (Emergency)
-  if (status.includes('en_route')) return '#bfdbfe' // Blue (Moving)
-  if (status.includes('at_')) return '#fde68a' // Yellow (Waiting/Location)
-  if (status === 'completed') return '#d1fae5' // Green
-  if (status === 'delayed') return '#ffedd5' // Orange
-  return '#f3f4f6' // Gray
+  if (status === 'incident') return '#fee2e2' 
+  if (status.includes('en_route')) return '#bfdbfe' 
+  if (status.includes('at_')) return '#fde68a' 
+  if (status === 'completed') return '#d1fae5' 
+  if (status === 'delayed') return '#ffedd5' 
+  return '#f3f4f6' 
 }
 
 const getStatusLabel = (status: ITrip['status']) => {

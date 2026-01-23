@@ -3,14 +3,14 @@ export interface NavItem {
   id?: string | number
   label: string
   icon?: string
-  to?: string // If provided, renders as router-link
+  to?: string 
   exact?: boolean
 }
 
 const props = withDefaults(
   defineProps<{
     items: NavItem[]
-    modelValue?: string | number // For tab selection mode
+    modelValue?: string | number 
     variant?: 'default' | 'dashboard' | 'editor'
   }>(),
   {
@@ -34,7 +34,7 @@ function handleClick(item: NavItem) {
 <template>
   <nav class="sidebar-nav" :class="[`variant-${props.variant}`]">
     <template v-for="item in items" :key="item.label">
-      <!-- Router Link Mode -->
+      
       <router-link
         v-if="item.to"
         :to="item.to"
@@ -47,7 +47,6 @@ function handleClick(item: NavItem) {
         <span class="label">{{ item.label }}</span>
       </router-link>
 
-      <!-- Button/Tab Mode -->
       <button
         v-else
         class="nav-item"
@@ -64,7 +63,7 @@ function handleClick(item: NavItem) {
 
 <style scoped>
 .sidebar-nav {
-  /* flex: 1 removed to allow composition unless specified per variant */
+  
   padding: 16px 0;
   display: flex;
   flex-direction: column;
@@ -72,15 +71,13 @@ function handleClick(item: NavItem) {
   overflow-y: auto;
 }
 
-/* Variant: Dashboard (More spacing + Vertical Grow) */
 .sidebar-nav.variant-dashboard {
   flex: 1;
   gap: 8px;
 }
 
-/* Variant: Editor (More spacing, less padding, NO FLEX GROW) */
 .sidebar-nav.variant-editor {
-  flex: none; /* Respects width */
+  flex: none; 
   gap: 8px;
 }
 
@@ -100,7 +97,6 @@ function handleClick(item: NavItem) {
   width: 100%;
   text-align: left;
 
-  /* Typography */
   color: hsl(from var(--color-neutral) h s 50%);
   font-weight: 500;
   font-size: 0.95rem;
@@ -108,9 +104,8 @@ function handleClick(item: NavItem) {
   transition: all 0.2s cubic-bezier(0.2, 0.8, 0.2, 1);
 }
 
-/* Editor Variant Item Styling */
 .sidebar-nav.variant-editor .nav-item {
-  padding: 12px 16px; /* Tighten horizontal padding */
+  padding: 12px 16px; 
 }
 
 .nav-item:hover {

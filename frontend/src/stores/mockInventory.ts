@@ -28,7 +28,7 @@ export const mockInventory = ref<IInventoryItem[]>([
     category: 'Food',
     quantity: 8,
     unit: 'cases',
-    minThreshold: 15, // Low stock
+    minThreshold: 15, 
     location: 'Pantry',
     lastUpdated: '2023-10-28',
   },
@@ -48,7 +48,7 @@ export const mockInventory = ref<IInventoryItem[]>([
     category: 'Medical',
     quantity: 2,
     unit: 'vials',
-    minThreshold: 10, // Critical
+    minThreshold: 10, 
     location: 'Medical Fridge',
     lastUpdated: '2023-10-28',
   },
@@ -76,7 +76,7 @@ export const mockInventory = ref<IInventoryItem[]>([
 
 export const inventoryStats = computed(() => {
   const lowStock = mockInventory.value.filter((i) => i.quantity <= i.minThreshold)
-  const critical = mockInventory.value.filter((i) => i.quantity <= i.minThreshold / 2) // Arbitrary critical level
+  const critical = mockInventory.value.filter((i) => i.quantity <= i.minThreshold / 2) 
 
   return {
     totalItems: mockInventory.value.length,

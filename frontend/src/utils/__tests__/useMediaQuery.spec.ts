@@ -8,7 +8,7 @@ describe('useMediaQuery', () => {
   let matchMediaMock: ReturnType<typeof vi.fn>
 
   beforeEach(() => {
-    // Mock window.matchMedia
+    
     matchMediaMock = vi.fn().mockImplementation((query: string) => ({
       matches: false,
       media: query,
@@ -38,7 +38,7 @@ describe('useMediaQuery', () => {
   })
 
   it('should return true when media query matches', async () => {
-    // Update mock before mounting
+    
     const addEventListener = vi.fn()
     const removeEventListener = vi.fn()
     
@@ -126,10 +126,8 @@ describe('useMediaQuery', () => {
       },
     })
 
-    // Should not throw an error
     expect(() => mount(TestComponent)).not.toThrow()
 
-    // Restore matchMedia
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     ;(window as any).matchMedia = originalMatchMedia
   })

@@ -73,7 +73,7 @@ const removeFile = (index?: number) => {
   } else {
     emit('update:modelValue', null)
   }
-  // Reset input value to allow selecting same file again
+  
   if (fileInput.value) fileInput.value.value = ''
 }
 
@@ -134,7 +134,6 @@ const formatSize = (bytes: number) => {
       </div>
     </div>
 
-    <!-- File Preview List -->
     <div v-if="modelValue" class="file-list">
       <template v-if="Array.isArray(modelValue)">
         <div v-for="(file, index) in modelValue" :key="index" class="file-item">

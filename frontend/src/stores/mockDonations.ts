@@ -67,14 +67,13 @@ export const mockTransactions = ref<ITransaction[]>([
   },
 ])
 
-// Computed Stats helpers (mock)
 export const donationStats = computed(() => {
   const total = mockTransactions.value
     .filter((t) => t.status === 'completed')
     .reduce((sum, t) => sum + t.amount, 0)
 
   const thisMonth = mockTransactions.value
-    .filter((t) => t.date.includes('2023-10')) // Simple mock check
+    .filter((t) => t.date.includes('2023-10')) 
     .reduce((sum, t) => sum + t.amount, 0)
 
   return {

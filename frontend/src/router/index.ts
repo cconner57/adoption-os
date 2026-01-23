@@ -1,5 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router'
-// Pages are now lazy-loaded inline to support code splitting
+
 const KioskLayout = () => import('../layouts/KioskLayout.vue')
 const KioskHome = () => import('../pages/kiosk/KioskHome.vue')
 const KioskDailyCare = () => import('../pages/kiosk/KioskDailyCare.vue')
@@ -164,13 +164,10 @@ const router = createRouter({
   },
 })
 
-
-
 type StartViewTransitionOptions = {
   update?: ViewTransitionUpdateCallback
   types?: string[]
 }
-
 
 interface CustomViewTransitionDocument extends Document {
   // eslint-disable-next-line no-unused-vars, @typescript-eslint/no-explicit-any
@@ -184,39 +181,30 @@ router.beforeEach(async (to, from, next) => {
   const authStore = useAuthStore()
   const uiStore = useUIStore()
 
-  // Start global page loader
   uiStore.startLoading()
 
-  // Ensure auth is initialized explicitly
   if (!authStore.initialized) {
     await authStore.initialize()
   }
 
-  // Ensure we have the latest auth state (optional, but good for refresh)
   if (!authStore.user && authStore.isAuthenticated) {
-    // If pinia persistence was used this would be different,
-    // but currently we rely on `checkAuth` on app mount usually.
-    // For now, assume state is correct.
+    
   }
 
-  // 1. Prevent logged-in users from seeing Login page
   if (to.path === '/login' && authStore.isAuthenticated) {
     next('/admin')
     return
   }
 
-  // 2. Check if route requires admin access
   if (to.path.startsWith('/admin')) {
     if (!authStore.isAuthenticated) {
-      // Not logged in -> Redirect to login
+      
       next('/login')
       return
     }
-    // We removed the role check redirect to '/' as requested.
-    // Authorized users stay here.
+    
   }
 
-  // 3. Allow navigation
   next()
 })
 

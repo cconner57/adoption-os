@@ -1,4 +1,4 @@
-// Export all pages for easy access
+
 export { default as About } from './About.vue'
 export { default as Applications } from './admin/Applications.vue'
 export { default as Adopt } from './Adopt.vue'

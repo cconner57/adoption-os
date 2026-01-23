@@ -56,7 +56,6 @@ defineEmits<{
       </div>
     </SettingsCard>
 
-    <!-- Profile / Account Settings -->
     <SettingsCard title="Account Settings" icon="🔒">
       <p class="text-sm text-gray mb-4">Update your personal account details.</p>
       <div class="row">
@@ -149,9 +148,7 @@ defineEmits<{
 </template>
 
 <style scoped>
-/* Assuming these styles are global or handled by parent standard classes.
-   If anything breaks, we can copy them here.
-*/
+
 .settings-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));

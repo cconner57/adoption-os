@@ -23,7 +23,7 @@ const getEventPosition = (event: MouseEvent | TouchEvent) => {
       return {
         offsetX: event.clientX - rect.left,
 
-        offsetY: event.clientY - rect.top, // Adjust for scaling
+        offsetY: event.clientY - rect.top, 
       }
     } else {
       const touch = event.touches[0]
@@ -161,7 +161,6 @@ onUnmounted(() => {
     touch-action: none;
   }
 
-  /* Nested state modifier */
   &.has-error .signature-canvas {
     border: 2px solid var(--color-danger);
   }

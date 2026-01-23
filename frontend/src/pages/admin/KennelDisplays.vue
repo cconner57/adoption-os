@@ -7,33 +7,29 @@ import { mockPetsData } from '../../stores/mockPetData'
 
 const mockPets = ref(mockPetsData)
 
-// Helpers
 const getPetName = (id: string | null) => {
   if (!id) return 'Unassigned'
   const pet = mockPets.value.find((p) => p.id === id)
   return pet ? pet.name : 'Unknown Pet'
 }
 
-// Battery Icon Logic
 const getBatteryIcon = (level: number) => {
   if (level > 90) return '🔋'
-  if (level > 50) return '🔋' // Simplification
+  if (level > 50) return '🔋' 
   if (level > 20) return '🪫'
   return '🔌'
 }
 
 const getBatteryColor = (level: number) => {
-  if (level <= 20) return '#ef4444' // Red
-  return '#10b981' // Green
+  if (level <= 20) return '#ef4444' 
+  return '#10b981' 
 }
 
-// Device Selection
 const selectedDeviceId = ref<string | null>(null)
 const selectedDevice = computed(() =>
   mockDevices.value.find((d) => d.id === selectedDeviceId.value),
 )
 
-// Linked pet for preview
 const previewPet = computed(() => {
   if (!selectedDevice.value?.assignedPetId) return null
   return mockPets.value.find((p) => p.id === selectedDevice.value?.assignedPetId)
@@ -43,11 +39,9 @@ const selectDevice = (id: string) => {
   selectedDeviceId.value = id
 }
 
-// Stats
 const onlineCount = computed(() => mockDevices.value.filter((d) => d.status === 'online').length)
 const lowBatteryCount = computed(() => mockDevices.value.filter((d) => d.batteryLevel < 20).length)
 
-// Actions
 const refreshDisplay = () => {
   if (!selectedDevice.value) return
   selectedDevice.value.status = 'syncing'
@@ -69,9 +63,6 @@ const unpairDevice = () => {
 import KennelDisplayPreview from '../../components/admin/kennel/KennelDisplayPreview.vue'
 import PetAssignmentModal from '../../components/admin/kennel/PetAssignmentModal.vue'
 
-// ... (keep existing refs/computed)
-
-// Modal for Assigning Pet (Mock)
 const showAssignModal = ref(false)
 
 const openAssignModal = () => {
@@ -88,7 +79,7 @@ const handleConfirmAssignment = (petId: string) => {
 
 <template>
   <div class="kennel-displays-page">
-    <!-- HEADER -->
+    
     <div class="page-header">
       <h1>Kennel Displays</h1>
       <div class="header-stats">
@@ -104,7 +95,7 @@ const handleConfirmAssignment = (petId: string) => {
     </div>
 
     <div class="split-layout">
-      <!-- LEFT: DEVICE LIST -->
+      
       <div class="device-list-card">
         <div class="list-header">
           <h2>Connected Tags</h2>
@@ -147,7 +138,6 @@ const handleConfirmAssignment = (petId: string) => {
         </div>
       </div>
 
-      <!-- RIGHT: DETAILS & PREVIEW -->
       <div class="details-panel" v-if="selectedDevice">
         <div class="panel-header">
           <h2>Device Details</h2>
@@ -183,15 +173,12 @@ const handleConfirmAssignment = (petId: string) => {
           </div>
         </div>
 
-        <!-- E-INK PREVIEW -->
         <KennelDisplayPreview :selectedDevice="selectedDevice" :previewPet="previewPet" />
       </div>
 
       <div v-else class="empty-selection">Select a device to view details and manage content.</div>
     </div>
 
-    <!-- MOCK ASSIGN MODAL -->
-    <!-- MOCK ASSIGN MODAL -->
     <PetAssignmentModal
       :isOpen="showAssignModal"
       :mockPets="mockPets"
@@ -206,7 +193,7 @@ const handleConfirmAssignment = (petId: string) => {
   display: flex;
   flex-direction: column;
   gap: 24px;
-  height: calc(100vh - 100px); /* Fill remaining usage */
+  height: calc(100vh - 100px); 
 }
 
 .page-header {
@@ -260,10 +247,9 @@ const handleConfirmAssignment = (petId: string) => {
   grid-template-columns: 350px 1fr;
   gap: 24px;
   flex: 1;
-  min-height: 0; /* Allow scrolling within items */
+  min-height: 0; 
 }
 
-/* DEVICE LIST */
 .device-list-card {
   background: white;
   border-radius: 12px;
@@ -339,7 +325,6 @@ const handleConfirmAssignment = (petId: string) => {
   color: hsl(from var(--color-neutral) h s 50%);
 }
 
-/* DETAILS PANEL */
 .details-panel {
   background: white;
   border-radius: 12px;
@@ -413,5 +398,4 @@ const handleConfirmAssignment = (petId: string) => {
   font-size: 0.9rem;
 }
 
-/* STYLES MOVED TO COMPONENTS */
 </style>

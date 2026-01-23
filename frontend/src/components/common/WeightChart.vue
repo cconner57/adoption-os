@@ -31,8 +31,7 @@ const chartComputeds = computed(() => {
   const dateRange = maxDate - minDate || 1
   const valueRange = maxValue - minValue || 1
 
-  // Buffering
-  const yMin = Math.max(0, minValue - valueRange * 0.2) // Ensure we don't go below 0 for weight
+  const yMin = Math.max(0, minValue - valueRange * 0.2) 
   const yMax = maxValue + valueRange * 0.1
   const yRange = yMax - yMin
 
@@ -46,10 +45,8 @@ const chartComputeds = computed(() => {
 
   const pointsStr = sortedData.value.map((d) => `${getX(d.date)},${getY(d.value)}`).join(' ')
 
-  // Area path for gradient (close the loop at the bottom)
   const areaPath = `M ${getX(sortedData.value[0].date)},${height - padding} L ${pointsStr} L ${getX(sortedData.value[sortedData.value.length - 1].date)},${height - padding} Z`
 
-  // Generate Y Axis Labels (5 ticks)
   const yTicks = []
   for (let i = 0; i <= 4; i++) {
     const val = yMin + yRange * (i / 4)
@@ -59,13 +56,11 @@ const chartComputeds = computed(() => {
     })
   }
 
-  // Generate X Axis Labels (Time-based for even spacing)
   const xTicks = []
   const numXTicks = 5
   for (let i = 0; i < numXTicks; i++) {
     const time = minDate + dateRange * (i / (numXTicks - 1))
-    // Round to nearest day to avoid weird fraction times if needed,
-    // but formatted date usually handles it well.
+    
     const dateStr = new Date(time).toISOString()
     xTicks.push({
       date: dateStr,
@@ -108,9 +103,8 @@ const formatWeight = (w: number) => `${w.toFixed(2)}kg / ${(w * 2.20462).toFixed
         </linearGradient>
       </defs>
 
-      <!-- Grid & Axes -->
       <g class="grid">
-        <!-- Y Axis Lines & Text -->
+        
         <g v-for="tick in chartComputeds.yTicks" :key="tick.value">
           <line
             :x1="padding"
@@ -124,7 +118,7 @@ const formatWeight = (w: number) => `${w.toFixed(2)}kg / ${(w * 2.20462).toFixed
             {{ tick.value.toFixed(1) }}kg
           </text>
         </g>
-        <!-- X Axis Text -->
+        
         <g v-for="tick in chartComputeds.xTicks" :key="tick.date">
           <text
             :x="tick.x"
@@ -138,10 +132,8 @@ const formatWeight = (w: number) => `${w.toFixed(2)}kg / ${(w * 2.20462).toFixed
         </g>
       </g>
 
-      <!-- Data Area -->
       <path :d="chartComputeds.areaPath" fill="url(#line-gradient)" />
 
-      <!-- Main Line -->
       <path
         :d="chartComputeds.linePath"
         fill="none"
@@ -151,9 +143,8 @@ const formatWeight = (w: number) => `${w.toFixed(2)}kg / ${(w * 2.20462).toFixed
         stroke-linejoin="round"
       />
 
-      <!-- Interactive Points -->
       <g v-for="(point, idx) in chartComputeds.interactivePoints" :key="idx">
-        <!-- Visible Dot -->
+        
         <circle
           :cx="point.x"
           :cy="point.y"
@@ -162,7 +153,7 @@ const formatWeight = (w: number) => `${w.toFixed(2)}kg / ${(w * 2.20462).toFixed
           stroke="var(--color-secondary)"
           stroke-width="2"
         />
-        <!-- Invisible Hit Area -->
+        
         <circle
           :cx="point.x"
           :cy="point.y"
@@ -174,10 +165,8 @@ const formatWeight = (w: number) => `${w.toFixed(2)}kg / ${(w * 2.20462).toFixed
       </g>
     </svg>
 
-    <!-- Empty State -->
     <div v-else class="empty-chart">No data available</div>
 
-    <!-- Tooltip -->
     <div
       v-if="hoveredPoint"
       class="tooltip"
@@ -197,7 +186,7 @@ const formatWeight = (w: number) => `${w.toFixed(2)}kg / ${(w * 2.20462).toFixed
   width: 100%;
   height: 100%;
   position: relative;
-  /* Use flex to center empty state */
+  
   display: flex;
   flex-direction: column;
 }

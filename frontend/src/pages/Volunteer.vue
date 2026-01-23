@@ -332,7 +332,6 @@ const handleReset = () => {
   background-color: var(--color-primary);
   padding: 9rem var(--layout-padding-side) 64px;
 
-  /* Viewport adjustments can remain, but simplified */
   @media (max-width: 430px) {
     padding: 6rem 16px 32px;
   }
@@ -351,7 +350,6 @@ const handleReset = () => {
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
     padding: 48px 48px 32px;
 
-    /* Responsive padding based on container width */
     @container form-card (max-width: 768px) {
       padding: 32px 24px;
     }
@@ -380,7 +378,6 @@ const handleReset = () => {
       flex-direction: column;
       gap: 16px;
 
-      /* Switch to grid when container is wide enough */
       @container form-card (min-width: 700px) {
         display: grid;
         grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -394,7 +391,6 @@ const handleReset = () => {
     }
   }
 
-  /* Nested components that are localized */
   .validation-summary {
     background-color: hsl(from var(--color-danger) h s 98%);
     border: 1px solid var(--color-danger);
@@ -426,17 +422,15 @@ const handleReset = () => {
     }
   }
 
-  /* Utility classes nested here or could be global, but scoped so kept here */
   .has-error :deep(input),
   .has-error :deep(textarea) {
     border-color: var(--color-danger) !important;
     outline: 2px solid var(--color-danger) !important;
   }
 
-  /* Reveal Animations */
   :deep(.reveal) {
     opacity: 0;
-    transform: translateY(20px); /* Smaller movement for form */
+    transform: translateY(20px); 
     transition: all 0.6s cubic-bezier(0.2, 0.8, 0.2, 1);
   }
 
@@ -445,7 +439,6 @@ const handleReset = () => {
     transform: translateY(0);
   }
 
-  /* Smooth Focus Transition */
   :deep(input),
   :deep(textarea),
   :deep(select) {
@@ -457,7 +450,7 @@ const handleReset = () => {
   :deep(input:focus),
   :deep(textarea:focus),
   :deep(select:focus) {
-    /* These styles rely on the component implementation, but transition property is added above */
+    
   }
 }
 </style>

@@ -4,7 +4,6 @@ import { ref, watch } from 'vue'
 import { Button,InputField } from '../../components/common/ui'
 import { mockKioskSettings } from '../../stores/mockKiosk'
 
-// Mock saving state
 const isSaving = ref(false)
 const hasChanges = ref(false)
 
@@ -28,7 +27,7 @@ watch(
 
 <template>
   <div class="kiosk-page">
-    <!-- HEADER -->
+    
     <div class="page-header">
       <h1>Kiosk Management</h1>
       <div class="header-actions">
@@ -38,9 +37,9 @@ watch(
     </div>
 
     <div class="split-view">
-      <!-- LEFT: SETTINGS -->
+      
       <div class="settings-panel">
-        <!-- SECTION: GENERAL -->
+        
         <div class="settings-group">
           <h2>General</h2>
           <div class="form-stack">
@@ -62,7 +61,6 @@ watch(
           </div>
         </div>
 
-        <!-- SECTION: BRANDING -->
         <div class="settings-group">
           <h2>Branding & Theme</h2>
           <div class="form-stack">
@@ -81,7 +79,6 @@ watch(
           </div>
         </div>
 
-        <!-- SECTION: FEATURES -->
         <div class="settings-group">
           <h2>Enabled Features</h2>
           <div class="toggle-list">
@@ -121,7 +118,6 @@ watch(
         </div>
       </div>
 
-      <!-- RIGHT: PREVIEW -->
       <div class="preview-panel">
         <div class="device-frame">
           <div class="camera-hole"></div>
@@ -204,8 +200,8 @@ watch(
 }
 
 .unsaved-badge {
-  background: #fef08a; /* yellow-200 */
-  color: #854d0e; /* yellow-800 */
+  background: #fef08a; 
+  color: #854d0e; 
   padding: 6px 12px;
   border-radius: 20px;
   font-size: 0.85rem;
@@ -218,7 +214,6 @@ watch(
   gap: 40px;
 }
 
-/* LEFT: SETTINGS */
 .settings-panel {
   display: flex;
   flex-direction: column;
@@ -288,7 +283,6 @@ watch(
   }
 }
 
-/* Custom checkbox as toggle */
 .toggle-switch {
   appearance: none;
   width: 44px;
@@ -320,7 +314,6 @@ watch(
   }
 }
 
-/* RIGHT: PREVIEW */
 .preview-panel {
   display: flex;
   flex-direction: column;
@@ -417,7 +410,6 @@ watch(
   font-size: 0.9rem;
 }
 
-/* Responsive */
 @media (max-width: 1024px) {
   .split-view {
     grid-template-columns: 1fr;

@@ -2,7 +2,6 @@
 import { storeToRefs } from 'pinia'
 import { computed,ref } from 'vue'
 
-// Components
 import SettingsGeneral from '../../components/admin/settings/SettingsGeneral.vue'
 import SettingsOverview from '../../components/admin/settings/SettingsOverview.vue'
 import SettingsPets from '../../components/admin/settings/SettingsPets.vue'
@@ -110,14 +109,11 @@ const categories = [
   },
 ]
 
-// ... existing imports ...
-
 const { isDemoMode, toggleDemoMode } = useDemoMode()
 const authStore = useAuthStore()
 const settingsStore = useSettingsStore()
 const { settings } = storeToRefs(settingsStore)
 
-// Account Settings Form
 const accountForm = ref({
   name: authStore.user?.Name || '',
   email: authStore.user?.Email || '',
@@ -151,7 +147,7 @@ async function updateAccount(showToastOnSuccess = true) {
     if (!res.ok) throw new Error('Failed to update')
 
     const data = await res.json()
-    // Update local store user
+    
     if (data.user) {
       authStore.user = data.user
     }
@@ -168,7 +164,7 @@ async function updateAccount(showToastOnSuccess = true) {
   } catch (e) {
     console.error(e)
     alert('Failed to update profile')
-    throw e // Re-throw to inform parent
+    throw e 
   } finally {
     savingAccount.value = false
   }
@@ -178,18 +174,17 @@ async function saveSettings() {
   saving.value = true
 
   try {
-    // If on General tab, also try to save account settings if dirty
+    
     if (activeCategory.value === 'general') {
       if (
         accountForm.value.password ||
         accountForm.value.name !== authStore.user?.Name ||
         accountForm.value.email !== authStore.user?.Email
       ) {
-        await updateAccount(false) // false = don't show separate toast
+        await updateAccount(false) 
       }
     }
 
-    // Simulate other settings save (or real API calls if they existed)
     await new Promise((resolve) => setTimeout(resolve, 800))
 
     saving.value = false
@@ -213,7 +208,7 @@ const activeCategoryLabel = computed(
   <div class="admin-page">
     <div class="page-header">
       <div class="header-left">
-        <!-- Back Button (only shown when category active) -->
+        
         <button v-if="activeCategory" class="back-btn" @click="activeCategory = null">
           ← Back
         </button>
@@ -225,10 +220,8 @@ const activeCategoryLabel = computed(
       </button>
     </div>
 
-    <!-- Toast Notification -->
     <div v-if="showToast" class="toast-notification">✅ Settings saved successfully!</div>
 
-    <!-- HOME GRID VIEW -->
     <div v-if="!activeCategory" class="categories-grid">
       <button
         v-for="cat in categories"
@@ -247,7 +240,6 @@ const activeCategoryLabel = computed(
       </button>
     </div>
 
-    <!-- DETAIL VIEW -->
     <div v-else class="settings-content">
       <SettingsGeneral
         v-if="activeCategory === 'general'"
@@ -268,7 +260,6 @@ const activeCategoryLabel = computed(
 
       <SettingsPets v-if="activeCategory === 'pets'" v-model:settings="settings" />
 
-      <!-- PLACEHOLDER TABS -->
       <div
         v-if="
           activeCategory &&
@@ -370,7 +361,6 @@ const activeCategoryLabel = computed(
   }
 }
 
-/* HOME GRID */
 .categories-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
@@ -435,14 +425,12 @@ const activeCategoryLabel = computed(
   color: var(--color-primary);
 }
 
-/* DETAIL CONTENT */
 .settings-content {
   flex: 1;
   overflow-y: auto;
   padding-bottom: 40px;
 }
 
-/* PLACEHOLDER */
 .placeholder-content {
   text-align: center;
   padding: 60px 20px;

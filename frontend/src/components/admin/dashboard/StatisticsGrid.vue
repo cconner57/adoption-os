@@ -95,7 +95,6 @@ const stats = computed(() => [
   font-size: 0.9rem;
 }
 
-/* Color variants */
 .stat-card.color-orange .stat-icon {
   background-color: hsl(from var(--color-warning) h s 88%);
   color: var(--color-warning);

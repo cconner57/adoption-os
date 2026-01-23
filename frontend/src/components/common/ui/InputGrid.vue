@@ -20,7 +20,6 @@ const emit = defineEmits<{
   'update:modelValue': [value: string]
 }>()
 
-// Helper to parse the current state
 const gridState = computed(() => {
   try {
     if (!props.modelValue || !props.modelValue.startsWith('{')) {
@@ -40,16 +39,15 @@ const toggleSelection = (row: string, col: string) => {
   const current = { ...gridState.value }
   const rowSelections = current[row] || []
 
-  // If singleSelect is enabled, we treat every click as setting the ONLY value
   if (props.singleSelect) {
     if (rowSelections.includes(col)) {
-      // Optional: Allow deselecting the single value (toggle behavior)
+      
       current[row] = []
     } else {
       current[row] = [col]
     }
   } else {
-    // Standard Multi-Select Logic with Exclusivity
+    
     const isExclusive = props.exclusiveOptions.includes(col)
 
     if (isExclusive) {
@@ -70,7 +68,6 @@ const toggleSelection = (row: string, col: string) => {
     }
   }
 
-  // Prune empty rows to keep JSON clean
   if (current[row] && current[row].length === 0) {
     delete current[row]
   }
@@ -154,14 +151,13 @@ const toggleSelection = (row: string, col: string) => {
   grid-column: 1 / -1;
 }
 
-/* Grid Styles */
 .grid-container {
   border: 1px solid var(--border-color);
   border-radius: 8px;
   overflow: hidden;
   margin-top: 8px;
   overflow-x: auto;
-  background-color: var(--text-inverse); /* Ensure container is white */
+  background-color: var(--text-inverse); 
 }
 
 .grid-header {
@@ -176,7 +172,7 @@ const toggleSelection = (row: string, col: string) => {
 .grid-row {
   display: grid;
   border-bottom: 1px solid var(--border-color);
-  background-color: var(--text-inverse); /* Force white background for all rows */
+  background-color: var(--text-inverse); 
 
   &:last-child {
     border-bottom: none;
@@ -214,10 +210,10 @@ const toggleSelection = (row: string, col: string) => {
   align-items: center;
   border-left: 1px solid var(--border-color);
   cursor: pointer;
-  background-color: var(--text-inverse); /* Standard cell background */
+  background-color: var(--text-inverse); 
 
   &:hover {
-    background-color: hsl(from var(--color-neutral) h s 98%); /* Very light subtle hover */
+    background-color: hsl(from var(--color-neutral) h s 98%); 
     box-shadow: 0 0 0 1px var(--border-color) inset;
   }
 
@@ -249,7 +245,6 @@ const toggleSelection = (row: string, col: string) => {
   color: var(--color-primary);
 }
 
-/* Corner Radius Fixes */
 .grid-header .row-label-header {
   border-top-left-radius: 7px;
 }

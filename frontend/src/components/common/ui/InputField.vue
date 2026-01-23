@@ -41,8 +41,6 @@ function onInput(e: Event) {
   }
   emit('update:modelValue', val)
 
-  // Force strict sync: if the emitted value was rejected by the parent (modelValue didn't change),
-  // we must manually reset the input value to match the modelValue.
   nextTick(() => {
     console.log(
       `DEBUG: InputField[${props.label}] nextTick check. Prop: '${props.modelValue}', Input: '${inputRef.value?.value}'`,
@@ -54,7 +52,6 @@ function onInput(e: Event) {
   })
 }
 
-// Enforce strict sync: if modelValue changes (or stays same while DOM changed), force DOM update
 watch(
   () => props.modelValue,
   (newVal) => {
@@ -96,10 +93,8 @@ function onBlur(e: Event) {
   display: flex;
   flex-direction: column;
   gap: 8px;
-  width: 100%; /* Default to full width of parent */
+  width: 100%; 
 }
-
-/* ... label styles ... */
 
 input {
   width: 100%;
@@ -112,8 +107,7 @@ input {
   caret-color: var(--text-primary);
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   color: var(--text-primary);
-  flex: 1; /* Allow input to grow */
+  flex: 1; 
 }
 
-/* ... other styles ... */
 </style>

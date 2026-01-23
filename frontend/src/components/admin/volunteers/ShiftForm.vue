@@ -19,7 +19,7 @@ const formData = ref({
   endTime: props.initialData?.endTime || '',
   role: props.initialData?.role || 'Feeding/Cleaning',
   status: props.initialData?.status || 'scheduled',
-  isRecurring: false, // Editing recurrence is tricky, maybe disable for edit?
+  isRecurring: false, 
   frequency: 'weekly',
   endDate: '',
   isCovering: false,
@@ -57,11 +57,10 @@ onMounted(async () => {
       const data = await res.json()
       const counts = data.data.roleCounts || {}
 
-      // Sort roles: descending by count
       roles.value.sort((a, b) => {
         const countA = counts[a.value] || 0
         const countB = counts[b.value] || 0
-        // If counts are equal, keep original order (stable sort) or alphabetical
+        
         if (countB !== countA) {
           return countB - countA
         }
@@ -97,13 +96,11 @@ function handleSave() {
     return
   }
 
-  // If covering, save to notes with notice info
   if (payload.isCovering && payload.coveringName) {
     const noticeText = payload.coverageNotice === 'less_24h' ? '<24h notice' : '>24h notice'
     payload.notes = `Covering for ${payload.coveringName} (${noticeText})`
   }
 
-  // If was covered by someone else, append to notes
   if (
     showCoveredBy.value &&
     payload.coveredBy &&
@@ -113,9 +110,7 @@ function handleSave() {
       ? payload.coveredBy.join(', ')
       : payload.coveredBy
     const prefix = `Covered by ${names}. `
-    // Avoid double adding if editing and already present
-    // Simple check: if notes already contains "Covered by", assume user might have manually edited or it's there
-    // For better experience, we might want to regex replace, but for now append if not startswith
+    
     const currentNotes = payload.notes || ''
     if (!currentNotes.startsWith('Covered by')) {
       payload.notes = prefix + currentNotes
@@ -124,7 +119,6 @@ function handleSave() {
 
   emit('save', payload)
 
-  // Reset form
   formData.value = {
     date: '',
     startTime: '',

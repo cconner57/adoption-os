@@ -33,9 +33,8 @@ defineProps<{
   flex-wrap: wrap;
   row-gap: 30px;
   column-gap: 20px;
-  /* Centering handled by flex-wrap behavior or parent alignment */
+  
   justify-content: center;
 
-  /* Removed media queries that set max-width constraints */
 }
 </style>

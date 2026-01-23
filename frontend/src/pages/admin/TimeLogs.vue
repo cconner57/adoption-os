@@ -16,17 +16,15 @@ const searchQuery = ref('')
 const filterLogStatus = ref<'all' | 'approved' | 'pending'>('all')
 const filterSeverity = ref<'all' | 'low' | 'medium' | 'high' | 'critical'>('all')
 
-// --- TIME LOGS LOGIC ---
 const filteredLogs = computed(() => {
   return mockTimeLogs.value
     .filter((log) => {
-      // 1. Text Search
+      
       const searchMatch =
         !searchQuery.value ||
         log.volunteerName.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
         log.taskDescription.toLowerCase().includes(searchQuery.value.toLowerCase())
 
-      // 2. Status Filter
       const statusMatch = filterLogStatus.value === 'all' || log.status === filterLogStatus.value
 
       return searchMatch && statusMatch
@@ -34,7 +32,6 @@ const filteredLogs = computed(() => {
     .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
 })
 
-// --- INCIDENTS LOGIC ---
 const filteredIncidents = computed(() => {
   return mockIncidents.value
     .filter((inc) => {
@@ -50,7 +47,6 @@ const filteredIncidents = computed(() => {
     .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
 })
 
-// --- ACTIONS LOGIC ---
 const handleLogAction = (action: string, log: ITimeLog) => {
   if (action === 'approve') {
     log.status = 'approved'
@@ -84,7 +80,6 @@ const handleIncidentAction = (action: string, inc: IIncident) => {
       </div>
     </div>
 
-    <!-- TABS -->
     <div class="tabs">
       <button class="tab-btn" :class="{ active: activeTab === 'logs' }" @click="activeTab = 'logs'">
         ⏱️ Time Sheets
@@ -98,7 +93,6 @@ const handleIncidentAction = (action: string, inc: IIncident) => {
       </button>
     </div>
 
-    <!-- CONTENT: TIME LOGS -->
     <TimeLogList
       v-if="activeTab === 'logs'"
       :filtered-logs="filteredLogs"
@@ -106,7 +100,6 @@ const handleIncidentAction = (action: string, inc: IIncident) => {
       @logAction="handleLogAction"
     />
 
-    <!-- CONTENT: INCIDENTS -->
     <IncidentList
       v-if="activeTab === 'incidents'"
       :filtered-incidents="filteredIncidents"

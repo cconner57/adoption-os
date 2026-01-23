@@ -18,7 +18,6 @@ const emit = defineEmits<{
 
 const isExpanded = ref(false)
 
-// --- Helpers ---
 function getStatusColor(status: string) {
   const map: Record<string, string> = {
     available: 'green',
@@ -39,7 +38,7 @@ function formatDoB(dateString?: string | null) {
 
 <template>
   <div class="pet-card" :class="{ expanded: isExpanded }">
-    <!-- Header: Avatar, Name, Status -->
+    
     <div class="card-header" @click="isExpanded = !isExpanded">
       <div class="header-main">
         <div class="pet-avatar">
@@ -83,7 +82,6 @@ function formatDoB(dateString?: string | null) {
       </div>
     </div>
 
-    <!-- Collapsed Quick Stats -->
     <div class="card-body" v-if="!isExpanded">
       <div class="quick-stats">
         <div class="stat">
@@ -97,9 +95,8 @@ function formatDoB(dateString?: string | null) {
       </div>
     </div>
 
-    <!-- Expanded Details -->
     <div v-if="isExpanded" class="card-details">
-      <!-- Reuse similar grid layout but stacked for mobile -->
+      
       <div class="detail-section">
         <h4>Basic Info</h4>
         <div class="detail-row">
@@ -162,7 +159,6 @@ function formatDoB(dateString?: string | null) {
         </div>
       </div>
 
-      <!-- Actions Footer -->
       <div class="card-actions">
         <Button
           v-if="pet.details.status === 'available'"
@@ -272,7 +268,7 @@ function formatDoB(dateString?: string | null) {
   text-transform: uppercase;
   letter-spacing: 0.5px;
 }
-/* Reused status colors */
+
 .status-badge.green {
   background: #dcfce7;
   color: #166534;
@@ -301,7 +297,7 @@ function formatDoB(dateString?: string | null) {
 .expand-icon {
   color: #94a3b8;
   transition: transform 0.3s;
-  margin-top: 4px; /* Align with top mostly */
+  margin-top: 4px; 
 }
 .expand-icon.rotated {
   transform: rotate(180deg);
@@ -309,7 +305,7 @@ function formatDoB(dateString?: string | null) {
 
 .card-body {
   padding: 0 16px 16px;
-  padding-left: 92px; /* Align with text, skipping avatar width (64) + gap (12) + padding (16) = 92 */
+  padding-left: 92px; 
 }
 
 .quick-stats {

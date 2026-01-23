@@ -26,9 +26,8 @@ const settingsStore = useSettingsStore()
 const activeTab = ref('basic')
 const formData = ref<Partial<IPet>>({})
 
-// Extract init logic to reuse
 function initFormData(newPet: IPet) {
-  // Merge with defaults to ensure all fields exist
+  
   const defaults = {
     profileSettings: {
       isSpotlightFeatured: false,
@@ -45,12 +44,12 @@ function initFormData(newPet: IPet) {
   formData.value = {
     ...JSON.parse(JSON.stringify(newPet)),
   }
-  // Shallow merge specific nested objects if missing
+  
   if (formData.value.litterName === undefined) formData.value.litterName = null
 
   if (!formData.value.profileSettings) formData.value.profileSettings = defaults.profileSettings
   else {
-    // Ensure properties exist
+    
     if (formData.value.profileSettings.isSpotlightFeatured === undefined)
       formData.value.profileSettings.isSpotlightFeatured = false
     if (formData.value.profileSettings.showMedicalHistory === undefined)
@@ -59,7 +58,6 @@ function initFormData(newPet: IPet) {
       formData.value.profileSettings.showAdditionalInformation = false
   }
 
-  // Ensure Medical object structure
   if (!formData.value.medical) {
     formData.value.medical = {
       spayedOrNeutered: false,
@@ -72,11 +70,11 @@ function initFormData(newPet: IPet) {
       microchip: { microchipped: false },
     }
   } else {
-    // Deep ensure microchip
+    
     if (!formData.value.medical.microchip) {
       formData.value.medical.microchip = { microchipped: false }
     }
-    // Ensure vaccinations
+    
     if (!formData.value.medical.vaccinations) {
       formData.value.medical.vaccinations = { other: [], rabies: { dateAdministered: '' } }
     } else {
@@ -86,7 +84,6 @@ function initFormData(newPet: IPet) {
     }
   }
 
-  // Ensure Behavior object exists
   if (!formData.value.behavior) {
     formData.value.behavior = {
       energyLevel: 'medium',
@@ -107,7 +104,6 @@ function initFormData(newPet: IPet) {
     }
   }
 
-  // Ensure Adoption object exists and has all fields
   if (!formData.value.adoption) {
     formData.value.adoption = {
       adoptedBy: '',
@@ -118,7 +114,7 @@ function initFormData(newPet: IPet) {
       adopterContactInfo: { name: '', email: '', phone: '' },
     }
   } else {
-    // Ensure nested properties exist if adoption object partial
+    
     if (!formData.value.adoption.adopterContactInfo) {
       formData.value.adoption.adopterContactInfo = { name: '', email: '', phone: '' }
     }
@@ -130,38 +126,30 @@ function initFormData(newPet: IPet) {
       formData.value.adoption.surveyCompleted = false
   }
 
-  // Ensure Foster object exists
   if (!formData.value.foster) formData.value.foster = {}
 
-  // Ensure details
   if (!formData.value.details) formData.value.details = { status: 'available' }
 
-  // Ensure descriptions
   if (!formData.value.descriptions) formData.value.descriptions = { primary: '' }
 
-  // Ensure photos
   if (!formData.value.photos) formData.value.photos = []
 
-  // Ensure returned
   if (!formData.value.returned) {
     formData.value.returned = { isReturned: false, history: [] }
   }
-  // Migration for old returned data if needed (though backend handles JSONB, frontend needs array)
+  
   if (!Array.isArray(formData.value.returned.history)) {
     formData.value.returned.history = []
   }
 }
 
-
-
-// Initialize form data when pet changes or modal opens
 watch(
   () => props.pet,
   (newPet) => {
     if (newPet) {
       initFormData(newPet)
     } else {
-      // Reset to Defaults for New Pet
+      
       const defaults = settingsStore.settings.pets || {}
 
       activeTab.value = 'basic'
@@ -253,7 +241,7 @@ watch(
 )
 
 function handleSave() {
-  // Advanced Validation
+  
   const defaults = settingsStore.settings.pets || {}
 
   if (defaults.requirePhotoForPublic && formData.value.details?.status === 'available') {
@@ -270,7 +258,6 @@ function handleClose() {
   emit('close')
 }
 
-// Tabs configuration
 const tabs = [
   { id: 'basic', label: 'Basic Info', icon: '📝' },
   { id: 'physical', label: 'Physical', icon: '📏' },
@@ -387,12 +374,11 @@ const tabs = [
 
 .drawer-body {
   flex: 1;
-  overflow: hidden; /* Hide outer overflow, inner sections scroll */
+  overflow: hidden; 
   display: flex;
-  flex-direction: row; /* Horizontal Layout */
+  flex-direction: row; 
 }
 
-/* Sidebar Styling */
 .editor-sidebar {
   width: 200px;
   background: hsl(from var(--color-neutral) h s 98%);
@@ -408,9 +394,6 @@ const tabs = [
   background: var(--text-inverse);
 }
 
-/* Form Sections are now inside components but layout styling remains generic */
-
-/* Scrollbar Styling */
 .sidebar-nav::-webkit-scrollbar,
 .tab-content::-webkit-scrollbar {
   width: 6px;
@@ -421,7 +404,6 @@ const tabs = [
   border-radius: 3px;
 }
 
-/* Mobile Responsive */
 @media (max-width: 768px) {
   .pet-editor-drawer {
     width: 100vw;
@@ -443,7 +425,6 @@ const tabs = [
     border-bottom: 1px solid var(--border-color);
     padding: 0;
 
-    /* Horizontal Scroll Layout */
     display: flex;
     flex-direction: row;
     overflow-x: auto;
@@ -452,7 +433,6 @@ const tabs = [
     background: white;
   }
 
-  /* Target the nav items inside */
   :deep(.nav-item) {
     flex: 0 0 auto;
     width: auto;

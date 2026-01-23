@@ -75,9 +75,9 @@ fieldset.field {
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
-  border: 1px solid transparent; /* Reserve space for border */
+  border: 1px solid transparent; 
   border-radius: 12px;
-  padding: 4px; /* formatting spacing */
+  padding: 4px; 
   @media (max-width: 440px) {
     margin-top: 8px;
     flex-direction: column;

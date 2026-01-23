@@ -50,7 +50,7 @@ defineProps<{
 
       <div v-if="device.template === 'kennel-card'" class="layout-kennel-card">
         <div v-if="device.config.featuredPetIds.length" class="kc-container">
-          <!-- We assume single pet for kennel card -->
+          
           <div
             v-for="pid in device.config.featuredPetIds.slice(0, 1)"
             :key="pid"
@@ -253,7 +253,7 @@ defineProps<{
       height: 100%;
       background: white;
       color: black;
-      font-family: 'Courier New', Courier, monospace; /* Monospace for that printed label look */
+      font-family: 'Courier New', Courier, monospace; 
       padding: 16px;
       box-sizing: border-box;
 

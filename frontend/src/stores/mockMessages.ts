@@ -15,7 +15,7 @@ export interface IThread {
   description: string
   icon: string
   isPrivate?: boolean
-  members?: string[] // User IDs
+  members?: string[] 
 }
 
 export interface IMessage {
@@ -44,7 +44,7 @@ export const mockUsers = ref<IChatUser[]>([
 ])
 
 export const mockThreads = ref<IThread[]>([
-  // CHANNELS
+  
   {
     id: 'th-1',
     type: 'channel',
@@ -74,7 +74,7 @@ export const mockThreads = ref<IThread[]>([
     description: 'Official shelter updates',
     icon: '📢',
   },
-  // ADOPTER INQUIRIES
+  
   {
     id: 'th-inq-1',
     type: 'inquiry',
@@ -126,11 +126,11 @@ export const mockMessages = ref<IMessage[]>([
     timestamp: '11:05 AM',
     type: 'text',
   },
-  // Inquiry Messages
+  
   {
     id: 'm-5',
     threadId: 'th-inq-1',
-    userId: 'u-4', // Adopter
+    userId: 'u-4', 
     text: 'Hi, I saw Rex on the website. Is he good with cats?',
     timestamp: '09:00 AM',
     type: 'text',

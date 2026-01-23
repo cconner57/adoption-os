@@ -22,7 +22,7 @@ defineEmits<{
     </div>
 
     <div class="channels-section">
-      <!-- VOLUNTEER CHANNELS -->
+      
       <div class="section-title">
         <span>VOLUNTEER CHANNELS</span>
         <button
@@ -49,7 +49,6 @@ defineEmits<{
         </button>
       </div>
 
-      <!-- ADOPTER INQUIRIES -->
       <div class="section-title mt-6">
         <span>ADOPTER INQUIRIES</span>
       </div>
@@ -77,7 +76,7 @@ defineEmits<{
 <style scoped>
 .sidebar {
   width: 260px;
-  background: #f8fafc; /* Slate-50 */
+  background: #f8fafc; 
   border-right: 1px solid #e2e8f0;
   display: flex;
   flex-direction: column;

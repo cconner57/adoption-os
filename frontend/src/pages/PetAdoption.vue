@@ -177,7 +177,6 @@ const handleReset = () => {
   container-type: inline-size;
   container-name: shell;
 
-  /* Viewport query for container's own padding */
   @media (max-width: 440px) {
     padding: 6rem 16px 32px;
   }
@@ -191,7 +190,6 @@ const handleReset = () => {
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
     padding: 48px 48px 32px;
 
-    /* Responsive padding based on container width */
     @container shell (max-width: 800px) {
       padding: 32px 24px;
     }

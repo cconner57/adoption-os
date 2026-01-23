@@ -21,8 +21,6 @@ const emit = defineEmits<{
   'mark-adopted': [pet: IPet]
 }>()
 
-// --- Helpers (moved from Pets.vue or similar) ---
-
 function getStatusColor(status: string) {
   const map: Record<string, string> = {
     available: 'green',
@@ -33,7 +31,7 @@ function getStatusColor(status: string) {
     intake: 'gray',
     archived: 'gray',
   }
-  // status tag text is already handled, simplified return for class
+  
   return map[status] || 'gray'
 }
 
@@ -51,16 +49,11 @@ function formatList(list?: string[] | null) {
   return list.join(', ')
 }
 
-// --- Helpers ---
 function isTrue(val: boolean | string | undefined | null) {
   if (val === 'true') return true
   if (val === true) return true
   return false
 }
-
-// --- Computed Properties for Expanded Data ---
-
-
 
 const vaccineSummary = computed(() => {
   const v = props.pet.medical?.vaccinations
@@ -70,7 +63,7 @@ const vaccineSummary = computed(() => {
   if (v.rabies?.dateAdministered) list.push(`Rabies: ${formatDoB(v.rabies.dateAdministered)}`)
   if (v.bordetella?.dateAdministered)
     list.push(`Bordetella: ${formatDoB(v.bordetella.dateAdministered)}`)
-  // Add simplified checks for series
+  
   if (v.canineDistemper?.round1?.dateAdministered)
     list.push(`Distemper (DHPP): ${formatDoB(v.canineDistemper.round1.dateAdministered)}`)
   if (v.felineDistemper?.round1?.dateAdministered)
@@ -80,7 +73,7 @@ const vaccineSummary = computed(() => {
 })
 
 const colCount = computed(() => {
-  let count = 1 // Start with 1 for the Expand Arrow Column
+  let count = 1 
   if (props.visibleColumns.photo) count++
   if (props.visibleColumns.name) count++
   if (props.visibleColumns.breed) count++
@@ -91,7 +84,6 @@ const colCount = computed(() => {
   if (props.visibleColumns.dob) count++
   if (props.visibleColumns.intake) count++
 
-  // Dynamic columns based on status
   if (props.statusFilter === 'adopted') count++
   if (props.statusFilter === 'foster') count++
 
@@ -102,13 +94,13 @@ const colCount = computed(() => {
 </script>
 
 <template>
-  <!-- Main Row -->
+  
   <tr
     class="pet-row"
     :class="{ expanded: isExpanded, 'even-row': index % 2 === 1 }"
     @click="emit('toggle-expand', pet)"
   >
-    <!-- Expand Arrow Column -->
+    
     <td class="expand-col">
       <button class="icon-btn expand-btn" :class="{ rotated: isExpanded }" title="Toggle Details">
         <svg
@@ -174,7 +166,6 @@ const colCount = computed(() => {
       <span v-else class="text-muted">-</span>
     </td>
 
-    <!-- Dynamic Data -->
     <td v-if="statusFilter === 'adopted'">
       <span v-if="pet.adoption?.date">{{ formatDoB(pet.adoption.date) }}</span>
       <span v-else class="text-muted">-</span>
@@ -190,7 +181,6 @@ const colCount = computed(() => {
       </span>
     </td>
 
-    <!-- Actions -->
     <td v-if="visibleColumns.actions" align="right">
       <div class="row-actions" @click.stop>
         <Button
@@ -212,7 +202,6 @@ const colCount = computed(() => {
     </td>
   </tr>
 
-  <!-- Expanded Details Row -->
   <tr v-if="isExpanded" class="details-row">
     <td :colspan="colCount">
       <div class="expanded-content">
@@ -263,7 +252,6 @@ const colCount = computed(() => {
             </div>
           </div>
 
-          <!-- Behavior & Compatibility -->
           <div class="detail-section">
             <h4>Behavior & Compatibility</h4>
             <div class="detail-item">
@@ -296,7 +284,6 @@ const colCount = computed(() => {
             </div>
           </div>
 
-          <!-- Adoption & Sponsorship -->
           <div class="detail-section">
             <h4>Adoption & Status</h4>
             <div class="detail-item">
@@ -322,7 +309,6 @@ const colCount = computed(() => {
               <span class="value" v-else>No</span>
             </div>
 
-            <!-- Profile Settings -->
             <div class="detail-item mt-2">
               <span class="label">Profile Visibility:</span>
               <div class="settings-grid">
@@ -349,7 +335,6 @@ const colCount = computed(() => {
               </div>
             </div>
 
-            <!-- Adoption Specific -->
             <template v-if="pet.details.status === 'adopted'">
               <div class="detail-item">
                 <span class="label">Adopted Date:</span>
@@ -378,7 +363,6 @@ const colCount = computed(() => {
               </div>
             </template>
 
-            <!-- Foster Specific -->
             <template v-if="pet.details.status === 'foster'">
               <div class="detail-item">
                 <span class="label">Foster Parent:</span>
@@ -399,7 +383,6 @@ const colCount = computed(() => {
             </template>
           </div>
 
-          <!-- Medical Info -->
           <div class="detail-section">
             <h4>Medical Snapshot</h4>
             <div class="detail-item">
@@ -445,7 +428,6 @@ const colCount = computed(() => {
             </div>
           </div>
 
-          <!-- Returns & History -->
           <div
             class="detail-section"
             v-if="pet.returned.isReturned || pet.details.status === 'intake'"
@@ -466,7 +448,6 @@ const colCount = computed(() => {
             </div>
           </div>
 
-          <!-- Additional Notes -->
           <div class="detail-section">
             <h4>Descriptions</h4>
             <div class="desc-group">
@@ -513,7 +494,7 @@ const colCount = computed(() => {
 <style scoped>
 .pet-row {
   cursor: pointer;
-  border-bottom: 2px solid var(--border-color); /* Strong outline for row separation */
+  border-bottom: 2px solid var(--border-color); 
   transition: background-color 0.2s;
 }
 
@@ -527,7 +508,7 @@ const colCount = computed(() => {
 
 .pet-row.expanded {
   background-color: hsl(from var(--color-secondary) h s 95%);
-  border-bottom: none; /* Merges with details row visually if needed, but we wanted outline */
+  border-bottom: none; 
 }
 
 td {
@@ -536,7 +517,6 @@ td {
   color: var(--text-primary);
 }
 
-/* Override padding for the expand icon column */
 .expand-col {
   width: 40px;
   padding: 0 8px;
@@ -545,7 +525,7 @@ td {
 
 .details-row td {
   padding: 0;
-  /* border-bottom: 2px solid var(--border-color);  Ensure the bottom of the details row closes the "card" */
+  
   background-color: var(--text-inverse);
 }
 
@@ -553,7 +533,7 @@ td {
   padding: 24px;
   border-top: 1px dashed var(--border-color);
   background-color: hsl(from var(--color-neutral) h s 98%);
-  border-bottom: 2px solid var(--border-color); /* Added bottom border */
+  border-bottom: 2px solid var(--border-color); 
 }
 
 .details-grid {
@@ -686,20 +666,19 @@ td {
   padding: 2px 6px;
   border-radius: 4px;
   background: #f1f5f9;
-  color: #475569; /* Darker slate for better contrast */
-  border: 1px solid #cbd5e1; /* Darker border */
+  color: #475569; 
+  border: 1px solid #cbd5e1; 
   white-space: nowrap;
 }
 
 .setting-tag.active {
   background: hsl(from var(--color-secondary) h s 96%);
   color: var(--color-secondary);
-  border-color: #bbf7d0; /* Slight green tint for active border? Or match brand */
+  border-color: #bbf7d0; 
   border-color: hsl(from var(--color-secondary) h s 90%);
   font-weight: 500;
 }
 
-/* Inherited styles that need to be scoped here or global */
 .pet-avatar {
   width: 48px;
   height: 48px;
@@ -725,7 +704,7 @@ td {
   text-transform: uppercase;
   white-space: nowrap;
 }
-/* Re-include status badge colors or rely on global if they are global (they were scoped in Pets.vue) */
+
 .status-badge.green {
   background-color: hsl(from var(--color-primary) h s 95%);
   color: var(--color-primary);
@@ -739,7 +718,7 @@ td {
   color: var(--color-secondary);
 }
 .status-badge.purple {
-  background-color: hsl(from var(--color-secondary) h s 92%); /* Using secondary tint for purple */
+  background-color: hsl(from var(--color-secondary) h s 92%); 
   color: var(--color-secondary);
 }
 .status-badge.red {
@@ -755,19 +734,19 @@ td {
   font-family: monospace;
   font-size: 0.9em;
   color: var(--text-primary);
-  background: var(--text-inverse); /* Contrast against row background */
+  background: var(--text-inverse); 
   padding: 2px 6px;
   border-radius: 4px;
   border: 1px solid var(--border-color);
-  display: inline-block; /* Default to inline-block for single values */
-  width: fit-content; /* Prevent stretching in flex containers */
+  display: inline-block; 
+  width: fit-content; 
 }
 
 .microchip-stack {
-  display: flex !important; /* Force flex */
+  display: flex !important; 
   flex-direction: column;
-  align-items: flex-start; /* Left align numbers */
-  width: min-content; /* Shrink to fit numbers */
+  align-items: flex-start; 
+  width: min-content; 
   white-space: nowrap;
 }
 
@@ -813,7 +792,7 @@ td {
 .expand-btn.rotated {
   transform: rotate(
     -90deg
-  ); /* Points down then rotates up? Standard is 0>180 or -90>0. Let's see */
+  ); 
 }
 
 .pet-link {

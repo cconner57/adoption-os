@@ -12,18 +12,15 @@ import {
   mockUsers,
 } from '../../stores/mockMessages'
 
-// State
 const activeThreadId = ref<string>('th-1')
 const showCreateModal = ref(false)
 const showMembersModal = ref(false)
 
-// Computed
 const activeThread = computed(() => mockThreads.value.find((t) => t.id === activeThreadId.value))
 
 const threadMessages = computed(
   () => mockMessages.value.filter((m) => m.threadId === activeThreadId.value),
-  // Simple sort (mock data should be ordered, but safeguards)
-  // .sort(...)
+  
 )
 
 const getUser = (userId: string) =>
@@ -37,7 +34,6 @@ const sortedInquiries = computed(() => {
   return mockThreads.value.filter((t) => t.type === 'inquiry')
 })
 
-// Actions
 const selectThread = (id: string) => {
   activeThreadId.value = id
 }
@@ -75,7 +71,6 @@ const deleteActiveThread = () => {
   }
 }
 
-// User Management Actions
 const removeMember = (userId: string) => {
    
   console.log('removing user', userId)
@@ -131,7 +126,7 @@ const addMember = () => {
 <style scoped>
 .messages-page {
   display: flex;
-  height: calc(100vh - 140px); /* Adjust based on dashboard header/nav */
+  height: calc(100vh - 140px); 
   background: white;
   border-radius: 12px;
   overflow: hidden;

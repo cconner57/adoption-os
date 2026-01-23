@@ -1,12 +1,11 @@
 <script setup lang="ts">
-// Importing the router to handle navigation
+
 import { useRouter } from 'vue-router'
 
 import Button from '../../common/ui/Button.vue'
 
 const router = useRouter()
 
-// Function to navigate to the surrender form page
 const goToSurrenderForm = () => {
   router.push('/surrender')
 }

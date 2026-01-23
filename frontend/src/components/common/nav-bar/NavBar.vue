@@ -124,7 +124,7 @@ const isTablet = useIsTablet()
   .nav-blurred {
     background-color: hsla(
       from var(--color-primary) h s 25% / 0.85
-    ); /* Darkened teal with opacity */
+    ); 
     backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(10px);
     transition:

@@ -8,22 +8,19 @@ const searchQuery = ref('')
 const filterCategory = ref<'All' | string>('All')
 const filterStatus = ref<'All' | 'Low Stock'>('All')
 
-// Computed
 const categories = computed(() => ['All', ...new Set(mockInventory.value.map((i) => i.category))])
 
 const filteredItems = computed(() => {
   return mockInventory.value
     .filter((item) => {
-      // 1. Search
+      
       const searchMatch =
         !searchQuery.value ||
         item.name.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
         item.location.toLowerCase().includes(searchQuery.value.toLowerCase())
 
-      // 2. Category
       const catMatch = filterCategory.value === 'All' || item.category === filterCategory.value
 
-      // 3. Status
       const isLow = item.quantity <= item.minThreshold
       const statusMatch =
         filterStatus.value === 'All' || (filterStatus.value === 'Low Stock' && isLow)
@@ -31,32 +28,27 @@ const filteredItems = computed(() => {
       return searchMatch && catMatch && statusMatch
     })
     .sort((a, b) => {
-      // Sort logic: Critical items first
+      
       const aRatio = a.quantity / a.minThreshold
       const bRatio = b.quantity / b.minThreshold
       return aRatio - bRatio
     })
 })
 
-// Helpers
 const getStockStatus = (item: IInventoryItem) => {
-  if (item.quantity === 0) return { label: 'Out of Stock', color: '#fee2e2' } // Red
-  if (item.quantity <= item.minThreshold) return { label: 'Low Stock', color: '#fef3c7' } // Yellow
-  return { label: 'In Stock', color: '#d1fae5' } // Green
+  if (item.quantity === 0) return { label: 'Out of Stock', color: '#fee2e2' } 
+  if (item.quantity <= item.minThreshold) return { label: 'Low Stock', color: '#fef3c7' } 
+  return { label: 'In Stock', color: '#d1fae5' } 
 }
 
 const getStockWidth = (item: IInventoryItem) => {
-  // Visual percentage for progress bar, capped at 100%
-  // Assuming 2x threshold is "full" enough for visualization
+  
   const max = item.minThreshold * 2
   return `${Math.min((item.quantity / max) * 100, 100)  }%`
 }
 
 import StockAdjustmentModal from '../../components/admin/inventory/StockAdjustmentModal.vue'
 
-// ...
-
-// Actions
 const showEditModal = ref(false)
 const editingItem = ref<IInventoryItem | null>(null)
 
@@ -72,7 +64,6 @@ const handleSaveStock = (item: IInventoryItem, quantity: number) => {
   editingItem.value = null
 }
 
-// Add Item Mock
 const addItem = () => {
   const name = prompt('Enter item name:')
   if (name) {
@@ -92,13 +83,12 @@ const addItem = () => {
 
 <template>
   <div class="inventory-page">
-    <!-- HEADER -->
+    
     <div class="page-header">
       <h1>Inventory Management</h1>
       <Button title="+ Add Item" color="white" :onClick="addItem" />
     </div>
 
-    <!-- ALERTS -->
     <div v-if="inventoryStats.lowStockCount > 0" class="alert-banner">
       <span class="alert-icon">⚠️</span>
       <span class="alert-text">
@@ -108,7 +98,6 @@ const addItem = () => {
       </span>
     </div>
 
-    <!-- STATS -->
     <div class="stats-grid">
       <div class="stat-card">
         <span class="stat-label">Total Items</span>
@@ -126,7 +115,6 @@ const addItem = () => {
       </div>
     </div>
 
-    <!-- FILTERS -->
     <div class="filters-bar">
       <div class="search-wrap">
         <InputField v-model="searchQuery" placeholder="Search items or location..." />
@@ -142,7 +130,6 @@ const addItem = () => {
       </div>
     </div>
 
-    <!-- TABLE -->
     <div class="table-container">
       <table class="data-table">
         <thead>
@@ -207,7 +194,6 @@ const addItem = () => {
       </div>
     </div>
 
-    <!-- EDIT ADJUST MODAL -->
     <StockAdjustmentModal
       :isOpen="showEditModal"
       :item="editingItem"
@@ -253,7 +239,6 @@ const addItem = () => {
   margin-left: 4px;
 }
 
-/* STATS */
 .stats-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
@@ -292,7 +277,6 @@ const addItem = () => {
   }
 }
 
-/* FILTERS */
 .filters-bar {
   display: flex;
   justify-content: space-between;
@@ -317,7 +301,6 @@ const addItem = () => {
   min-width: 140px;
 }
 
-/* TABLE */
 .table-container {
   background: white;
   border-radius: 12px;
@@ -407,5 +390,4 @@ const addItem = () => {
   color: hsl(from var(--color-neutral) h s 50%);
 }
 
-/* MODAL STYLES REMOVED */
 </style>

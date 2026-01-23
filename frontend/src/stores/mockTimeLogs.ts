@@ -58,7 +58,7 @@ export const mockTimeLogs = ref<ITimeLog[]>([
     volunteerName: 'Harvey Specter',
     date: '2023-10-28',
     timeIn: '08:00 AM',
-    timeOut: null, // Currently clocked in
+    timeOut: null, 
     duration: null,
     taskDescription: 'Lobby greeter.',
     status: 'pending',

@@ -4,8 +4,6 @@ import { computed } from 'vue'
 import { Capsules } from '../../common/ui'
 import Button from '../../common/ui/Button.vue'
 
-// Define interfaces locally or import from a shared types file if available
-// For now, mirroring the structure used in Applications.vue
 export interface IApplicationItem {
   id: string
   type: string
@@ -18,13 +16,13 @@ export interface IApplicationItem {
     role?: string | null
     reason?: string | null
   }
-  fullApplication: Record<string, unknown> // Keep as any for the dynamic data blob for now, or Record<string, any>
+  fullApplication: Record<string, unknown> 
 }
 
 const props = defineProps<{
   app: IApplicationItem
   expanded: boolean
-  isExpandedId: boolean // helpful to distinguish? actually 'expanded' boolean is enough
+  isExpandedId: boolean 
 }>()
 
 defineEmits<{
@@ -32,8 +30,6 @@ defineEmits<{
   'update-status': [app: IApplicationItem, status: IApplicationItem['status']]
   'view-original': [id: string]
 }>()
-
-// --- Helpers moved from parent ---
 
 const formatDate = (dateStr: string) => {
   return new Date(dateStr).toLocaleDateString(undefined, {
@@ -108,7 +104,6 @@ const displayFields = computed(() => {
     return true
   })
 
-  // Sort
   filtered.sort(([keyA], [keyB]) => {
     const priority = [
       'firstName',
@@ -190,7 +185,7 @@ const displayFields = computed(() => {
     }"
     @click="$emit('toggle')"
   >
-    <!-- Card Header / Summary -->
+    
     <div class="card-summary">
       <div class="app-main">
         <div class="app-header">
@@ -216,7 +211,6 @@ const displayFields = computed(() => {
       </div>
     </div>
 
-    <!-- Expanded Content -->
     <div v-if="expanded" class="expanded-content" @click.stop>
       <hr class="divider" />
 
@@ -253,7 +247,6 @@ const displayFields = computed(() => {
         />
       </div>
 
-      <!-- Auto-Delete Warning -->
       <div
         v-if="app.status === 'pending' && getDaysPending(app.date) > 5"
         class="mt-4 p-3 bg-red-50 border border-red-200 rounded-md text-sm text-red-700 flex items-center gap-2"
@@ -273,7 +266,6 @@ const displayFields = computed(() => {
             </span>
           </div>
 
-          <!-- Signatures Section -->
           <div v-if="app.fullApplication.signatureData" class="qa-item span-full">
             <span class="question">Signature</span>
             <img
@@ -468,6 +460,6 @@ const displayFields = computed(() => {
 }
 
 .answer {
-  /* add any specific answer styling if needed */
+  
 }
 </style>

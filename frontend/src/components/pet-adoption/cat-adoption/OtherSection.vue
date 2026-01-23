@@ -135,7 +135,6 @@ const { modelValue } = defineProps<{
     gap: 2rem;
   }
 
-  /* Make the "Surrender Conditions" and "Surrender Plan" span full width */
   .other-section .full-width {
     grid-column: 1 / -1;
   }

@@ -3,9 +3,9 @@ export interface IShift {
   volunteerId?: string
   volunteerName: string
   role: string
-  startTime: string // "HH:MM:SS" or ISO
-  endTime: string // "HH:MM:SS" or ISO
-  date: string // "YYYY-MM-DD"
+  startTime: string 
+  endTime: string 
+  date: string 
   status?: 'scheduled' | 'imcomplete' | 'completed' | 'canceled'
 }
 

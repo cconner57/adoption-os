@@ -44,12 +44,11 @@ export const useAuthStore = defineStore('auth', () => {
       const data = await response.json()
 
       if (response.ok) {
-        // Login successful
+        
         if (data.token) {
           localStorage.setItem('token', data.token)
         }
 
-        // Also ensure user data is set immediately if returned
         if (data.user) {
           user.value = data.user
         } else {
@@ -64,8 +63,6 @@ export const useAuthStore = defineStore('auth', () => {
     }
   }
 
-// ... moving checkAuth up ...
-
   const logout = async () => {
     try {
       await fetch('/api/users/logout', {
@@ -77,7 +74,7 @@ export const useAuthStore = defineStore('auth', () => {
     } finally {
       localStorage.removeItem('token')
       user.value = null
-      window.location.reload() // Force reload to clear any memory/state
+      window.location.reload() 
     }
   }
 

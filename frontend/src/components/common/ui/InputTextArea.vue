@@ -6,7 +6,7 @@ const props = withDefaults(
     modelValue: string | null
     hasError?: boolean
     spanFull?: boolean
-    spanFull?: boolean
+
     maxChars?: number
   }>(),
   {

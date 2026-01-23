@@ -3,7 +3,6 @@
 import { computed } from 'vue'
 
 import type { IPet } from '../../../models/common'
-import type { IPet } from '../../../models/common'
 import { calculateAge,formatDate } from '../../../utils/date'
 import { Button } from '../../common/ui'
 
@@ -459,11 +458,11 @@ const colCount = computed(() => {
             </div>
             <div class="detail-item" v-if="pet.returned.isReturned">
               <span class="label">Return Date:</span>
-              <span class="value">{{ formatDoB(pet.returned.date) }}</span>
+              <span class="value">{{ formatDoB(pet.returned.history[0]?.date) || '-' }}</span>
             </div>
             <div class="detail-item" v-if="pet.returned.isReturned">
               <span class="label">Return Reason:</span>
-              <span class="value">{{ pet.returned.reason || '-' }}</span>
+              <span class="value">{{ pet.returned.history[0]?.reason || '-' }}</span>
             </div>
           </div>
 

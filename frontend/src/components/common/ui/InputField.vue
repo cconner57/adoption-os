@@ -7,7 +7,7 @@ defineOptions({
 
 const props = defineProps<{
   id?: string
-  id?: string
+
   label?: string
   placeholder: string
   type?: string

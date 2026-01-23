@@ -1,10 +1,12 @@
 <script setup lang="ts">
-import type { IEventDisplay } from '../../../stores/mockEventDisplays'
+import type { IPet } from '../../../models/common'
+import type { IEventDevice } from '../../../stores/mockEventDisplays'
 import { calculateAge,formatDate } from '../../../utils/date'
 
 defineProps<{
-  device: IEventDisplay
-  getPetById: (_id: string) => unknown // eslint-disable-line no-unused-vars
+  device: IEventDevice
+  // eslint-disable-next-line no-unused-vars
+  getPetById: (id: string) => IPet | undefined
 }>()
 </script>
 
@@ -28,7 +30,7 @@ defineProps<{
           <div v-for="pid in device.config.featuredPetIds" :key="pid" class="pet-tile">
             <div class="pt-photo">📷</div>
             <div class="pt-name">{{ getPetById(pid)?.name }}</div>
-            <div class="pt-breed">{{ getPetById(pid)?.breed }}</div>
+            <div class="pt-breed">{{ getPetById(pid)?.physical.breed }}</div>
           </div>
           <div v-if="device.config.featuredPetIds.length === 0" class="empty-msg">
             Select pets to display

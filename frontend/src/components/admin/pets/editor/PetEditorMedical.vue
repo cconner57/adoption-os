@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 
-import type { IPet } from '../../../../../models/common'
+import type { IPet } from '../../../../models/common'
 import { ButtonToggle, Combobox, InputField, InputTextArea } from '../../../common/ui'
 
 const props = defineProps<{
@@ -83,12 +83,14 @@ const medicalConcernOptions = [
       >
         <InputField
           label="Microchip ID"
-          v-model="formData.medical.microchip.microchipID"
+          :model-value="formData.medical.microchip.microchipID || null"
+          @update:model-value="val => formData.medical?.microchip && (formData.medical.microchip.microchipID = (val as string))"
           placeholder="e.g. 98102000..."
         />
         <InputField
           label="Company / Brand"
-          v-model="formData.medical.microchip.microchipCompany"
+          :model-value="formData.medical.microchip.microchipCompany || null"
+          @update:model-value="val => formData.medical?.microchip && (formData.medical.microchip.microchipCompany = (val as string))"
           placeholder="e.g. HomeAgain"
         />
       </div>
@@ -97,7 +99,8 @@ const medicalConcernOptions = [
     <div class="form-group" v-if="formData.behavior">
       <InputTextArea
         label="Health Summary"
-        v-model="formData.behavior.healthSummary"
+        :model-value="formData.behavior.healthSummary || null"
+        @update:model-value="val => formData.behavior && (formData.behavior.healthSummary = val)"
         placeholder="General summary of health status..."
         :maxChars="500"
       />
@@ -109,7 +112,8 @@ const medicalConcernOptions = [
     <div class="form-group">
       <Combobox
         label="Health Concerns / Conditions"
-        v-model="formData.medical.healthConcerns"
+        :model-value="(formData.medical.healthConcerns as unknown as string[]) || null"
+        @update:model-value="val => formData.medical && (formData.medical.healthConcerns = (Array.isArray(val) ? val : val ? [val] : []) as any)"
         :options="medicalConcernOptions"
         multiple
         placeholder="Select conditions..."
@@ -118,7 +122,8 @@ const medicalConcernOptions = [
     <div class="form-group">
       <Combobox
         label="Current Medications"
-        v-model="formData.medical.currentMedications"
+        :model-value="formData.medical.currentMedications || null"
+        @update:model-value="val => formData.medical && (formData.medical.currentMedications = (Array.isArray(val) ? val : val ? [val] : []))"
         :options="[]"
         allow-create
         multiple
@@ -134,7 +139,9 @@ const medicalConcernOptions = [
       <div class="form-row">
         <InputField
           label="Rabies Date"
-          v-model="formData.medical.vaccinations.rabies.dateAdministered"
+          :model-value="formData.medical.vaccinations.rabies?.dateAdministered || null"
+          @update:model-value="val => formData.medical?.vaccinations?.rabies && (formData.medical.vaccinations.rabies.dateAdministered = (val as string))"
+          placeholder="YYYY-MM-DD"
           type="date"
         />
       </div>
@@ -154,17 +161,18 @@ const medicalConcernOptions = [
             border-radius: 6px;
           "
         >
-          <InputField label="Name" v-model="vax.name" placeholder="Vaccine Name" />
-          <InputField label="Date" v-model="vax.dateAdministered" type="date" />
+          <InputField label="Name" :model-value="vax.name || null" @update:model-value="val => vax.name = (val as string)" placeholder="Vaccine Name" />
+          <InputField label="Date" placeholder="YYYY-MM-DD" v-model="vax.dateAdministered" type="date" />
           <button
-            @click="formData.medical.vaccinations.other.splice(idx, 1)"
+            @click="formData.medical?.vaccinations?.other?.splice(idx, 1)"
             style="color: #ef4444; background: none; border: none; padding: 8px; cursor: pointer"
+            type="button"
           >
             ✕
           </button>
         </div>
         <button
-          @click="formData.medical.vaccinations.other.push({ name: '', dateAdministered: '' })"
+          @click="formData.medical?.vaccinations?.other?.push({ name: '', dateAdministered: '' })"
           style="
             align-self: flex-start;
             background: none;
@@ -175,6 +183,7 @@ const medicalConcernOptions = [
             cursor: pointer;
             font-size: 0.85rem;
           "
+          type="button"
         >
           + Add Vaccination
         </button>

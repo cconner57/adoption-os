@@ -5,7 +5,13 @@ import { ButtonToggle } from '../../common/ui'
 import SettingsCard from './SettingsCard.vue'
 
 defineProps<{
-  settings: Record<string, unknown>
+  settings: {
+    overview: {
+      showRecentActivity: boolean
+      showPendingTasks: boolean
+      showStatsGraph: boolean
+    }
+  }
 }>()
 
 defineEmits<{

@@ -167,7 +167,7 @@ watch(
                   :key="time"
                   class="filter-btn"
                   :class="{ active: chartTimeframe === time }"
-                  @click="chartTimeframe = time"
+                  @click="chartTimeframe = time as any"
                 >
                   {{ time === 'ALL' ? 'Lifetime' : time }}
                 </button>

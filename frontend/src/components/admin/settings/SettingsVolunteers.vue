@@ -5,7 +5,14 @@ import { ButtonToggle, InputField, InputSelectGroup } from '../../common/ui'
 import SettingsCard from './SettingsCard.vue'
 
 defineProps<{
-  settings: Record<string, unknown>
+  settings: {
+    volunteers: {
+      enableGamification: boolean
+      allowTeenVolunteers: boolean
+      shiftReminderHours: string
+      minHoursForTier1: number | string
+    }
+  }
 }>()
 
 defineEmits<{

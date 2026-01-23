@@ -40,7 +40,7 @@ defineEmits<{
 
       <div class="modal-actions">
         <Button title="Add People" color="purple" :onClick="() => $emit('addMember')" />
-        <Button title="Done" color="black" :onClick="() => $emit('close')" />
+        <Button title="Done" color="white" :onClick="() => $emit('close')" />
       </div>
     </div>
   </div>

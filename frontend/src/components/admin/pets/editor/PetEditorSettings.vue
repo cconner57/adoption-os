@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 
-import type { IPet } from '../../../../../models/common'
+import type { IPet } from '../../../../models/common'
 import { ButtonToggle } from '../../../common/ui'
 
 const props = defineProps<{

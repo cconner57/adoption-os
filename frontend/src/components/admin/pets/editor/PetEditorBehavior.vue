@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 
-import type { IPet } from '../../../../../models/common'
+import type { IPet } from '../../../../models/common'
 import { ButtonToggle, Combobox, InputSelectGroup, InputTextArea } from '../../../common/ui'
 
 const props = defineProps<{
@@ -146,7 +146,8 @@ const bondedWithOptions = computed(() => {
       >
         <Combobox
           label="Bonded With"
-          v-model="formData.behavior.bonded.bondedWith"
+          :model-value="formData.behavior.bonded.bondedWith?.length ? formData.behavior.bonded.bondedWith : null"
+          @update:model-value="val => formData.behavior?.bonded && (formData.behavior.bonded.bondedWith = (Array.isArray(val) ? val : val ? [val] : []))"
           :options="bondedWithOptions"
           multiple
           placeholder="Search pets..."
@@ -157,7 +158,8 @@ const bondedWithOptions = computed(() => {
     <div class="form-group">
       <InputTextArea
         label="Special Needs / Behavior Notes"
-        v-model="formData.behavior.specialNeeds"
+        :model-value="formData.behavior.specialNeeds || null"
+        @update:model-value="val => formData.behavior && (formData.behavior.specialNeeds = val)"
         placeholder="Describe any special behavioral needs..."
         :maxChars="300"
       />

@@ -164,43 +164,18 @@ const router = createRouter({
   },
 })
 
-interface ViewTransition {
-  finished: Promise<void>
-  ready: Promise<void>
-  updateCallbackDone: Promise<void>
-  skipTransition(): void
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  types?: any
-}
 
-/* eslint-disable no-unused-vars */
-interface ViewTransitionTypeSet {
-  add(type: string): void
-  delete(type: string): boolean
-  has(type: string): boolean
-  clear(): void
-  readonly size: number
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  forEach(callbackfn: (value: string, value2: string, set: Set<string>) => void, thisArg?: any): void
-  entries(): IterableIterator<[string, string]>
-  keys(): IterableIterator<string>
-  values(): IterableIterator<string>
-  [Symbol.iterator](): IterableIterator<string>
-  readonly [Symbol.toStringTag]: string
-}
 
 type StartViewTransitionOptions = {
   update?: ViewTransitionUpdateCallback
   types?: string[]
 }
 
-interface ViewTransitionDocument extends Document {
-  startViewTransition(
-    callback?: ViewTransitionUpdateCallback,
-    options?: StartViewTransitionOptions,
-  ): ViewTransition
+
+interface CustomViewTransitionDocument extends Document {
+  // eslint-disable-next-line no-unused-vars, @typescript-eslint/no-explicit-any
+  startViewTransition(callback?: ViewTransitionUpdateCallback, options?: StartViewTransitionOptions): any
 }
-/* eslint-enable no-unused-vars */
 
 import { useAuthStore } from '../stores/auth'
 import { useUIStore } from '../stores/ui'
@@ -246,7 +221,7 @@ router.beforeEach(async (to, from, next) => {
 })
 
 router.beforeResolve((to, from, next) => {
-  const doc = document as unknown as ViewTransitionDocument
+  const doc = document as unknown as CustomViewTransitionDocument
 
   if (!doc.startViewTransition) {
     next()

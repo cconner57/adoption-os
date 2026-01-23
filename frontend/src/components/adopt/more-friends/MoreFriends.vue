@@ -21,43 +21,43 @@ const isMobile = useIsMobile()
         name="Crystal"
         :id="pet.id"
         :capsules="[
-          pet.physicalTraits?.species ?? '',
-          pet.physicalTraits?.sex ?? '',
-          formatDate(pet.physicalTraits?.age ?? ''),
+          pet.species || '',
+          (pet.sex as string) || '',
+          formatDate((pet.physical?.ageGroup || '') as string),
         ]"
-        :photo="pet.photos?.primaryPhoto"
+        :photo="pet.photos?.find((p) => p.isPrimary)?.url || pet.photos?.[0]?.url"
       />
       <PetItem
         name="Crystal"
         :id="pet.id"
         :capsules="[
-          pet.physicalTraits?.species ?? '',
-          pet.physicalTraits?.sex ?? '',
-          formatDate(pet.physicalTraits?.age ?? ''),
+          pet.species || '',
+          (pet.sex as string) || '',
+          formatDate((pet.physical?.ageGroup || '') as string),
         ]"
-        :photo="pet.photos?.primaryPhoto"
-      />
-      <PetItem
-        v-if="!isMobile"
-        :id="pet.id"
-        name="Crystal"
-        :capsules="[
-          pet.physicalTraits?.species ?? '',
-          pet.physicalTraits?.sex ?? '',
-          formatDate(pet.physicalTraits?.age ?? ''),
-        ]"
-        :photo="pet.photos?.primaryPhoto"
+        :photo="pet.photos?.find((p) => p.isPrimary)?.url || pet.photos?.[0]?.url"
       />
       <PetItem
         v-if="!isMobile"
         :id="pet.id"
         name="Crystal"
         :capsules="[
-          pet.physicalTraits?.species ?? '',
-          pet.physicalTraits?.sex ?? '',
-          formatDate(pet.physicalTraits?.age ?? ''),
+          pet.species || '',
+          (pet.sex as string) || '',
+          formatDate((pet.physical?.ageGroup || '') as string),
         ]"
-        :photo="pet.photos?.primaryPhoto"
+        :photo="pet.photos?.find((p) => p.isPrimary)?.url || pet.photos?.[0]?.url"
+      />
+      <PetItem
+        v-if="!isMobile"
+        :id="pet.id"
+        name="Crystal"
+        :capsules="[
+          pet.species || '',
+          (pet.sex as string) || '',
+          formatDate((pet.physical?.ageGroup || '') as string),
+        ]"
+        :photo="pet.photos?.find((p) => p.isPrimary)?.url || pet.photos?.[0]?.url"
       />
     </div>
   </div>

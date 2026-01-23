@@ -18,7 +18,6 @@ const position = ref({ x: 0, y: 0 })
 const isDragging = ref(false)
 const dragStart = ref({ x: 0, y: 0 })
 
-
 // Config
 const MIN_SCALE = 1
 const MAX_SCALE = 3
@@ -27,6 +26,12 @@ function resetState() {
   scale.value = 1
   position.value = { x: 0, y: 0 }
 }
+
+function onImageLoad() {
+  resetState()
+}
+
+
 
 // Load image
 watch(

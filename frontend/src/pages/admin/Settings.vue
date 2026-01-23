@@ -259,7 +259,7 @@ const activeCategoryLabel = computed(
         v-if="activeCategory === 'website'"
         v-model:settings="settings"
         :isDemoMode="isDemoMode"
-        @toggleDemoMode="toggleDemoMode"
+        @toggleDemoMode="toggleDemoMode(!isDemoMode)"
       />
 
       <SettingsVolunteers v-if="activeCategory === 'volunteers'" v-model:settings="settings" />

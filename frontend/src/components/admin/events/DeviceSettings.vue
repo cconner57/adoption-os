@@ -1,18 +1,26 @@
 <script setup lang="ts">
-import type { IEventDisplay } from '../../../stores/mockEventDisplays'
+import { computed } from 'vue'
+
+import type { IEventDevice } from '../../../stores/mockEventDisplays'
 import { Button, InputField, InputSelectGroup } from '../../common/ui'
 
-defineProps<{
-  device: IEventDisplay
+const props = defineProps<{
+  modelValue: IEventDevice
   availablePets: any[] // eslint-disable-line @typescript-eslint/no-explicit-any
   templateOptions: { label: string; value: string }[]
   directionOptions: { label: string; value: string }[]
 }>()
 
-defineEmits<{
+const emit = defineEmits<{
   forceUpdate: []
   togglePet: [petId: string]
+  'update:modelValue': [val: IEventDevice]
 }>()
+
+const device = computed({
+  get: () => props.modelValue,
+  set: (val) => emit('update:modelValue', val),
+})
 </script>
 
 <template>
@@ -22,7 +30,7 @@ defineEmits<{
       <Button
         title="Push Update"
         size="small"
-        color="black"
+        color="white"
         :loading="device.status === 'updating'"
         @click="$emit('forceUpdate')"
       />
@@ -30,7 +38,7 @@ defineEmits<{
 
     <div class="form-group">
       <label>Device Name</label>
-      <InputField v-model="device.name" />
+      <InputField v-model="device.name" placeholder="Device Name" />
     </div>
 
     <div class="form-group">
@@ -39,12 +47,16 @@ defineEmits<{
 
     <div class="form-group">
       <label>Main Title</label>
-      <InputField v-model="device.config.title" />
+      <InputField v-model="device.config.title" placeholder="Event Title" />
     </div>
 
     <div class="form-group">
       <label>Subtitle / Message</label>
-      <InputField v-model="device.config.subtitle" />
+      <InputField
+        :model-value="device.config.subtitle || null"
+        @update:model-value="val => device.config.subtitle = (val as string)"
+        placeholder="Event Subtitle"
+      />
     </div>
 
     <!-- Kennel Card Pet Selection (Single) -->
@@ -87,7 +99,8 @@ defineEmits<{
     <div v-if="device.template === 'wayfinding'" class="form-group">
       <InputSelectGroup
         label="Direction"
-        v-model="device.config.direction"
+        :model-value="device.config.direction || null"
+        @update:model-value="val => device.config.direction = (val as any)"
         :options="directionOptions"
       />
     </div>

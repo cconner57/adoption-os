@@ -197,7 +197,7 @@ const handleLogDonation = () => {
 
         <div class="modal-actions">
           <Button title="Cancel" color="white" :onClick="() => (showLogModal = false)" />
-          <Button title="Log Donation" color="black" :onClick="handleLogDonation" />
+          <Button title="Log Donation" color="white" :onClick="handleLogDonation" />
         </div>
       </div>
     </div>

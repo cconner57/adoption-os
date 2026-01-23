@@ -49,7 +49,7 @@ const save = () => {
 
       <div class="modal-actions">
         <Button title="Cancel" color="white" :onClick="() => $emit('close')" />
-        <Button title="Save Changes" color="black" :onClick="save" />
+        <Button title="Save Changes" color="white" :onClick="save" />
       </div>
     </div>
   </div>

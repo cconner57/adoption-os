@@ -277,8 +277,8 @@ const displayFields = computed(() => {
           <div v-if="app.fullApplication.signatureData" class="qa-item span-full">
             <span class="question">Signature</span>
             <img
-              v-if="getSignatureSrc(app.fullApplication.signatureData)"
-              :src="getSignatureSrc(app.fullApplication.signatureData)"
+              v-if="getSignatureSrc(app.fullApplication.signatureData as string)"
+              :src="getSignatureSrc(app.fullApplication.signatureData as string)"
               class="max-h-24 w-auto border rounded bg-white p-2 mt-1"
             />
             <p v-else class="text-sm text-gray-400 italic">Invalid Signature Data</p>
@@ -287,8 +287,8 @@ const displayFields = computed(() => {
           <div v-if="app.fullApplication.parentSignatureData" class="qa-item span-full">
             <span class="question">Parent Signature</span>
             <img
-              v-if="getSignatureSrc(app.fullApplication.parentSignatureData)"
-              :src="getSignatureSrc(app.fullApplication.parentSignatureData)"
+              v-if="getSignatureSrc(app.fullApplication.parentSignatureData as string)"
+              :src="getSignatureSrc(app.fullApplication.parentSignatureData as string)"
               class="max-h-24 w-auto border rounded bg-white p-2 mt-1"
             />
             <p v-else class="text-sm text-gray-400 italic">Invalid Signature Data</p>

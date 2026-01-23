@@ -5,8 +5,20 @@ import { ButtonToggle, InputField, InputSelectGroup } from '../../common/ui'
 import SettingsCard from './SettingsCard.vue'
 
 defineProps<{
-  settings: Record<string, unknown>
-  accountForm: Record<string, unknown>
+  settings: {
+    organization: {
+      name: string
+      email: string
+      phone: string
+      timezone: string
+    }
+    notifications: {
+      incidentAlerts: boolean
+      newApplicationAlerts: boolean
+      emailDigests: string
+    }
+  }
+  accountForm: any // eslint-disable-line @typescript-eslint/no-explicit-any
 }>()
 
 defineEmits<{

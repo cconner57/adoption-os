@@ -26,6 +26,7 @@ const formData = ref({
   coveringName: '',
   coveredBy: [] as (string | number)[],
   coverageNotice: 'more_24h',
+  notes: props.initialData?.notes || '',
 })
 
 const showCoveredBy = computed(() => {
@@ -135,6 +136,11 @@ function handleSave() {
     isCovering: false,
     coveringName: '',
     notes: '',
+    id: undefined,
+    volunteerId: undefined,
+    status: 'scheduled',
+    coveredBy: [],
+    coverageNotice: 'more_24h',
   }
 }
 
@@ -149,7 +155,7 @@ function setEndOfYear() {
   <div class="shift-form-card">
     <div class="form-grid">
       <div class="row-2">
-        <InputField label="Date" type="date" v-model="formData.date" class="full-width" />
+        <InputField label="Date" placeholder="YYYY-MM-DD" type="date" v-model="formData.date" class="full-width" />
         <div class="field-group">
           <label class="field-label">Role</label>
           <Select v-model="formData.role" :options="roles" />
@@ -157,8 +163,8 @@ function setEndOfYear() {
       </div>
 
       <div class="row-2">
-        <InputField label="Start Time" type="time" v-model="formData.startTime" />
-        <InputField label="End Time" type="time" v-model="formData.endTime" />
+        <InputField label="Start Time" placeholder="09:00" type="time" v-model="formData.startTime" />
+        <InputField label="End Time" placeholder="17:00" type="time" v-model="formData.endTime" />
       </div>
 
       <div v-if="formData.id" :class="{ 'row-2': showCoveredBy }">
@@ -202,7 +208,7 @@ function setEndOfYear() {
                   Until End of Year
                 </Button>
               </div>
-              <InputField type="date" v-model="formData.endDate" />
+              <InputField type="date" placeholder="YYYY-MM-DD" v-model="formData.endDate" />
             </div>
           </div>
         </div>

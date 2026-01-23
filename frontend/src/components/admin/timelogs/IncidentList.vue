@@ -2,8 +2,8 @@
 import { ref } from 'vue'
 
 import type { IIncident } from '../../../stores/mockTimeLogs'
-import { Capsules, InputSelectGroup } from '../../components/common/ui'
-import Button from '../../components/common/ui/Button.vue'
+import { Capsules, InputSelectGroup } from '../../common/ui'
+import Button from '../../common/ui/Button.vue'
 
 defineProps<{
   filteredIncidents: IIncident[]
@@ -50,7 +50,7 @@ const handleAction = (action: string, inc: IIncident) => {
     <div class="filters-row" @click.stop>
       <InputSelectGroup
         :modelValue="filterSeverity"
-        @update:modelValue="(val) => $emit('update:filterSeverity', val)"
+        @update:modelValue="(val) => $emit('update:filterSeverity', (val as string) || 'all')"
         :options="[
           { label: 'All Severities', value: 'all' },
           { label: 'Low', value: 'low' },

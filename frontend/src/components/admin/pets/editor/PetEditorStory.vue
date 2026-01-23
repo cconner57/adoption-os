@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 
-import type { IPet } from '../../../../../models/common'
+import type { IPet } from '../../../../models/common'
 import { InputTextArea } from '../../../common/ui'
 
 const props = defineProps<{
@@ -42,7 +42,8 @@ const additionalInfoString = computed({
     <div class="form-group" v-if="formData.descriptions">
       <InputTextArea
         label="Primary Bio"
-        v-model="formData.descriptions.primary"
+        :model-value="formData.descriptions.primary || null"
+        @update:model-value="val => formData.descriptions && (formData.descriptions.primary = val)"
         placeholder="Tell their story..."
         :maxChars="500"
       />
@@ -50,7 +51,8 @@ const additionalInfoString = computed({
     <div class="form-group" v-if="formData.descriptions">
       <InputTextArea
         label="Origin / History"
-        v-model="formData.descriptions.origin"
+        :model-value="formData.descriptions.origin || null"
+        @update:model-value="val => formData.descriptions && (formData.descriptions.origin = val)"
         placeholder="Where did they come from?"
         :maxChars="300"
       />
@@ -59,7 +61,8 @@ const additionalInfoString = computed({
     <div class="form-group" v-if="formData.descriptions">
       <InputTextArea
         label="Fun Facts"
-        v-model="formData.descriptions.fun"
+        :model-value="formData.descriptions.fun || null"
+        @update:model-value="val => formData.descriptions && (formData.descriptions.fun = val)"
         placeholder="Quirks and cute habits..."
         :maxChars="200"
       />
@@ -67,7 +70,8 @@ const additionalInfoString = computed({
     <div class="form-group" v-if="formData.descriptions">
       <InputTextArea
         label="Special Needs Description"
-        v-model="formData.descriptions.specialNeeds"
+        :model-value="formData.descriptions.specialNeeds || null"
+        @update:model-value="val => formData.descriptions && (formData.descriptions.specialNeeds = val)"
         placeholder="Details about medical/behavioral needs..."
         :maxChars="300"
       />
@@ -75,7 +79,9 @@ const additionalInfoString = computed({
     <div class="form-group" v-if="formData.descriptions">
       <InputTextArea
         label="Spotlight Blurb (Short)"
-        v-model="formData.descriptions.spotlight"
+        placeholder="Featured on homepage..."
+        :model-value="formData.descriptions.spotlight || null"
+        @update:model-value="val => formData.descriptions && (formData.descriptions.spotlight = val)"
         :maxChars="100"
       />
     </div>

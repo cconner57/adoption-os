@@ -87,7 +87,7 @@ const directionOptions = [
 
       <div v-if="selectedDevice" class="editor-area">
         <DeviceSettings
-          :device="selectedDevice"
+          v-model="selectedDevice"
           :availablePets="availablePets"
           :templateOptions="templateOptions"
           :directionOptions="directionOptions"
@@ -201,6 +201,6 @@ const directionOptions = [
   grid-template-columns: 350px 1fr;
   gap: 24px;
   min-height: 0;
-
+}
 /* STYLES MOVED TO COMPONENTS */
 </style>

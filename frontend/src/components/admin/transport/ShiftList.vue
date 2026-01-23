@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type { ITrip } from '../../../stores/mockTransport'
-import { Capsules } from '../../components/common/ui'
+import { Capsules } from '../../common/ui'
 
 defineProps<{
   trips: ITrip[]

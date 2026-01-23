@@ -38,7 +38,7 @@ const create = () => {
       </div>
       <div class="modal-actions">
         <Button title="Cancel" color="white" :onClick="() => $emit('close')" />
-        <Button title="Create Channel" color="black" :onClick="create" />
+        <Button title="Create Channel" color="white" :onClick="create" />
       </div>
     </div>
   </div>

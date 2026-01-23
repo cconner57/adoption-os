@@ -35,6 +35,18 @@ const selectedTrip = computed(() => {
 
 
 // Actions
+// Actions
+const updateStatus = (newStatus: ITrip['status']) => {
+  if (!selectedTrip.value) return
+  loadingAction.value = newStatus
+
+  // Simulate network delay
+  setTimeout(() => {
+    if (selectedTrip.value) selectedTrip.value.status = newStatus
+    loadingAction.value = null
+  }, 600)
+}
+
 const reportIssue = (issueType: string) => {
   if (!selectedTrip.value) return
 
@@ -96,16 +108,9 @@ const sendEta = (eta: string) => {
   alert('ETA notification sent to Director and Adopters!')
 }
 
-const updateStatus = (newStatus: ITrip['status']) => {
-  if (!selectedTrip.value) return
-  loadingAction.value = newStatus
 
-  // Simulate network delay
-  setTimeout(() => {
-    if (selectedTrip.value) selectedTrip.value.status = newStatus
-    loadingAction.value = null
-  }, 600)
-}
+
+
 
 const updateVehicleInfo = (info: string) => {
   if (!selectedTrip.value) return

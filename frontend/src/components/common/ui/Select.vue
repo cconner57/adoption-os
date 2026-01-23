@@ -3,7 +3,7 @@ import { computed, onMounted, onUnmounted,ref } from 'vue'
 
 const props = withDefaults(
   defineProps<{
-    modelValue: string | number | null
+    modelValue: string | number | null | (string | number)[]
     options: (string | { label: string; value: string | number })[]
     placeholder?: string
     label?: string

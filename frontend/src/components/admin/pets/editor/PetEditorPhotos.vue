@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue'
 
-import type { IPet } from '../../../../../models/common'
+import type { IPet } from '../../../../models/common'
 import { ImageCropper,Toast } from '../../../common/ui'
 
 const props = defineProps<{
@@ -145,14 +145,14 @@ async function onFileSelected(event: Event) {
 
 function setPrimaryPhoto(index: number) {
   if (!formData.value.photos) return
-  formData.value.photos.forEach((p, i) => {
+  formData.value.photos.forEach((p: any, i: number) => { // eslint-disable-line @typescript-eslint/no-explicit-any
     p.isPrimary = i === index
   })
 }
 
 function setSpotlightPhoto(index: number) {
   if (!formData.value.photos) return
-  formData.value.photos.forEach((p, i) => {
+  formData.value.photos.forEach((p: any, i: number) => { // eslint-disable-line @typescript-eslint/no-explicit-any
     p.isSpotlight = i === index
   })
 }

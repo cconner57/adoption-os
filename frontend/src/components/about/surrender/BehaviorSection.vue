@@ -96,7 +96,7 @@ onMounted(() => {
         placeholder="Any comments"
         :spanFull="false"
         :modelValue="formState.commentsOnBehavior"
-        @update:modelValue="(val) => (formState.commentsOnBehavior = val)"
+        @update:modelValue="(val) => (formState.commentsOnBehavior = val || '')"
       />
       <InputSelectGroup
         :label="`How does the ${selectedAnimal.toLowerCase()} usually react when an unfamiliar person approaches or enters the yard or house?`"
@@ -185,14 +185,14 @@ onMounted(() => {
         placeholder="Explanation"
         :spanFull="false"
         :modelValue="formState.animalScaredOfAnythingExplanation"
-        @update:modelValue="(val) => (formState.animalScaredOfAnythingExplanation = val)"
+        @update:modelValue="(val) => (formState.animalScaredOfAnythingExplanation = val || '')"
       />
       <InputTextArea
         :label="`Please tell us the ${selectedAnimal.toLowerCase()} bad habits`"
         placeholder="Describe habits"
         :spanFull="false"
         :modelValue="formState.animalBadHabits"
-        @update:modelValue="(val) => (formState.animalBadHabits = val)"
+        @update:modelValue="(val) => (formState.animalBadHabits = val || '')"
       />
       <ButtonToggle
         :label="`Is the ${selectedAnimal.toLowerCase()} allowed on furniture?`"
@@ -213,7 +213,7 @@ onMounted(() => {
         placeholder="Describe reaction"
         :spanFull="false"
         :modelValue="formState.animalBehaviorFoodOthers"
-        @update:modelValue="(val) => (formState.animalBehaviorFoodOthers = val)"
+        @update:modelValue="(val) => (formState.animalBehaviorFoodOthers = val || '')"
       />
       <InputSelectGroup
         :label="`Does the ${selectedAnimal.toLowerCase()} have problems riding in cars?`"
@@ -228,7 +228,7 @@ onMounted(() => {
         placeholder="Explanation"
         :spanFull="false"
         :modelValue="formState.animalProblemsRidingInCarExplanation"
-        @update:modelValue="(val) => (formState.animalProblemsRidingInCarExplanation = val)"
+        @update:modelValue="(val) => (formState.animalProblemsRidingInCarExplanation = val || '')"
       />
       <ButtonToggle
         label="Has the pet escaped your property 2 or more times in the last 6 months?"
@@ -240,14 +240,14 @@ onMounted(() => {
         placeholder="Explanation"
         :spanFull="false"
         :modelValue="formState.animalEscapedBeforeExplanation"
-        @update:modelValue="(val) => (formState.animalEscapedBeforeExplanation = val)"
+        @update:modelValue="(val) => (formState.animalEscapedBeforeExplanation = val || '')"
       />
       <InputTextArea
         label="Describe the pets reaction if a person or other cat attempts to take a toy they are playing with"
         placeholder="Describe reaction"
         :spanFull="false"
         :modelValue="formState.animalBehaviorToysOthers"
-        @update:modelValue="(val) => (formState.animalBehaviorToysOthers = val)"
+        @update:modelValue="(val) => (formState.animalBehaviorToysOthers = val || '')"
       />
     </div>
   </div>

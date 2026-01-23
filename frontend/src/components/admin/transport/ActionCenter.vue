@@ -2,7 +2,7 @@
 import { ref } from 'vue'
 
 import type { ITrip } from '../../../stores/mockTransport'
-import { Button, InputField } from '../../components/common/ui'
+import { Button, InputField } from '../../common/ui'
 
 defineProps<{
   selectedTrip: ITrip | undefined
@@ -77,7 +77,7 @@ const updateVehicle = () => {
         <div v-if="selectedTrip.status === 'en_route_vet'" class="button-grid">
           <div class="eta-sender">
             <InputField v-model="etaInput" placeholder="ETA (e.g. 15 mins)" />
-            <Button title="Send ETA" color="black" :onClick="sendEta" :disabled="!etaInput" />
+            <Button title="Send ETA" color="white" :onClick="sendEta" :disabled="!etaInput" />
           </div>
           <Button
             title="✅ Arrived at Vet Safely"
@@ -92,7 +92,7 @@ const updateVehicle = () => {
           <p class="status-helper">Wait for vet to finish intake/procedures.</p>
           <Button
             title="👋 Leaving Vet (En Route)"
-            color="black"
+            color="white"
             :loading="loadingAction === 'en_route_shelter'"
             :onClick="() => $emit('updateStatus', 'en_route_shelter')"
           />
@@ -108,7 +108,7 @@ const updateVehicle = () => {
         <div v-else-if="selectedTrip.status === 'en_route_shelter'" class="button-grid">
           <div class="eta-sender">
             <InputField v-model="etaInput" placeholder="ETA to Shelter" />
-            <Button title="Send ETA" color="black" :onClick="sendEta" :disabled="!etaInput" />
+            <Button title="Send ETA" color="white" :onClick="sendEta" :disabled="!etaInput" />
           </div>
           <Button
             title="🏠 Arrived at Shelter"
@@ -129,12 +129,12 @@ const updateVehicle = () => {
           <Button
             v-else-if="selectedTrip.status === 'assigned'"
             title="🚀 Start Trip"
-            color="black"
+            color="white"
             :onClick="
               () =>
                 $emit(
                   'updateStatus',
-                  selectedTrip.direction === 'to_vet' ? 'en_route_vet' : 'en_route_shelter',
+                  selectedTrip?.direction === 'to_vet' ? 'en_route_vet' : 'en_route_shelter',
                 )
             "
           />

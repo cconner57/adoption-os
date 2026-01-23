@@ -8,7 +8,7 @@ import { InputSelectGroup } from '../../components/common/ui'
 
 function formatRole(prefs: unknown): string | null {
   if (!prefs) return null
-  return Array.isArray(prefs) ? prefs.join(', ') : prefs
+  return Array.isArray(prefs) ? prefs.join(', ') : String(prefs || '')
 }
 const activeTab = ref<'volunteer' | 'surrender' | 'adoption' | 'history'>('adoption')
 const filterStatus = ref<'all' | 'pending' | 'approved' | 'denied' | 'needs_info' | 'autodeleted'>(
@@ -38,11 +38,21 @@ const filteredApplications = computed(() => {
   })
 })
 
-// function declarations for hoisting
+const toggleExpand = (id: string) => {
+  if (expandedId.value === id) {
+    expandedId.value = null
+  } else {
+    expandedId.value = id
+  }
+}
 
-
-
-
+const selectTab = (id: typeof activeTab.value) => {
+  activeTab.value = id
+  expandedId.value = null
+  if (id !== 'history') {
+    // maybe refresh or filter
+  }
+}
 // function declarations for hoisting
 async function fetchApplications(autoFocus = false) {
   loading.value = true
@@ -67,7 +77,7 @@ async function fetchApplications(autoFocus = false) {
           name =
             d.firstName && d.lastName
               ? `${d.firstName} ${d.lastName}`
-              : d.nameFull || 'Volunteer Applicant'
+              : String(d.nameFull || 'Volunteer Applicant')
         } else if (app.type === 'adoption') {
           name = d.firstName && d.lastName ? `${d.firstName} ${d.lastName}` : 'Adoption Applicant'
         } else if (app.type === 'surrender') {
@@ -191,7 +201,7 @@ const viewOriginal = async (appId: string) => {
           ]"
         />
         <div v-if="activeTab === 'history'" class="ml-4">
-          <select v-model="selectedYear" @change="fetchApplications" class="p-2 border rounded-md">
+          <select v-model="selectedYear" @change="() => fetchApplications()" class="p-2 border rounded-md">
             <option v-for="y in 5" :key="y" :value="currentYear - y">{{ currentYear - y }}</option>
           </select>
         </div>

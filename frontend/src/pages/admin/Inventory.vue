@@ -95,7 +95,7 @@ const addItem = () => {
     <!-- HEADER -->
     <div class="page-header">
       <h1>Inventory Management</h1>
-      <Button title="+ Add Item" color="black" :onClick="addItem" />
+      <Button title="+ Add Item" color="white" :onClick="addItem" />
     </div>
 
     <!-- ALERTS -->

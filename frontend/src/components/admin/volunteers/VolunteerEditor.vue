@@ -104,13 +104,14 @@ function handleSave() {
                   accept="image/*"
                 />
               </div>
-              <InputField label="First Name" v-model="formData.firstName" />
-              <InputField label="Last Name" v-model="formData.lastName" />
-              <InputField label="Email" v-model="formData.email" />
+              <InputField label="First Name" placeholder="First Name" :model-value="formData.firstName || ''" @update:model-value="val => formData.firstName = (val as string)" />
+              <InputField label="Last Name" placeholder="Last Name" :model-value="formData.lastName || ''" @update:model-value="val => formData.lastName = (val as string)" />
+              <InputField label="Email" placeholder="Email" :model-value="formData.email || ''" @update:model-value="val => formData.email = (val as string)" />
               <div class="row-full">
                 <InputField
                   label="Phone"
-                  :model-value="formData.phone"
+                  placeholder="Phone"
+                  :model-value="formData.phone || ''"
                   @update:model-value="
                     (val: any) => (formData.phone = formatPhoneInput(String(val || '')))
                   "
@@ -120,19 +121,20 @@ function handleSave() {
               </div>
 
               <div class="row-full">
-                <InputField label="Address" v-model="formData.address" class="full-width" />
+                <InputField label="Address" placeholder="Address" :model-value="formData.address || ''" @update:model-value="val => formData.address = (val as string)" class="full-width" />
               </div>
 
               <!-- City has its own row for more space -->
               <div class="row-full">
-                <InputField label="City" v-model="formData.city" class="full-width" />
+                <InputField label="City" placeholder="City" :model-value="formData.city || ''" @update:model-value="val => formData.city = (val as string)" class="full-width" />
               </div>
 
               <!-- Zip moved next to Birthday -->
               <div class="row-2 full-width">
                 <InputField
                   label="Zip"
-                  :model-value="formData.zip"
+                  placeholder="Zip"
+                  :model-value="formData.zip || ''"
                   @update:model-value="
                     (val: any) => (formData.zip = formatZipInput(String(val || '')))
                   "
@@ -142,8 +144,10 @@ function handleSave() {
                 />
                 <InputField
                   label="Birthday"
+                  placeholder="Birthday"
                   type="date"
-                  v-model="formData.birthday"
+                  :model-value="formData.birthday || ''"
+                  @update:model-value="val => formData.birthday = (val as string)"
                   fullWidth
                   class="full-width"
                 />
@@ -152,10 +156,11 @@ function handleSave() {
 
             <h3 class="section-title mt-6">Emergency Contact</h3>
             <div class="form-grid">
-              <InputField label="Name" v-model="formData.emergencyContactName" />
+              <InputField label="Name" placeholder="Name" :model-value="formData.emergencyContactName || ''" @update:model-value="val => formData.emergencyContactName = (val as string)" />
               <InputField
                 label="Phone"
-                :model-value="formData.emergencyContactPhone"
+                placeholder="Phone"
+                :model-value="formData.emergencyContactPhone || ''"
                 @update:model-value="
                   (val: any) =>
                     (formData.emergencyContactPhone = formatPhoneInput(String(val || '')))
@@ -170,7 +175,7 @@ function handleSave() {
           <div v-else-if="activeTab === 'bio'" class="form-section">
             <h3 class="section-title">Bio & Skills</h3>
             <div class="stack">
-              <InputTextArea label="Bio" v-model="formData.bio" rows="4" />
+              <InputTextArea label="Bio" placeholder="Bio description..." :model-value="formData.bio || ''" @update:model-value="val => formData.bio = (val as string)" rows="4" />
 
               <div class="field-group">
                 <label class="field-label">Skills (comma separated)</label>
@@ -188,7 +193,7 @@ function handleSave() {
               </div>
 
               <div class="field-group">
-                <Toggle v-model="formData.allergies" label="Has Allergies?" labelPosition="left" />
+                <Toggle :model-value="formData.allergies || false" @update:model-value="val => formData.allergies = val" label="Has Allergies?" labelPosition="left" />
               </div>
             </div>
           </div>
@@ -197,14 +202,14 @@ function handleSave() {
           <div v-else-if="activeTab === 'preferences'" class="form-section">
             <h3 class="section-title">Application Details</h3>
             <div class="stack">
-              <InputTextArea label="Why they joined" v-model="formData.interestReason" />
-              <InputTextArea label="Volunteer Experience" v-model="formData.volunteerExperience" />
+              <InputTextArea label="Why they joined" placeholder="Reason for joining..." :model-value="formData.interestReason || ''" @update:model-value="val => formData.interestReason = (val as string | undefined)" />
+              <InputTextArea label="Volunteer Experience" placeholder="Previous experience..." :model-value="formData.volunteerExperience || ''" @update:model-value="val => formData.volunteerExperience = (val as string | undefined)" />
 
               <h3 class="section-subtitle mt-4">Position Preferences</h3>
-              <PositionPreferences v-model="formData.positionPreferences" />
+              <PositionPreferences :model-value="formData.positionPreferences || []" @update:model-value="val => formData.positionPreferences = val" />
 
               <h3 class="section-subtitle mt-4">Availability</h3>
-              <Availability v-model="formData.availability" />
+              <Availability :model-value="formData.availability || []" @update:model-value="val => formData.availability = val" />
             </div>
           </div>
 
@@ -217,7 +222,8 @@ function handleSave() {
                 >Permission Level</label
               >
               <Select
-                v-model="formData.role"
+                :model-value="formData.role || 'Tier 1'"
+                @update:model-value="val => formData.role = (val as any)"
                 :options="[
                   { label: 'Tier 1 Volunteer', value: 'Tier 1' },
                   { label: 'Tier 2 Volunteer', value: 'Tier 2' },

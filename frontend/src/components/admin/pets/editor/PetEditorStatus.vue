@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 
-import type { IPet } from '../../../../../models/common'
+import type { IPet } from '../../../../models/common'
 import { ButtonToggle,InputField } from '../../../common/ui'
 
 const props = defineProps<{
@@ -55,35 +55,39 @@ function removeAdoptionPhoto() {
                 (e) => {
                   const val = (e.target as HTMLInputElement).value
                   console.error('DEBUG: RAW INPUT UPDATE:', val)
-                  formData.adoption.date = val
+                  if (formData.adoption) formData.adoption.date = val
                 }
               "
             />
           </div>
         </div>
-        <InputField label="Adoption Fee ($)" v-model="formData.adoption.fee" type="number" />
+        <InputField label="Adoption Fee ($)" placeholder="0.00" :model-value="formData.adoption.fee || null" @update:model-value="val => formData.adoption && (formData.adoption.fee = (val as number))" type="number" />
       </div>
       <div class="form-row">
         <InputField
           label="Adopted By"
-          v-model="formData.adoption.adoptedBy"
+          :model-value="formData.adoption.adoptedBy || null"
+          @update:model-value="val => formData.adoption && (formData.adoption.adoptedBy = (val as string))"
           placeholder="Adopter Name"
         />
         <InputField
           label="New Adopted Name"
-          v-model="formData.adoption.newAdoptedName"
+          :model-value="formData.adoption.newAdoptedName || null"
+          @update:model-value="val => formData.adoption && (formData.adoption.newAdoptedName = (val as string))"
           placeholder="New Name"
         />
       </div>
       <div class="form-row" v-if="formData.adoption.adopterContactInfo">
         <InputField
           label="Adopter Email"
-          v-model="formData.adoption.adopterContactInfo.email"
+          :model-value="formData.adoption.adopterContactInfo.email || null"
+          @update:model-value="val => formData.adoption?.adopterContactInfo && (formData.adoption.adopterContactInfo.email = (val as string))"
           placeholder="email@example.com"
         />
         <InputField
           label="Adopter Phone"
-          v-model="formData.adoption.adopterContactInfo.phone"
+          :model-value="formData.adoption.adopterContactInfo.phone || null"
+          @update:model-value="val => formData.adoption?.adopterContactInfo && (formData.adoption.adopterContactInfo.phone = (val as string))"
           placeholder="(555) 123-4567"
         />
       </div>
@@ -171,13 +175,14 @@ function removeAdoptionPhoto() {
       <div class="form-row">
         <InputField
           label="Foster Parent"
-          v-model="formData.foster.parentName"
+          :model-value="formData.foster.parentName || null"
+          @update:model-value="val => formData.foster && (formData.foster.parentName = (val as string))"
           placeholder="Foster Name"
         />
       </div>
       <div class="form-row">
-        <InputField label="Start Date" v-model="formData.foster.startDate" type="date" />
-        <InputField label="End Date" v-model="formData.foster.endDate" type="date" />
+        <InputField label="Start Date" placeholder="YYYY-MM-DD" :model-value="formData.foster.startDate || null" @update:model-value="val => formData.foster && (formData.foster.startDate = (val as string))" type="date" />
+        <InputField label="End Date" placeholder="YYYY-MM-DD" :model-value="formData.foster.endDate || null" @update:model-value="val => formData.foster && (formData.foster.endDate = (val as string))" type="date" />
       </div>
       <hr class="divider" />
     </template>
@@ -194,10 +199,11 @@ function removeAdoptionPhoto() {
     <div class="form-row" v-if="formData.sponsored?.isSponsored">
       <InputField
         label="Sponsored By"
-        v-model="formData.sponsored.sponsoredBy"
+        :model-value="formData.sponsored.sponsoredBy || null"
+        @update:model-value="val => formData.sponsored && (formData.sponsored.sponsoredBy = (val as string))"
         placeholder="Sponsor Name"
       />
-      <InputField label="Amount ($)" v-model="formData.sponsored.amount" type="number" />
+      <InputField label="Amount ($)" placeholder="0.00" :model-value="formData.sponsored.amount || null" @update:model-value="val => formData.sponsored && (formData.sponsored.amount = (val as number))" type="number" />
     </div>
 
     <hr class="divider" />
@@ -227,7 +233,7 @@ function removeAdoptionPhoto() {
             border-radius: 6px;
           "
         >
-          <InputField label="Return Date" v-model="record.date" type="date" />
+          <InputField label="Return Date" placeholder="YYYY-MM-DD" v-model="record.date" type="date" />
           <InputField label="Reason" v-model="record.reason" placeholder="Reason for return" />
           <button
             @click="formData.returned.history.splice(idx, 1)"

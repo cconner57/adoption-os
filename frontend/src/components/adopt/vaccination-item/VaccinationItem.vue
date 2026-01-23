@@ -1,5 +1,16 @@
 <script setup lang="ts">
-defineProps<{ name: string }>()
+import { computed } from 'vue'
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const props = defineProps<{ name: string; pet: any }>()
+
+const formatDate = (dateString: string) => {
+  if (!dateString) return ''
+  return new Date(dateString).toLocaleDateString()
+}
+
+const vaccinationRecord = computed(() => props.name === 'rabies')
+const vaccinationSeries = computed(() => props.name === 'felineDistemper')
 </script>
 
 <template>

@@ -33,7 +33,7 @@ watch(
       <h1>Kiosk Management</h1>
       <div class="header-actions">
         <span v-if="hasChanges" class="unsaved-badge">Unsaved Changes</span>
-        <Button title="Publish Changes" color="black" :loading="isSaving" :onClick="saveSettings" />
+        <Button title="Publish Changes" color="white" :loading="isSaving" :onClick="saveSettings" />
       </div>
     </div>
 

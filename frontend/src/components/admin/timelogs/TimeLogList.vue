@@ -2,8 +2,8 @@
 import { ref } from 'vue'
 
 import type { ITimeLog } from '../../../stores/mockTimeLogs'
-import { Capsules, InputSelectGroup } from '../../components/common/ui'
-import Button from '../../components/common/ui/Button.vue'
+import { Capsules, InputSelectGroup } from '../../common/ui'
+import Button from '../../common/ui/Button.vue'
 
 defineProps<{
   filteredLogs: ITimeLog[]
@@ -46,7 +46,7 @@ const handleAction = (action: string, log: ITimeLog) => {
     <div class="filters-row" @click.stop>
       <InputSelectGroup
         :modelValue="filterLogStatus"
-        @update:modelValue="(val) => $emit('update:filterLogStatus', val)"
+        @update:modelValue="(val) => $emit('update:filterLogStatus', (val as string) || 'all')"
         :options="[
           { label: 'All Logs', value: 'all' },
           { label: 'Pending Review', value: 'pending' },

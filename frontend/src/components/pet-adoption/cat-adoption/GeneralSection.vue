@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import ButtonToggle from '../../common/ui/ButtonToggle.vue'
+
 import ButtonToggle from '../../common/ui/ButtonToggle.vue'
 import InputField from '../../common/ui/InputField.vue'
 
@@ -45,7 +45,7 @@ function removeChild(index: number) {
   modelValue.childrenNamesAges.splice(index, 1)
 }
 
-function handleAgreementUpdate(val: string) {
+function handleAgreementUpdate(val: string | number | boolean | null) {
   modelValue.adultMembersAgreed = val as 'Yes' | 'No'
 }
 </script>

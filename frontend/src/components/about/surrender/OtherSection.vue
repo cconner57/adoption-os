@@ -24,15 +24,15 @@ const { formState } = defineProps<{
         />
       <InputFileUpload
         label="Please upload a full body picture of the pet"
-        :modelValue="formState.fullBodyPhotoOfCat"
-        @update:modelValue="(val) => (formState.fullBodyPhotoOfCat = val)"
+        :modelValue="formState.fullBodyPhotoOfAnimal"
+        @update:modelValue="(val) => (formState.fullBodyPhotoOfAnimal = val)"
         :required="true"
         accept="image/*"
       />
       <InputFileUpload
         label="Please upload a up close head shot of the pet"
-        :modelValue="formState.closeUpPhotoOfCatsFace"
-        @update:modelValue="(val) => (formState.closeUpPhotoOfCatsFace = val)"
+        :modelValue="formState.closeUpPhotoOfAnimalFace"
+        @update:modelValue="(val) => (formState.closeUpPhotoOfAnimalFace = val)"
         accept="image/*"
       />
       <InputFileUpload

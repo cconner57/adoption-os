@@ -37,7 +37,7 @@ onMounted(() => {
         placeholder="Explanation"
         :spanFull="false"
         :modelValue="formState.animalEverAttackedPeopleExplanation"
-        @update:modelValue="(val) => (formState.animalEverAttackedPeopleExplanation = val)"
+        @update:modelValue="(val) => (formState.animalEverAttackedPeopleExplanation = val || '')"
       />
         <ButtonToggle
         :label="`Has the ${selectedAnimal.toLowerCase()} ever attacked or bit a cat?`"
@@ -49,7 +49,7 @@ onMounted(() => {
         placeholder="Explanation"
         :spanFull="false"
         :modelValue="formState.animalEverAttackedOtherCatsExplanation"
-        @update:modelValue="(val) => (formState.animalEverAttackedOtherCatsExplanation = val)"
+        @update:modelValue="(val) => (formState.animalEverAttackedOtherCatsExplanation = val || '')"
       />
     </div>
   </div>

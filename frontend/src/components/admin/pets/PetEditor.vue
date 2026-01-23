@@ -1,7 +1,8 @@
 <script setup lang="ts">
 /* eslint-disable */
 import { ref, watch } from 'vue'
-import type { IPet } from '../../../models/common'
+import type { IPet, TEnvironment, TPetStatus, TSpecies } from '../../../models/common'
+import type { TPetBreed } from '../../../constants/breeds'
 import { SidebarNav, Button } from '../../common/ui'
 import { useSettingsStore } from '../../../stores/settings'
 import PetEditorBasic from './editor/PetEditorBasic.vue'
@@ -89,21 +90,13 @@ function initFormData(newPet: IPet) {
   if (!formData.value.behavior) {
     formData.value.behavior = {
       energyLevel: 'medium',
-      isGoodWithCats:
-        (defaults.defaultGoodWithCats as unknown as string) === 'unknown'
-          ? null
-          : (defaults.defaultGoodWithCats as unknown as string) === 'yes',
-      isGoodWithDogs:
-        (defaults.defaultGoodWithDogs as unknown as string) === 'unknown'
-          ? null
-          : (defaults.defaultGoodWithDogs as unknown as string) === 'yes',
-      isGoodWithKids:
-        (defaults.defaultGoodWithKids as unknown as string) === 'unknown'
-          ? null
-          : (defaults.defaultGoodWithKids as unknown as string) === 'yes',
+      isGoodWithCats: null,
+      isGoodWithDogs: null,
+      isGoodWithKids: null,
       isHouseTrained: null,
       personalityTags: [],
       bonded: { isBonded: false, bondedWith: [] },
+      prefersToBeAlone: false,
     }
   } else {
     if (!formData.value.behavior.bonded) {
@@ -159,156 +152,7 @@ function initFormData(newPet: IPet) {
   }
 }
 
-// Reset tab when drawer opens
-watch(
-  () => props.isOpen,
-  (val) => {
-    if (val) {
-      activeTab.value = 'basic'
-      // If we are reopening the same pet, we might want to re-clone the data to discard unsaved edits?
-      // The watch(pet) handles new pet data.
-      // If pet is same, watch(pet) won't trigger.
-      // So we should re-initialize formData here too if pet is present.
-      if (props.pet) {
-        initFormData(props.pet)
-      }
-    }
-  },
-)
 
-// Extract init logic to reuse
-function initFormData(newPet: IPet) {
-  // Merge with defaults to ensure all fields exist
-  const defaults = {
-    profileSettings: {
-      isSpotlightFeatured: false,
-      showMedicalHistory: false,
-      showAdditionalInformation: false,
-    },
-    medical: {
-      microchip: { microchipped: false },
-    },
-    behavior: {
-      energyLevel: 'medium',
-    },
-  }
-  formData.value = {
-    ...JSON.parse(JSON.stringify(newPet)),
-  }
-  // Shallow merge specific nested objects if missing
-  if (formData.value.litterName === undefined) formData.value.litterName = null
-
-  if (!formData.value.profileSettings) formData.value.profileSettings = defaults.profileSettings
-  else {
-    // Ensure properties exist
-    if (formData.value.profileSettings.isSpotlightFeatured === undefined)
-      formData.value.profileSettings.isSpotlightFeatured = false
-    if (formData.value.profileSettings.showMedicalHistory === undefined)
-      formData.value.profileSettings.showMedicalHistory = false
-    if (formData.value.profileSettings.showAdditionalInformation === undefined)
-      formData.value.profileSettings.showAdditionalInformation = false
-  }
-
-  // Ensure Medical object structure
-  if (!formData.value.medical) {
-    formData.value.medical = {
-      spayedOrNeutered: false,
-      vaccinationsUpToDate: false,
-      vaccinations: {
-        other: [],
-        rabies: { dateAdministered: '' },
-      },
-      surgeries: [],
-      microchip: { microchipped: false },
-    }
-  } else {
-    // Deep ensure microchip
-    if (!formData.value.medical.microchip) {
-      formData.value.medical.microchip = { microchipped: false }
-    }
-    // Ensure vaccinations
-    if (!formData.value.medical.vaccinations) {
-      formData.value.medical.vaccinations = { other: [], rabies: { dateAdministered: '' } }
-    } else {
-      if (!formData.value.medical.vaccinations.other) formData.value.medical.vaccinations.other = []
-      if (!formData.value.medical.vaccinations.rabies)
-        formData.value.medical.vaccinations.rabies = { dateAdministered: '' }
-    }
-  }
-
-  // Ensure Behavior object exists
-  if (!formData.value.behavior) {
-    formData.value.behavior = {
-      energyLevel: 'medium',
-      isGoodWithCats:
-        (defaults.defaultGoodWithCats as any) === 'unknown'
-          ? null
-          : defaults.defaultGoodWithCats === 'yes',
-      isGoodWithDogs:
-        (defaults.defaultGoodWithDogs as any) === 'unknown'
-          ? null
-          : defaults.defaultGoodWithDogs === 'yes',
-      isGoodWithKids:
-        (defaults.defaultGoodWithKids as any) === 'unknown'
-          ? null
-          : defaults.defaultGoodWithKids === 'yes',
-      isHouseTrained: null,
-      personalityTags: [],
-      bonded: { isBonded: false, bondedWith: [] },
-    }
-  } else {
-    if (!formData.value.behavior.bonded) {
-      formData.value.behavior.bonded = { isBonded: false, bondedWith: [] }
-    }
-    if (!formData.value.behavior.personalityTags) {
-      formData.value.behavior.personalityTags = []
-    }
-  }
-
-  // Ensure Adoption object exists and has all fields
-  if (!formData.value.adoption) {
-    formData.value.adoption = {
-      adoptedBy: '',
-      date: '',
-      newAdoptedName: '',
-      fee: null,
-      surveyCompleted: false,
-      adopterContactInfo: { name: '', email: '', phone: '' },
-    }
-  } else {
-    // Ensure nested properties exist if adoption object partial
-    if (!formData.value.adoption.adopterContactInfo) {
-      formData.value.adoption.adopterContactInfo = { name: '', email: '', phone: '' }
-    }
-    if (formData.value.adoption.date === undefined) formData.value.adoption.date = ''
-    if (formData.value.adoption.adoptedBy === undefined) formData.value.adoption.adoptedBy = ''
-    if (formData.value.adoption.newAdoptedName === undefined)
-      formData.value.adoption.newAdoptedName = ''
-    if (formData.value.adoption.surveyCompleted === undefined)
-      formData.value.adoption.surveyCompleted = false
-  }
-
-  // Ensure Foster object exists
-  if (!formData.value.foster) formData.value.foster = {}
-
-  // Ensure details
-  if (!formData.value.details) formData.value.details = { status: 'available' }
-
-  // Ensure descriptions
-  if (!formData.value.descriptions) formData.value.descriptions = { primary: '' }
-
-  // Ensure photos
-  if (!formData.value.photos) formData.value.photos = []
-
-  // Ensure returned
-  if (!formData.value.returned) {
-    formData.value.returned = { isReturned: false, history: [] }
-  }
-  // Migration for old returned data if needed (though backend handles JSONB, frontend needs array)
-  if (!Array.isArray(formData.value.returned.history)) {
-    formData.value.returned.history = []
-  }
-}
 
 // Initialize form data when pet changes or modal opens
 watch(
@@ -323,10 +167,10 @@ watch(
       activeTab.value = 'basic'
       formData.value = {
         name: '',
-        species: (defaults.defaultSpecies as unknown as string) || 'cat',
+        species: (defaults.defaultSpecies as unknown as TSpecies) || 'cat',
         sex: 'unknown',
         physical: {
-          breed: (defaults.defaultBreed as unknown as string) || 'Unknown',
+          breed: (defaults.defaultBreed as unknown as TPetBreed) || 'Unknown',
           size: 'medium',
           ageGroup: 'baby',
           color: '',
@@ -346,6 +190,11 @@ watch(
           energyLevel: 'medium',
           personalityTags: [],
           bonded: { isBonded: false, bondedWith: [] },
+          isGoodWithCats: null,
+          isGoodWithDogs: null,
+          isGoodWithKids: null,
+          isHouseTrained: null,
+          prefersToBeAlone: false,
         },
         descriptions: {
           primary: defaults.defaultBioTemplate || '',
@@ -357,11 +206,11 @@ watch(
           specialNeeds: '',
         },
         details: {
-          status: (defaults.defaultIntakeStatus as unknown as string) || 'available',
+          status: (defaults.defaultIntakeStatus as unknown as TPetStatus) || 'available',
           intakeDate: new Date().toISOString().split('T')[0],
           shelterLocation: defaults.defaultShelterLocation || '',
           preferredPetLitterType: '',
-          environmentType: (defaults.defaultEnvironment as unknown as string) || null,
+          environmentType: (defaults.defaultEnvironment as unknown as TEnvironment) || null,
         },
         adoption: {
           adoptedBy: '',

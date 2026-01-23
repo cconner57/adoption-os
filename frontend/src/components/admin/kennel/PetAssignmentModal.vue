@@ -3,7 +3,7 @@ import { ref, watch } from 'vue'
 
 import { Button } from '../../common/ui'
 
-defineProps<{
+const props = defineProps<{
   isOpen: boolean
   mockPets: any[] // eslint-disable-line @typescript-eslint/no-explicit-any
 }>()
@@ -46,7 +46,7 @@ const confirm = () => {
       </div>
       <div class="modal-actions">
         <Button title="Cancel" color="white" :onClick="() => $emit('close')" />
-        <Button title="Confirm Link" color="black" :onClick="confirm" />
+        <Button title="Confirm Link" color="white" :onClick="confirm" />
       </div>
     </div>
   </div>

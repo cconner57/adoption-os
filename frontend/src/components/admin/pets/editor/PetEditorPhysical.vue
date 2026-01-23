@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 
-import type { IPet } from '../../../../../models/common'
+import type { IPet } from '../../../../models/common'
 import { InputField, Select } from '../../../common/ui'
 
 const props = defineProps<{
@@ -84,7 +84,8 @@ const breedOptions = computed(() => {
       />
       <InputField
         label="Date of Birth"
-        v-model="formData.physical.dateOfBirth"
+        :model-value="formData.physical.dateOfBirth || null"
+        @update:model-value="val => formData.physical && (formData.physical.dateOfBirth = (val as string))"
         type="date"
         placeholder="mm/dd/yyyy"
       />
@@ -109,7 +110,8 @@ const breedOptions = computed(() => {
       />
       <InputField
         label="Weight (lbs/kg)"
-        v-model="formData.physical.currentWeight"
+        :model-value="formData.physical.currentWeight || null"
+        @update:model-value="val => formData.physical && (formData.physical.currentWeight = (val as number))"
         type="number"
         placeholder="e.g. 10.5"
       />

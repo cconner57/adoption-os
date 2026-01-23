@@ -6,7 +6,7 @@ const props = withDefaults(
     modelValue: string | null
     hasError?: boolean
     spanFull?: boolean
-    spanFull?: boolean
+
     maxChars?: number
   }>(),
   {
@@ -57,7 +57,7 @@ const inputId = `textarea-${Math.random().toString(36).slice(2, 9)}`
 .col-span-2 {
   grid-column: span 2;
 }
-/* Reset global field margin */
+
 .field {
   margin-bottom: 0;
 }

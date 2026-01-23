@@ -1,16 +1,29 @@
 <script setup lang="ts">
-import { defineProps, defineEmits } from 'vue'
-import { InputField, ButtonToggle, InputSelectGroup } from '../../common/ui'
+import { defineEmits,defineProps } from 'vue'
+
+import { ButtonToggle, InputField, InputSelectGroup } from '../../common/ui'
 import SettingsCard from './SettingsCard.vue'
 
 defineProps<{
-  settings: any
-  accountForm: any
+  settings: {
+    organization: {
+      name: string
+      email: string
+      phone: string
+      timezone: string
+    }
+    notifications: {
+      incidentAlerts: boolean
+      newApplicationAlerts: boolean
+      emailDigests: string
+    }
+  }
+  accountForm: any // eslint-disable-line @typescript-eslint/no-explicit-any
 }>()
 
-const emit = defineEmits<{
-  (e: 'update:settings', value: any): void
-  (e: 'update:accountForm', value: any): void
+defineEmits<{
+  'update:settings': [value: Record<string, unknown>]
+  'update:accountForm': [value: Record<string, unknown>]
 }>()
 </script>
 
@@ -43,7 +56,6 @@ const emit = defineEmits<{
       </div>
     </SettingsCard>
 
-    <!-- Profile / Account Settings -->
     <SettingsCard title="Account Settings" icon="🔒">
       <p class="text-sm text-gray mb-4">Update your personal account details.</p>
       <div class="row">
@@ -136,9 +148,7 @@ const emit = defineEmits<{
 </template>
 
 <style scoped>
-/* Assuming these styles are global or handled by parent standard classes.
-   If anything breaks, we can copy them here.
-*/
+
 .settings-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));

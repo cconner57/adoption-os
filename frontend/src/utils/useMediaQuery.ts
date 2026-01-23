@@ -1,4 +1,4 @@
-import { ref, onMounted, onUnmounted } from 'vue'
+import { onMounted, onUnmounted,ref } from 'vue'
 
 export function useMediaQuery(query: string) {
   const matches = ref(false)

@@ -1,7 +1,8 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue'
-import type { IPet } from '../../../../../models/common'
-import { Toast, ImageCropper } from '../../../common/ui'
+
+import type { IPet } from '../../../../models/common'
+import { ImageCropper,Toast } from '../../../common/ui'
 
 const props = defineProps<{
   modelValue: Partial<IPet>
@@ -24,7 +25,6 @@ const showToast = ref(false)
 const toastMessage = ref('')
 const toastType = ref<'success' | 'error'>('error')
 
-// --- Cropping State ---
 const pendingFile = ref<File | null>(null)
 
 function onCancelCrop() {
@@ -32,29 +32,14 @@ function onCancelCrop() {
   if (fileInput.value) fileInput.value.value = ''
 }
 
-async function onCropComplete(croppedBlob: Blob) {
-  // Convert blob to File
-  const file = new File([croppedBlob], pendingFile.value?.name || 'photo.jpg', {
-    type: 'image/jpeg',
-  })
-
-  await uploadFile(file, false) // Suppress toast for crop
-  pendingFile.value = null
-  if (fileInput.value) fileInput.value.value = ''
-}
-
 async function uploadFile(file: File, showSuccessToast = true) {
-  // Validate Pet ID availability
+  
   if (!formData.value.id) {
     toastMessage.value = 'Please save the pet first before uploading photos.'
     toastType.value = 'error'
     showToast.value = true
     return
   }
-
-  // note: max photos check moved to selection time or here?
-  // If we check here, user might crop then get rejected. Better to check before crop.
-  // But redundant check is fine safety.
 
   isUploading.value = true
 
@@ -79,7 +64,7 @@ async function uploadFile(file: File, showSuccessToast = true) {
       throw new Error(txt || 'Upload failed')
     }
 
-    const data = await response.json() // { url, thumbnailUrl }
+    const data = await response.json() 
 
     if (!formData.value.photos) formData.value.photos = []
 
@@ -98,7 +83,7 @@ async function uploadFile(file: File, showSuccessToast = true) {
       toastType.value = 'success'
       showToast.value = true
     }
-  } catch (error: any) {
+  } catch (error: any) { // eslint-disable-line @typescript-eslint/no-explicit-any
     console.error('Upload error:', error)
     toastMessage.value = error.message || 'Failed to upload photo'
     toastType.value = 'error'
@@ -108,13 +93,37 @@ async function uploadFile(file: File, showSuccessToast = true) {
   }
 }
 
+function handleFileSelection(file: File) {
+  
+  if ((formData.value.photos?.length || 0) >= 5) {
+    toastMessage.value = 'Maximum of 5 photos allowed.'
+    toastType.value = 'error'
+    showToast.value = true
+    if (fileInput.value) fileInput.value.value = ''
+    return
+  }
+
+  pendingFile.value = file
+}
+
+async function onCropComplete(croppedBlob: Blob) {
+  
+  const file = new File([croppedBlob], pendingFile.value?.name || 'photo.jpg', {
+    type: 'image/jpeg',
+  })
+
+  await uploadFile(file, false) 
+  pendingFile.value = null
+  if (fileInput.value) fileInput.value.value = ''
+}
+
 const isDragging = ref(false)
 
-function onDragOver(e: DragEvent) {
+function onDragOver() {
   isDragging.value = true
 }
 
-function onDragLeave(e: DragEvent) {
+function onDragLeave() {
   isDragging.value = false
 }
 
@@ -133,37 +142,23 @@ async function onFileSelected(event: Event) {
   handleFileSelection(file)
 }
 
-function handleFileSelection(file: File) {
-  // Validate Max Photos BEFORE cropping
-  if ((formData.value.photos?.length || 0) >= 5) {
-    toastMessage.value = 'Maximum of 5 photos allowed.'
-    toastType.value = 'error'
-    showToast.value = true
-    if (fileInput.value) fileInput.value.value = ''
-    return
-  }
-
-  pendingFile.value = file
-}
-
 function setPrimaryPhoto(index: number) {
   if (!formData.value.photos) return
-  formData.value.photos.forEach((p, i) => {
+  formData.value.photos.forEach((p: any, i: number) => { // eslint-disable-line @typescript-eslint/no-explicit-any
     p.isPrimary = i === index
   })
 }
 
 function setSpotlightPhoto(index: number) {
   if (!formData.value.photos) return
-  formData.value.photos.forEach((p, i) => {
+  formData.value.photos.forEach((p: any, i: number) => { // eslint-disable-line @typescript-eslint/no-explicit-any
     p.isSpotlight = i === index
   })
 }
 
 function removePhoto(index: number) {
-  formData.value.photos?.splice(index, 1) // already removed
+  formData.value.photos?.splice(index, 1) 
 
-  // If only 1 photo remains, enforce Main + Spotlight
   if (formData.value.photos?.length === 1) {
     formData.value.photos[0].isPrimary = true
     formData.value.photos[0].isSpotlight = true
@@ -201,7 +196,6 @@ function removePhoto(index: number) {
         </div>
       </div>
 
-      <!-- Hide Add Button if Cropping -->
       <div
         class="add-photo-btn"
         :class="{ 'is-dragging': isDragging, 'is-loading': isUploading }"
@@ -228,7 +222,6 @@ function removePhoto(index: number) {
       </div>
     </div>
 
-    <!-- Inline Cropper -->
     <ImageCropper
       v-if="pendingFile"
       :imageFile="pendingFile"
@@ -245,7 +238,7 @@ function removePhoto(index: number) {
 
 .photos-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); /* Better responsiveness */
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); 
   gap: 16px;
 }
 
@@ -262,7 +255,7 @@ function removePhoto(index: number) {
 
 .photo-card img {
   width: 100%;
-  height: 70%; /* Give space for controls */
+  height: 70%; 
   object-fit: cover;
   background: #f1f5f9;
 }
@@ -369,7 +362,7 @@ function removePhoto(index: number) {
 .count-text {
   font-size: 0.7rem;
   color: var(--text-tertiary);
-  margin-top: auto; /* Push to bottom */
+  margin-top: auto; 
 }
 
 .add-photo-btn.is-loading {

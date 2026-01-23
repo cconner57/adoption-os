@@ -1,12 +1,13 @@
 <script setup lang="ts">
 import { ref } from 'vue'
+
 import type { IPet } from '../../../models/common.ts'
+import { formatDate } from '../../../utils/common.ts'
 import Button from '../../common/ui/Button.vue'
 import Capsules from '../../common/ui/Capsules.vue'
+import AdditionalInfo from '../additional-info/AdditionalInfo.vue'
 import AdoptionFAQ from '../adopt-faq/AdoptionFAQ.vue'
 import AdoptionProcess from '../adopt-process/AdoptionProcess.vue'
-import { formatDate } from '../../../utils/common.ts'
-import AdditionalInfo from '../additional-info/AdditionalInfo.vue'
 import AdoptDrawer from './AdoptDrawer.vue'
 
 const props = defineProps<{
@@ -22,14 +23,6 @@ const handleStartAdoption = () => {
   )
   globalThis.location.href = `/pet-adoption/${props.pet.id}`
 }
-
-// const handleScheduleMeet = () => {
-//   isDrawerOpen.value = true
-// }
-
-// const handleRequestInformation = () => {
-//   globalThis.location.href = `/pet-adoption/${props.pet.id}`
-// }
 
 const handleShare = () => {
   const shareData = {
@@ -84,18 +77,7 @@ function onImgError() {
               @click="handleStartAdoption"
               :fullWidth="true"
             />
-            <!-- <Button
-              title="Schedule a Meet"
-              color="purple"
-              @click="handleScheduleMeet"
-              :fullWidth="true"
-            /> -->
-            <!-- <Button
-              title="Request Information"
-              color="orange"
-              @click="handleRequestInformation"
-              :fullWidth="true"
-            /> -->
+            
             <Button title="Share" color="green" @click="handleShare" :fullWidth="true" />
           </div>
         </div>
@@ -186,7 +168,7 @@ function onImgError() {
       <AdoptionFAQ />
     </div>
   </div>
-  <!-- <MoreFriends :pet="pet" /> -->
+  
   <AdoptDrawer
     :pet="pet"
     :isDrawerOpen="isDrawerOpen"
@@ -205,10 +187,11 @@ function onImgError() {
 
     img {
       flex: 3;
-      width: 0;
+      width: 100%;
       min-width: 0;
       height: 600px;
       object-fit: cover;
+      object-position: top center;
       border-radius: 16px;
       box-shadow: 0 4px 6px rgba(0, 0, 0, 0.25);
     }
@@ -246,7 +229,7 @@ function onImgError() {
         border-bottom: 1px solid rgb(178, 177, 177);
         padding-bottom: 20px;
         h1 {
-          font-size: 2.5rem; /* Larger title */
+          font-size: 2.5rem; 
         }
         @media (min-width: 321px) and (max-width: 430px) {
           h1 {
@@ -268,7 +251,7 @@ function onImgError() {
           display: grid;
           grid-template-columns: 1fr 1fr;
           gap: 14px;
-          flex-wrap: wrap; /* Allow wrapping */
+          flex-wrap: wrap; 
           @media (max-width: 440px) {
             display: flex;
             flex-direction: column;
@@ -325,14 +308,14 @@ function onImgError() {
           margin-bottom: 8px;
           display: flex;
           border-bottom: 1px solid rgb(178, 177, 177);
-          width: 100%; /* Full width */
-          justify-content: space-between; /* Space out */
+          width: 100%; 
+          justify-content: space-between; 
           p {
             margin-bottom: 8px;
           }
           p:first-child {
             margin-right: 8px;
-            /* width: 300px; removed fixed width */
+            
             flex: 1;
           }
           p:last-child {
@@ -380,9 +363,8 @@ function onImgError() {
     }
   }
 
-  /* Mobile padding fix */
   @media (max-width: 430px) {
-    padding: 0; /* Let parent handle padding */
+    padding: 0; 
   }
 }
 </style>

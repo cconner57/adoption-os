@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia'
-import { ref, computed } from 'vue'
+import { computed,ref } from 'vue'
 
 export const useAuthStore = defineStore('auth', () => {
   const user = ref<{
@@ -10,40 +10,6 @@ export const useAuthStore = defineStore('auth', () => {
   } | null>(null)
 
   const isAuthenticated = computed(() => !!user.value)
-
-  const login = async (email: string, password: string): Promise<boolean> => {
-    try {
-      const response = await fetch('/api/login', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        credentials: 'include',
-        body: JSON.stringify({ email, password }),
-      })
-
-      const data = await response.json()
-
-      if (response.ok) {
-        // Login successful
-        if (data.token) {
-          localStorage.setItem('token', data.token)
-        }
-
-        // Also ensure user data is set immediately if returned
-        if (data.user) {
-          user.value = data.user
-        } else {
-          await checkAuth()
-        }
-        return true
-      }
-      return false
-    } catch (error) {
-      console.error('Login error:', error)
-      return false
-    }
-  }
 
   const checkAuth = async () => {
     try {
@@ -64,6 +30,39 @@ export const useAuthStore = defineStore('auth', () => {
     }
   }
 
+  const login = async (email: string, password: string): Promise<boolean> => {
+    try {
+      const response = await fetch('/api/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        credentials: 'include',
+        body: JSON.stringify({ email, password }),
+      })
+
+      const data = await response.json()
+
+      if (response.ok) {
+        
+        if (data.token) {
+          localStorage.setItem('token', data.token)
+        }
+
+        if (data.user) {
+          user.value = data.user
+        } else {
+          await checkAuth()
+        }
+        return true
+      }
+      return false
+    } catch (error) {
+      console.error('Login error:', error)
+      return false
+    }
+  }
+
   const logout = async () => {
     try {
       await fetch('/api/users/logout', {
@@ -75,7 +74,7 @@ export const useAuthStore = defineStore('auth', () => {
     } finally {
       localStorage.removeItem('token')
       user.value = null
-      window.location.reload() // Force reload to clear any memory/state
+      window.location.reload() 
     }
   }
 

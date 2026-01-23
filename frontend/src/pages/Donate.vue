@@ -122,7 +122,7 @@ import Footer from '../components/common/footer/Footer.vue'
 
 .header {
   text-align: center;
-  /* Reduced top padding for mobile, creates better visual balance */
+  
   padding: 140px 20px 40px;
 }
 
@@ -130,7 +130,7 @@ import Footer from '../components/common/footer/Footer.vue'
   color: var(--text-inverse);
   font-size: 3rem;
   margin: 0;
-  line-height: 1.2; /* Better line height for multi-line titles */
+  line-height: 1.2; 
 }
 
 .header .mission-text {
@@ -159,7 +159,6 @@ import Footer from '../components/common/footer/Footer.vue'
   width: 100%;
 }
 
-/* Common Card Styles */
 .donate-card {
   background: var(--text-inverse);
   border-radius: 24px;
@@ -183,7 +182,7 @@ import Footer from '../components/common/footer/Footer.vue'
   font-size: 2rem;
   margin-bottom: 24px;
   font-weight: 700;
-  text-align: center; /* Ensures title is centered on mobile */
+  text-align: center; 
 }
 
 .illustration img {
@@ -241,7 +240,7 @@ import Footer from '../components/common/footer/Footer.vue'
   display: flex;
   justify-content: center;
   margin: 8px 0;
-  width: 100%; /* Ensures it takes full width of container */
+  width: 100%; 
 }
 
 .qr-placeholder {
@@ -274,13 +273,13 @@ import Footer from '../components/common/footer/Footer.vue'
   font-weight: 700;
   color: #333;
   font-size: 0.9rem;
-  word-break: break-word; /* Prevents long names from breaking layout */
+  word-break: break-word; 
 }
 
 .handle {
   font-size: 0.85rem;
   color: #666;
-  word-break: break-all; /* Handles long @handles on small screens */
+  word-break: break-all; 
 }
 
 .qr-icon {
@@ -290,14 +289,13 @@ import Footer from '../components/common/footer/Footer.vue'
 }
 
 .real-qr {
-  width: 100%; /* Fluid width */
-  max-width: 180px; /* Cap width */
-  height: auto; /* Maintain aspect ratio */
+  width: 100%; 
+  max-width: 180px; 
+  height: auto; 
   object-fit: contain;
   border-radius: 4px;
 }
 
-/* Cat Specific Styles */
 .cat-card h2 {
   color: var(--color-tertiary);
 }
@@ -313,7 +311,6 @@ import Footer from '../components/common/footer/Footer.vue'
   background-color: var(--color-tertiary);
 }
 
-/* Dog Specific Styles */
 .dog-card h2 {
   color: var(--color-secondary);
 }
@@ -324,7 +321,7 @@ import Footer from '../components/common/footer/Footer.vue'
   background-color: var(--color-secondary-weak);
   border-width: 6px;
   box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.05);
-  /* Filter to turn white #fff to blue #3b82f6 */
+  
   filter: brightness(0) saturate(100%) invert(42%) sepia(97%) saturate(1466%) hue-rotate(198deg)
     brightness(99%) contrast(94%);
 }
@@ -339,10 +336,10 @@ import Footer from '../components/common/footer/Footer.vue'
   height: 80px;
   opacity: 0.9;
   margin-bottom: 12px;
-  /* Filter to turn white #fff to blue #3b82f6 */
+  
   filter: brightness(0) saturate(100%) invert(42%) sepia(97%) saturate(1466%) hue-rotate(198deg)
     brightness(99%) contrast(94%);
-  /* Mimic the "boxed" look of a QR code */
+  
   border: 2px solid var(--color-secondary-light);
   padding: 12px;
   border-radius: 12px;
@@ -352,7 +349,6 @@ import Footer from '../components/common/footer/Footer.vue'
   background-color: var(--color-secondary);
 }
 
-/* Adjusting Zelle/Venmo Colors */
 .cat-card .btn-venmo {
   background-color: var(--color-tertiary);
 }
@@ -360,14 +356,11 @@ import Footer from '../components/common/footer/Footer.vue'
   background-color: var(--color-secondary);
 }
 
-/* --- RESPONSIVENESS UPDATES --- */
-
-/* Tablet: Stack the cards when space is tight */
 @media (max-width: 1024px) {
   .donate-container {
     flex-direction: column;
     align-items: center;
-    padding-bottom: 60px; /* Reduce bottom padding */
+    padding-bottom: 60px; 
   }
 
   .header {
@@ -375,30 +368,29 @@ import Footer from '../components/common/footer/Footer.vue'
   }
 }
 
-/* Mobile: Optimize for small screens */
 @media (max-width: 480px) {
   .header {
-    padding: 110px 20px 30px; /* Tighter spacing */
+    padding: 110px 20px 30px; 
   }
 
   .header h1 {
-    font-size: 2rem; /* Smaller title */
+    font-size: 2rem; 
     margin-top: 10px;
   }
 
   .mission-text {
-    font-size: 1rem; /* Readable body text */
-    padding: 0 10px; /* Ensure text doesn't hit the edges */
+    font-size: 1rem; 
+    padding: 0 10px; 
   }
 
   .donate-container {
-    padding: 0 16px 60px; /* Smaller side padding */
+    padding: 0 16px 60px; 
   }
 
   .donate-card {
-    padding: 24px 16px; /* Reduce card padding to fit more content */
+    padding: 24px 16px; 
     border-radius: 16px;
-    min-width: 0; /* Allow card to shrink below 400px */
+    min-width: 0; 
     width: 100%;
   }
 
@@ -407,13 +399,13 @@ import Footer from '../components/common/footer/Footer.vue'
   }
 
   .illustration img {
-    height: 140px; /* Smaller illustration */
+    height: 140px; 
     width: 140px;
     margin-bottom: 20px;
   }
 
   .qr-placeholder {
-    min-height: 240px; /* Allow it to shrink slightly */
+    min-height: 240px; 
   }
 }
 </style>

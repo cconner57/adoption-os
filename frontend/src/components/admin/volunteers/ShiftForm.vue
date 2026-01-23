@@ -1,10 +1,10 @@
 <script setup lang="ts">
-import { ref, computed, onMounted } from 'vue'
+import { computed, onMounted,ref } from 'vue'
+
 import { Button, InputField, InputTextArea, Select, Toggle } from '../../common/ui'
 
 const props = defineProps<{
-  initialData?: any
-  initialData?: any
+  initialData?: any // eslint-disable-line @typescript-eslint/no-explicit-any
   volunteerOptions?: { label: string; value: string }[]
   currentVolunteerName?: string
 }>()
@@ -19,13 +19,14 @@ const formData = ref({
   endTime: props.initialData?.endTime || '',
   role: props.initialData?.role || 'Feeding/Cleaning',
   status: props.initialData?.status || 'scheduled',
-  isRecurring: false, // Editing recurrence is tricky, maybe disable for edit?
+  isRecurring: false, 
   frequency: 'weekly',
   endDate: '',
   isCovering: false,
   coveringName: '',
   coveredBy: [] as (string | number)[],
   coverageNotice: 'more_24h',
+  notes: props.initialData?.notes || '',
 })
 
 const showCoveredBy = computed(() => {
@@ -56,11 +57,10 @@ onMounted(async () => {
       const data = await res.json()
       const counts = data.data.roleCounts || {}
 
-      // Sort roles: descending by count
       roles.value.sort((a, b) => {
         const countA = counts[a.value] || 0
         const countB = counts[b.value] || 0
-        // If counts are equal, keep original order (stable sort) or alphabetical
+        
         if (countB !== countA) {
           return countB - countA
         }
@@ -96,13 +96,11 @@ function handleSave() {
     return
   }
 
-  // If covering, save to notes with notice info
   if (payload.isCovering && payload.coveringName) {
     const noticeText = payload.coverageNotice === 'less_24h' ? '<24h notice' : '>24h notice'
     payload.notes = `Covering for ${payload.coveringName} (${noticeText})`
   }
 
-  // If was covered by someone else, append to notes
   if (
     showCoveredBy.value &&
     payload.coveredBy &&
@@ -112,9 +110,7 @@ function handleSave() {
       ? payload.coveredBy.join(', ')
       : payload.coveredBy
     const prefix = `Covered by ${names}. `
-    // Avoid double adding if editing and already present
-    // Simple check: if notes already contains "Covered by", assume user might have manually edited or it's there
-    // For better experience, we might want to regex replace, but for now append if not startswith
+    
     const currentNotes = payload.notes || ''
     if (!currentNotes.startsWith('Covered by')) {
       payload.notes = prefix + currentNotes
@@ -123,7 +119,6 @@ function handleSave() {
 
   emit('save', payload)
 
-  // Reset form
   formData.value = {
     date: '',
     startTime: '',
@@ -135,6 +130,11 @@ function handleSave() {
     isCovering: false,
     coveringName: '',
     notes: '',
+    id: undefined,
+    volunteerId: undefined,
+    status: 'scheduled',
+    coveredBy: [],
+    coverageNotice: 'more_24h',
   }
 }
 
@@ -149,7 +149,7 @@ function setEndOfYear() {
   <div class="shift-form-card">
     <div class="form-grid">
       <div class="row-2">
-        <InputField label="Date" type="date" v-model="formData.date" class="full-width" />
+        <InputField label="Date" placeholder="YYYY-MM-DD" type="date" v-model="formData.date" class="full-width" />
         <div class="field-group">
           <label class="field-label">Role</label>
           <Select v-model="formData.role" :options="roles" />
@@ -157,8 +157,8 @@ function setEndOfYear() {
       </div>
 
       <div class="row-2">
-        <InputField label="Start Time" type="time" v-model="formData.startTime" />
-        <InputField label="End Time" type="time" v-model="formData.endTime" />
+        <InputField label="Start Time" placeholder="09:00" type="time" v-model="formData.startTime" />
+        <InputField label="End Time" placeholder="17:00" type="time" v-model="formData.endTime" />
       </div>
 
       <div v-if="formData.id" :class="{ 'row-2': showCoveredBy }">
@@ -202,7 +202,7 @@ function setEndOfYear() {
                   Until End of Year
                 </Button>
               </div>
-              <InputField type="date" v-model="formData.endDate" />
+              <InputField type="date" placeholder="YYYY-MM-DD" v-model="formData.endDate" />
             </div>
           </div>
         </div>

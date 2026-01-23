@@ -1,17 +1,17 @@
 <script setup lang="ts">
-import InputField from '../../common/ui/InputField.vue'
 import type { SurrenderFormState } from '../../../models/surrender-form.ts'
-import InputTextArea from '../../common/ui/InputTextArea.vue'
-import InputSelectGroup from '../../common/ui/InputSelectGroup.vue'
-import ButtonToggle from '../../common/ui/ButtonToggle.vue'
-import HoneypotField from '../../common/ui/HoneypotField.vue'
 import {
   formatPhoneNumber,
-  sanitizeName,
-  sanitizeCity,
-  sanitizeZip,
   sanitizeAddress,
+  sanitizeCity,
+  sanitizeName,
+  sanitizeZip,
 } from '../../../utils/validators.ts'
+import ButtonToggle from '../../common/ui/ButtonToggle.vue'
+import HoneypotField from '../../common/ui/HoneypotField.vue'
+import InputField from '../../common/ui/InputField.vue'
+import InputSelectGroup from '../../common/ui/InputSelectGroup.vue'
+import InputTextArea from '../../common/ui/InputTextArea.vue'
 
 const { formState, touched, handleBlur, hasAttemptedSubmit, selectedAnimal } = defineProps<{
   formState: SurrenderFormState
@@ -25,7 +25,7 @@ const { formState, touched, handleBlur, hasAttemptedSubmit, selectedAnimal } = d
 <template>
   <div class="household-section">
     <h5>{{ selectedAnimal }} & Household Information</h5>
-    <HoneypotField v-model="formState.fax_number" />
+    <HoneypotField :model-value="formState.fax_number || null" @update:model-value="val => formState.fax_number = val as string" />
     <fieldset class="household-grid">
       <InputField
         label="First Name"
@@ -376,7 +376,7 @@ const { formState, touched, handleBlur, hasAttemptedSubmit, selectedAnimal } = d
     .age-group,
     .quantity-group {
       flex: 1;
-      width: 0; /* Ensures flex-basis work correctly for equal widths */
+      width: 0; 
 
       @media (max-width: 640px) {
         width: 100%;
@@ -402,7 +402,7 @@ const { formState, touched, handleBlur, hasAttemptedSubmit, selectedAnimal } = d
       border: 1px solid var(--border-color);
       border-radius: 8px;
       padding: 4px;
-      height: 48px; /* Match typical input height */
+      height: 48px; 
 
       .toggle-btn {
         flex: 1;
@@ -442,7 +442,7 @@ const { formState, touched, handleBlur, hasAttemptedSubmit, selectedAnimal } = d
       cursor: pointer;
       transition: all 0.2s;
       flex-shrink: 0;
-      margin-top: 29px; /* Align with input fields */
+      margin-top: 29px; 
 
       &:hover {
         background: hsl(from var(--color-danger) h s 98%);
@@ -479,11 +479,11 @@ const { formState, touched, handleBlur, hasAttemptedSubmit, selectedAnimal } = d
     }
   }
 }
-/* Add error styles for fieldsets */
+
 fieldset.has-error .chips {
   outline: 2px solid var(--color-danger);
   border-color: var(--color-danger);
-  border-radius: 12px; /* Add some radius */
-  padding: 8px; /* Add padding so border doesn't hug chips too tight */
+  border-radius: 12px; 
+  padding: 8px; 
 }
 </style>

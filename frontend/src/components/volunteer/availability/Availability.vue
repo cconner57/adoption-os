@@ -284,7 +284,6 @@ const selected = computed({
   transition: all 0.2s;
 }
 
-/* Checked State */
 .time-card:has(> input:checked) {
   background: color-mix(in srgb, var(--color-primary) 5%, white);
   border-color: var(--color-primary);

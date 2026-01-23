@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, watch, computed, onMounted, onUnmounted, nextTick } from 'vue'
+import { computed, onMounted, onUnmounted,ref, watch } from 'vue'
 
 const props = withDefaults(
   defineProps<{
@@ -29,20 +29,10 @@ const searchQuery = ref('')
 const containerRef = ref<HTMLElement | null>(null)
 const inputRef = ref<HTMLInputElement | null>(null)
 
-const selectedLabels = computed(() => {
-  if (props.multiple) {
-    const vals = (props.modelValue as string[]) || []
-    return vals.map((v) => props.options.find((o) => o.value === v)?.label || v)
-  }
-  const val = props.modelValue as string
-  return props.options.find((o) => o.value === val)?.label || val
-})
-
 const filteredOptions = computed(() => {
   if (!searchQuery.value) return props.options
   const q = searchQuery.value.toLowerCase().trim()
 
-  // Check for exact match ignoring case and extra whitespace
   const exactMatch = props.options.some((o) => o.label.toLowerCase().trim() === q)
 
   const filtered = props.options.filter((o) => o.label.toLowerCase().includes(q))
@@ -92,7 +82,7 @@ function selectOption(option: { label: string; value: string; isCustom?: boolean
     inputRef.value?.focus()
   } else {
     emit('update:modelValue', valToEmit)
-    // Keep the selected label/value in the input for single select
+    
     searchQuery.value = option.isCustom ? valToEmit : option.label
     isOpen.value = false
   }
@@ -108,7 +98,7 @@ function removeTag(value: string) {
   }
 }
 
-function handleInput(e: Event) {
+function handleInput() {
   isOpen.value = true
 }
 
@@ -116,7 +106,6 @@ function handleFocus() {
   isOpen.value = true
 }
 
-// Close on click outside
 function handleClickOutside(e: MouseEvent) {
   if (containerRef.value && !containerRef.value.contains(e.target as Node)) {
     isOpen.value = false
@@ -137,7 +126,7 @@ onUnmounted(() => {
     <label v-if="label" class="label">{{ label }}</label>
 
     <div class="combobox-wrapper">
-      <!-- Selected Tags (Multiple Mode) -->
+      
       <div v-if="multiple && (modelValue as string[])?.length" class="selected-tags">
         <span v-for="val in modelValue as string[]" :key="val" class="tag">
           {{ options.find((o) => o.value === val)?.label || val }}
@@ -145,7 +134,6 @@ onUnmounted(() => {
         </span>
       </div>
 
-      <!-- Input Area -->
       <div class="input-container">
         <input
           ref="inputRef"
@@ -161,7 +149,6 @@ onUnmounted(() => {
         <span class="chevron">▼</span>
       </div>
 
-      <!-- Dropdown -->
       <div v-show="isOpen" class="dropdown-menu">
         <template v-if="filteredOptions.length > 0">
           <button

@@ -1,14 +1,21 @@
 <script setup lang="ts">
-import { defineProps, defineEmits } from 'vue'
+import { defineEmits,defineProps } from 'vue'
+
 import { ButtonToggle } from '../../common/ui'
 import SettingsCard from './SettingsCard.vue'
 
 defineProps<{
-  settings: any
+  settings: {
+    overview: {
+      showRecentActivity: boolean
+      showPendingTasks: boolean
+      showStatsGraph: boolean
+    }
+  }
 }>()
 
-const emit = defineEmits<{
-  (e: 'update:settings', value: any): void
+defineEmits<{
+  'update:settings': [value: Record<string, unknown>]
 }>()
 </script>
 

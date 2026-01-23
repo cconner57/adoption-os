@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import { ref, watch, onMounted, onUnmounted } from 'vue'
+import { onUnmounted,ref, watch } from 'vue'
 
 const props = defineProps<{
   imageFile: File
-  aspectRatio?: number // default 1
+  aspectRatio?: number 
 }>()
 
 const emit = defineEmits(['crop', 'cancel'])
@@ -12,19 +12,23 @@ const containerRef = ref<HTMLElement | null>(null)
 const imageRef = ref<HTMLImageElement | null>(null)
 const imageUrl = ref('')
 
-// State
 const scale = ref(1)
 const position = ref({ x: 0, y: 0 })
 const isDragging = ref(false)
 const dragStart = ref({ x: 0, y: 0 })
-const imgSize = ref({ width: 0, height: 0 })
-const viewportSize = ref({ width: 0, height: 0 }) // The size of the crop box
 
-// Config
 const MIN_SCALE = 1
 const MAX_SCALE = 3
 
-// Load image
+function resetState() {
+  scale.value = 1
+  position.value = { x: 0, y: 0 }
+}
+
+function onImageLoad() {
+  resetState()
+}
+
 watch(
   () => props.imageFile,
   (file) => {
@@ -37,23 +41,28 @@ watch(
   { immediate: true },
 )
 
-function resetState() {
-  scale.value = 1
-  position.value = { x: 0, y: 0 }
+function onMouseMove(e: MouseEvent | TouchEvent) {
+  if (!isDragging.value) return
+  e.preventDefault() 
+
+  const clientX = 'touches' in e ? e.touches[0].clientX : e.clientX
+  const clientY = 'touches' in e ? e.touches[0].clientY : e.clientY
+
+  const newX = clientX - dragStart.value.x
+  const newY = clientY - dragStart.value.y
+
+  position.value = { x: newX, y: newY }
 }
 
-function onImageLoad(e: Event) {
-  const img = e.target as HTMLImageElement
-  imgSize.value = { width: img.naturalWidth, height: img.naturalHeight }
-  fitImage()
+function onMouseUp() {
+  isDragging.value = false
+  window.removeEventListener('mousemove', onMouseMove)
+  window.removeEventListener('mouseup', onMouseUp)
+  window.removeEventListener('touchmove', onMouseMove)
+  window.removeEventListener('touchend', onMouseUp)
+
 }
 
-function fitImage() {
-  // Initial fit logic could go here if we needed to pre-scale
-  // But for now CSS 'contain' or similar starts us off, and we control via transform
-}
-
-// --- Drag Logic ---
 function onMouseDown(e: MouseEvent | TouchEvent) {
   e.preventDefault()
   isDragging.value = true
@@ -67,41 +76,6 @@ function onMouseDown(e: MouseEvent | TouchEvent) {
   window.addEventListener('touchend', onMouseUp)
 }
 
-function onMouseMove(e: MouseEvent | TouchEvent) {
-  if (!isDragging.value) return
-  e.preventDefault() // prevent scroll on touch
-
-  const clientX = 'touches' in e ? e.touches[0].clientX : e.clientX
-  const clientY = 'touches' in e ? e.touches[0].clientY : e.clientY
-
-  let newX = clientX - dragStart.value.x
-  let newY = clientY - dragStart.value.y
-
-  position.value = { x: newX, y: newY }
-}
-
-function onMouseUp() {
-  isDragging.value = false
-  window.removeEventListener('mousemove', onMouseMove)
-  window.removeEventListener('mouseup', onMouseUp)
-  window.removeEventListener('touchmove', onMouseMove)
-  window.removeEventListener('touchend', onMouseUp)
-
-  // Snap back bounds check could happen here or continuously in draw
-  const bounds = calculateBounds()
-  // Simply clamping:
-  /*
-     Ideally we want the image to fill the crop box.
-     Implementation detail: clamp position so edges don't come inside crop box if scale allows covering
-  */
-}
-
-function calculateBounds() {
-  // Not fully implementing strict bounds clamping for this MVP step to keep it simple drag
-  // User sees what they get.
-}
-
-// --- Crop Logic ---
 function crop() {
   if (!imageRef.value || !containerRef.value) return
 
@@ -109,52 +83,21 @@ function crop() {
   const ctx = canvas.getContext('2d')
   if (!ctx) return
 
-  // We want the output to be the size of the viewport on screen (or natural resolution equivalent)
-  // Let's go for high-ish resolution: 1080x1080 usually good for aspect 1
   const outputWidth = 1200
   const outputHeight = outputWidth / (props.aspectRatio || 1)
 
   canvas.width = outputWidth
   canvas.height = outputHeight
 
-  // Draw logic
-  // We need to map the "Visible Viewport" pixels to the "Natural Image" pixels
-
-  /*
-    The generic constraints:
-    The container (viewport) is usually fixed size on screen, e.g. 300px x 300px.
-    The image is transformed by CSS: scale(S) translate(X, Y).
-
-    We need to reverse this to find which part of the image is under the viewport.
-  */
-
-  // 1. Get viewport size in pixels
   const rect = containerRef.value.getBoundingClientRect()
   const vw = rect.width
-  const vh = rect.height
 
-  // 2. Map coordinates relative to image center/origin?
-  // Easier: The image is drawn at `position` with size `naturalWidth * scale` ? No.
-  // The CSS usually sets width: 100% or similar.
-  // Let's assume the image rendered width is `rect.width` (initial) * scale.
-  // Wait, let's look at CSS. Image is typically min-width: 100%, min-height: 100% object-fit: cover?
-  // For manual panning, we usually set width/height specifically or use transform on a base size.
-
-  // Let's use computed style for current rendered width/height (unscaled by transform)
   const imgRect = imageRef.value.getBoundingClientRect()
-  // imgRect includes the transform scaling!
-
-  // Ratio of Rendering-to-Output
+  
   const renderScale = outputWidth / vw
 
   ctx.fillStyle = '#ffffff'
   ctx.fillRect(0, 0, outputWidth, outputHeight)
-
-  // Draw the image onto the canvas
-  // We can draw the FULL image into the canvas, transformed appropriately
-  // The viewport is (0,0) to (vw, vh) in screen coordinates
-  // The image is at (imgRect.left, imgRect.top)
-  // Relative to viewport: x = imgRect.left - rect.left, y = imgRect.top - rect.top
 
   const relativeX = (imgRect.left - rect.left) * renderScale
   const relativeY = (imgRect.top - rect.top) * renderScale
@@ -196,7 +139,7 @@ onUnmounted(() => {
       >
         <img :src="imageUrl" ref="imageRef" @load="onImageLoad" draggable="false" />
       </div>
-      <!-- Overlay grid lines (optional) -->
+      
       <div class="grid-overlay"></div>
     </div>
 
@@ -244,7 +187,7 @@ onUnmounted(() => {
 
 .viewport-wrapper {
   width: 100%;
-  max-width: 400px; /* Limit size on desktop */
+  max-width: 400px; 
   aspect-ratio: 1 / 1;
   background: #f1f5f9;
   margin: 0 auto;
@@ -252,7 +195,7 @@ onUnmounted(() => {
   position: relative;
   border-radius: 4px;
   user-select: none;
-  touch-action: none; /* Important for preventing scroll */
+  touch-action: none; 
 }
 
 .image-layer {
@@ -265,16 +208,11 @@ onUnmounted(() => {
 }
 
 .image-layer img {
-  /* Ensure image covers the box initially or fits?
-     For cropping, typically we want 'contain' initially so they can zoom in,
-     or 'cover' so it's already full. 'contain' is safer index.
-  */
+  
   max-width: 100%;
   max-height: 100%;
   object-fit: contain;
-  /* Actually for transform based pan/zoom we might want auto size?
-     If we use object-fit, the transform applies to the container div.
-  */
+  
   display: block;
 }
 

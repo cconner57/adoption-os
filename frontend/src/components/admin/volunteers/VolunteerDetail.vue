@@ -1,15 +1,16 @@
 <script setup lang="ts">
-import { ref, computed } from 'vue'
-import type { IVolunteer, IShift, IIncident } from '../../../stores/mockVolunteerData'
-import { availableBadges } from '../../../stores/mockVolunteerData'
-import { Tag, Toast, Button, Capsules, Tabs } from '../../common/ui'
+/* eslint-disable max-lines */
+import { computed,ref } from 'vue'
 
-import VolunteerEditor from './VolunteerEditor.vue'
-import ShiftForm from './ShiftForm.vue'
 import { useAuthStore } from '../../../stores/auth'
-import { formatPhoneNumber } from '../../../utils/formatters'
+import type { IIncident,IShift, IVolunteer } from '../../../stores/mockVolunteerData'
+import { availableBadges } from '../../../stores/mockVolunteerData'
 import { formatDate } from '../../../utils/date'
-import { calculateReliabilityScore, calculateMaxStreak } from '../../../utils/reliability'
+import { formatPhoneNumber } from '../../../utils/formatters'
+import { calculateMaxStreak,calculateReliabilityScore } from '../../../utils/reliability'
+import { Button, Capsules, Tabs,Tag, Toast } from '../../common/ui'
+import ShiftForm from './ShiftForm.vue'
+import VolunteerEditor from './VolunteerEditor.vue'
 
 const props = defineProps<{
   volunteer: IVolunteer
@@ -36,7 +37,7 @@ const sortedVolunteerOptions = computed(() => {
 
 const isEditorOpen = ref(false)
 const isAddingShift = ref(false)
-const editingShiftData = ref<any>(null)
+const editingShiftData = ref<any>(null) // eslint-disable-line @typescript-eslint/no-explicit-any
 const showToast = ref(false)
 
 const emit = defineEmits(['add-shift', 'update', 'update-shift', 'delete-shift'])
@@ -55,16 +56,16 @@ function toggleAddShift() {
   }
 }
 
-function editShift(shift: any) {
+function editShift(shift: any) { // eslint-disable-line @typescript-eslint/no-explicit-any
   editingShiftData.value = shift
   isAddingShift.value = true
 }
 
-function deleteShift(shift: any) {
+function deleteShift(shift: any) { // eslint-disable-line @typescript-eslint/no-explicit-any
   emit('delete-shift', shift.id)
 }
 
-function handleShiftSave(shiftData: any) {
+function handleShiftSave(shiftData: any) { // eslint-disable-line @typescript-eslint/no-explicit-any
   if (shiftData.id) {
     emit('update-shift', shiftData)
   } else {
@@ -86,17 +87,17 @@ function verifyShift(shift: IShift, status: string) {
 }
 
 function markLate(shift: IShift) {
-  // Pre-fill with late status so user sees it, then open form to edit time
+  
   editingShiftData.value = { ...shift, status: 'late' }
   isAddingShift.value = true
 }
 
 function handleArchive() {
   if (confirm('Are you sure you want to archive this volunteer?')) {
-    // In real app, call API
+    
     console.log('Archiving volunteer', props.volunteer.id)
     isEditorOpen.value = false
-    // Show a different toast or redirect
+    
   }
 }
 
@@ -112,7 +113,6 @@ const tabItems = computed(() =>
   })),
 )
 
-// Helper to parse YYYY-MM-DD as local date to prevent timezone shifts
 function parseLocalDate(dateStr: string) {
   if (!dateStr) return new Date()
   const [y, m, d] = dateStr.split('-').map(Number)
@@ -133,7 +133,7 @@ const unverifiedShifts = computed(() => {
   const currentYear = new Date().getFullYear().toString()
   return props.shifts
     .filter((s) => s.date < today && s.status === 'scheduled' && s.date.startsWith(currentYear))
-    .sort((a, b) => b.date.localeCompare(a.date)) // Newest to oldest
+    .sort((a, b) => b.date.localeCompare(a.date)) 
 })
 
 const verifiedPastShifts = computed(() => {
@@ -151,7 +151,7 @@ const yearlyStats = computed(() => {
   > = {}
 
   props.shifts.forEach((shift) => {
-    // Skip future shifts for stats
+    
     if (shift.status === 'scheduled') return
 
     const year = shift.date.split('-')[0]
@@ -159,13 +159,11 @@ const yearlyStats = computed(() => {
       stats[year] = { year, hours: 0, totalShifts: 0, completedShifts: 0, score: 0 }
     }
 
-    // Calculate hours
     const start = parseInt(shift.startTime.split(':')[0])
     const end = parseInt(shift.endTime.split(':')[0])
     let duration = end - start
-    if (duration < 0) duration += 24 // Handle overnight simplified
+    if (duration < 0) duration += 24 
 
-    // Logic: Only count hours if "all_good" or "completed" or "late"
     if (['completed', 'all_good', 'late'].includes(shift.status)) {
       stats[year].hours += duration
       stats[year].completedShifts += 1
@@ -174,15 +172,6 @@ const yearlyStats = computed(() => {
     stats[year].totalShifts += 1
   })
 
-  // Calculate scores per year using utility
-  props.shifts.forEach((shift) => {
-    if (shift.status === 'scheduled') return
-    const year = shift.date.split('-')[0]
-    // We need to pass array of shifts to utility, so we might need to group first
-    // Refactor: grouping shifts by year first is cleaner
-  })
-
-  // Re-write of yearlyStats logic to be cleaner and use utility
   const shiftsByYear: Record<string, IShift[]> = {}
   props.shifts.forEach((s) => {
     if (s.status === 'scheduled') return
@@ -211,13 +200,11 @@ const totalReliabilityScore = computed(() => {
   return props.volunteer.reliabilityScore
 })
 
-// Helper to determine display status
 function getDisplayStatus(shift: IShift) {
   if (shift.status === 'covered_24h') return 'Covered More 24h'
   return shift.status.replace(/_/g, ' ')
 }
 
-// Helper for Capsules component colors
 function getShiftCapsuleConfig(shift: IShift | { status: string }) {
   const displayStatus = (shift.status || '').toLowerCase()
 
@@ -247,7 +234,7 @@ function getShiftCapsuleConfig(shift: IShift | { status: string }) {
     case 'covered <1h notice':
       return { color: 'hsl(330 60% 90%)', textColor: 'hsl(330 60% 40%)' }
     default:
-      // Scheduled / Blue
+      
       return {
         color: 'hsl(from var(--color-secondary) h s 95%)',
         textColor: 'var(--color-secondary)',
@@ -258,7 +245,6 @@ function getShiftCapsuleConfig(shift: IShift | { status: string }) {
 const suggestions = computed(() => {
   const list: { title: string; desc: string; icon: string }[] = []
 
-  // Reliability Suggestions
   if (props.volunteer.reliabilityScore < 100) {
     list.push({
       title: 'Boost Reliability',
@@ -267,7 +253,6 @@ const suggestions = computed(() => {
     })
   }
 
-  // Tier Advancement Suggestions
   if (props.volunteer.role === 'Teen') {
     list.push({
       title: 'Become Tier 1',
@@ -293,35 +278,6 @@ const suggestions = computed(() => {
   return list
 })
 
-function getShiftStatusColor(shift: IShift) {
-  const displayStatus = getDisplayStatus(shift).toLowerCase()
-  switch (displayStatus) {
-    case 'all_good':
-    case 'completed':
-      return 'green'
-    case 'late':
-      return 'orange'
-    case 'no_show':
-    case 'missed':
-      return 'red'
-    case 'cancelled':
-      return 'gray'
-    case 'covered':
-    case 'covered 24h':
-    case 'covered_24h':
-      return 'purple'
-    case 'covered late':
-    case 'covered_late':
-    case 'covered_less_24h':
-    case 'covered <24h notice':
-    case 'covered_less_1h':
-    case 'covered <1h notice':
-      return 'pink'
-    default:
-      return 'blue'
-  }
-}
-
 function formatTime(timeStr: string) {
   if (!timeStr) return ''
   const [hours, minutes] = timeStr.split(':')
@@ -333,18 +289,18 @@ function formatTime(timeStr: string) {
 
 function getRoleColors(role: string) {
   const r = role.toLowerCase()
-  if (r.includes('tier 2')) return { bg: '#FFF7ED', text: '#C2410C' } // Orange-ish
-  if (r.includes('tier 1')) return { bg: '#EFF6FF', text: '#1D4ED8' } // Blue-ish
-  if (r.includes('teen')) return { bg: '#F0FDFA', text: '#0F766E' } // Teal
-  if (r.includes('admin')) return { bg: '#FEF2F2', text: '#B91C1C' } // Red
-  return { bg: '#F3F4F6', text: '#374151' } // Gray
+  if (r.includes('tier 2')) return { bg: '#FFF7ED', text: '#C2410C' } 
+  if (r.includes('tier 1')) return { bg: '#EFF6FF', text: '#1D4ED8' } 
+  if (r.includes('teen')) return { bg: '#F0FDFA', text: '#0F766E' } 
+  if (r.includes('admin')) return { bg: '#FEF2F2', text: '#B91C1C' } 
+  return { bg: '#F3F4F6', text: '#374151' } 
 }
 
 function getStatusColors(status: string) {
   const s = status.toLowerCase()
-  if (s === 'active') return { bg: '#ECFDF5', text: '#047857' } // Green
-  if (s === 'inactive') return { bg: '#F3F4F6', text: '#374151' } // Gray
-  if (s === 'archived') return { bg: '#FEF2F2', text: '#B91C1C' } // Red
+  if (s === 'active') return { bg: '#ECFDF5', text: '#047857' } 
+  if (s === 'inactive') return { bg: '#F3F4F6', text: '#374151' } 
+  if (s === 'archived') return { bg: '#FEF2F2', text: '#B91C1C' } 
   return { bg: '#F3F4F6', text: '#374151' }
 }
 </script>
@@ -360,7 +316,7 @@ function getStatusColors(status: string) {
       @archive="handleArchive"
     />
     <Toast :show="showToast" message="Updated successfully" @close="showToast = false" />
-    <!-- Header -->
+    
     <header class="detail-header">
       <div class="profile-main">
         <div class="big-avatar">{{ volunteer.firstName[0] }}{{ volunteer.lastName[0] }}</div>
@@ -386,7 +342,6 @@ function getStatusColors(status: string) {
       </div>
     </header>
 
-    <!-- Metrics Bar (Gamification) -->
     <div class="metrics-bar">
       <div class="metric-item">
         <span class="metric-label">Total Hours</span>
@@ -424,7 +379,6 @@ function getStatusColors(status: string) {
       </div>
     </div>
 
-    <!-- Warning Banner -->
     <div v-if="totalReliabilityScore < 0" class="warning-banner">
       <div class="warning-icon">⚠️</div>
       <div class="warning-content">
@@ -436,14 +390,12 @@ function getStatusColors(status: string) {
       </div>
     </div>
 
-    <!-- Tabs -->
     <Tabs :items="tabItems" v-model="activeTab" />
 
-    <!-- Content -->
     <div class="tab-content">
-      <!-- Overview Tab -->
+      
       <div v-if="activeTab === 'overview'" class="overview-grid">
-        <!-- Column 1: Personal Info -->
+        
         <div class="left-col">
           <div class="card info-card">
             <h3>Contact Information</h3>
@@ -509,7 +461,6 @@ function getStatusColors(status: string) {
           </div>
         </div>
 
-        <!-- Column 2: Application Details -->
         <div class="right-col">
           <div class="card app-card">
             <h3>Application Details</h3>
@@ -561,7 +512,6 @@ function getStatusColors(status: string) {
         </div>
       </div>
 
-      <!-- Schedule Tab -->
       <div v-if="activeTab === 'schedule'" class="schedule-section">
         <div class="section-block">
           <div
@@ -740,7 +690,6 @@ function getStatusColors(status: string) {
         </div>
       </div>
 
-      <!-- Incidents Tab -->
       <div v-if="activeTab === 'incidents'" class="incidents-section">
         <div class="incidents-header">
           <h3>Incident Log</h3>
@@ -764,10 +713,9 @@ function getStatusColors(status: string) {
         </div>
       </div>
 
-      <!-- Performance Tab -->
       <div v-if="activeTab === 'performance'" class="performance-section">
         <div class="perf-row">
-          <!-- Yearly Stats -->
+          
           <div class="card perf-card">
             <div>
               <h3>Yearly Performance</h3>
@@ -835,7 +783,6 @@ function getStatusColors(status: string) {
         </div>
       </div>
 
-      <!-- Suggestions Tab -->
       <div v-if="activeTab === 'suggestions'" class="suggestions-section">
         <div class="card suggestion-card">
           <h3>Suggestions for Improvement</h3>
@@ -858,7 +805,7 @@ function getStatusColors(status: string) {
 .vol-detail {
   padding: 32px;
   height: 100%;
-  padding-bottom: 60px; /* Space for scroll */
+  padding-bottom: 60px; 
 }
 
 .detail-header {
@@ -922,7 +869,6 @@ function getStatusColors(status: string) {
   }
 }
 
-/* Metrics Bar */
 .metrics-bar {
   display: flex;
   gap: 24px;
@@ -935,7 +881,7 @@ function getStatusColors(status: string) {
 }
 
 .tab-content {
-  min-height: 400px; /* Prevent layout shift */
+  min-height: 400px; 
 }
 
 .metric-item {
@@ -985,7 +931,6 @@ function getStatusColors(status: string) {
   cursor: help;
 }
 
-/* Overview Grid */
 .overview-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -1049,7 +994,7 @@ function getStatusColors(status: string) {
 .bio {
   color: hsl(from var(--color-neutral) h s 50%);
   line-height: 1.5;
-  /* margin-bottom handled by app-section */
+  
 }
 
 .app-section {
@@ -1110,7 +1055,6 @@ function getStatusColors(status: string) {
   }
 }
 
-/* Schedule */
 .shift-card {
   display: flex;
   align-items: center;
@@ -1206,13 +1150,13 @@ function getStatusColors(status: string) {
 }
 
 .table-container {
-  overflow-x: auto; /* Fix layout break */
+  overflow-x: auto; 
 }
 
 .simple-table {
   width: 100%;
   border-collapse: collapse;
-  min-width: 600px; /* Force spread */
+  min-width: 600px; 
 
   th {
     text-align: left;
@@ -1228,7 +1172,6 @@ function getStatusColors(status: string) {
   }
 }
 
-/* Incidents */
 .incidents-header {
   display: flex;
   justify-content: space-between;
@@ -1304,7 +1247,6 @@ function getStatusColors(status: string) {
   border-radius: 12px;
 }
 
-/* Performance */
 .perf-card {
   width: 100%;
 }
@@ -1438,7 +1380,7 @@ function getStatusColors(status: string) {
   margin-left: auto;
   display: flex;
   gap: 8px;
-  /* Always show for now to ensure visibility on touch/mobile if needed, or stick to opacity */
+  
   opacity: 0;
   transition: opacity 0.2s;
 }
@@ -1507,7 +1449,7 @@ function getStatusColors(status: string) {
 }
 
 .action-btn.purple {
-  background: hsl(270 95% 95%); /* Approximating purple */
+  background: hsl(270 95% 95%); 
   color: hsl(270 60% 50%);
   border: 1px solid hsl(270 60% 50%);
 }

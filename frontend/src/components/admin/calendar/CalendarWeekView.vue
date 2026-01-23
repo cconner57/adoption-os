@@ -6,24 +6,23 @@ const props = defineProps<{
   recurringShifts: Record<number, Array<{ time: string; title: string; type: string }>>
 }>()
 
-// Helper to parse time for sorting (e.g. "9:00 AM")
 const parseTime = (timeStr: string): number => {
   if (!timeStr) return 0
   const [time, modifier] = timeStr.split(' ')
-  let [hours, minutes] = time.split(':').map(Number)
+  const timeParts = time.split(':').map(Number)
+  let hours = timeParts[0]
+  const minutes = timeParts[1]
   if (modifier === 'PM' && hours < 12) hours += 12
   if (modifier === 'AM' && hours === 12) hours = 0
   return hours * 60 + minutes
 }
 
-// Week View Data
 const weekDays = computed(() => {
   const days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
 
-  // Find Monday of the ACTIVE week
   const current = new Date(props.activeDate)
   const day = current.getDay()
-  const diff = current.getDate() - day + (day === 0 ? -6 : 1) // adjust when day is sunday
+  const diff = current.getDate() - day + (day === 0 ? -6 : 1) 
   const monday = new Date(current.setDate(diff))
 
   return days.map((name, index) => {
@@ -31,27 +30,24 @@ const weekDays = computed(() => {
     date.setDate(monday.getDate() + index)
     const dayOfWeek = date.getDay()
 
-    // Mock events
     const events = []
 
-    // Add recurring shifts
     const shifts = props.recurringShifts[dayOfWeek] || []
     shifts.forEach((shift, idx) => {
       events.push({ id: `wk-v-${index}-${idx}`, ...shift })
     })
 
     if (index === 0) {
-      // Monday
+      
       events.push({
         id: `wk-vet-special`,
         type: 'vet',
         time: '9:00 AM',
-        title: 'Vet Appointments', // Fixed typo here if it was wrong before
+        title: 'Vet Appointments', 
         details: ['Malachi', 'Merry', 'Ariel', 'Aragorn', 'Purina'],
       })
     }
 
-    // Sort events by time
     events.sort((a, b) => parseTime(a.time) - parseTime(b.time))
 
     return {
@@ -93,7 +89,7 @@ const weekDays = computed(() => {
 </template>
 
 <style scoped>
-/* Week View */
+
 .week-view {
   flex: 1;
   overflow-x: auto;
@@ -184,11 +180,11 @@ const weekDays = computed(() => {
     padding-left: 16px;
     font-size: 0.8rem;
     opacity: 0.9;
-    list-style-type: disc; /* Ensure bullets show */
+    list-style-type: disc; 
 
     li {
       margin-bottom: 2px;
-      margin-left: 4px; /* Slight indent for bullets */
+      margin-left: 4px; 
     }
   }
 }

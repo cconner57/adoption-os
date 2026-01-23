@@ -1,8 +1,9 @@
 <script setup lang="ts">
-import { ref, computed } from 'vue'
+import { computed,ref } from 'vue'
 import { useRouter } from 'vue-router'
-import { mockPetsData } from '../../stores/mockPetData' // Reuse existing pet data
+
 import { Capsules } from '../../components/common/ui'
+import { mockPetsData } from '../../stores/mockPetData' 
 
 const mockPets = ref(mockPetsData)
 
@@ -20,7 +21,7 @@ const filteredPets = computed(() => {
 
 const calculateAge = (dob: string | null | undefined): string => {
   if (!dob) return 'Unknown Age'
-  if (dob.length < 5) return dob // Handle '1yr' or similar mock strings
+  if (dob.length < 5) return dob 
   const birthDate = new Date(dob)
   if (isNaN(birthDate.getTime())) return dob
 
@@ -64,7 +65,7 @@ const goHome = () => router.push('/kiosk')
     <div class="pets-grid">
       <div v-for="pet in formattedPets" :key="pet.id" class="pet-card">
         <div class="img-area">
-          <!-- Fallback emoji if no image, using first char of name -->
+          
           <span class="emoji-avatar">{{ pet.species === 'dog' ? '🐶' : '🐱' }}</span>
         </div>
         <div class="pet-info">

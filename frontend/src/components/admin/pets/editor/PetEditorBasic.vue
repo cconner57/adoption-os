@@ -1,7 +1,8 @@
 <script setup lang="ts">
 import { computed } from 'vue'
-import { InputField, Select, Combobox } from '../../../common/ui'
-import type { IPet } from '../../../../../models/common'
+
+import type { IPet } from '../../../../models/common'
+import { Combobox,InputField, Select } from '../../../common/ui'
 
 const props = defineProps<{
   modelValue: Partial<IPet>
@@ -55,7 +56,7 @@ const statusOptions = [
 
 const litterOptions = computed(() => {
   if (!props.availablePets) return []
-  // Extract unique litter names
+  
   const litters = new Set(props.availablePets.map((p) => p.litterName).filter(Boolean))
   return Array.from(litters).map((l) => ({ label: l!, value: l! }))
 })
@@ -67,17 +68,30 @@ const litterOptions = computed(() => {
 
 <template>
   <div class="form-section">
-    <InputField label="Name" v-model="formData.name" placeholder="Pet's Name" />
+    <InputField label="Name" :model-value="formData.name || null" @update:model-value="val => formData.name = (val as string)" placeholder="Pet's Name" />
 
     <div class="form-row">
-      <Select label="Species" v-model="formData.species" :options="speciesOptions" fullWidth />
-      <Select label="Sex" v-model="formData.sex" :options="sexOptions" fullWidth />
+      <Select
+        label="Species"
+        :model-value="formData.species || null"
+        @update:model-value="val => formData.species = (val as any)"
+        :options="speciesOptions"
+        fullWidth
+      />
+      <Select
+        label="Sex"
+        :model-value="formData.sex || null"
+        @update:model-value="val => formData.sex = (val as any)"
+        :options="sexOptions"
+        fullWidth
+      />
     </div>
 
     <div class="form-row">
       <Combobox
         label="Litter Name"
-        v-model="formData.litterName"
+        :model-value="formData.litterName || null"
+        @update:model-value="val => formData.litterName = (val as string)"
         :options="litterOptions"
         placeholder="Select or create litter..."
         allow-create
@@ -87,13 +101,15 @@ const litterOptions = computed(() => {
     <div class="form-row" v-if="formData.details">
       <InputField
         label="Intake Date"
-        v-model="formData.details.intakeDate"
+        :model-value="formData.details.intakeDate || null"
+        @update:model-value="val => formData.details && (formData.details.intakeDate = (val as string))"
         type="date"
         placeholder="Select date"
       />
       <Select
         label="Environment"
-        v-model="formData.details.environmentType"
+        :model-value="formData.details.environmentType || null"
+        @update:model-value="val => formData.details && (formData.details.environmentType = (val as any))"
         :options="environmentOptions"
         fullWidth
       />
@@ -103,7 +119,8 @@ const litterOptions = computed(() => {
       <div v-if="formData.adoption" style="flex: 1">
         <InputField
           label="Adoption Fee ($)"
-          v-model.number="formData.adoption.fee"
+          :model-value="formData.adoption.fee || null"
+          @update:model-value="val => formData.adoption && (formData.adoption.fee = (val as number))"
           type="number"
           placeholder="0.00"
         />
@@ -121,7 +138,8 @@ const litterOptions = computed(() => {
     <div class="form-row" v-if="formData.details">
       <InputField
         label="Shelter Location"
-        v-model="formData.details.shelterLocation"
+        :model-value="formData.details.shelterLocation || null"
+        @update:model-value="val => formData.details && (formData.details.shelterLocation = (val as string))"
         placeholder="e.g. Main Location, Foster"
       />
     </div>
@@ -129,7 +147,8 @@ const litterOptions = computed(() => {
     <div class="form-row" v-if="formData.species === 'cat' && formData.details">
       <Combobox
         label="Preferred Litter Type"
-        v-model="formData.details.preferredPetLitterType"
+        :model-value="formData.details.preferredPetLitterType || null"
+        @update:model-value="val => formData.details && (formData.details.preferredPetLitterType = (val as string))"
         :options="litterTypeOptions"
         placeholder="Select litter type..."
         allow-create

@@ -1,10 +1,11 @@
 <script setup lang="ts">
 import { onMounted } from 'vue'
-import InputTextArea from '../../common/ui/InputTextArea.vue'
-import ButtonToggle from '../../common/ui/ButtonToggle.vue'
-import type { SurrenderFormState } from '../../../models/surrender-form.ts'
 
-const { formState, touched, handleBlur, hasAttemptedSubmit, selectedAnimal } = defineProps<{
+import type { SurrenderFormState } from '../../../models/surrender-form.ts'
+import ButtonToggle from '../../common/ui/ButtonToggle.vue'
+import InputTextArea from '../../common/ui/InputTextArea.vue'
+
+const { formState, selectedAnimal } = defineProps<{
   formState: SurrenderFormState
   touched: Record<string, boolean>
   handleBlur: (_field: string) => void // eslint-disable-line no-unused-vars
@@ -36,7 +37,7 @@ onMounted(() => {
         placeholder="Explanation"
         :spanFull="false"
         :modelValue="formState.animalEverAttackedPeopleExplanation"
-        @update:modelValue="(val) => (formState.animalEverAttackedPeopleExplanation = val)"
+        @update:modelValue="(val) => (formState.animalEverAttackedPeopleExplanation = val || '')"
       />
         <ButtonToggle
         :label="`Has the ${selectedAnimal.toLowerCase()} ever attacked or bit a cat?`"
@@ -48,7 +49,7 @@ onMounted(() => {
         placeholder="Explanation"
         :spanFull="false"
         :modelValue="formState.animalEverAttackedOtherCatsExplanation"
-        @update:modelValue="(val) => (formState.animalEverAttackedOtherCatsExplanation = val)"
+        @update:modelValue="(val) => (formState.animalEverAttackedOtherCatsExplanation = val || '')"
       />
     </div>
   </div>
@@ -71,6 +72,5 @@ onMounted(() => {
     row-gap: 16px;
   }
 }
-
 
 </style>

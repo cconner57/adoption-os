@@ -8,7 +8,7 @@ export interface IKioskSettings {
   }
   theme: {
     primaryColor: string
-    backgroundImage: string // URL or preset
+    backgroundImage: string 
     logoUrl: string
   }
   features: {
@@ -26,10 +26,10 @@ export const mockKioskSettings = ref<IKioskSettings>({
     timeoutSeconds: 60,
   },
   theme: {
-    primaryColor: '#8b5cf6', // Violet-500
+    primaryColor: '#8b5cf6', 
     backgroundImage:
-      'https://images.unsplash.com/photo-1450778869180-41d0601e046e?q=80&w=2500&auto=format&fit=crop', // Dog running
-    logoUrl: '', // Empty for placeholder
+      'https://images.unsplash.com/photo-1450778869180-41d0601e046e?q=80&w=2500&auto=format&fit=crop', 
+    logoUrl: '', 
   },
   features: {
     allowCheckIn: true,

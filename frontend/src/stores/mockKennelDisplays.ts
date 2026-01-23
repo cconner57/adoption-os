@@ -3,8 +3,8 @@ import { ref } from 'vue'
 export interface IDisplayDevice {
   id: string
   macAddress: string
-  batteryLevel: number // 0-100
-  signalStrength: number // 0-100
+  batteryLevel: number 
+  signalStrength: number 
   assignedPetId: string | null
   status: 'online' | 'offline' | 'syncing'
   lastSync: string
@@ -17,7 +17,7 @@ export const mockDevices = ref<IDisplayDevice[]>([
     macAddress: 'A1:B2:C3:D4:E5:F6',
     batteryLevel: 85,
     signalStrength: 92,
-    assignedPetId: '1', // Linked to a mock pet
+    assignedPetId: '1', 
     status: 'online',
     lastSync: '10 mins ago',
     template: 'standard',
@@ -37,7 +37,7 @@ export const mockDevices = ref<IDisplayDevice[]>([
     macAddress: 'AA:BB:CC:DD:EE:FF',
     batteryLevel: 12,
     signalStrength: 45,
-    assignedPetId: null, // Unassigned
+    assignedPetId: null, 
     status: 'offline',
     lastSync: '2 days ago',
     template: 'standard',
@@ -47,7 +47,7 @@ export const mockDevices = ref<IDisplayDevice[]>([
     macAddress: '11:22:33:44:55:66',
     batteryLevel: 98,
     signalStrength: 88,
-    assignedPetId: '4', // Colby
+    assignedPetId: '4', 
     status: 'syncing',
     lastSync: 'Just now',
     template: 'medical',

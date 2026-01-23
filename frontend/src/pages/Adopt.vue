@@ -1,16 +1,17 @@
 <script setup lang="ts">
-import FilterPanel from '../components/adopt/FilterPanel.vue'
+import { storeToRefs } from 'pinia'
+import { computed, nextTick, onMounted,ref } from 'vue'
+import { useRoute } from 'vue-router'
+
 import AdoptDetail from '../components/adopt/adopt-view/AdoptDetail.vue'
 import AdoptSummary from '../components/adopt/adopt-view/AdoptSummary.vue'
-import { computed, ref, nextTick, onMounted } from 'vue'
-import { useRoute } from 'vue-router'
+import FilterPanel from '../components/adopt/FilterPanel.vue'
 import { usePetStore } from '../stores/pets'
-import { storeToRefs } from 'pinia'
 
 const props = defineProps<{ id?: string }>()
 const route = useRoute()
 const store = usePetStore()
-const { currentPets, isFetching } = storeToRefs(store)
+const { currentPets } = storeToRefs(store)
 
 const id = computed(() => props.id ?? (route.params.id as string | undefined))
 const isFilterPanelOpen = ref(false)
@@ -50,12 +51,10 @@ onMounted(() => {
 const filteredPets = computed(() => {
   let result = currentPets.value
 
-  // 1. Species Filter (Buttons)
   if (activeFilter.value !== 'All') {
     result = result.filter((p) => p.species.toLowerCase() === activeFilter.value.toLowerCase())
   }
 
-  // 2. Advanced Filters
   const { age, size, sex, goodWith } = advancedFilters.value
 
   if (age.length > 0) {
@@ -72,7 +71,7 @@ const filteredPets = computed(() => {
 
   if (goodWith.length > 0) {
     result = result.filter((p) => {
-      // Check if pet matches ALL selected "good with" traits
+      
       return goodWith.every((trait) => {
         if (trait === 'kids') return p.behavior.isGoodWithKids
         if (trait === 'dogs') return p.behavior.isGoodWithDogs
@@ -178,7 +177,7 @@ const pet = computed(() => {
     display: flex;
     gap: 12px;
     align-items: center;
-    flex-wrap: wrap; /* Allow wrapping within group if really needed on tiny screens */
+    flex-wrap: wrap; 
     justify-content: center;
   }
 
@@ -245,7 +244,7 @@ const pet = computed(() => {
 
   .content-wrapper {
     width: 100%;
-    /* max-width: 1600px; removed to let children fill 1600px independently of padding */
+    
     margin: 0 auto;
     padding: 8rem var(--layout-padding-side) 3rem;
     display: flex;
@@ -278,7 +277,7 @@ const pet = computed(() => {
   }
 
   @media (min-width: 0px) and (max-width: 320px) {
-    /* margin-top: 1rem; removed as sticking to padding based layout */
+    
   }
   @media (min-width: 321px) and (max-width: 430px) {
     .content-wrapper {
@@ -294,8 +293,8 @@ const pet = computed(() => {
     & p {
       font-size: 1rem;
       min-width: auto;
-      max-width: 280px; /* Constrain width */
-      margin: 0 auto; /* Center it */
+      max-width: 280px; 
+      margin: 0 auto; 
       padding: 0;
       line-height: 1.5;
     }
@@ -308,14 +307,14 @@ const pet = computed(() => {
       justify-content: center;
     }
   }
-  /* Mobile specific overrides for filters */
+  
   @media (max-width: 600px) {
     .filters {
       display: flex;
       flex-direction: column;
       align-items: center;
       gap: 16px;
-      /* Reset overflow from previous attempts if any */
+      
       overflow-x: visible;
 
       .species-group {
@@ -324,16 +323,16 @@ const pet = computed(() => {
         gap: 8px;
         width: 100%;
         justify-content: center;
-        flex-wrap: nowrap; /* Force single line */
+        flex-wrap: nowrap; 
       }
 
       .mobile-break {
-        display: none; /* Not needed with flex-col */
+        display: none; 
       }
 
       .divider {
         width: 100%;
-        max-width: 200px; /* constraining width for aesthetics */
+        max-width: 200px; 
         height: 1px;
         background: rgba(255, 255, 255, 0.2);
         margin: 0;
@@ -366,24 +365,22 @@ const pet = computed(() => {
       flex-wrap: nowrap;
       justify-content: flex-start;
       overflow-x: auto;
-      padding-bottom: 8px; /* Hide scrollbar a bit or give space */
+      padding-bottom: 8px; 
       width: 100%;
       -webkit-overflow-scrolling: touch;
-      padding-left: 16px; /* Add padding to match layout */
+      padding-left: 16px; 
       padding-right: 16px;
-      /* box-sizing border-box is crucial */
+      
       box-sizing: border-box;
 
-      /* Hide scrollbar for Chrome/Safari/Opera */
       &::-webkit-scrollbar {
         display: none;
       }
-      /* Hide scrollbar for IE, Edge and Firefox */
-      -ms-overflow-style: none; /* IE and Edge */
-      scrollbar-width: none; /* Firefox */
+      
+      -ms-overflow-style: none; 
+      scrollbar-width: none; 
     }
 
-    /* Prevent buttons from shrinking */
     .filters button {
       white-space: nowrap;
       flex-shrink: 0;

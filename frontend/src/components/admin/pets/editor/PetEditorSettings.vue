@@ -1,7 +1,8 @@
 <script setup lang="ts">
 import { computed } from 'vue'
+
+import type { IPet } from '../../../../models/common'
 import { ButtonToggle } from '../../../common/ui'
-import type { IPet } from '../../../../../models/common'
 
 const props = defineProps<{
   modelValue: Partial<IPet>

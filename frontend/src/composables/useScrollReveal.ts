@@ -1,4 +1,3 @@
-import { onMounted, onUnmounted } from 'vue'
 
 export function useScrollReveal(className = 'reveal', threshold = 0.1) {
   const observer = new IntersectionObserver(
@@ -6,13 +5,13 @@ export function useScrollReveal(className = 'reveal', threshold = 0.1) {
       entries.forEach((entry) => {
         if (entry.isIntersecting) {
           entry.target.classList.add('active')
-          observer.unobserve(entry.target) // Only animate once
+          observer.unobserve(entry.target) 
         }
       })
     },
     {
       threshold,
-      rootMargin: '0px 0px -50px 0px', // Trigger slightly before element is fully visible
+      rootMargin: '0px 0px -50px 0px', 
     },
   )
 

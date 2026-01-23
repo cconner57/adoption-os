@@ -5,7 +5,7 @@ const props = withDefaults(
   defineProps<{
     variant?: 'primary' | 'secondary' | 'tertiary' | 'text'
     theme?: 'primary' | 'secondary' | 'tertiary' | 'warning' | 'danger' | 'neutral'
-    color?: 'green' | 'blue' | 'purple' | 'green-weak' | 'orange' | 'white' // Legacy prop
+    color?: 'green' | 'blue' | 'purple' | 'green-weak' | 'orange' | 'white' 
     onClick?: () => void
     size?: 'small' | 'medium' | 'large'
     align?: 'center' | 'start' | 'between'
@@ -24,10 +24,9 @@ const props = withDefaults(
 const resolvedTheme = computed(() => {
   if (props.theme) return props.theme
 
-  // Map legacy colors to themes
   switch (props.color) {
     case 'green':
-    case 'green-weak': // handled in specific class
+    case 'green-weak': 
       return 'primary'
     case 'blue':
       return 'secondary'
@@ -42,16 +41,14 @@ const resolvedTheme = computed(() => {
   }
 })
 
-// Handle legacy variant mapping
 const resolvedVariant = computed(() => {
-  // If using legacy 'white' color and variant is default 'primary', auto-switch to tertiary to match old look
+  
   if (props.color === 'white' && props.variant === 'primary') {
     return 'tertiary'
   }
   return props.variant
 })
 
-// Compute classes
 const classes = computed(() => {
   const base = [
     `variant-${resolvedVariant.value}`,
@@ -89,7 +86,7 @@ button {
   border-radius: 6px;
   transition: all 0.2s ease;
   white-space: nowrap;
-  border: 1px solid transparent; /* default border */
+  border: 1px solid transparent; 
   font-family: inherit;
 
   &:hover:not(:disabled) {
@@ -103,10 +100,9 @@ button {
   }
 }
 
-/* --- Sizes --- */
 .small {
   height: 32px;
-  min-width: 80px; /* Reduced min-width constraint */
+  min-width: 80px; 
   padding: 0 12px;
   font-size: 0.85rem;
 }
@@ -125,7 +121,6 @@ button {
   font-size: 1.1rem;
 }
 
-/* --- Alignment --- */
 .justify-center {
   justify-content: center;
 }
@@ -140,9 +135,6 @@ button {
   display: flex;
 }
 
-/* --- Variants & Themes --- */
-
-/* 1. Primary Variant (Solid Background) */
 .variant-primary {
   color: white;
   border: none;
@@ -166,15 +158,13 @@ button {
   background-color: var(--color-neutral);
 }
 
-/* Hover states for Primary */
 .variant-primary:hover:not(:disabled) {
   opacity: 0.9;
 }
 
-/* 2. Secondary Variant (White bg, Colored Border, Colored Text) */
 .variant-secondary {
   background-color: white;
-  border: 1px solid currentColor; /* border matches text color */
+  border: 1px solid currentColor; 
 }
 .variant-secondary.theme-primary {
   color: var(--color-primary);
@@ -197,25 +187,23 @@ button {
 }
 
 .variant-secondary:hover:not(:disabled) {
-  background-color: #f8fafc; /* subtle hover */
+  background-color: #f8fafc; 
 }
 
-/* 3. Tertiary Variant (White bg, Gray Border, Dark/Theme Text) */
 .variant-tertiary {
   background-color: white;
-  border: 1px solid #cbd5e1; /* Light gray border */
+  border: 1px solid #cbd5e1; 
   color: var(--text-primary);
 }
 
 .variant-tertiary.theme-primary {
   color: var(--text-primary);
-} /* Keep it neutral/dark */
+} 
 .variant-tertiary:hover:not(:disabled) {
   border-color: #94a3b8;
   background-color: #f1f5f9;
 }
 
-/* 4. Text Variant (No bg, No border, Underline) */
 .variant-text {
   background: none;
   border: none;
@@ -244,7 +232,6 @@ button {
   color: var(--text-secondary);
 }
 
-/* --- Legacy Overrides --- */
 .legacy-green-weak {
   background-color: hsl(from var(--color-primary) h s 95%);
   color: var(--color-primary);
@@ -262,7 +249,6 @@ button {
   box-shadow: none !important;
 }
 
-/* Spinner */
 .spinner {
   width: 1em;
   height: 1em;

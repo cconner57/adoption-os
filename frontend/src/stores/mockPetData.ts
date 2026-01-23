@@ -1,7 +1,7 @@
 /* eslint-disable max-lines */
 import type { IPet } from '../models/common.js'
 
-export const mockPetsData: IPet[] = [
+export const mockPetsData: IPet[] = ([
   {
     id: '1',
     name: 'Amari',
@@ -8728,7 +8728,7 @@ export const mockPetsData: IPet[] = [
     details: { status: 'available' },
     profileSettings: { isSpotlightFeatured: true },
     photos: [],
-    // Minimal required fields to satisfy type
+    
     adoption: {},
     foster: {},
     returned: { isReturned: false },
@@ -8745,7 +8745,7 @@ export const mockPetsData: IPet[] = [
       size: 'medium',
       color: 'Gray & White',
       coatLength: 'short',
-      dateOfBirth: '2025-01-01', // Young
+      dateOfBirth: '2025-01-01', 
       breed: 'Unknown',
     },
     behavior: {
@@ -8841,4 +8841,4 @@ export const mockPetsData: IPet[] = [
     createdAt: new Date().toISOString(),
     updatedAt: new Date().toISOString(),
   },
-]
+] as any) as IPet[] // eslint-disable-line @typescript-eslint/no-explicit-any

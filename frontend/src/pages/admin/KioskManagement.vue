@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import { ref, watch } from 'vue'
-import { mockKioskSettings } from '../../stores/mockKiosk'
-import { InputField, Button, ButtonToggle, InputSelectGroup } from '../../components/common/ui'
 
-// Mock saving state
+import { Button,InputField } from '../../components/common/ui'
+import { mockKioskSettings } from '../../stores/mockKiosk'
+
 const isSaving = ref(false)
 const hasChanges = ref(false)
 
@@ -27,27 +27,27 @@ watch(
 
 <template>
   <div class="kiosk-page">
-    <!-- HEADER -->
+    
     <div class="page-header">
       <h1>Kiosk Management</h1>
       <div class="header-actions">
         <span v-if="hasChanges" class="unsaved-badge">Unsaved Changes</span>
-        <Button title="Publish Changes" color="black" :loading="isSaving" :onClick="saveSettings" />
+        <Button title="Publish Changes" color="white" :loading="isSaving" :onClick="saveSettings" />
       </div>
     </div>
 
     <div class="split-view">
-      <!-- LEFT: SETTINGS -->
+      
       <div class="settings-panel">
-        <!-- SECTION: GENERAL -->
+        
         <div class="settings-group">
           <h2>General</h2>
           <div class="form-stack">
             <label>Kiosk Name</label>
-            <InputField v-model="mockKioskSettings.general.kioskName" />
+            <InputField v-model="mockKioskSettings.general.kioskName" placeholder="Enter Kiosk Name" />
 
             <label>Welcome Message</label>
-            <InputField v-model="mockKioskSettings.general.welcomeMessage" />
+            <InputField v-model="mockKioskSettings.general.welcomeMessage" placeholder="Welcome Message" />
 
             <label>Screen Timeout (Seconds)</label>
             <input
@@ -61,7 +61,6 @@ watch(
           </div>
         </div>
 
-        <!-- SECTION: BRANDING -->
         <div class="settings-group">
           <h2>Branding & Theme</h2>
           <div class="form-stack">
@@ -76,11 +75,10 @@ watch(
             </div>
 
             <label>Background Image URL</label>
-            <InputField v-model="mockKioskSettings.theme.backgroundImage" />
+            <InputField v-model="mockKioskSettings.theme.backgroundImage" placeholder="https://..." />
           </div>
         </div>
 
-        <!-- SECTION: FEATURES -->
         <div class="settings-group">
           <h2>Enabled Features</h2>
           <div class="toggle-list">
@@ -120,7 +118,6 @@ watch(
         </div>
       </div>
 
-      <!-- RIGHT: PREVIEW -->
       <div class="preview-panel">
         <div class="device-frame">
           <div class="camera-hole"></div>
@@ -203,8 +200,8 @@ watch(
 }
 
 .unsaved-badge {
-  background: #fef08a; /* yellow-200 */
-  color: #854d0e; /* yellow-800 */
+  background: #fef08a; 
+  color: #854d0e; 
   padding: 6px 12px;
   border-radius: 20px;
   font-size: 0.85rem;
@@ -217,7 +214,6 @@ watch(
   gap: 40px;
 }
 
-/* LEFT: SETTINGS */
 .settings-panel {
   display: flex;
   flex-direction: column;
@@ -287,7 +283,6 @@ watch(
   }
 }
 
-/* Custom checkbox as toggle */
 .toggle-switch {
   appearance: none;
   width: 44px;
@@ -319,7 +314,6 @@ watch(
   }
 }
 
-/* RIGHT: PREVIEW */
 .preview-panel {
   display: flex;
   flex-direction: column;
@@ -416,7 +410,6 @@ watch(
   font-size: 0.9rem;
 }
 
-/* Responsive */
 @media (max-width: 1024px) {
   .split-view {
     grid-template-columns: 1fr;

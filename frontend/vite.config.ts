@@ -1,8 +1,9 @@
 /// <reference types="node" />
-import { fileURLToPath, URL } from 'node:url'
-import { defineConfig, loadEnv } from 'vite'
-import vue from '@vitejs/plugin-vue'
 import dns from 'node:dns'
+import { fileURLToPath, URL } from 'node:url'
+
+import vue from '@vitejs/plugin-vue'
+import { defineConfig, loadEnv } from 'vite'
 
 dns.setDefaultResultOrder('ipv4first')
 

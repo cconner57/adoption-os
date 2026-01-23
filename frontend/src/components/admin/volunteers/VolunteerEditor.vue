@@ -1,20 +1,19 @@
 <script setup lang="ts">
-import { ref, watch, reactive } from 'vue'
-import type { IVolunteer } from '../../../stores/mockVolunteerData'
-import {
-  SidebarNav,
-  InputField,
-  InputTextArea,
-  Tag,
-  Button,
-  Toggle,
-  InputFileUpload,
-  Select,
-} from '../../common/ui'
-import { formatPhoneInput, formatZipInput } from '../../../utils/formatters'
-import PositionPreferences from '../../volunteer/preferences/PositionPreferences.vue'
+import { ref, watch } from 'vue'
 
+import type { IVolunteer } from '../../../stores/mockVolunteerData'
+import { formatPhoneInput, formatZipInput } from '../../../utils/formatters'
+import {
+  Button,
+  InputField,
+  InputFileUpload,
+  InputTextArea,
+  Select,
+  SidebarNav,
+  Toggle,
+} from '../../common/ui'
 import Availability from '../../volunteer/availability/Availability.vue'
+import PositionPreferences from '../../volunteer/preferences/PositionPreferences.vue'
 
 const props = defineProps<{
   volunteer: IVolunteer | null
@@ -27,14 +26,13 @@ const emit = defineEmits(['close', 'save', 'archive'])
 const activeTab = ref('general')
 const formData = ref<Partial<IVolunteer>>({})
 
-// Init data
 watch(
   () => props.volunteer,
   (newVal) => {
     if (newVal) {
       formData.value = JSON.parse(JSON.stringify(newVal))
     } else {
-      // Defaults for new volunteer
+      
       formData.value = {
         firstName: '',
         lastName: '',
@@ -69,7 +67,7 @@ function handleSave() {
 <template>
   <div v-if="isOpen" class="editor-overlay" @click.self="emit('close')">
     <div class="editor-drawer">
-      <!-- Header -->
+      
       <header class="editor-header">
         <h2>{{ volunteer ? `Edit ${volunteer.firstName}` : 'Add New Volunteer' }}</h2>
         <div class="header-actions">
@@ -78,7 +76,6 @@ function handleSave() {
         </div>
       </header>
 
-      <!-- Body -->
       <div class="editor-body">
         <SidebarNav
           variant="editor"
@@ -94,7 +91,7 @@ function handleSave() {
         />
 
         <div class="editor-content">
-          <!-- General Tab -->
+          
           <div v-if="activeTab === 'general'" class="form-section">
             <h3 class="section-title">General Information</h3>
             <div class="form-grid">
@@ -105,13 +102,14 @@ function handleSave() {
                   accept="image/*"
                 />
               </div>
-              <InputField label="First Name" v-model="formData.firstName" />
-              <InputField label="Last Name" v-model="formData.lastName" />
-              <InputField label="Email" v-model="formData.email" />
+              <InputField label="First Name" placeholder="First Name" :model-value="formData.firstName || ''" @update:model-value="val => formData.firstName = (val as string)" />
+              <InputField label="Last Name" placeholder="Last Name" :model-value="formData.lastName || ''" @update:model-value="val => formData.lastName = (val as string)" />
+              <InputField label="Email" placeholder="Email" :model-value="formData.email || ''" @update:model-value="val => formData.email = (val as string)" />
               <div class="row-full">
                 <InputField
                   label="Phone"
-                  :model-value="formData.phone"
+                  placeholder="Phone"
+                  :model-value="formData.phone || ''"
                   @update:model-value="
                     (val: any) => (formData.phone = formatPhoneInput(String(val || '')))
                   "
@@ -121,19 +119,18 @@ function handleSave() {
               </div>
 
               <div class="row-full">
-                <InputField label="Address" v-model="formData.address" class="full-width" />
+                <InputField label="Address" placeholder="Address" :model-value="formData.address || ''" @update:model-value="val => formData.address = (val as string)" class="full-width" />
               </div>
 
-              <!-- City has its own row for more space -->
               <div class="row-full">
-                <InputField label="City" v-model="formData.city" class="full-width" />
+                <InputField label="City" placeholder="City" :model-value="formData.city || ''" @update:model-value="val => formData.city = (val as string)" class="full-width" />
               </div>
 
-              <!-- Zip moved next to Birthday -->
               <div class="row-2 full-width">
                 <InputField
                   label="Zip"
-                  :model-value="formData.zip"
+                  placeholder="Zip"
+                  :model-value="formData.zip || ''"
                   @update:model-value="
                     (val: any) => (formData.zip = formatZipInput(String(val || '')))
                   "
@@ -143,8 +140,10 @@ function handleSave() {
                 />
                 <InputField
                   label="Birthday"
+                  placeholder="Birthday"
                   type="date"
-                  v-model="formData.birthday"
+                  :model-value="formData.birthday || ''"
+                  @update:model-value="val => formData.birthday = (val as string)"
                   fullWidth
                   class="full-width"
                 />
@@ -153,10 +152,11 @@ function handleSave() {
 
             <h3 class="section-title mt-6">Emergency Contact</h3>
             <div class="form-grid">
-              <InputField label="Name" v-model="formData.emergencyContactName" />
+              <InputField label="Name" placeholder="Name" :model-value="formData.emergencyContactName || ''" @update:model-value="val => formData.emergencyContactName = (val as string)" />
               <InputField
                 label="Phone"
-                :model-value="formData.emergencyContactPhone"
+                placeholder="Phone"
+                :model-value="formData.emergencyContactPhone || ''"
                 @update:model-value="
                   (val: any) =>
                     (formData.emergencyContactPhone = formatPhoneInput(String(val || '')))
@@ -167,11 +167,10 @@ function handleSave() {
             </div>
           </div>
 
-          <!-- Bio & Skills Tab -->
           <div v-else-if="activeTab === 'bio'" class="form-section">
             <h3 class="section-title">Bio & Skills</h3>
             <div class="stack">
-              <InputTextArea label="Bio" v-model="formData.bio" rows="4" />
+              <InputTextArea label="Bio" placeholder="Bio description..." :model-value="formData.bio || ''" @update:model-value="val => formData.bio = (val as string)" rows="4" />
 
               <div class="field-group">
                 <label class="field-label">Skills (comma separated)</label>
@@ -189,27 +188,25 @@ function handleSave() {
               </div>
 
               <div class="field-group">
-                <Toggle v-model="formData.allergies" label="Has Allergies?" labelPosition="left" />
+                <Toggle :model-value="formData.allergies || false" @update:model-value="val => formData.allergies = val" label="Has Allergies?" labelPosition="left" />
               </div>
             </div>
           </div>
 
-          <!-- Preferences Tab -->
           <div v-else-if="activeTab === 'preferences'" class="form-section">
             <h3 class="section-title">Application Details</h3>
             <div class="stack">
-              <InputTextArea label="Why they joined" v-model="formData.interestReason" />
-              <InputTextArea label="Volunteer Experience" v-model="formData.volunteerExperience" />
+              <InputTextArea label="Why they joined" placeholder="Reason for joining..." :model-value="formData.interestReason || ''" @update:model-value="val => formData.interestReason = (val as string | undefined)" />
+              <InputTextArea label="Volunteer Experience" placeholder="Previous experience..." :model-value="formData.volunteerExperience || ''" @update:model-value="val => formData.volunteerExperience = (val as string | undefined)" />
 
               <h3 class="section-subtitle mt-4">Position Preferences</h3>
-              <PositionPreferences v-model="formData.positionPreferences" />
+              <PositionPreferences :model-value="formData.positionPreferences || []" @update:model-value="val => formData.positionPreferences = val" />
 
               <h3 class="section-subtitle mt-4">Availability</h3>
-              <Availability v-model="formData.availability" />
+              <Availability :model-value="formData.availability || []" @update:model-value="val => formData.availability = val" />
             </div>
           </div>
 
-          <!-- Settings Tab -->
           <div v-else-if="activeTab === 'settings'" class="form-section">
             <h3 class="section-title">Settings</h3>
 
@@ -218,7 +215,8 @@ function handleSave() {
                 >Permission Level</label
               >
               <Select
-                v-model="formData.role"
+                :model-value="formData.role || 'Tier 1'"
+                @update:model-value="val => formData.role = (val as any)"
                 :options="[
                   { label: 'Tier 1 Volunteer', value: 'Tier 1' },
                   { label: 'Tier 2 Volunteer', value: 'Tier 2' },
@@ -272,7 +270,7 @@ function handleSave() {
 }
 
 .editor-drawer {
-  width: 800px; /* Match PetEditor width logic roughly, or slightly smaller */
+  width: 800px; 
   background: #fff;
   height: 100%;
   box-shadow: -4px 0 24px rgba(0, 0, 0, 0.15);
@@ -372,7 +370,6 @@ function handleSave() {
   gap: 20px;
 }
 
-/* Reused input styles (consider making global shared CSS) */
 .field-group {
   display: flex;
   flex-direction: column;
@@ -431,7 +428,6 @@ function handleSave() {
   width: 100%;
 }
 
-/* Force deep width override for Inputs in grid cells */
 .row-2 :deep(input),
 .row-full :deep(input) {
   width: 100% !important;
@@ -444,23 +440,23 @@ function handleSave() {
 }
 
 .panel.danger-zone {
-  border-color: #fca5a5; /* red-300 */
+  border-color: #fca5a5; 
 }
 
 .danger-zone .panel-header {
-  background: #fef2f2; /* red-50 */
+  background: #fef2f2; 
   padding: 16px;
   border-bottom: 1px solid #fca5a5;
 }
 
 .danger-zone h4 {
-  color: #991b1b; /* red-800 */
+  color: #991b1b; 
   font-weight: 600;
   margin-bottom: 4px;
 }
 
 .danger-zone p {
-  color: #b91c1c; /* red-700 */
+  color: #b91c1c; 
   font-size: 0.9rem;
   margin: 0;
 }

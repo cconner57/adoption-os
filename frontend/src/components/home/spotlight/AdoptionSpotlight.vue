@@ -1,10 +1,10 @@
 <script setup lang="ts">
-import { ref, computed, watch } from 'vue'
-import PetItem from '../../common/pet-item/PetItem.vue'
-import { Spacer } from '../../common/ui' // Oops Spacer doesn't exist? Use div.
-import { Spinner } from '../../common/ui'
-import { useIsMobile } from '../../../utils/useIsMobile.ts'
+import { computed, ref, watch } from 'vue'
+
 import type { IPet } from '../../../models/common.ts'
+import { useIsMobile } from '../../../utils/useIsMobile.ts'
+import PetItem from '../../common/pet-item/PetItem.vue'
+import { Spinner } from '../../common/ui'
 
 const props = defineProps<{
   pets: IPet[]
@@ -93,9 +93,8 @@ const displayedPets = computed((): IPet[] => {
     overflow-x: auto;
     padding-bottom: 8px;
     -webkit-overflow-scrolling: touch;
-    justify-content: center; /* Center by default on larger screens */
+    justify-content: center; 
 
-    /* Fix for cutoff cards: extend scroll area to edges */
     margin-left: -50px;
     margin-right: -50px;
     padding-left: 50px;
@@ -111,12 +110,12 @@ const displayedPets = computed((): IPet[] => {
     }
     .pet-list {
       gap: 1rem;
-      /* Adjust for mobile padding (2rem = 32px roughly, but verify padding above) */
+      
       margin-left: -2rem;
       margin-right: -2rem;
       padding-left: 2rem;
       padding-right: 2rem;
-      justify-content: flex-start; /* Keep left alignment for scrolling on mobile */
+      justify-content: flex-start; 
     }
   }
   @media (min-width: 431px) and (max-width: 768px) {
@@ -138,7 +137,7 @@ const displayedPets = computed((): IPet[] => {
     }
     .pet-list {
       gap: 2rem;
-      /* Adjust for tablet landscape/desktop padding */
+      
       margin-left: -30px;
       margin-right: -30px;
       padding-left: 30px;

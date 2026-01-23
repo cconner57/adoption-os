@@ -72,7 +72,6 @@ const { formStep, selectedAnimal } = defineProps<{
     gap: 16px;
     padding-left: 16px;
 
-    /* Hide horizontal line on mobile */
     & .line {
       display: none;
     }
@@ -83,7 +82,7 @@ const { formStep, selectedAnimal } = defineProps<{
     flex-direction: column;
     align-items: center;
     position: relative;
-    z-index: 2; /* Above line */
+    z-index: 2; 
 
     @media (max-width: 600px) {
       flex-direction: row;

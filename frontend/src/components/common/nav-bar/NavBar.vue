@@ -1,10 +1,11 @@
 <script setup lang="ts">
 import { ref, watch } from 'vue'
-import { useRouter, useRoute } from 'vue-router'
+import { useRoute,useRouter } from 'vue-router'
+
 import { goToDonate } from '../../../utils/navigate.ts'
+import { useIsMobile, useIsTablet } from '../../../utils/useIsMobile.ts'
 import Button from '../ui/Button.vue'
 import NavDrawer from './NavDrawer.vue'
-import { useIsMobile, useIsTablet } from '../../../utils/useIsMobile.ts'
 
 const router = useRouter()
 const route = useRoute()
@@ -41,7 +42,7 @@ const isTablet = useIsTablet()
             to="/about"
             class="nav-item"
             active-class="active"
-            :class="{ active: $route.path.startsWith('/surrender') }"
+            :class="{ active: route.path.startsWith('/surrender') }"
             ><p>About</p></RouterLink
           >
           <RouterLink
@@ -49,7 +50,7 @@ const isTablet = useIsTablet()
             class="nav-item"
             active-class="active"
             :class="{
-              active: $route.path.startsWith('/adopt') || $route.path.startsWith('/pet-adoption'),
+              active: route.path.startsWith('/adopt') || route.path.startsWith('/pet-adoption'),
             }"
             ><p>Adopt</p></RouterLink
           >
@@ -123,7 +124,7 @@ const isTablet = useIsTablet()
   .nav-blurred {
     background-color: hsla(
       from var(--color-primary) h s 25% / 0.85
-    ); /* Darkened teal with opacity */
+    ); 
     backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(10px);
     transition:

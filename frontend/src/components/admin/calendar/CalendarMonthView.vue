@@ -9,11 +9,12 @@ const props = defineProps<{
   recurringShifts: Record<number, Array<{ time: string; title: string; type: string }>>
 }>()
 
-// Helper to parse time for sorting (e.g. "9:00 AM")
 const parseTime = (timeStr: string): number => {
   if (!timeStr) return 0
   const [time, modifier] = timeStr.split(' ')
-  let [hours, minutes] = time.split(':').map(Number)
+  const timeParts = time.split(':').map(Number)
+  let hours = timeParts[0]
+  const minutes = timeParts[1]
   if (modifier === 'PM' && hours < 12) hours += 12
   if (modifier === 'AM' && hours === 12) hours = 0
   return hours * 60 + minutes
@@ -29,11 +30,9 @@ const firstDayOfMonth = computed(() => {
 
 const weekDaysHeader = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
 
-// Month View Data
 const monthDays = computed(() => {
   const days = []
 
-  // Padding for start of month
   let padding = firstDayOfMonth.value - 1
   if (padding < 0) padding = 6
 
@@ -42,19 +41,18 @@ const monthDays = computed(() => {
   }
 
   for (let i = 1; i <= daysInMonth.value; i++) {
-    // Generate mock events
+    
     const events = []
     const currentDayDate = new Date(props.currentYear, props.currentMonth, i)
     const dayOfWeek = currentDayDate.getDay()
 
-    // Add recurring shifts
     const shifts = props.recurringShifts[dayOfWeek] || []
     shifts.forEach((shift, idx) => {
       events.push({ id: `v-${i}-${idx}`, ...shift })
     })
 
     if (i === 5) {
-      // Vet mock logic
+      
       events.push({
         id: `vet-${i}-special`,
         type: 'vet',
@@ -63,7 +61,6 @@ const monthDays = computed(() => {
       })
     }
 
-    // Sort events by time
     events.sort((a, b) => parseTime(a.time) - parseTime(b.time))
 
     days.push({
@@ -117,7 +114,7 @@ const monthDays = computed(() => {
 </template>
 
 <style scoped>
-/* Month View */
+
 .month-view {
   background: var(--text-inverse);
   border-radius: 12px;
@@ -142,7 +139,7 @@ const monthDays = computed(() => {
   grid-template-columns: repeat(7, 1fr);
   grid-auto-rows: 1fr;
   gap: 1px;
-  background-color: var(--border-color); /* Grid lines */
+  background-color: var(--border-color); 
   border: 1px solid var(--border-color);
   flex: 1;
 }
@@ -196,7 +193,7 @@ const monthDays = computed(() => {
     height: 6px;
     border-radius: 50%;
     flex-shrink: 0;
-    margin-top: 5px; /* Align with first line of text */
+    margin-top: 5px; 
   }
 
   .content {
@@ -214,7 +211,6 @@ const monthDays = computed(() => {
     display: inline;
   }
 
-  /* Specific event type styling needs to be here or passed down/global */
   &.volunteer {
     background-color: hsl(from var(--color-secondary) h s 95%);
     color: var(--color-secondary);

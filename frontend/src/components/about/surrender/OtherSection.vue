@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import type { SurrenderFormState } from '../../../models/surrender-form.ts'
-import InputTextArea from '../../common/ui/InputTextArea.vue'
 import InputFileUpload from '../../common/ui/InputFileUpload.vue'
+import InputTextArea from '../../common/ui/InputTextArea.vue'
 
-const { formState, touched, handleBlur, hasAttemptedSubmit } = defineProps<{
+const { formState } = defineProps<{
   formState: SurrenderFormState
   touched: Record<string, boolean>
   handleBlur: (_field: string) => void // eslint-disable-line no-unused-vars
@@ -24,15 +24,15 @@ const { formState, touched, handleBlur, hasAttemptedSubmit } = defineProps<{
         />
       <InputFileUpload
         label="Please upload a full body picture of the pet"
-        :modelValue="formState.fullBodyPhotoOfCat"
-        @update:modelValue="(val) => (formState.fullBodyPhotoOfCat = val)"
+        :modelValue="formState.fullBodyPhotoOfAnimal"
+        @update:modelValue="(val) => (formState.fullBodyPhotoOfAnimal = val)"
         :required="true"
         accept="image/*"
       />
       <InputFileUpload
         label="Please upload a up close head shot of the pet"
-        :modelValue="formState.closeUpPhotoOfCatsFace"
-        @update:modelValue="(val) => (formState.closeUpPhotoOfCatsFace = val)"
+        :modelValue="formState.closeUpPhotoOfAnimalFace"
+        @update:modelValue="(val) => (formState.closeUpPhotoOfAnimalFace = val)"
         accept="image/*"
       />
       <InputFileUpload

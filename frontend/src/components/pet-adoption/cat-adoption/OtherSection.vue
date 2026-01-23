@@ -1,8 +1,7 @@
 <script setup lang="ts">
-import InputSelectGroup from '../../common/ui/InputSelectGroup.vue'
-import InputField from '../../common/ui/InputField.vue'
-
 import type { FormState } from '../../../models/adopt-form.ts'
+import InputField from '../../common/ui/InputField.vue'
+import InputSelectGroup from '../../common/ui/InputSelectGroup.vue'
 
 const { modelValue } = defineProps<{
   modelValue: FormState
@@ -136,7 +135,6 @@ const { modelValue } = defineProps<{
     gap: 2rem;
   }
 
-  /* Make the "Surrender Conditions" and "Surrender Plan" span full width */
   .other-section .full-width {
     grid-column: 1 / -1;
   }

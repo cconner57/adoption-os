@@ -26,10 +26,9 @@ defineProps<{
   border: 1px solid transparent;
 }
 
-/* Default Variant (High Contrast Background) */
 .tag.default.neutral {
   background-color: hsl(from var(--color-neutral) h s 90%);
-  color: hsl(from var(--color-neutral) h s 20%); /* Darker text */
+  color: hsl(from var(--color-neutral) h s 20%); 
   border-color: hsl(from var(--color-neutral) h s 85%);
 }
 
@@ -45,7 +44,6 @@ defineProps<{
   border-color: hsl(from var(--color-secondary) h s 85%);
 }
 
-/* Outline Variant (Border driven) */
 .tag.outline {
   background-color: var(--text-inverse);
   border-width: 1px;
@@ -61,7 +59,6 @@ defineProps<{
   color: var(--color-primary);
 }
 
-/* Ghost Variant (Subtle) */
 .tag.ghost {
   background-color: transparent;
   padding: 4px 10px;

@@ -1,8 +1,9 @@
 <script setup lang="ts">
 import { reactive, ref } from 'vue'
-import InputSelectGroup from '../../common/ui/InputSelectGroup.vue'
-import InputField from '../../common/ui/InputField.vue'
+
 import ButtonToggle from '../../common/ui/ButtonToggle.vue'
+import InputField from '../../common/ui/InputField.vue'
+import InputSelectGroup from '../../common/ui/InputSelectGroup.vue'
 
 const { modelValue } = defineProps<{
   modelValue: {
@@ -183,8 +184,8 @@ const handleBlur = (field: string) => {
   .home-section {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
-    column-gap: 24px; /* Space between columns */
-    row-gap: 24px; /* Space between rows */
+    column-gap: 24px; 
+    row-gap: 24px; 
     align-items: start;
   }
 }

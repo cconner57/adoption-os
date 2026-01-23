@@ -8,12 +8,12 @@ export interface IApplication {
   date: string
   status: 'pending' | 'approved' | 'denied' | 'needs_info'
   notes?: string
-  details: Record<string, any>
-  fullApplication: Record<string, any> // The raw form data
+  details: Record<string, unknown>
+  fullApplication: Record<string, unknown> 
 }
 
 export const mockApplications = ref<IApplication[]>([
-  // Volunteer Applications
+  
   {
     id: 'v-app-1',
     type: 'volunteer',
@@ -58,7 +58,6 @@ export const mockApplications = ref<IApplication[]>([
     },
   },
 
-  // Surrender Applications
   {
     id: 's-app-1',
     type: 'surrender',
@@ -112,7 +111,6 @@ export const mockApplications = ref<IApplication[]>([
     },
   },
 
-  // Adoption Applications
   {
     id: 'a-app-1',
     type: 'adoption',

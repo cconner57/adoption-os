@@ -1,25 +1,23 @@
 <script setup lang="ts">
-import { ref, computed } from 'vue'
+import { ref } from 'vue'
+
 import type { IPet } from '../../../models/common'
-import { useRouter } from 'vue-router'
-import { formatDate, calculateAge } from '../../../utils/date'
+import { calculateAge,formatDate } from '../../../utils/date'
 import { Button } from '../../common/ui'
 
-const props = defineProps<{
+defineProps<{
   pet: IPet
   statusFilter: string
 }>()
 
 const emit = defineEmits<{
-  (e: 'edit', pet: IPet): void
-  (e: 'archive', pet: IPet): void
-  (e: 'mark-adopted', pet: IPet): void
+  edit: [pet: IPet]
+  archive: [pet: IPet]
+  'mark-adopted': [pet: IPet]
 }>()
 
 const isExpanded = ref(false)
-const router = useRouter()
 
-// --- Helpers ---
 function getStatusColor(status: string) {
   const map: Record<string, string> = {
     available: 'green',
@@ -36,40 +34,11 @@ function getStatusColor(status: string) {
 function formatDoB(dateString?: string | null) {
   return formatDate(dateString)
 }
-
-function formatCurrency(amount?: number | null) {
-  if (amount == null) return '-'
-  return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(amount)
-}
-
-function formatList(list?: string[] | null) {
-  if (!list || list.length === 0) return '-'
-  return list.join(', ')
-}
-
-function isTrue(val: boolean | string | undefined | null) {
-  return val === 'true' || val === true
-}
-
-// --- Computed ---
-const vaccineSummary = computed(() => {
-  const v = props.pet.medical?.vaccinations
-  if (!v) return 'No recent records'
-  const list: string[] = []
-  if (v.rabies?.dateAdministered) list.push(`Rabies: ${formatDoB(v.rabies.dateAdministered)}`)
-  if (v.bordetella?.dateAdministered)
-    list.push(`Bordetella: ${formatDoB(v.bordetella.dateAdministered)}`)
-  if (v.canineDistemper?.round1?.dateAdministered)
-    list.push(`Distemper: ${formatDoB(v.canineDistemper.round1.dateAdministered)}`)
-  if (v.felineDistemper?.round1?.dateAdministered)
-    list.push(`FVRCP: ${formatDoB(v.felineDistemper.round1.dateAdministered)}`)
-  return list.length ? list.join(' • ') : 'No recent records'
-})
 </script>
 
 <template>
   <div class="pet-card" :class="{ expanded: isExpanded }">
-    <!-- Header: Avatar, Name, Status -->
+    
     <div class="card-header" @click="isExpanded = !isExpanded">
       <div class="header-main">
         <div class="pet-avatar">
@@ -113,7 +82,6 @@ const vaccineSummary = computed(() => {
       </div>
     </div>
 
-    <!-- Collapsed Quick Stats -->
     <div class="card-body" v-if="!isExpanded">
       <div class="quick-stats">
         <div class="stat">
@@ -127,9 +95,8 @@ const vaccineSummary = computed(() => {
       </div>
     </div>
 
-    <!-- Expanded Details -->
     <div v-if="isExpanded" class="card-details">
-      <!-- Reuse similar grid layout but stacked for mobile -->
+      
       <div class="detail-section">
         <h4>Basic Info</h4>
         <div class="detail-row">
@@ -192,7 +159,6 @@ const vaccineSummary = computed(() => {
         </div>
       </div>
 
-      <!-- Actions Footer -->
       <div class="card-actions">
         <Button
           v-if="pet.details.status === 'available'"
@@ -302,7 +268,7 @@ const vaccineSummary = computed(() => {
   text-transform: uppercase;
   letter-spacing: 0.5px;
 }
-/* Reused status colors */
+
 .status-badge.green {
   background: #dcfce7;
   color: #166534;
@@ -331,7 +297,7 @@ const vaccineSummary = computed(() => {
 .expand-icon {
   color: #94a3b8;
   transition: transform 0.3s;
-  margin-top: 4px; /* Align with top mostly */
+  margin-top: 4px; 
 }
 .expand-icon.rotated {
   transform: rotate(180deg);
@@ -339,7 +305,7 @@ const vaccineSummary = computed(() => {
 
 .card-body {
   padding: 0 16px 16px;
-  padding-left: 92px; /* Align with text, skipping avatar width (64) + gap (12) + padding (16) = 92 */
+  padding-left: 92px; 
 }
 
 .quick-stats {

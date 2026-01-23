@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
+import { onMounted,ref } from 'vue'
+
 import Candid from '../../common/candid-award/Candid.vue'
 import { Spinner } from '../../common/ui'
 
@@ -11,17 +12,16 @@ const countPrevious = ref(0)
 const isLoading = ref(true)
 
 import { API_ENDPOINTS } from '../../../constants/api'
-// ... (rest of logic unchanged)
 
 const fetchCount = async (year: number) => {
   try {
     const response = await fetch(`${API_ENDPOINTS.ADOPTED_PETS_COUNT}?year=${year}`)
     const json = await response.json()
-    // Handle standard envelope { data: { count: N } }
+    
     if (json.data && typeof json.data.count === 'number') {
       return json.data.count
     }
-    // Fallback if structure is different
+    
     return json.count || 0
   } catch (error) {
     console.error(`Error fetching count for ${year}:`, error)
@@ -32,7 +32,7 @@ const fetchCount = async (year: number) => {
 const getLabel = (count: number) => (count === 1 ? 'pet' : 'pets')
 
 onMounted(async () => {
-  // Parallel fetch
+  
   const [prev, curr] = await Promise.all([fetchCount(previousYear), fetchCount(currentYear)])
 
   countPrevious.value = prev
@@ -71,7 +71,7 @@ onMounted(async () => {
 </template>
 
 <style scoped lang="css">
-/* Loader Styles */
+
 .loader-container {
   display: flex;
   justify-content: center;
@@ -80,9 +80,6 @@ onMounted(async () => {
   height: 100%;
 }
 
-/* Spinner styles removed, using component */
-
-/* Main Layout Styles */
 .impact {
   width: 100%;
   background-color: var(--text-inverse);
@@ -125,7 +122,7 @@ onMounted(async () => {
     justify-content: center;
     width: 100%;
     max-width: 450px;
-    min-height: 100px; /* Prevent layout jump during loading */
+    min-height: 100px; 
 
     & span {
       display: flex;
@@ -146,7 +143,6 @@ onMounted(async () => {
     }
   }
 
-  /* Media Queries */
   @media (max-width: 900px) {
     margin-top: -80px;
     padding: 30px;
@@ -196,7 +192,7 @@ onMounted(async () => {
   }
 
   @media (max-width: 480px) {
-    margin-top: -30px; /* Reduced overlap for mobile */
+    margin-top: -30px; 
     padding: 24px;
 
     .stats {

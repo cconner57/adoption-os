@@ -38,7 +38,7 @@ const emit = defineEmits(['update:modelValue'])
   background: none;
   border: none;
   padding: 12px 0;
-  margin-right: 24px; /* Use margin instead of gap for safety */
+  margin-right: 24px; 
   font-size: 1rem;
   color: hsl(from var(--color-neutral) h s 50%);
   cursor: pointer;

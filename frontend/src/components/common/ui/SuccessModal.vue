@@ -7,9 +7,7 @@ defineProps<{
   message?: string
 }>()
 
-const emit = defineEmits<{
-  (e: 'close'): void
-}>()
+const emit = defineEmits(['close'])
 </script>
 
 <template>
@@ -50,7 +48,7 @@ const emit = defineEmits<{
     0,
     0,
     0.5
-  ); /* Neutral overlay can stay or use neutral var with opacity */
+  ); 
   display: flex;
   justify-content: center;
   align-items: center;
@@ -61,13 +59,13 @@ const emit = defineEmits<{
 
 .modal-card {
   background: var(--text-inverse);
-  padding: 40px 32px; /* Slight increase in vertical padding */
+  padding: 40px 32px; 
   border-radius: 24px;
   width: 90%;
   max-width: 400px;
   display: flex;
   flex-direction: column;
-  align-items: center; /* Ensures horizontal centering of all children */
+  align-items: center; 
   justify-content: center;
   box-shadow:
     0 20px 25px -5px rgba(0, 0, 0, 0.1),
@@ -84,7 +82,7 @@ const emit = defineEmits<{
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-bottom: 24px; /* Reduced auto margin reliance */
+  margin-bottom: 24px; 
   animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) 0.1s both;
 }
 
@@ -97,7 +95,7 @@ const emit = defineEmits<{
 }
 
 .modal-message {
-  color: hsl(from var(--color-neutral) h s 30%); /* Darker gray for better contrast */
+  color: hsl(from var(--color-neutral) h s 30%); 
   margin-bottom: 32px;
   line-height: 1.5;
   text-align: center;

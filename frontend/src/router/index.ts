@@ -1,13 +1,14 @@
 import { createRouter, createWebHistory } from 'vue-router'
-// Pages are now lazy-loaded inline to support code splitting
+
 const KioskLayout = () => import('../layouts/KioskLayout.vue')
 const KioskHome = () => import('../pages/kiosk/KioskHome.vue')
 const KioskDailyCare = () => import('../pages/kiosk/KioskDailyCare.vue')
 const KioskPetList = () => import('../pages/kiosk/KioskPetList.vue')
 const KioskVetSchedule = () => import('../pages/kiosk/KioskVetSchedule.vue')
 
-import { useMetrics } from '../composables/useMetrics'
 import { nextTick } from 'vue'
+
+import { useMetrics } from '../composables/useMetrics'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -19,9 +20,11 @@ const router = createRouter({
     {
       path: '/login',
       component: () => import('../pages/Login.vue'),
+      meta: { hideNavbar: true },
     },
     {
       path: '/kiosk',
+      meta: { hideNavbar: true },
       component: KioskLayout,
       children: [
         { path: '', name: 'kiosk-home', component: KioskHome },
@@ -32,6 +35,7 @@ const router = createRouter({
     },
     {
       path: '/admin',
+      meta: { hideNavbar: true },
       component: () => import('../layouts/AdminLayout.vue'),
       children: [
         {
@@ -160,63 +164,52 @@ const router = createRouter({
   },
 })
 
-interface ViewTransition {
-  finished: Promise<void>
-  ready: Promise<void>
-  updateCallbackDone: Promise<void>
-  skipTransition(): void
+type StartViewTransitionOptions = {
+  update?: ViewTransitionUpdateCallback
+  types?: string[]
 }
 
-type ViewTransitionUpdateCallback = () => Promise<void> | void
-type StartViewTransitionOptions = Record<string, unknown>
-
-interface ViewTransitionDocument extends Document {
-  startViewTransition(
-    callback?: ViewTransitionUpdateCallback,
-    options?: StartViewTransitionOptions,
-  ): ViewTransition
+interface CustomViewTransitionDocument extends Document {
+  // eslint-disable-next-line no-unused-vars, @typescript-eslint/no-explicit-any
+  startViewTransition(callback?: ViewTransitionUpdateCallback, options?: StartViewTransitionOptions): any
 }
 
 import { useAuthStore } from '../stores/auth'
+import { useUIStore } from '../stores/ui'
 
 router.beforeEach(async (to, from, next) => {
   const authStore = useAuthStore()
+  const uiStore = useUIStore()
 
-  // Ensure auth is initialized explicitly
+  uiStore.startLoading()
+
   if (!authStore.initialized) {
     await authStore.initialize()
   }
 
-  // Ensure we have the latest auth state (optional, but good for refresh)
   if (!authStore.user && authStore.isAuthenticated) {
-    // If pinia persistence was used this would be different,
-    // but currently we rely on `checkAuth` on app mount usually.
-    // For now, assume state is correct.
+    
   }
 
-  // 1. Prevent logged-in users from seeing Login page
   if (to.path === '/login' && authStore.isAuthenticated) {
     next('/admin')
     return
   }
 
-  // 2. Check if route requires admin access
   if (to.path.startsWith('/admin')) {
     if (!authStore.isAuthenticated) {
-      // Not logged in -> Redirect to login
+      
       next('/login')
       return
     }
-    // We removed the role check redirect to '/' as requested.
-    // Authorized users stay here.
+    
   }
 
-  // 3. Allow navigation
   next()
 })
 
 router.beforeResolve((to, from, next) => {
-  const doc = document as unknown as ViewTransitionDocument
+  const doc = document as unknown as CustomViewTransitionDocument
 
   if (!doc.startViewTransition) {
     next()
@@ -231,7 +224,15 @@ router.beforeResolve((to, from, next) => {
 
 router.afterEach((to) => {
   const { submitMetric } = useMetrics()
+  const uiStore = useUIStore()
+
+  uiStore.stopLoading()
   submitMetric('page_view', { path: to.fullPath })
+})
+
+router.onError(() => {
+  const uiStore = useUIStore()
+  uiStore.stopLoading()
 })
 
 export default router

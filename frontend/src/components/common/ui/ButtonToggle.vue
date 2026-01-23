@@ -7,7 +7,7 @@ const props = withDefaults(
     trueValue?: string | number | boolean | null
     falseValue?: string | number | boolean | null
     trueLabel?: string
-    trueLabel?: string
+
     falseLabel?: string
     hasError?: boolean
   }>(),

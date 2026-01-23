@@ -1,5 +1,5 @@
-export { default as ApplicationHeader } from './application-header/ApplicationHeader.vue'
 export { default as Agreement } from './agreement/Agreement.vue'
 export { default as Allergies } from './allergies/Allergies.vue'
+export { default as ApplicationHeader } from './application-header/ApplicationHeader.vue'
 export { default as Availability } from './availability/Availability.vue'
 export { default as PositionPreferences } from './preferences/PositionPreferences.vue'

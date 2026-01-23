@@ -18,12 +18,7 @@ defineProps<{
 </template>
 
 <style scoped>
-/* Consolidate card styles if they aren't globally available,
-   but for now we assume global 'card' class or scoped style persistence.
-   Since the original used scoped styles, we might need to rely on the parent or global styles.
-   However, assuming 'card' is a global utility class or we should copy the scoped styles if they were local.
-   Checking original Settings.vue... it has scoped styles but 'settings-card' seems specific.
-*/
+
 .settings-card {
   background: white;
   border: 1px solid #e5e7eb;

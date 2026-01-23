@@ -89,7 +89,7 @@ const { vScrollReveal } = useScrollReveal()
 </template>
 
 <style scoped lang="css">
-/* Reveal Animations */
+
 :deep(.reveal) {
   opacity: 0;
   transform: translateY(30px);
@@ -116,7 +116,6 @@ const { vScrollReveal } = useScrollReveal()
   transition-delay: 0.2s;
 }
 
-/* Stagger awards */
 :deep(.award-item) {
   opacity: 0;
   transform: translateY(20px);
@@ -132,12 +131,11 @@ const { vScrollReveal } = useScrollReveal()
   overflow: hidden;
   color: var(--text-primary);
 
-  /* Shared wrapper style */
   .content-wrapper {
     width: 100%;
     max-width: 1600px;
     margin: 0 auto;
-    /* padding: 0 var(--layout-padding-side); removed padding to match NavBar logic */
+    
     box-sizing: border-box;
   }
 
@@ -163,7 +161,7 @@ const { vScrollReveal } = useScrollReveal()
       font-size: 1.25rem;
       max-width: 600px;
       margin-top: 12px;
-      font-weight: 400; /* Increased contrast */
+      font-weight: 400; 
       color: var(--text-inverse);
     }
   }
@@ -229,7 +227,7 @@ const { vScrollReveal } = useScrollReveal()
       font-size: 1.15rem;
       max-width: 600px;
       margin-top: 12px;
-      font-weight: 400; /* Increased contrast */
+      font-weight: 400; 
       color: var(--text-inverse);
     }
 
@@ -243,7 +241,7 @@ const { vScrollReveal } = useScrollReveal()
       list-style: none;
       padding: 0;
       margin: 12px 0 0;
-      font-weight: 400; /* Increased contrast */
+      font-weight: 400; 
       color: var(--text-inverse);
     }
     & .ticks li {
@@ -285,10 +283,10 @@ const { vScrollReveal } = useScrollReveal()
       margin-top: 12px;
     }
     .notice {
-      text-align: right; /* Aligns content to the right edge */
+      text-align: right; 
       display: flex;
       flex-direction: column;
-      align-items: flex-end; /* Ensures flex children align right */
+      align-items: flex-end; 
 
       & h2 {
         font-size: 2.5rem;
@@ -303,7 +301,7 @@ const { vScrollReveal } = useScrollReveal()
       display: flex;
       gap: 3rem;
       align-items: center;
-      justify-content: center; /* Centered in its column */
+      justify-content: center; 
     }
   }
 
@@ -326,7 +324,7 @@ const { vScrollReveal } = useScrollReveal()
     .mission content,
     .transparency .notice {
       max-width: 100%;
-      align-items: center; /* Reset alignments for center text */
+      align-items: center; 
     }
 
     .story-text p,
@@ -335,21 +333,19 @@ const { vScrollReveal } = useScrollReveal()
     .mission .ticks {
       margin-left: auto;
       margin-right: auto;
-      text-align: left; /* Keep text readable */
+      text-align: left; 
     }
 
-    /* Re-center lists/paragraphs if desired, or keep left aligned within a centered block */
     .mission .ticks {
       display: inline-block;
       text-align: left;
     }
 
     .transparency .awards {
-      order: -1; /* Awards on top on mobile? matching previous layout logic roughly */
+      order: -1; 
       margin-bottom: 2rem;
     }
 
-    /* Reset transparency alignment for mobile */
     .transparency .notice {
       text-align: center;
       align-items: center;
@@ -367,7 +363,6 @@ const { vScrollReveal } = useScrollReveal()
       }
     }
 
-    /* Further specific mobile adjustments can go here if generic max-width: 1024 isn't enough */
     .transparency .awards {
       flex-direction: column;
       gap: 3.5rem;

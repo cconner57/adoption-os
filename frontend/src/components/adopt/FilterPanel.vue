@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import { ref, watch, onMounted } from 'vue'
+import { ref, watch } from 'vue'
+
 import Button from '../common/ui/Button.vue'
 
 const props = defineProps<{
@@ -13,9 +14,9 @@ const props = defineProps<{
 }>()
 
 const emit = defineEmits<{
-  (e: 'close'): void
-  (e: 'apply', filters: typeof props.currentFilters): void
-  (e: 'clear'): void
+  close: []
+  apply: [filters: typeof props.currentFilters]
+  clear: []
 }>()
 
 const localFilters = ref({
@@ -25,7 +26,6 @@ const localFilters = ref({
   goodWith: [] as string[],
 })
 
-// Sync local state when props change or component mounts
 watch(
   () => props.currentFilters,
   (newVal) => {
@@ -49,9 +49,7 @@ const toggleSex = (value: string) => {
 
 const applyFilters = () => {
   emit('apply', localFilters.value)
-  // Optional: emit('close') if we want it to close on apply,
-  // but for inline panel, keeping it open might be better UX?
-  // Let's close it to signify "Action Taken" and save space.
+  
   emit('close')
 }
 </script>
@@ -128,7 +126,7 @@ const applyFilters = () => {
 <style scoped>
 .filter-panel {
   width: 100%;
-  max-width: 800px; /* Match content width roughly */
+  max-width: 800px; 
   background: white;
   border-radius: 24px;
   padding: 24px;
@@ -196,7 +194,6 @@ section {
   }
 }
 
-/* Make footer responsive */
 footer {
   display: flex;
   justify-content: space-between;
@@ -214,7 +211,7 @@ footer {
 
 @media (max-width: 480px) {
   footer {
-    flex-direction: column-reverse; /* Stack actions on top or bottom */
+    flex-direction: column-reverse; 
     align-items: stretch;
   }
 
@@ -224,7 +221,7 @@ footer {
     gap: 12px;
 
     button {
-      width: 100%; /* Make buttons full width on small screens */
+      width: 100%; 
     }
   }
 }

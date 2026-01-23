@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { computed } from 'vue'
+
 import type { IPet } from '../../../models/common.ts'
 
 const props = defineProps<{
@@ -95,8 +96,8 @@ const houseTrainedText = () => {
     }
     p:last-child {
       text-wrap: wrap;
-      width: auto; /* Allow flexible width */
-      flex: 1;    /* Take remaining space */
+      width: auto; 
+      flex: 1;    
     }
   }
 }

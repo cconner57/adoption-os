@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import InputField from '../../common/ui/InputField.vue'
+
 import ButtonToggle from '../../common/ui/ButtonToggle.vue'
-import HoneypotField from '../../common/ui/HoneypotField.vue'
+import InputField from '../../common/ui/InputField.vue'
 
 const { modelValue } = defineProps<{
   modelValue: {
@@ -45,7 +45,7 @@ function removeChild(index: number) {
   modelValue.childrenNamesAges.splice(index, 1)
 }
 
-function handleAgreementUpdate(val: string) {
+function handleAgreementUpdate(val: string | number | boolean | null) {
   modelValue.adultMembersAgreed = val as 'Yes' | 'No'
 }
 </script>
@@ -55,7 +55,6 @@ function handleAgreementUpdate(val: string) {
     <div>
       <h2>Applicant Information</h2>
 
-      <!-- Honeypot Field (Hidden) -->
       <div class="fax-field" aria-hidden="true">
         <label for="fax_number">Fax Number</label>
         <input
@@ -318,7 +317,6 @@ function handleAgreementUpdate(val: string) {
     grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 16px;
 
-    /* Use nearest container (likely .form-card or .page-shell) */
     @container (max-width: 768px) {
       grid-template-columns: 1fr;
     }
@@ -352,7 +350,6 @@ function handleAgreementUpdate(val: string) {
       display: none;
     }
 
-    /* Remove any margin from the control to ensure perfect centering */
     :deep(.control) {
       gap: 0;
     }
@@ -396,7 +393,6 @@ function handleAgreementUpdate(val: string) {
     background-color: hsl(from var(--color-danger) h s 95%);
   }
 
-  /* Children specific overrides */
   @container (max-width: 480px) {
     .children .dynamic-input-row {
       flex-wrap: wrap;

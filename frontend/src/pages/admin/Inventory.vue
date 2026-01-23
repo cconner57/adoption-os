@@ -1,28 +1,26 @@
 <script setup lang="ts">
-import { ref, computed } from 'vue'
-import { mockInventory, inventoryStats, type IInventoryItem } from '../../stores/mockInventory'
-import { Capsules, InputField, InputSelectGroup, Button } from '../../components/common/ui'
+import { computed,ref } from 'vue'
+
+import { Button,Capsules, InputField } from '../../components/common/ui'
+import { type IInventoryItem,inventoryStats, mockInventory } from '../../stores/mockInventory'
 
 const searchQuery = ref('')
 const filterCategory = ref<'All' | string>('All')
 const filterStatus = ref<'All' | 'Low Stock'>('All')
 
-// Computed
 const categories = computed(() => ['All', ...new Set(mockInventory.value.map((i) => i.category))])
 
 const filteredItems = computed(() => {
   return mockInventory.value
     .filter((item) => {
-      // 1. Search
+      
       const searchMatch =
         !searchQuery.value ||
         item.name.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
         item.location.toLowerCase().includes(searchQuery.value.toLowerCase())
 
-      // 2. Category
       const catMatch = filterCategory.value === 'All' || item.category === filterCategory.value
 
-      // 3. Status
       const isLow = item.quantity <= item.minThreshold
       const statusMatch =
         filterStatus.value === 'All' || (filterStatus.value === 'Low Stock' && isLow)
@@ -30,48 +28,42 @@ const filteredItems = computed(() => {
       return searchMatch && catMatch && statusMatch
     })
     .sort((a, b) => {
-      // Sort logic: Critical items first
+      
       const aRatio = a.quantity / a.minThreshold
       const bRatio = b.quantity / b.minThreshold
       return aRatio - bRatio
     })
 })
 
-// Helpers
 const getStockStatus = (item: IInventoryItem) => {
-  if (item.quantity === 0) return { label: 'Out of Stock', color: '#fee2e2' } // Red
-  if (item.quantity <= item.minThreshold) return { label: 'Low Stock', color: '#fef3c7' } // Yellow
-  return { label: 'In Stock', color: '#d1fae5' } // Green
+  if (item.quantity === 0) return { label: 'Out of Stock', color: '#fee2e2' } 
+  if (item.quantity <= item.minThreshold) return { label: 'Low Stock', color: '#fef3c7' } 
+  return { label: 'In Stock', color: '#d1fae5' } 
 }
 
 const getStockWidth = (item: IInventoryItem) => {
-  // Visual percentage for progress bar, capped at 100%
-  // Assuming 2x threshold is "full" enough for visualization
+  
   const max = item.minThreshold * 2
   return `${Math.min((item.quantity / max) * 100, 100)  }%`
 }
 
-// Actions
+import StockAdjustmentModal from '../../components/admin/inventory/StockAdjustmentModal.vue'
+
 const showEditModal = ref(false)
 const editingItem = ref<IInventoryItem | null>(null)
-const tempQuantity = ref(0) // For adjustment
 
 const openEditModal = (item: IInventoryItem) => {
   editingItem.value = item
-  tempQuantity.value = item.quantity
   showEditModal.value = true
 }
 
-const saveStock = () => {
-  if (editingItem.value) {
-    editingItem.value.quantity = tempQuantity.value
-    editingItem.value.lastUpdated = new Date().toISOString().split('T')[0]
-    showEditModal.value = false
-    editingItem.value = null
-  }
+const handleSaveStock = (item: IInventoryItem, quantity: number) => {
+  item.quantity = quantity
+  item.lastUpdated = new Date().toISOString().split('T')[0]
+  showEditModal.value = false
+  editingItem.value = null
 }
 
-// Add Item Mock
 const addItem = () => {
   const name = prompt('Enter item name:')
   if (name) {
@@ -91,13 +83,12 @@ const addItem = () => {
 
 <template>
   <div class="inventory-page">
-    <!-- HEADER -->
+    
     <div class="page-header">
       <h1>Inventory Management</h1>
-      <Button title="+ Add Item" color="black" :onClick="addItem" />
+      <Button title="+ Add Item" color="white" :onClick="addItem" />
     </div>
 
-    <!-- ALERTS -->
     <div v-if="inventoryStats.lowStockCount > 0" class="alert-banner">
       <span class="alert-icon">⚠️</span>
       <span class="alert-text">
@@ -107,7 +98,6 @@ const addItem = () => {
       </span>
     </div>
 
-    <!-- STATS -->
     <div class="stats-grid">
       <div class="stat-card">
         <span class="stat-label">Total Items</span>
@@ -125,7 +115,6 @@ const addItem = () => {
       </div>
     </div>
 
-    <!-- FILTERS -->
     <div class="filters-bar">
       <div class="search-wrap">
         <InputField v-model="searchQuery" placeholder="Search items or location..." />
@@ -141,7 +130,6 @@ const addItem = () => {
       </div>
     </div>
 
-    <!-- TABLE -->
     <div class="table-container">
       <table class="data-table">
         <thead>
@@ -206,34 +194,12 @@ const addItem = () => {
       </div>
     </div>
 
-    <!-- EDIT ADJUST MODAL -->
-    <div
-      v-if="showEditModal && editingItem"
-      class="modal-overlay"
-      @click.self="showEditModal = false"
-    >
-      <div class="modal-card">
-        <h3>Adjust Stock: {{ editingItem.name }}</h3>
-        <p class="subtitle">Update current quantity on hand.</p>
-
-        <div class="stock-adjuster">
-          <button class="adjust-btn" @click="tempQuantity = Math.max(0, tempQuantity - 1)">
-            -
-          </button>
-          <input v-model.number="tempQuantity" type="number" class="qty-input" />
-          <button class="adjust-btn" @click="tempQuantity++">+</button>
-        </div>
-
-        <p class="threshold-info">
-          Minimum Threshold: {{ editingItem.minThreshold }} {{ editingItem.unit }}
-        </p>
-
-        <div class="modal-actions">
-          <Button title="Cancel" color="white" :onClick="() => (showEditModal = false)" />
-          <Button title="Save Changes" color="black" :onClick="saveStock" />
-        </div>
-      </div>
-    </div>
+    <StockAdjustmentModal
+      :isOpen="showEditModal"
+      :item="editingItem"
+      @close="showEditModal = false"
+      @save="handleSaveStock"
+    />
   </div>
 </template>
 
@@ -273,7 +239,6 @@ const addItem = () => {
   margin-left: 4px;
 }
 
-/* STATS */
 .stats-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
@@ -312,7 +277,6 @@ const addItem = () => {
   }
 }
 
-/* FILTERS */
 .filters-bar {
   display: flex;
   justify-content: space-between;
@@ -337,7 +301,6 @@ const addItem = () => {
   min-width: 140px;
 }
 
-/* TABLE */
 .table-container {
   background: white;
   border-radius: 12px;
@@ -427,78 +390,4 @@ const addItem = () => {
   color: hsl(from var(--color-neutral) h s 50%);
 }
 
-/* MODAL */
-.modal-overlay {
-  position: fixed;
-  inset: 0;
-  background: rgba(0, 0, 0, 0.5);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 100;
-}
-
-.modal-card {
-  background: white;
-  padding: 24px;
-  border-radius: 12px;
-  width: 100%;
-  max-width: 400px;
-  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
-  text-align: center;
-
-  h3 {
-    margin: 0 0 8px 0;
-  }
-  .subtitle {
-    margin: 0 0 24px 0;
-    color: hsl(from var(--color-neutral) h s 50%);
-  }
-}
-
-.stock-adjuster {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 16px;
-  margin-bottom: 16px;
-}
-
-.adjust-btn {
-  width: 40px;
-  height: 40px;
-  border-radius: 8px;
-  border: 1px solid #e5e7eb;
-  background: white;
-  font-size: 1.5rem;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  &:hover {
-    background: hsl(from var(--color-neutral) h s 98%);
-  }
-}
-
-.qty-input {
-  width: 80px;
-  text-align: center;
-  font-size: 1.5rem;
-  font-weight: 700;
-  border: none;
-  border-bottom: 2px solid var(--color-secondary);
-  outline: none;
-}
-
-.threshold-info {
-  font-size: 0.85rem;
-  color: hsl(from var(--color-neutral) h s 50%);
-  margin-bottom: 24px;
-}
-
-.modal-actions {
-  display: flex;
-  justify-content: flex-end;
-  gap: 12px;
-}
 </style>

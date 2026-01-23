@@ -1,10 +1,10 @@
 import { defineStore } from 'pinia'
-import { ref, reactive, computed } from 'vue'
-import type { SurrenderFormState } from '../models/surrender-form'
-import { API_ENDPOINTS } from '../constants/api'
-import { useMetrics } from '../composables/useMetrics'
+import { computed,reactive, ref } from 'vue'
 
 import { useDemoMode } from '../composables/useDemoMode'
+import { useMetrics } from '../composables/useMetrics'
+import { API_ENDPOINTS } from '../constants/api'
+import type { SurrenderFormState } from '../models/surrender-form'
 
 export const useSurrenderStore = defineStore('surrender', () => {
   const { isDemoMode } = useDemoMode()
@@ -146,7 +146,6 @@ export const useSurrenderStore = defineStore('surrender', () => {
     return true
   })
 
-  /* Init Metrics */
   const { submitMetric } = useMetrics()
 
   const nextStep = () => {
@@ -193,7 +192,7 @@ export const useSurrenderStore = defineStore('surrender', () => {
       }
 
       isSubmitted.value = false
-      // Import API_ENDPOINTS if not already available in scope (adding import at top of file)
+      
       const response = await fetch(API_ENDPOINTS.SURRENDER_APPLICATION, {
         method: 'POST',
         headers: {

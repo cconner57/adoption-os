@@ -1,37 +1,34 @@
 <script setup lang="ts">
-import { ref, computed } from 'vue'
+import { computed,ref } from 'vue'
 import { useRouter } from 'vue-router'
-import { mockDailyLogs, type IDailyLog } from '../../stores/mockDailyCare'
-import { InputField, BooleanCapsule } from '../../components/common/ui'
+
+import { mockDailyLogs } from '../../stores/mockDailyCare'
 
 const router = useRouter()
 
-// Get today's log or fallback
-const todayLog = computed(() => mockDailyLogs.value[0]) // Simplification for mock
+const todayLog = computed(() => mockDailyLogs.value[0]) 
 
 const shift = ref<'AM' | 'PM'>('AM')
 
-// Computed Tasks based on Shift
 const currentTasks = computed(() => {
   return shift.value === 'AM' ? todayLog.value.amTasks : todayLog.value.pmTasks
 })
 
 const currentVolunteerName = computed({
-  get: () => (shift.value === 'AM' ? todayLog.value.amVolunteer : todayLog.value.pmVolunteer),
-  set: (val) => {
+  get: () => (shift.value === 'AM' ? todayLog.value.amVolunteer : todayLog.value.pmVolunteer) || '',
+  set: (val: string) => {
     if (shift.value === 'AM') todayLog.value.amVolunteer = val
     else todayLog.value.pmVolunteer = val
   },
 })
 
-// Columns config
 const columns = [
   { key: 'food', label: 'Food', icon: '🥣' },
   { key: 'pee', label: 'Pee', icon: '💧' },
   { key: 'poo', label: 'Poo', icon: '💩' },
   { key: 'clean', label: 'Clean', icon: '🧹' },
   { key: 'play', label: 'Play', icon: '🧸' },
-]
+] as const
 
 const generalChecklist = [
   { key: 'sweep', label: 'Sweep Floor' },
@@ -41,14 +38,14 @@ const generalChecklist = [
   { key: 'trash', label: 'Empty Trash / Clean Bag' },
   { key: 'windows', label: 'Clean Windows' },
   { key: 'mop', label: 'Mop Floor' },
-]
+] as const
 
 const goHome = () => router.push('/kiosk')
 </script>
 
 <template>
   <div class="care-sheet-page">
-    <!-- HEADER -->
+    
     <div class="sheet-header">
       <button class="back-link" @click="goHome">← Back</button>
       <div class="title-group">
@@ -66,7 +63,6 @@ const goHome = () => router.push('/kiosk')
       </div>
     </div>
 
-    <!-- VOLUNTEER INFO -->
     <div class="volunteer-row">
       <span>Volunteer on Duty:</span>
       <input
@@ -77,7 +73,6 @@ const goHome = () => router.push('/kiosk')
       />
     </div>
 
-    <!-- PET GRID -->
     <div class="grid-container">
       <table class="care-table">
         <thead>
@@ -98,20 +93,18 @@ const goHome = () => router.push('/kiosk')
             <td class="narrow-col center-text">{{ entry.cageNumber }}</td>
             <td class="pet-col fw-bold">{{ entry.petName }}</td>
 
-            <!-- DYNAMIC CHECKBOXES -->
             <td v-for="col in columns" :key="col.key" class="check-cell">
               <input
                 type="checkbox"
-                v-model="entry[shift.toLowerCase()][col.key]"
+                v-model="(entry[shift.toLowerCase() as 'am' | 'pm'] as any)[col.key]"
                 class="big-checkbox"
               />
             </td>
 
-            <!-- NOTES INPUT -->
             <td class="notes-cell">
               <input
                 type="text"
-                v-model="entry[shift.toLowerCase()].notes"
+                v-model="entry[shift.toLowerCase() as 'am' | 'pm'].notes"
                 class="table-input"
                 placeholder="Enter notes..."
               />
@@ -121,9 +114,8 @@ const goHome = () => router.push('/kiosk')
       </table>
     </div>
 
-    <!-- BOTTOM SECTION: CHECKLIST & EXTRAS -->
     <div class="bottom-section">
-      <!-- GENERAL TASKS -->
+      
       <div class="card tasks-card">
         <h3>🧹 General Tasks</h3>
         <div class="checklist-grid">
@@ -131,15 +123,14 @@ const goHome = () => router.push('/kiosk')
             v-for="task in generalChecklist"
             :key="task.key"
             class="task-row"
-            :class="{ checked: currentTasks[task.key] }"
+            :class="{ checked: (currentTasks as any)[task.key] }"
           >
-            <input type="checkbox" v-model="currentTasks[task.key]" class="big-checkbox" />
+            <input type="checkbox" v-model="(currentTasks as any)[task.key]" class="big-checkbox" />
             <span>{{ task.label }}</span>
           </label>
         </div>
       </div>
 
-      <!-- SUMMARY INPUTS -->
       <div class="card summary-card">
         <h3>📝 Shift Summary</h3>
 
@@ -261,11 +252,10 @@ const goHome = () => router.push('/kiosk')
   }
 }
 
-/* TABLE */
 .grid-container {
   background: white;
   border-radius: 16px;
-  border: 2px solid #000; /* Mimic bold lines of paper form */
+  border: 2px solid #000; 
   overflow: hidden;
   margin-bottom: 32px;
 }
@@ -338,10 +328,9 @@ const goHome = () => router.push('/kiosk')
   border: none;
   background: transparent;
   outline: none;
-  font-family: 'Inter', sans-serif; /* For handwriting feel? */
+  font-family: 'Inter', sans-serif; 
 }
 
-/* BOTTOM SECTION */
 .bottom-section {
   display: grid;
   grid-template-columns: 1fr 1fr;

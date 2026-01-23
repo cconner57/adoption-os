@@ -1,9 +1,11 @@
 import { fileURLToPath } from 'node:url'
-import { mergeConfig, defineConfig, configDefaults } from 'vitest/config'
+
+import { configDefaults,defineConfig, mergeConfig } from 'vitest/config'
+
 import viteConfig from './vite.config'
 
 export default mergeConfig(
-  viteConfig,
+  viteConfig as any, // eslint-disable-line @typescript-eslint/no-explicit-any
   defineConfig({
     test: {
       environment: 'jsdom',

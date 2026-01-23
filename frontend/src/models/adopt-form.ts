@@ -17,7 +17,7 @@ export interface PastPet {
 }
 
 export interface FormState {
-  fax_number: string | null // Honeypot
+  fax_number: string | null 
   firstName: string | null
   lastName: string | null
   age: number | null

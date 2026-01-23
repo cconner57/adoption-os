@@ -33,7 +33,7 @@ export interface IGeneralTasks {
 }
 
 export interface IDailyLog {
-  date: string // YYYY-MM-DD
+  date: string 
   amVolunteer: string
   pmVolunteer: string
   entries: ICareEntry[]
@@ -41,7 +41,6 @@ export interface IDailyLog {
   pmTasks: IGeneralTasks
 }
 
-// Helper to create empty status
 const emptyStatus = (): ICareTaskStatus => ({
   food: false,
   pee: false,
@@ -65,7 +64,6 @@ const emptyTasks = (): IGeneralTasks => ({
   additionalNotes: '',
 })
 
-// Mock Data for "Today"
 export const mockDailyLogs = ref<IDailyLog[]>([
   {
     date: new Date().toISOString().split('T')[0],

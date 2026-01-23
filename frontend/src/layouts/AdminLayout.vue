@@ -1,11 +1,12 @@
 <script setup lang="ts">
-import { ref, computed } from 'vue'
-import { useRouter, useRoute } from 'vue-router'
-import { useAuthStore } from '../stores/auth'
+import { computed,ref } from 'vue'
+import { useRouter } from 'vue-router'
+
 import { SidebarNav } from '../components/common/ui'
+import { useAuthStore } from '../stores/auth'
 
 const router = useRouter()
-const route = useRoute()
+
 const authStore = useAuthStore()
 
 const isMobileMenuOpen = ref(false)
@@ -19,7 +20,6 @@ const handleLogout = () => {
   router.push('/login')
 }
 
-// Mapped to SidebarNav interface (label, to, icon)
 const navItems = [
   { label: 'Overview', to: '/admin', icon: '📊', exact: true },
   { label: 'Calendar', to: '/admin/calendar', icon: '📅' },
@@ -53,7 +53,7 @@ const userInitials = computed(() => {
 
 <template>
   <div class="admin-layout">
-    <!-- Sidebar -->
+    
     <aside class="sidebar" :class="{ 'mobile-open': isMobileMenuOpen }">
       <div class="sidebar-header">
         <img src="/images/idohr-logo.jpg" alt="IDOHR Logo" class="logo" />
@@ -74,10 +74,8 @@ const userInitials = computed(() => {
       </div>
     </aside>
 
-    <!-- Overlay for mobile -->
     <div v-if="isMobileMenuOpen" class="sidebar-overlay" @click="isMobileMenuOpen = false"></div>
 
-    <!-- Main Content -->
     <div class="main-content">
       <header class="top-bar">
         <button class="menu-toggle" @click="toggleMobileMenu">☰</button>
@@ -99,7 +97,6 @@ const userInitials = computed(() => {
   overflow: hidden;
 }
 
-/* Sidebar Styles */
 .sidebar {
   width: 280px;
   background-color: var(--text-inverse);
@@ -134,8 +131,6 @@ const userInitials = computed(() => {
     letter-spacing: -0.02em;
   }
 }
-
-/* SidebarNav component handles the nav items styling */
 
 .sidebar-footer {
   padding: 24px;
@@ -205,17 +200,16 @@ const userInitials = computed(() => {
   }
 }
 
-/* Main Content Styles */
 .main-content {
   flex: 1;
   display: flex;
   flex-direction: column;
   overflow: hidden;
-  background-color: hsl(from var(--color-neutral) h s 98%); /* Cooler, lighter gray */
+  background-color: hsl(from var(--color-neutral) h s 98%); 
 }
 
 .top-bar {
-  display: none; /* Hidden on desktop since it is empty now */
+  display: none; 
   height: 80px;
   background-color: transparent;
   align-items: center;
@@ -245,10 +239,9 @@ const userInitials = computed(() => {
 .page-content {
   flex: 1;
   overflow-y: auto;
-  padding: 32px 40px 40px 40px; /* Added top padding to align with sidebar */
+  padding: 32px 40px 40px 40px; 
 }
 
-/* Mobile Responsive */
 .sidebar-overlay {
   position: fixed;
   top: 0;
@@ -284,7 +277,7 @@ const userInitials = computed(() => {
   }
 
   .top-bar {
-    display: flex; /* Show on mobile for menu toggle */
+    display: flex; 
     padding: 0 24px;
     height: 64px;
     background-color: var(--white);

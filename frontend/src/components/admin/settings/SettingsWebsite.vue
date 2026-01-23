@@ -1,17 +1,18 @@
 <script setup lang="ts">
-import { defineProps, defineEmits } from 'vue'
-import { InputField, ButtonToggle, Capsules } from '../../common/ui'
+import { defineEmits,defineProps } from 'vue'
+
+import { ButtonToggle, Capsules,InputField } from '../../common/ui'
 import Button from '../../common/ui/Button.vue'
 import SettingsCard from './SettingsCard.vue'
 
 const props = defineProps<{
-  settings: any
+  settings: any // eslint-disable-line @typescript-eslint/no-explicit-any
   isDemoMode: boolean
 }>()
 
 const emit = defineEmits<{
-  (e: 'update:settings', value: any): void
-  (e: 'toggleDemoMode'): void
+  'update:settings': [value: any] // eslint-disable-line @typescript-eslint/no-explicit-any
+  'toggleDemoMode': []
 }>()
 
 function addEmail(type: 'volunteer' | 'surrender' | 'adoption') {
@@ -52,7 +53,7 @@ function removeEmail(type: 'volunteer' | 'surrender' | 'adoption', email: string
 
     <SettingsCard title="Applications & Forms" icon="📝">
       <div class="forms-grid">
-        <!-- Volunteer Form -->
+        
         <div class="form-config-col">
           <div class="config-header">
             <h4>Volunteer Application</h4>
@@ -97,7 +98,6 @@ function removeEmail(type: 'volunteer' | 'surrender' | 'adoption', email: string
           </div>
         </div>
 
-        <!-- Surrender Form -->
         <div class="form-config-col">
           <div class="config-header">
             <h4>Surrender Request</h4>
@@ -142,7 +142,6 @@ function removeEmail(type: 'volunteer' | 'surrender' | 'adoption', email: string
           </div>
         </div>
 
-        <!-- Adoption Form -->
         <div class="form-config-col">
           <div class="config-header">
             <h4>Adoption Application</h4>
@@ -200,10 +199,9 @@ function removeEmail(type: 'volunteer' | 'surrender' | 'adoption', email: string
 }
 .settings-grid.single-col {
   grid-template-columns: 1fr;
-  max-width: 800px; /* Optional, keep readable width */
+  max-width: 800px; 
 }
 
-/* Row & Setting Row (Shared) */
 .setting-row {
   display: flex;
   justify-content: space-between;
@@ -227,7 +225,6 @@ function removeEmail(type: 'volunteer' | 'surrender' | 'adoption', email: string
   line-height: 1.4;
 }
 
-/* Forms Grid */
 .forms-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));

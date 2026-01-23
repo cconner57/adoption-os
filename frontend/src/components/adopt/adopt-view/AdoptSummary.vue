@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import type { IPet } from '../../../models/common.ts'
-import PetItem from '../../common/pet-item/PetItem.vue'
 import { formatDate } from '../../../utils/common.ts'
+import PetItem from '../../common/pet-item/PetItem.vue'
 
 defineProps<{
   pets: IPet[]
@@ -33,9 +33,8 @@ defineProps<{
   flex-wrap: wrap;
   row-gap: 30px;
   column-gap: 20px;
-  /* Centering handled by flex-wrap behavior or parent alignment */
+  
   justify-content: center;
 
-  /* Removed media queries that set max-width constraints */
 }
 </style>

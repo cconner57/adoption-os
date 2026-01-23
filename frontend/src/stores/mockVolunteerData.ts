@@ -1,4 +1,4 @@
-// ... existing code ...
+
 export interface IVolunteer {
   id: string
   firstName: string
@@ -11,9 +11,8 @@ export interface IVolunteer {
   bio?: string
   photoUrl?: string
   skills: string[]
-  reliabilityScore: number // 0-100
+  reliabilityScore: number 
 
-  // Detailed Form Data
   address: string
   city: string
   zip: string
@@ -25,39 +24,53 @@ export interface IVolunteer {
   volunteerExperience?: string
   interestReason?: string
   positionPreferences: string[]
-  availability: string[] // "Monday Morning", "Tuesday Evening"
+  availability: string[] 
 
-  // Gamification Metrics
   totalHours: number
-  streak: number // consecutive weeks
-  badges: string[] // "Early Bird", "Weekend Warrior"
+  streak: number 
+  badges: string[] 
 }
 
 export interface IShift {
   id: string
   volunteerId: string
-  date: string // ISO date
-  startTime: string // "09:00"
-  endTime: string // "13:00"
-  role: string // "Dog Walking", "Cleaning", etc.
-  status: 'scheduled' | 'all_good' | 'late' | 'no_show' | 'cancelled'
+  date: string 
+  startTime: string 
+  endTime: string 
+  role: string 
+  status:
+    | 'scheduled'
+    | 'all_good'
+    | 'late'
+    | 'no_show'
+    | 'cancelled'
+    | 'completed'
+    | 'missed'
+    | 'covered'
+    | 'covered 24h'
+    | 'covered_24h'
+    | 'covered late'
+    | 'covered_late'
+    | 'covered <24h notice'
+    | 'covered_less_24h'
+    | 'covered <1h notice'
+    | 'covered_less_1h'
   notes?: string
 }
 
 export interface IIncident {
   id: string
   volunteerId: string
-  date: string // ISO date
+  date: string 
   severity: 'low' | 'medium' | 'high'
   description: string
   recordedBy: string
 }
 
-// Volunteers are now fetched from the API
 export const mockVolunteers: IVolunteer[] = []
 
 export const mockShifts: IShift[] = [
-  // Linda's historical shifts for performance data
+  
   {
     id: 's-t2-1-1',
     volunteerId: 't2-1',
@@ -113,7 +126,7 @@ export const mockShifts: IShift[] = [
     role: 'Feeding/Cleaning',
     status: 'scheduled',
   },
-  // Mike's shifts
+  
   {
     id: 's3',
     volunteerId: 'v2',
@@ -146,7 +159,7 @@ export const mockIncidents: IIncident[] = [
   },
 ]
 export const availableBadges = [
-  // Tenure & Milestones
+  
   { id: 'b1', name: 'New Recruit', icon: '🌱', description: 'Completed your first shift!' },
   { id: 'b2', name: 'Rookie', icon: '⭐', description: 'Active for 1 month.' },
   { id: 'b3', name: 'Regular', icon: '🌟', description: 'Active for 6 months.' },
@@ -154,7 +167,6 @@ export const availableBadges = [
   { id: 'b5', name: 'Lifer', icon: '🏅', description: 'Active for 3 years.' },
   { id: 'b6', name: 'Legend', icon: '👑', description: 'Active for 5+ years.' },
 
-  // Hours Club
   { id: 'h1', name: '10 Hours', icon: '🕙', description: 'Contributed 10 hours of service.' },
   { id: 'h2', name: '50 Hours', icon: '🕔', description: 'Contributed 50 hours of service.' },
   {
@@ -177,7 +189,6 @@ export const availableBadges = [
     description: 'Contributed 1000+ hours of service.',
   },
 
-  // Canine Crew
   { id: 'd1', name: 'Dog Walker', icon: '🐕', description: 'Completed 10 Dog Walking shifts.' },
   { id: 'd2', name: 'Power Walker', icon: '👟', description: 'Completed 50 Dog Walking shifts.' },
   {
@@ -190,7 +201,6 @@ export const availableBadges = [
   { id: 'd5', name: 'Puppy Pal', icon: '🐾', description: 'Helped with puppy socialization.' },
   { id: 'd6', name: 'Bark Ranger', icon: '🏞️', description: 'Took a dog on a field trip.' },
 
-  // Feline Friends
   {
     id: 'c1',
     name: 'Cat Cuddler',
@@ -218,7 +228,6 @@ export const availableBadges = [
     description: 'Helped maximize vertical cat space.',
   },
 
-  // Small Animals & Operations
   { id: 's1', name: 'Bunny Buddy', icon: '🐰', description: 'Cared for rabbits.' },
   { id: 's2', name: 'Pocket Pet Pal', icon: '🐹', description: 'Cared for hamsters/guinea pigs.' },
   { id: 'o1', name: 'Cleaning Crew', icon: '🧼', description: 'Completed 20 Cleaning shifts.' },
@@ -231,7 +240,6 @@ export const availableBadges = [
     description: 'Managed the reception desk like a pro.',
   },
 
-  // Special Shifts
   { id: 't1', name: 'Early Bird', icon: '🌅', description: 'Shift started before 9 AM.' },
   { id: 't2', name: 'Night Owl', icon: '🌙', description: 'Shift ended after 6 PM.' },
   { id: 't3', name: 'Weekend Warrior', icon: '📅', description: '10 weekend shifts completed.' },
@@ -244,7 +252,6 @@ export const availableBadges = [
     description: 'Picked up a shift with < 24h notice.',
   },
 
-  // Reliability & Attributes
   { id: 'r1', name: 'Reliable', icon: '🛡️', description: '100% attendance for 3 months.' },
   { id: 'r2', name: 'Perfect Year', icon: '📅', description: '100% attendance for 12 months.' },
   { id: 'r3', name: 'Mentor', icon: '🎓', description: 'Trained a new volunteer.' },
@@ -257,7 +264,6 @@ export const availableBadges = [
   },
   { id: 'r6', name: 'Shelter Guardian', icon: '👼', description: 'Donated supplies or funds.' },
 
-  // Fun & Misc
   {
     id: 'f1',
     name: 'The Treat Dispenser',

@@ -1,21 +1,22 @@
 <script setup lang="ts">
-import { useRouter } from 'vue-router'
 import { storeToRefs } from 'pinia'
-import { useSurrenderStore } from '../stores/surrender'
+import { computed, onMounted,reactive } from 'vue'
+import { useRouter } from 'vue-router'
+
 import {
   AggressiveSection,
+  BehaviorSection,
   FeedingSection,
   HouseholdSection,
   MedicalSection,
-  BehaviorSection,
   OtherSection,
 } from '../components/about/surrender/index.ts'
-import Button from '../components/common/ui/Button.vue'
-import SurrenderSteps from '../components/about/surrender/SurrenderSteps.vue'
 import PetSelectSection from '../components/about/surrender/PetSelectSection.vue'
+import SurrenderSteps from '../components/about/surrender/SurrenderSteps.vue'
 import FormSubmitted from '../components/common/form-submitted/FormSubmitted.vue'
-import { reactive, computed, onMounted } from 'vue'
+import Button from '../components/common/ui/Button.vue'
 import { useMetrics } from '../composables/useMetrics'
+import { useSurrenderStore } from '../stores/surrender'
 
 const { submitMetric } = useMetrics()
 
@@ -194,7 +195,6 @@ const formattedAnimal = computed(() => {
   container-type: inline-size;
   container-name: shell;
 
-  /* Viewport query for container's own padding */
   @media (max-width: 440px) {
     padding: 6rem 16px 32px;
   }
@@ -208,7 +208,6 @@ const formattedAnimal = computed(() => {
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
     padding: 48px 48px 32px;
 
-    /* Logic based on shell width */
     @container shell (max-width: 800px) {
       padding: 32px 16px;
     }
@@ -231,7 +230,6 @@ const formattedAnimal = computed(() => {
         width: 100px;
       }
 
-      /* Tablet/Mobile adjustments based on container width */
       @container shell (max-width: 800px) {
         flex-direction: column;
         align-items: center;
@@ -270,8 +268,6 @@ const formattedAnimal = computed(() => {
     }
   }
 
-  /* Nested validation summary */
-  /* Nested validation summary matching Volunteer.vue */
   .validation-summary {
     background-color: #fff1f2;
     border: 1px solid #e11d48;

@@ -51,7 +51,6 @@ const { headerTitle, headerText } = defineProps<{
     color: var(--color-primary);
   }
 
-  /* SVG Icon Styling */
   & .header-icon {
     flex-shrink: 0;
     width: 80px;

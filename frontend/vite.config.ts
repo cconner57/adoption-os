@@ -17,7 +17,7 @@ export default defineConfig(({ mode }) => {
       },
     },
     server: {
-      allowedHosts: ['www.idohr.app'],
+      allowedHosts: ['www.idohr.app', 'idohr.app'],
       proxy: {
         // Proxy all backend routes to local backend while maintaining relative paths
         // This allows access via localhost OR tunnel (idohr.app) transparently

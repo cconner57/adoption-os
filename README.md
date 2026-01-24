@@ -162,9 +162,9 @@ _(Status: In Progress)_
 
 #### Phase 4: PWA & Mobile Capabilities
 
-- [ ] **Offline "Field Mode":** Configure Service Workers and IndexedDB to allow staff to fill out intake forms in areas with zero cell service, syncing when connection is restored.
+- [x] **Offline "Field Mode":** Configure Service Workers and IndexedDB to allow staff to fill out intake forms in areas with zero cell service, syncing when connection is restored.
 - [ ] **Push Notifications:** Implement the Web Push API to send browser-based alerts to volunteers for urgent needs (e.g., "Transporter needed ASAP").
-- [ ] **"Add to Home Screen":** Configure the `manifest.json` to allow users to install the website as a standalone app on iOS/Android.
+- [x] **"Add to Home Screen":** Configure the `manifest.json` to allow users to install the website as a standalone app on iOS/Android.
 - [ ] **Geolocation Intake:** Use the browser Geolocation API to automatically tag the GPS coordinates of stray animal intakes for mapping data.
 
 #### Phase 5: Gamification & Fundraising Campaigns

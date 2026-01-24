@@ -1,8 +1,11 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue'
 
+import { API_ENDPOINTS } from '../../../../constants/api'
 import type { IPet } from '../../../../models/common'
-import { ImageCropper,Toast } from '../../../common/ui'
+import { ImageCropper, Toast } from '../../../common/ui'
+
+// ... (rest of script)
 
 const props = defineProps<{
   modelValue: Partial<IPet>
@@ -33,7 +36,7 @@ function onCancelCrop() {
 }
 
 async function uploadFile(file: File, showSuccessToast = true) {
-  
+
   if (!formData.value.id) {
     toastMessage.value = 'Please save the pet first before uploading photos.'
     toastType.value = 'error'
@@ -48,8 +51,11 @@ async function uploadFile(file: File, showSuccessToast = true) {
 
   try {
     const token = localStorage.getItem('token')
+
+// ... (inside script)
+
     const response = await fetch(
-      `${import.meta.env.VITE_API_URL}/pets/${formData.value.id}/photos`,
+      API_ENDPOINTS.PET_PHOTOS(formData.value.id!),
       {
         method: 'POST',
         headers: {
@@ -64,7 +70,7 @@ async function uploadFile(file: File, showSuccessToast = true) {
       throw new Error(txt || 'Upload failed')
     }
 
-    const data = await response.json() 
+    const data = await response.json()
 
     if (!formData.value.photos) formData.value.photos = []
 
@@ -94,7 +100,7 @@ async function uploadFile(file: File, showSuccessToast = true) {
 }
 
 function handleFileSelection(file: File) {
-  
+
   if ((formData.value.photos?.length || 0) >= 5) {
     toastMessage.value = 'Maximum of 5 photos allowed.'
     toastType.value = 'error'
@@ -107,12 +113,12 @@ function handleFileSelection(file: File) {
 }
 
 async function onCropComplete(croppedBlob: Blob) {
-  
+
   const file = new File([croppedBlob], pendingFile.value?.name || 'photo.jpg', {
     type: 'image/jpeg',
   })
 
-  await uploadFile(file, false) 
+  await uploadFile(file, false)
   pendingFile.value = null
   if (fileInput.value) fileInput.value.value = ''
 }
@@ -157,7 +163,7 @@ function setSpotlightPhoto(index: number) {
 }
 
 function removePhoto(index: number) {
-  formData.value.photos?.splice(index, 1) 
+  formData.value.photos?.splice(index, 1)
 
   if (formData.value.photos?.length === 1) {
     formData.value.photos[0].isPrimary = true
@@ -238,7 +244,7 @@ function removePhoto(index: number) {
 
 .photos-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); 
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
   gap: 16px;
 }
 
@@ -255,7 +261,7 @@ function removePhoto(index: number) {
 
 .photo-card img {
   width: 100%;
-  height: 70%; 
+  height: 70%;
   object-fit: cover;
   background: #f1f5f9;
 }
@@ -362,7 +368,7 @@ function removePhoto(index: number) {
 .count-text {
   font-size: 0.7rem;
   color: var(--text-tertiary);
-  margin-top: auto; 
+  margin-top: auto;
 }
 
 .add-photo-btn.is-loading {

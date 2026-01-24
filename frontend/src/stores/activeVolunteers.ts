@@ -1,6 +1,7 @@
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
 
+import { API_ENDPOINTS } from '../constants/api'
 import type { IShift } from '../models/volunteers'
 
 export const useActiveVolunteersStore = defineStore('activeVolunteers', () => {
@@ -14,7 +15,7 @@ export const useActiveVolunteersStore = defineStore('activeVolunteers', () => {
     error.value = null
     try {
       const apiUrl = import.meta.env.VITE_API_URL || ''
-      
+
       const response = await fetch(`${apiUrl}/v1/volunteers?status=active&page_size=1`, {
         headers: {
           'Content-Type': 'application/json',
@@ -25,7 +26,7 @@ export const useActiveVolunteersStore = defineStore('activeVolunteers', () => {
       if (!response.ok) throw new Error(`vols: ${response.status} ${response.statusText}`)
 
       const json = await response.json()
-      
+
       const data = json.data || {}
 
       activeCount.value = data.metadata?.totalRecords || 0
@@ -43,8 +44,7 @@ export const useActiveVolunteersStore = defineStore('activeVolunteers', () => {
 
   const fetchWeeklyShifts = async (start: string, end: string) => {
     try {
-      const apiUrl = import.meta.env.VITE_API_URL || ''
-      const response = await fetch(`${apiUrl}/v1/shifts?start=${start}&end=${end}`, {
+      const response = await fetch(`${API_ENDPOINTS.SHIFTS}?start=${start}&end=${end}`, {
         headers: {
           'Content-Type': 'application/json',
           Authorization: `Bearer ${localStorage.getItem('token')}`,
@@ -53,7 +53,7 @@ export const useActiveVolunteersStore = defineStore('activeVolunteers', () => {
 
       if (!response.ok) throw new Error(`shifts: ${response.status}`)
       const json = await response.json()
-      
+
       const data = json.data || {}
       weeklyShifts.value = data.shifts || []
     } catch (e: unknown) {

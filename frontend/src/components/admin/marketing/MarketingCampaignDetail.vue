@@ -115,24 +115,31 @@ const handleSaveParticipant = async (updated: IRaffleParticipant) => {
 }
 
 const calculateProgress = (camp: ICampaign) => {
-  if (!camp.participants || !camp.goal) return 0
-
-  let current = 0
-  if (camp.metric === 'dollars') {
-      current = camp.participants
-          .filter(p => p.paid)
-          .reduce((sum, p) => {
-              const amt = parseFloat((p.amount || '0').toString().replace('$', ''))
-              return sum + (isNaN(amt) ? 0 : amt)
-          }, 0)
-  } else {
-      // Default to entries
-      current = camp.participants.length
-  }
-
   const goalNum = Number(camp.goal)
   if (!goalNum) return 0
-  return Math.min(100, Math.round((current / goalNum) * 100))
+
+  // 1. Use explicit progress from DB if available
+  if (typeof camp.progress === 'number' && camp.progress > 0) {
+      return Math.min(100, Math.round((camp.progress / goalNum) * 100))
+  }
+
+  // 2. Fallback to participants
+  if (camp.participants && camp.participants.length > 0) {
+      let current = 0
+      if (camp.metric === 'dollars') {
+          current = camp.participants
+              .filter(p => p.paid)
+              .reduce((sum, p) => {
+                  const amt = parseFloat((p.amount || '0').toString().replace('$', ''))
+                  return sum + (isNaN(amt) ? 0 : amt)
+              }, 0)
+      } else {
+          current = camp.participants.length
+      }
+      return Math.min(100, Math.round((current / goalNum) * 100))
+  }
+
+  return 0
 }
 
 const getGoalText = (camp: ICampaign) => {

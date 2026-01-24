@@ -136,7 +136,7 @@ _(Status: In Progress)_
 - [x] **Digital Intake:** Create a multi-step "Surrender Pet" wizard that flags high-risk intakes (e.g., "Bite History" or "Medical Emergency") for immediate staff review.
 - [x] **Volunteer Portal:** Develop a gated portal for volunteers to apply, utilizing conditional logic to serve different waiver forms for minors (Teen) vs. Adults.
 - [x] **Adoption Application:** Implement the primary long-form adoption questionnaire with real-time validation to prevent incomplete submissions.
-- [ ] **Backend Core:** Initialize the Go server, set up the PostgreSQL schema with migrations, and configure environment-based configuration (Dev vs. Prod).
+- [x] **Backend Core:** Initialize the Go server, set up the PostgreSQL schema with migrations, and configure environment-based configuration (Dev vs. Prod).
 
 #### Phase 2: Agency Administration & Workflow
 
@@ -157,8 +157,8 @@ _(Status: In Progress)_
 - [ ] **Manual Donation & Cash Handling:** Add an administrative form to manually log cash/check donations so the financial reporting remains accurate offline.
 - [ ] **Foster-to-Adopt Fast-Track:** Build a simplified workflow that allows current fosters to finalize an adoption without re-entering their personal data.
 - [ ] **SMS Status Integration:** Connect Brevo/Twilio to send automated text alerts (e.g., "Application Approved") to reduce follow-up phone calls.
-- [x] **Smart QR Codes:** Implement a generator that creates unique QR codes linking directly to a pet’s profile, printable for kennel cards.
-- [x] **Digital Kennel Cards (E-Ink V2):** Develop the Go script for IoT devices to fetch pet details via API and render them to an e-ink display.
+- [ ] **Smart QR Codes:** Implement a generator that creates unique QR codes linking directly to a pet’s profile, printable for kennel cards.
+- [ ] **Digital Kennel Cards (E-Ink V2):** Develop the Go script for IoT devices to fetch pet details via API and render them to an e-ink display.
 
 #### Phase 4: PWA & Mobile Capabilities
 

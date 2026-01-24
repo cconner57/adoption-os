@@ -1,10 +1,11 @@
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
 
+import { API_ENDPOINTS } from '../constants/api'
 import type { IPet } from '../models/common'
 
 export const usePetStore = defineStore('pets', () => {
-  
+
   const currentPets = ref<IPet[]>([])
   const lastFetched = ref<number>(0)
   const isFetching = ref(false)
@@ -17,10 +18,10 @@ export const usePetStore = defineStore('pets', () => {
   } | null>(null)
 
   const STORAGE_KEY = 'adoption_pet'
-  const CACHE_DURATION = 5 * 60 * 1000 
+  const CACHE_DURATION = 5 * 60 * 1000
 
   const fetchPets = async (forceRefresh = false) => {
-    
+
     const isFresh = Date.now() - lastFetched.value < CACHE_DURATION
     if (currentPets.value.length > 0 && isFresh && !forceRefresh) {
       return
@@ -28,8 +29,10 @@ export const usePetStore = defineStore('pets', () => {
 
     isFetching.value = true
     try {
-      
-      const response = await fetch(`${import.meta.env.VITE_API_URL}/pets?status=available&sort=age`)
+
+
+    // ... (in fetchPets)
+      const response = await fetch(`${API_ENDPOINTS.PETS}?status=available&sort=age`)
       if (!response.ok) throw new Error('Failed to fetch pets')
 
       const data = await response.json()
@@ -73,7 +76,7 @@ export const usePetStore = defineStore('pets', () => {
   initFromSession()
 
   return {
-    
+
     currentPets,
     selectedPet,
     isFetching,

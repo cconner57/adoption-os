@@ -15,24 +15,32 @@ const store = useMarketingStore()
 const { campaigns } = storeToRefs(store)
 
 const calculateProgress = (camp: ICampaign) => {
-  if (!camp.participants || !camp.goal) return 0
-
-  let current = 0
-  if (camp.metric === 'dollars') {
-      current = camp.participants
-          .filter(p => p.paid)
-          .reduce((sum, p) => {
-              const amt = parseFloat((p.amount || '0').toString().replace('$', ''))
-              return sum + (isNaN(amt) ? 0 : amt)
-          }, 0)
-  } else {
-      // Default to entries
-      current = camp.participants.length
-  }
-
   const goalNum = Number(camp.goal)
   if (!goalNum) return 0
-  return Math.min(100, Math.round((current / goalNum) * 100))
+
+  // 1. Use explicit progress from DB if available and seemingly valid
+  if (typeof camp.progress === 'number' && camp.progress > 0) {
+      // Assuming 'progress' in DB is the raw value (e.g. 150 entries), calculate percentage
+      return Math.min(100, Math.round((camp.progress / goalNum) * 100))
+  }
+
+  // 2. Fallback to calculating from participants if array is present
+  if (camp.participants && camp.participants.length > 0) {
+      let current = 0
+      if (camp.metric === 'dollars') {
+          current = camp.participants
+              .filter(p => p.paid)
+              .reduce((sum, p) => {
+                  const amt = parseFloat((p.amount || '0').toString().replace('$', ''))
+                  return sum + (isNaN(amt) ? 0 : amt)
+              }, 0)
+      } else {
+          current = camp.participants.length
+      }
+      return Math.min(100, Math.round((current / goalNum) * 100))
+  }
+
+  return 0
 }
 
 const getGoalText = (camp: ICampaign) => {
@@ -40,7 +48,7 @@ const getGoalText = (camp: ICampaign) => {
         const goalNum = Number(camp.goal)
         return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 }).format(goalNum)
     }
-    return `${camp.goal} Entries`
+    return `${camp.goal}`
 }
 const getProgressColor = (progress: number) => {
   if (progress >= 100) return '#10b981'
@@ -281,11 +289,14 @@ const formatDate = (dateString: string) => {
 
 .camp-card {
   background: #fff;
-  padding: 20px;
-  border-radius: 12px;
-  border: 1px solid #e5e7eb;
+  padding: 24px;
+  border-radius: 16px;
+  border: 1px solid var(--border-color);
   cursor: pointer;
   transition: transform 0.2s, box-shadow 0.2s;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
 
   &:hover {
     transform: translateY(-2px);
@@ -297,7 +308,7 @@ const formatDate = (dateString: string) => {
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
-  margin-bottom: 8px;
+  margin-bottom: 0;
 
   h3 {
     margin: 0;
@@ -308,7 +319,7 @@ const formatDate = (dateString: string) => {
 .camp-dates {
   font-size: 0.9rem;
   color: hsl(from var(--color-neutral) h s 50%);
-  margin-bottom: 20px;
+  margin-bottom: 0;
 }
 
 .progress-bar {

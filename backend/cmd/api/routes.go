@@ -48,6 +48,12 @@ func (app *application) routes() http.Handler {
 	mux.Handle("DELETE /v1/shifts/{id}", app.requireLogin(http.HandlerFunc(app.deleteShiftHandler)))
 	mux.Handle("GET /v1/shifts/meta/roles", app.requireLogin(http.HandlerFunc(app.getShiftRoleStatsHandler)))
 
+	// Marketing Management
+	mux.Handle("GET /v1/marketing/campaigns", app.requireLogin(http.HandlerFunc(app.listCampaignsHandler)))
+	mux.Handle("GET /v1/marketing/campaigns/{id}", app.requireLogin(http.HandlerFunc(app.getCampaignHandler)))
+	mux.Handle("POST /v1/marketing/campaigns", app.requireLogin(http.HandlerFunc(app.createCampaignHandler)))
+	mux.Handle("PUT /v1/marketing/campaigns/{id}", app.requireLogin(http.HandlerFunc(app.updateCampaignHandler)))
+
 	// User Authentication
 	mux.HandleFunc("POST /api/users", app.registerUserHandler)
 	mux.HandleFunc("POST /api/login", app.loginUserHandler)

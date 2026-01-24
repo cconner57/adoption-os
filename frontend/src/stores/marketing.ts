@@ -1,6 +1,7 @@
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
 
+import { API_ENDPOINTS } from '../constants/api'
 import type { ICampaign } from './mockMarketing'
 
 export const useMarketingStore = defineStore('marketing', () => {
@@ -10,7 +11,7 @@ export const useMarketingStore = defineStore('marketing', () => {
   const fetchCampaigns = async () => {
     isFetching.value = true
     try {
-      const response = await fetch(`${import.meta.env.VITE_API_URL}/v1/marketing/campaigns`)
+      const response = await fetch(API_ENDPOINTS.MARKETING_CAMPAIGNS)
       if (!response.ok) throw new Error('Failed to fetch campaigns')
       const data = await response.json()
       // Backend returns envelope {"campaigns": [...]}
@@ -26,7 +27,7 @@ export const useMarketingStore = defineStore('marketing', () => {
 
   const updateCampaign = async (campaign: ICampaign) => {
     try {
-      const response = await fetch(`${import.meta.env.VITE_API_URL}/v1/marketing/campaigns/${campaign.id}`, {
+      const response = await fetch(`${API_ENDPOINTS.MARKETING_CAMPAIGNS}/${campaign.id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',

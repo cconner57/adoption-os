@@ -7,4 +7,10 @@ export const API_ENDPOINTS = {
   PET_SPOTLIGHT: `${API_BASE_URL}/pets/spotlight`,
   SURRENDER_APPLICATION: `${API_BASE_URL}/applications/surrender`,
   METRICS: `${API_BASE_URL}/metrics`,
+  PETS: `${API_BASE_URL}/pets`,
+  PET_PHOTOS: (id: string) => `${API_BASE_URL}/pets/${id}/photos`,
+  MARKETING_CAMPAIGNS: `${API_BASE_URL}/v1/marketing/campaigns`, // Using v1
+  APPLICATIONS: `${API_BASE_URL}/v1/applications`,
+  VOLUNTEERS: `${API_BASE_URL}/v1/volunteers`,
+  SHIFTS: `${API_BASE_URL}/v1/shifts`,
 }

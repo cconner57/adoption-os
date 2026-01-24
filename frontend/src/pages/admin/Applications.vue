@@ -5,6 +5,7 @@ import ApplicationCard, {
   type IApplicationItem,
 } from '../../components/admin/applications/ApplicationCard.vue'
 import { InputSelectGroup } from '../../components/common/ui'
+import { API_ENDPOINTS } from '../../constants/api'
 
 function formatRole(prefs: unknown): string | null {
   if (!prefs) return null
@@ -28,7 +29,9 @@ const tabs = [
   { id: 'history', label: 'Past Years', icon: '🕰️' },
 ] as const
 
-const API_url = import.meta.env.VITE_API_URL || ''
+// Used for base logic below
+// const API_url = API_ENDPOINTS.APPLICATIONS
+// Refactoring to use API_ENDPOINTS directly
 
 const filteredApplications = computed(() => {
   return applications.value.filter((app) => {
@@ -67,7 +70,7 @@ async function fetchApplications(autoFocus = false) {
 
     // Fetch from API
     try {
-      const res = await fetch(`${API_url}/v1/applications?page_size=100&year=${yearParam}`, {
+      const res = await fetch(`${API_ENDPOINTS.APPLICATIONS}?page_size=100&year=${yearParam}`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -182,7 +185,7 @@ const updateStatus = (app: IApplicationItem, status: IApplicationItem['status'])
   }
 
   const token = localStorage.getItem('token')
-  fetch(`${API_url}/v1/applications/${app.id}`, {
+  fetch(`${API_ENDPOINTS.APPLICATIONS}/${app.id}`, {
     method: 'PUT',
     headers: {
       'Content-Type': 'application/json',
@@ -199,7 +202,7 @@ const updateStatus = (app: IApplicationItem, status: IApplicationItem['status'])
 const viewOriginal = async (appId: string) => {
   try {
     const token = localStorage.getItem('token')
-    const res = await fetch(`${API_url}/v1/applications/${appId}/original`, {
+    const res = await fetch(`${API_ENDPOINTS.APPLICATIONS}/${appId}/original`, {
       headers: {
         Authorization: `Bearer ${token}`,
       },

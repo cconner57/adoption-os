@@ -90,3 +90,68 @@ export const mockHappyTails = ref<IHappyTail[]>([
     status: 'published',
   },
 ])
+
+// Mock Participants for Raffle
+const mockParticipants = [
+  {
+    id: 'p-1',
+    ticketNumber: 1,
+    name: 'Andrea Gladson',
+    contact: 'andrea@example.com',
+    paid: true,
+    date: '2025-12-01',
+    paymentMethod: 'Credit Card',
+    amount: '$10',
+  },
+  {
+    id: 'p-2',
+    ticketNumber: 2,
+    name: 'John Smith',
+    contact: 'john@example.com',
+    paid: true,
+    date: '2025-12-02',
+    paymentMethod: 'Cash',
+    amount: '$10',
+  },
+  // ... generating 148 more ideally, but we'll cheat for the progress bar by repeating
+  ...Array.from({ length: 148 }, (_, i) => ({
+    id: `p-${i + 3}`,
+    ticketNumber: i + 3,
+    name: `Participant ${i + 3}`,
+    contact: 'user@example.com',
+    paid: true,
+    date: '2025-12-05',
+    paymentMethod: 'Online',
+    amount: '$10',
+  }))
+]
+
+export const mockCampaigns = ref<ICampaign[]>([
+  {
+    id: 'cp-1',
+    name: '65" Samsung Smart TV Raffle',
+    status: 'completed',
+    startDate: '2025-11-30',
+    endDate: '2025-12-10',
+    goal: 150,
+    progress: 100, // Calculated dynamically usually, but initial state
+    metric: 'entries',
+    type: 'raffle',
+    prize: '65" Samsung Smart TV',
+    ticketPrice: 10,
+    participants: mockParticipants,
+    winnerId: 'p-1', // Andrea Gladson
+  },
+  {
+    id: 'cp-2',
+    name: 'Holiday Giving Drive',
+    status: 'active',
+    startDate: '2025-12-01',
+    endDate: '2025-12-31',
+    goal: 5000,
+    progress: 45,
+    metric: 'dollars',
+    type: 'standard',
+    participants: [],
+  }
+])

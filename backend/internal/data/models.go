@@ -10,6 +10,7 @@ type Models struct {
 	Sessions     SessionModel
 	Shifts       ShiftModel
 	Applications ApplicationModel
+	Marketing    MarketingModel
 }
 
 func NewModels(db *sql.DB) Models {
@@ -21,5 +22,6 @@ func NewModels(db *sql.DB) Models {
 		Sessions:     SessionModel{DB: db},
 		Shifts:       ShiftModel{DB: db},
 		Applications: ApplicationModel{DB: db},
+		Marketing:    MarketingModel{DB: db},
 	}
 }

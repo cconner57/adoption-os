@@ -101,7 +101,7 @@ function handleAdopt() {
     width: 100%;
     height: 180px;
     object-fit: cover;
-    object-position: top center;
+    object-position: center center;
     background: url('/images/paw.svg') 90px 60px/100px 100px no-repeat #f9fafb;
     cursor: pointer;
   }

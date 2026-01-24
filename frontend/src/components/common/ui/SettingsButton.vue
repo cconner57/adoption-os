@@ -34,6 +34,7 @@ const emit = defineEmits<{
 .settings-btn {
   background: #fff;
   border: 1px solid var(--border-color);
+  box-shadow: 0 1px 2px rgb(0 0 0 / 6%);
   width: 48px;
   height: 48px;
   font-size: 1.1rem;

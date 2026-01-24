@@ -32,7 +32,7 @@ watch(
     if (newVal) {
       formData.value = JSON.parse(JSON.stringify(newVal))
     } else {
-      
+
       formData.value = {
         firstName: '',
         lastName: '',
@@ -53,10 +53,10 @@ watch(
 )
 
 const navItems = [
-  { id: 'general', label: 'General Info', icon: '👤' },
-  { id: 'bio', label: 'Bio & Skills', icon: '📝' },
-  { id: 'preferences', label: 'Preferences', icon: '⭐' },
-  { id: 'settings', label: 'Settings', icon: '⚙️' },
+  { id: 'general', label: 'General Info', icon: 'user' },
+  { id: 'bio', label: 'Bio & Skills', icon: 'fileText' },
+  { id: 'preferences', label: 'Preferences', icon: 'star' },
+  { id: 'settings', label: 'Settings', icon: 'cog' },
 ]
 
 function handleSave() {
@@ -67,7 +67,7 @@ function handleSave() {
 <template>
   <div v-if="isOpen" class="editor-overlay" @click.self="emit('close')">
     <div class="editor-drawer">
-      
+
       <header class="editor-header">
         <h2>{{ volunteer ? `Edit ${volunteer.firstName}` : 'Add New Volunteer' }}</h2>
         <div class="header-actions">
@@ -91,7 +91,7 @@ function handleSave() {
         />
 
         <div class="editor-content">
-          
+
           <div v-if="activeTab === 'general'" class="form-section">
             <h3 class="section-title">General Information</h3>
             <div class="form-grid">
@@ -226,6 +226,23 @@ function handleSave() {
               />
             </div>
 
+            <div class="panel" style="margin-bottom: 24px;">
+                <div class="panel-header" style="padding: 16px; border-bottom: 1px solid var(--border-color); background: #f9fafb;">
+                    <h4 style="margin: 0 0 4px; font-weight: 600; font-size: 1rem;">User Account</h4>
+                    <p style="margin: 0; color: var(--text-secondary); font-size: 0.9rem;">
+                        Invite this volunteer to create a login account to access the dashboard.
+                    </p>
+                </div>
+                <div class="panel-actions">
+                    <Button
+                        title="Invite User"
+                        color="purple"
+                        style="width: 100%; justify-content: center;"
+                        :onClick="() => {}"
+                    />
+                </div>
+            </div>
+
             <div class="panel danger-zone">
               <div class="panel-header">
                 <h4>Danger Zone</h4>
@@ -270,7 +287,7 @@ function handleSave() {
 }
 
 .editor-drawer {
-  width: 800px; 
+  width: 800px;
   background: #fff;
   height: 100%;
   box-shadow: -4px 0 24px rgb(0 0 0 / 15%);
@@ -442,23 +459,23 @@ function handleSave() {
 }
 
 .panel.danger-zone {
-  border-color: #fca5a5; 
+  border-color: #fca5a5;
 }
 
 .danger-zone .panel-header {
-  background: #fef2f2; 
+  background: #fef2f2;
   padding: 16px;
   border-bottom: 1px solid #fca5a5;
 }
 
 .danger-zone h4 {
-  color: #991b1b; 
+  color: #991b1b;
   font-weight: 600;
   margin-bottom: 4px;
 }
 
 .danger-zone p {
-  color: #b91c1c; 
+  color: #b91c1c;
   font-size: 0.9rem;
   margin: 0;
 }

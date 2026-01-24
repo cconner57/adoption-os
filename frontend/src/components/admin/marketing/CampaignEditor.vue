@@ -2,7 +2,7 @@
 import { ref, watch } from 'vue'
 
 import type { ICampaign } from '../../../stores/mockMarketing'
-import { Button, InputField, Select } from '../../common/ui'
+import { Button, InputDate, InputField, Select } from '../../common/ui'
 
 const statusOptions = [
   { label: 'Draft', value: 'draft' },
@@ -73,7 +73,7 @@ const handleSave = () => {
     ...base,
     prize: formData.value.prize,
     ticketPrice: Number(formData.value.ticketPrice),
-    goal: Number(formData.value.goal),
+    goal: String(formData.value.goal),
     startDate: formData.value.startDate,
     endDate: formData.value.endDate,
     metric: formData.value.metric,
@@ -123,8 +123,8 @@ const handleSave = () => {
                />
             </div>
             <div class="form-row">
-               <InputField label="Start Date" type="date" v-model="formData.startDate" placeholder="Select Start Date" fullWidth />
-               <InputField label="End Date" type="date" v-model="formData.endDate" placeholder="Select End Date" fullWidth />
+               <InputDate label="Start Date" v-model="formData.startDate" placeholder="Select Start Date" fullWidth />
+               <InputDate label="End Date" v-model="formData.endDate" placeholder="Select End Date" fullWidth />
             </div>
           </div>
         </form>

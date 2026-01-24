@@ -71,7 +71,13 @@ func (app *application) routes() http.Handler {
 	mux.Handle("GET /pet-photos/", http.StripPrefix("/pet-photos/", app.cacheControl(assetsServer)))
 
 	// Upload Route
+	// Upload Route
 	mux.Handle("POST /pets/{id}/photos", app.requireLogin(http.HandlerFunc(app.uploadPetPhotoHandler)))
+
+	// Notifications
+	mux.HandleFunc("POST /v1/notifications/subscribe", app.subscribeHandler)
+	mux.HandleFunc("POST /v1/notifications/test", app.testNotificationHandler)                                   // New Test Route
+	mux.Handle("POST /v1/notifications/broadcast", app.requireLogin(http.HandlerFunc(app.sendBroadcastHandler))) // Admin only
 
 	c := cors.New(cors.Options{
 		AllowedOrigins:   []string{"http://localhost:5173", "http://127.0.0.1:5173", "https://idohr.app", "https://www.idohr.app"},

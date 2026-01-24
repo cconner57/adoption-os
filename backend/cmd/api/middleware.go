@@ -169,7 +169,11 @@ func (app *application) requireLogin(next http.Handler) http.Handler {
 		}
 
 		if session == nil {
-			app.logger.Info("Session not found or expired", "token_prefix", token[:5])
+			prefix := token
+			if len(token) > 5 {
+				prefix = token[:5]
+			}
+			app.logger.Info("Session not found or expired", "token_prefix", prefix)
 			// Invalid or expired token
 			// Clear the cookie just in case it was a cookie
 			http.SetCookie(w, &http.Cookie{

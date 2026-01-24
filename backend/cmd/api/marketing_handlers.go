@@ -2,6 +2,7 @@ package main
 
 import (
 	"errors"
+	"fmt"
 	"net/http"
 
 	"github.com/cconner57/adoption-os/backend/internal/data"
@@ -177,6 +178,10 @@ func (app *application) updateCampaignHandler(w http.ResponseWriter, r *http.Req
 	if err != nil {
 		app.serverErrorResponse(w, r, err)
 		return
+	}
+
+	if campaign.Progress >= 100 {
+		go app.notifier.SendToAll(fmt.Sprintf("Campaign '%s' has reached 100%% goal! 🎉", campaign.Name))
 	}
 
 	app.writeJSON(w, http.StatusOK, envelope{"campaign": campaign}, nil)

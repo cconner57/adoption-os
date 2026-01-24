@@ -3,6 +3,7 @@ import { computed, ref } from 'vue'
 
 import { useMarketingStore } from '../../../stores/marketing'
 import type { ICampaign, IRaffleParticipant } from '../../../stores/mockMarketing'
+import { formatDate } from '../../../utils/date'
 import { Button, Capsules, SettingsButton, TableColumnToggle } from '../../common/ui'
 import CampaignEditor from './CampaignEditor.vue'
 import MarketingWinner from './MarketingWinner.vue'
@@ -56,12 +57,7 @@ const getStatusColor = (status: string) => {
   }
 }
 
-const formatDate = (dateString: string) => {
-  if (!dateString) return ''
-  const date = new Date(dateString)
-  if (isNaN(date.getTime())) return dateString
-  return new Intl.DateTimeFormat('en-US', { month: 'short', day: 'numeric', year: 'numeric' }).format(date)
-}
+
 
 const raisedAmount = computed(() => {
   if (!props.campaign.participants) return '$0'
@@ -115,15 +111,15 @@ const handleSaveParticipant = async (updated: IRaffleParticipant) => {
 }
 
 const calculateProgress = (camp: ICampaign) => {
-  const goalNum = Number(camp.goal)
-  if (!goalNum) return 0
-
-  // 1. Use explicit progress from DB if available
-  if (typeof camp.progress === 'number' && camp.progress > 0) {
-      return Math.min(100, Math.round((camp.progress / goalNum) * 100))
+  let goalNum = Number(camp.goal)
+  // Handle case where goal is string like "150 Entries"
+  if (isNaN(goalNum) && typeof camp.goal === 'string') {
+      goalNum = parseFloat((camp.goal as string).replace(/[^0-9.]/g, ''))
   }
 
-  // 2. Fallback to participants
+  if (!goalNum) return 0
+
+  // 1. Calculate from participants if available (Real-time truth)
   if (camp.participants && camp.participants.length > 0) {
       let current = 0
       if (camp.metric === 'dollars') {
@@ -137,6 +133,11 @@ const calculateProgress = (camp: ICampaign) => {
           current = camp.participants.length
       }
       return Math.min(100, Math.round((current / goalNum) * 100))
+  }
+
+  // 2. Fallback to manual progress from DB
+  if (typeof camp.progress === 'number' && camp.progress > 0) {
+      return Math.min(100, Math.round((camp.progress / goalNum) * 100))
   }
 
   return 0

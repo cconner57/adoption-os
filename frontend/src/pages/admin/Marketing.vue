@@ -4,6 +4,7 @@ import { ref } from 'vue'
 import MarketingCampaigns from '../../components/admin/marketing/MarketingCampaigns.vue'
 import MarketingHappyTails from '../../components/admin/marketing/MarketingHappyTails.vue'
 import MarketingNewsletters from '../../components/admin/marketing/MarketingNewsletters.vue'
+import { Icon } from '../../components/common/ui'
 import type { ICampaign } from '../../stores/mockMarketing'
 
 const activeTab = ref<'campaigns' | 'newsletters' | 'stories'>('campaigns')
@@ -19,9 +20,18 @@ const selectedCampaign = ref<ICampaign | null>(null)
       <h1>{{ selectedCampaign ? selectedCampaign.name : 'Marketing Center' }}</h1>
 
       <div v-if="!selectedCampaign" class="tabs">
-        <button class="tab-btn" :class="{ active: activeTab === 'campaigns' }" @click="activeTab = 'campaigns'">📣 Campaigns</button>
-        <button class="tab-btn" :class="{ active: activeTab === 'newsletters' }" @click="activeTab = 'newsletters'">📧 Newsletters</button>
-        <button class="tab-btn" :class="{ active: activeTab === 'stories' }" @click="activeTab = 'stories'">🐾 Happy Tails</button>
+        <button class="tab-btn" :class="{ active: activeTab === 'campaigns' }" @click="activeTab = 'campaigns'">
+          <Icon name="megaphone" size="18" />
+          Campaigns
+        </button>
+        <button class="tab-btn" :class="{ active: activeTab === 'newsletters' }" @click="activeTab = 'newsletters'">
+          <Icon name="mail" size="18" />
+          Newsletters
+        </button>
+        <button class="tab-btn" :class="{ active: activeTab === 'stories' }" @click="activeTab = 'stories'">
+          <Icon name="paw" size="18" />
+          Happy Tails
+        </button>
       </div>
     </div>
 
@@ -82,6 +92,9 @@ const selectedCampaign = ref<ICampaign | null>(null)
   border: none;
   padding: 12px 4px;
   font-size: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 8px;
   color: hsl(from var(--color-neutral) h s 50%);
   cursor: pointer;
   border-bottom: 2px solid transparent;

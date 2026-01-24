@@ -2,6 +2,7 @@
 import { ref } from 'vue'
 
 import SettingsButton from './SettingsButton.vue'
+import Toggle from './Toggle.vue'
 
 const props = defineProps<{
   modelValue: Record<string, boolean>
@@ -30,14 +31,20 @@ const updateCol = (key: string, val: boolean) => {
 
     <div v-if="isOpen" class="settings-dropdown">
       <div class="dropdown-header">Visible Columns</div>
-      <label v-for="col in columns" :key="col.key" class="dropdown-item">
-        <input
-          type="checkbox"
-          :checked="modelValue[col.key]"
-          @change="(e) => updateCol(col.key, (e.target as HTMLInputElement).checked)"
+      <div
+        v-for="col in columns"
+        :key="col.key"
+        class="dropdown-item"
+        @click="updateCol(col.key, !modelValue[col.key])"
+      >
+        <Toggle
+          :model-value="modelValue[col.key]"
+          :label="col.label"
+          label-position="left"
+          full-width
+          style="pointer-events: none"
         />
-        {{ col.label }}
-      </label>
+      </div>
     </div>
 
     <div v-if="isOpen" class="overlay" @click="isOpen = false"></div>
@@ -65,7 +72,7 @@ const updateCol = (key: string, val: boolean) => {
   border: 1px solid var(--border-color);
   border-radius: 8px;
   box-shadow: 0 4px 12px rgb(0 0 0 / 10%);
-  width: 200px;
+  width: 280px;
   padding: 8px 0;
   z-index: 50;
 }

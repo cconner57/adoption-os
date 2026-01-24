@@ -14,6 +14,9 @@ export default defineConfig(({ mode }) => {
   return {
     plugins: [vue(), VitePWA({
       registerType: 'autoUpdate',
+      strategies: 'injectManifest',
+      srcDir: 'src',
+      filename: 'sw.js',
       includeAssets: ['favicon.ico', 'images/paw.svg', 'apple-touch-icon.png'],
       manifest: {
         name: 'Adoption OS',

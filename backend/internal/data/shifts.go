@@ -90,7 +90,8 @@ func (m ShiftModel) GetForVolunteer(volunteerID int64) ([]*Shift, error) {
 func (m ShiftModel) GetAll(start, end string) ([]*Shift, error) {
 	// Query to fetch shifts including volunteer name by joining volunteers table
 	query := `
-		SELECT s.id, s.volunteer_id, TO_CHAR(s.date, 'YYYY-MM-DD'), s.start_time, s.end_time, s.role, s.status, s.notes, v.first_name, v.last_name
+		SELECT s.id, s.volunteer_id, TO_CHAR(s.date, 'YYYY-MM-DD'), s.start_time, s.end_time, s.role, s.status, s.notes,
+		COALESCE(v.first_name, ''), COALESCE(v.last_name, '')
 		FROM shifts s
 		JOIN volunteers v ON s.volunteer_id = v.id
 		WHERE s.date >= $1 AND s.date <= $2

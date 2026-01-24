@@ -355,8 +355,13 @@ const statusOptions = [
   .filter-group {
     width: 100%;
     padding-bottom: 4px;
+    padding-bottom: 4px;
     flex-wrap: wrap;
     overflow: visible;
+  }
+
+  .filter-group :deep(.select-container) {
+    width: 100% !important;
   }
 
   .search-row {

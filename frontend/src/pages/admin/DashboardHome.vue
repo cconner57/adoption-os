@@ -5,6 +5,7 @@ import DashboardListWidget from '../../components/admin/dashboard/DashboardListW
 import StatisticsGrid from '../../components/admin/dashboard/StatisticsGrid.vue'
 import WeeklySchedule from '../../components/admin/dashboard/WeeklySchedule.vue'
 import { Button } from '../../components/common/ui'
+import Icon from '../../components/common/ui/Icon.vue' // Added import
 import { useActiveVolunteersStore } from '../../stores/activeVolunteers'
 import { useAuthStore } from '../../stores/auth'
 import { usePetStore } from '../../stores/pets'
@@ -12,14 +13,14 @@ import { usePetStore } from '../../stores/pets'
 const authStore = useAuthStore()
 const petStore = usePetStore()
 const volunteerStore = useActiveVolunteersStore()
-const userName = computed(() => authStore.user?.Name || 'Admin')
+const userName = computed(() => authStore.user?.Name || 'Volunteer') // Changed 'Admin' to 'Volunteer'
 const pendingCount = ref(0)
 const API_URL = import.meta.env.VITE_API_URL
 
 const getWeekRange = () => {
   const today = new Date()
-  const day = today.getDay() 
-  const diff = today.getDate() - day + (day === 0 ? -6 : 1) 
+  const day = today.getDay()
+  const diff = today.getDate() - day + (day === 0 ? -6 : 1)
   const monday = new Date(today.setDate(diff))
   const sunday = new Date(today.setDate(diff + 6))
 
@@ -209,10 +210,10 @@ const newIntakesItems = computed(() => [
 
 <template>
   <div class="dashboard-home">
-    <div class="welcome-section">
-      <h1>Hello, {{ userName }} 👋</h1>
+    <header class="welcome-section">
+      <h1>Hello, {{ userName }}</h1>
       <p>Here's what's happening at the rescue today.</p>
-    </div>
+    </header>
 
     <StatisticsGrid :pendingCount="pendingCount" :adoptablePetsCount="adoptablePetsCount" />
 
@@ -223,31 +224,43 @@ const newIntakesItems = computed(() => [
         <h3>Quick Actions</h3>
         <div class="action-buttons">
           <Button variant="secondary" fullWidth align="between">
-            New Pet Profile <span>→</span>
+            New Pet Profile <Icon name="arrowRight" size="16" />
           </Button>
           <Button variant="secondary" fullWidth align="between">
-            Review Applications <span>→</span>
+            Review Applications <Icon name="arrowRight" size="16" />
           </Button>
           <Button variant="secondary" fullWidth align="between">
-            Send Newsletter <span>→</span>
+            Send Newsletter <Icon name="arrowRight" size="16" />
           </Button>
           <Button variant="secondary" fullWidth align="between">
-            Log Incident <span>→</span>
+            Log Incident <Icon name="arrowRight" size="16" />
           </Button>
         </div>
       </div>
     </div>
 
     <div class="widgets-row-three">
-      <DashboardListWidget title="🏥 Urgent Medical" :items="medicalNeedsItems" />
-      <DashboardListWidget title="⚠️ Low Inventory" :items="inventoryAlertsItems" />
-      <DashboardListWidget title="📍 Active Now" :items="activeVolunteersItems" />
+      <DashboardListWidget title="Urgent Medical" :items="medicalNeedsItems">
+        <template #icon><Icon name="activity" size="20" /></template>
+      </DashboardListWidget>
+      <DashboardListWidget title="Low Inventory" :items="inventoryAlertsItems">
+        <template #icon><Icon name="alert" size="20" /></template>
+      </DashboardListWidget>
+      <DashboardListWidget title="Active Now" :items="activeVolunteersItems">
+        <template #icon><Icon name="pin" size="20" /></template>
+      </DashboardListWidget>
     </div>
 
     <div class="widgets-row-three">
-      <DashboardListWidget title="📝 Recent Applications" :items="recentApplicationsItems" />
-      <DashboardListWidget title="💰 Recent Donations" :items="recentDonationsItems" />
-      <DashboardListWidget title="🐾 New Intakes" :items="newIntakesItems" />
+      <DashboardListWidget title="Recent Applications" :items="recentApplicationsItems">
+        <template #icon><Icon name="clipboard" size="20" /></template>
+      </DashboardListWidget>
+      <DashboardListWidget title="Recent Donations" :items="recentDonationsItems">
+        <template #icon><Icon name="donate" size="20" /></template>
+      </DashboardListWidget>
+      <DashboardListWidget title="New Intakes" :items="newIntakesItems">
+        <template #icon><Icon name="paw" size="20" /></template>
+      </DashboardListWidget>
     </div>
   </div>
 </template>

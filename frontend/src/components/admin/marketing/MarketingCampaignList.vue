@@ -15,16 +15,16 @@ const store = useMarketingStore()
 const { campaigns } = storeToRefs(store)
 
 const calculateProgress = (camp: ICampaign) => {
-  const goalNum = Number(camp.goal)
-  if (!goalNum) return 0
-
-  // 1. Use explicit progress from DB if available and seemingly valid
-  if (typeof camp.progress === 'number' && camp.progress > 0) {
-      // Assuming 'progress' in DB is the raw value (e.g. 150 entries), calculate percentage
-      return Math.min(100, Math.round((camp.progress / goalNum) * 100))
+  let goalNum = Number(camp.goal)
+  // Handle case where goal is string like "150 Entries"
+  if (isNaN(goalNum) && typeof camp.goal === 'string') {
+      goalNum = parseFloat((camp.goal as string).replace(/[^0-9.]/g, ''))
   }
 
-  // 2. Fallback to calculating from participants if array is present
+  if (!goalNum) return 0
+
+
+  // 1. Calculate from participants if available (Real-time truth)
   if (camp.participants && camp.participants.length > 0) {
       let current = 0
       if (camp.metric === 'dollars') {
@@ -40,6 +40,11 @@ const calculateProgress = (camp: ICampaign) => {
       return Math.min(100, Math.round((current / goalNum) * 100))
   }
 
+  // 2. Fallback to manual progress from DB
+  if (typeof camp.progress === 'number' && camp.progress > 0) {
+      return Math.min(100, Math.round((camp.progress / goalNum) * 100))
+  }
+
   return 0
 }
 
@@ -48,7 +53,12 @@ const getGoalText = (camp: ICampaign) => {
         const goalNum = Number(camp.goal)
         return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 }).format(goalNum)
     }
-    return `${camp.goal}`
+    // Check if goal string already contains text to avoid double label "150 Entries Entries"
+    const goalStr = String(camp.goal)
+    if (goalStr.toLowerCase().includes('entries') || goalStr.toLowerCase().includes('dollars')) {
+        return goalStr
+    }
+    return `${camp.goal} ${camp.metric === 'entries' ? 'Entries' : ''}`
 }
 const getProgressColor = (progress: number) => {
   if (progress >= 100) return '#10b981'

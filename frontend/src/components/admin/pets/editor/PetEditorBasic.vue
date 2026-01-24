@@ -2,7 +2,7 @@
 import { computed } from 'vue'
 
 import type { IPet } from '../../../../models/common'
-import { Combobox,InputField, Select } from '../../../common/ui'
+import { Combobox,InputDate, InputField, Select } from '../../../common/ui'
 
 const props = defineProps<{
   modelValue: Partial<IPet>
@@ -56,7 +56,7 @@ const statusOptions = [
 
 const litterOptions = computed(() => {
   if (!props.availablePets) return []
-  
+
   const litters = new Set(props.availablePets.map((p) => p.litterName).filter(Boolean))
   return Array.from(litters).map((l) => ({ label: l!, value: l! }))
 })
@@ -99,11 +99,10 @@ const litterOptions = computed(() => {
     </div>
 
     <div class="form-row" v-if="formData.details">
-      <InputField
+      <InputDate
         label="Intake Date"
         :model-value="formData.details.intakeDate || null"
         @update:model-value="val => formData.details && (formData.details.intakeDate = (val as string))"
-        type="date"
         placeholder="Select date"
       />
       <Select

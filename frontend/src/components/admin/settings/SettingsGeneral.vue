@@ -27,7 +27,7 @@ defineEmits<{
 
 <template>
   <div class="settings-grid">
-    <SettingsCard title="Organization Profile" icon="🏢">
+    <SettingsCard title="Organization Profile" icon="home">
       <InputField
         label="Shelter Name"
         placeholder="e.g. Happy Tails"
@@ -54,10 +54,8 @@ defineEmits<{
       </div>
     </SettingsCard>
 
-    <SettingsCard title="Account Settings" icon="🔒">
+    <SettingsCard title="Account Settings" icon="lock">
       <p class="text-sm text-gray mb-4">Update your personal account details.</p>
-      <div class="row">
-        <InputField label="Your Name" placeholder="Name" v-model="accountForm.name" class="mb-4" />
         <InputField
           label="Your Email"
           placeholder="email@example.com"
@@ -65,8 +63,6 @@ defineEmits<{
           v-model="accountForm.email"
           class="mb-4"
         />
-      </div>
-      <div class="row">
         <InputField
           label="New Password"
           placeholder="Leave blank to keep current"
@@ -81,10 +77,9 @@ defineEmits<{
           v-model="accountForm.confirmPassword"
           class="mb-4"
         />
-      </div>
     </SettingsCard>
 
-    <SettingsCard title="Notifications" icon="🔔">
+    <SettingsCard title="Notifications" icon="bell">
       <div class="setting-row">
         <div class="setting-info">
           <label>Incident Alerts</label>
@@ -127,7 +122,7 @@ defineEmits<{
       </div>
     </SettingsCard>
 
-    <SettingsCard title="System" icon="⚙️">
+    <SettingsCard title="System" icon="cog">
       <div class="setting-row">
         <div class="setting-info">
           <label>Maintenance Mode</label>

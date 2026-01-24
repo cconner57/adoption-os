@@ -27,12 +27,27 @@ export const useMarketingStore = defineStore('marketing', () => {
 
   const updateCampaign = async (campaign: ICampaign) => {
     try {
+      // Create sanitized payload to avoid strict decoding errors in backend (DisallowUnknownFields)
+      const payload = {
+        name: campaign.name,
+        status: campaign.status,
+        startDate: campaign.startDate,
+        endDate: campaign.endDate,
+        goal: String(campaign.goal),
+        progress: campaign.progress,
+        metric: campaign.metric,
+        type: campaign.type,
+        prize: campaign.prize,
+        ticketPrice: campaign.ticketPrice,
+        winnerId: campaign.winnerId,
+      }
+
       const response = await fetch(`${API_ENDPOINTS.MARKETING_CAMPAIGNS}/${campaign.id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(campaign),
+        body: JSON.stringify(payload),
       })
       if (!response.ok) throw new Error('Failed to update campaign')
 

@@ -4,7 +4,7 @@ import { computed } from 'vue'
 
 import type { IPet } from '../../../models/common'
 import { calculateAge,formatDate } from '../../../utils/date'
-import { Button } from '../../common/ui'
+import { Button, Icon } from '../../common/ui'
 
 const props = defineProps<{
   pet: IPet
@@ -31,7 +31,7 @@ function getStatusColor(status: string) {
     intake: 'gray',
     archived: 'gray',
   }
-  
+
   return map[status] || 'gray'
 }
 
@@ -63,7 +63,7 @@ const vaccineSummary = computed(() => {
   if (v.rabies?.dateAdministered) list.push(`Rabies: ${formatDoB(v.rabies.dateAdministered)}`)
   if (v.bordetella?.dateAdministered)
     list.push(`Bordetella: ${formatDoB(v.bordetella.dateAdministered)}`)
-  
+
   if (v.canineDistemper?.round1?.dateAdministered)
     list.push(`Distemper (DHPP): ${formatDoB(v.canineDistemper.round1.dateAdministered)}`)
   if (v.felineDistemper?.round1?.dateAdministered)
@@ -73,7 +73,7 @@ const vaccineSummary = computed(() => {
 })
 
 const colCount = computed(() => {
-  let count = 1 
+  let count = 1
   if (props.visibleColumns.photo) count++
   if (props.visibleColumns.name) count++
   if (props.visibleColumns.breed) count++
@@ -94,13 +94,13 @@ const colCount = computed(() => {
 </script>
 
 <template>
-  
+
   <tr
     class="pet-row"
     :class="{ expanded: isExpanded, 'even-row': index % 2 === 1 }"
     @click="emit('toggle-expand', pet)"
   >
-    
+
     <td class="expand-col">
       <button class="icon-btn expand-btn" :class="{ rotated: isExpanded }" title="Toggle Details">
         <svg
@@ -139,8 +139,20 @@ const colCount = computed(() => {
     <td v-if="visibleColumns.breed" class="capitalize">{{ pet.species }}</td>
     <td v-if="visibleColumns.sex" class="capitalize">{{ pet.sex }}</td>
     <td v-if="visibleColumns.sn" class="text-center">
-      <span v-if="pet.medical?.spayedOrNeutered" title="Spayed/Neutered">✅</span>
-      <span v-else class="text-muted" title="Not Spayed/Neutered">❌</span>
+      <Icon
+        v-if="pet.medical?.spayedOrNeutered"
+        name="check"
+        size="18"
+        style="color: var(--color-primary)"
+        title="Spayed/Neutered"
+      />
+      <Icon
+        v-else
+        name="cross"
+        size="18"
+        class="text-muted"
+        title="Not Spayed/Neutered"
+      />
     </td>
     <td v-if="visibleColumns.microchip">
       <div v-if="pet.medical?.microchip?.microchipID" class="microchip-stack mono-text">
@@ -494,7 +506,7 @@ const colCount = computed(() => {
 <style scoped>
 .pet-row {
   cursor: pointer;
-  border-bottom: 2px solid var(--border-color); 
+  border-bottom: 2px solid var(--border-color);
   transition: background-color 0.2s;
 }
 
@@ -508,7 +520,7 @@ const colCount = computed(() => {
 
 .pet-row.expanded {
   background-color: hsl(from var(--color-secondary) h s 95%);
-  border-bottom: none; 
+  border-bottom: none;
 }
 
 td {
@@ -532,7 +544,7 @@ td {
   padding: 24px;
   border-top: 1px dashed var(--border-color);
   background-color: hsl(from var(--color-neutral) h s 98%);
-  border-bottom: 2px solid var(--border-color); 
+  border-bottom: 2px solid var(--border-color);
 }
 
 .details-grid {
@@ -670,15 +682,15 @@ td {
   padding: 2px 6px;
   border-radius: 4px;
   background: #f1f5f9;
-  color: #475569; 
-  border: 1px solid #cbd5e1; 
+  color: #475569;
+  border: 1px solid #cbd5e1;
   white-space: nowrap;
 }
 
 .setting-tag.active {
   background: hsl(from var(--color-secondary) h s 96%);
   color: var(--color-secondary);
-  border-color: #bbf7d0; 
+  border-color: #bbf7d0;
   border-color: hsl(from var(--color-secondary) h s 90%);
   font-weight: 500;
 }
@@ -725,7 +737,7 @@ td {
 }
 
 .status-badge.purple {
-  background-color: hsl(from var(--color-secondary) h s 92%); 
+  background-color: hsl(from var(--color-secondary) h s 92%);
   color: var(--color-secondary);
 }
 
@@ -743,19 +755,19 @@ td {
   font-family: monospace;
   font-size: 0.9em;
   color: var(--text-primary);
-  background: var(--text-inverse); 
+  background: var(--text-inverse);
   padding: 2px 6px;
   border-radius: 4px;
   border: 1px solid var(--border-color);
-  display: inline-block; 
-  width: fit-content; 
+  display: inline-block;
+  width: fit-content;
 }
 
 .microchip-stack {
-  display: flex !important; 
+  display: flex !important;
   flex-direction: column;
-  align-items: flex-start; 
-  width: min-content; 
+  align-items: flex-start;
+  width: min-content;
   white-space: nowrap;
 }
 
@@ -804,7 +816,7 @@ td {
 .expand-btn.rotated {
   transform: rotate(
     -90deg
-  ); 
+  );
 }
 
 .pet-link {

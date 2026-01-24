@@ -1,12 +1,14 @@
 <script setup lang="ts">
 import { storeToRefs } from 'pinia'
-import { computed,ref } from 'vue'
+import { computed, onMounted,ref } from 'vue'
 
 import SettingsGeneral from '../../components/admin/settings/SettingsGeneral.vue'
 import SettingsOverview from '../../components/admin/settings/SettingsOverview.vue'
 import SettingsPets from '../../components/admin/settings/SettingsPets.vue'
+import SettingsUser from '../../components/admin/settings/SettingsUser.vue'
 import SettingsVolunteers from '../../components/admin/settings/SettingsVolunteers.vue'
 import SettingsWebsite from '../../components/admin/settings/SettingsWebsite.vue'
+import { Icon } from '../../components/common/ui'
 import { useDemoMode } from '../../composables/useDemoMode'
 import { useAuthStore } from '../../stores/auth'
 import { useSettingsStore } from '../../stores/settings'
@@ -15,110 +17,33 @@ const saving = ref(false)
 const showToast = ref(false)
 const activeCategory = ref<string | null>(null)
 
-const categories = [
-  {
-    id: 'general',
-    label: 'General',
-    icon: '⚙️',
-    description: 'Organization profile, notifications, system status.',
-  },
-  {
-    id: 'website',
-    label: 'Website',
-    icon: '🌐',
-    description: 'Manage public facing application forms and email routing.',
-  },
-  {
-    id: 'overview',
-    label: 'Overview',
-    icon: '📊',
-    description: 'Dashboard widgets and visibility settings.',
-  },
-  {
-    id: 'volunteers',
-    label: 'Volunteers',
-    icon: '🤝',
-    description: 'Gamification, shift rules, and application settings.',
-  },
-  { id: 'calendar', label: 'Calendar', icon: '📅', description: 'Scheduling preferences.' },
-  {
-    id: 'pets',
-    label: 'Pet Records',
-    icon: '🐾',
-    description: 'Default intake fields and species.',
-  },
-  {
-    id: 'health',
-    label: 'Medical',
-    icon: '🩺',
-    description: 'Vaccine protocols and vet contacts.',
-  },
-  {
-    id: 'transport',
-    label: 'Transport',
-    icon: '🚙',
-    description: 'Vehicle fleet and driver requirements.',
-  },
-  {
-    id: 'timesheets',
-    label: 'Timesheets',
-    icon: '⏱️',
-    description: 'Clock-in/out rules and roundings.',
-  },
-  {
-    id: 'messages',
-    label: 'Messages',
-    icon: '✉️',
-    description: 'Auto-replies and signature settings.',
-  },
-  {
-    id: 'donations',
-    label: 'Donations',
-    icon: '💰',
-    description: 'Payment gateways and receipt templates.',
-  },
-  {
-    id: 'inventory',
-    label: 'Inventory',
-    icon: '📦',
-    description: 'Low stock alerts and categories.',
-  },
-  {
-    id: 'marketing',
-    label: 'Marketing',
-    icon: '📣',
-    description: 'Social media integrations and branding.',
-  },
-  {
-    id: 'kiosk',
-    label: 'Intake Kiosk',
-    icon: '🖥️',
-    description: 'Kiosk display and timeout settings.',
-  },
-  {
-    id: 'kennel',
-    label: 'Smart Kennel Cards',
-    icon: '🏷️',
-    description: 'Digital cage card layouts.',
-  },
-  {
-    id: 'events',
-    label: 'Event Signage',
-    icon: '🎪',
-    description: 'Digital signage playlist management.',
-  },
-]
+import { settingsCategories } from '../../config/settingsCategories'
+
+const categories = settingsCategories
 
 const { isDemoMode, toggleDemoMode } = useDemoMode()
 const authStore = useAuthStore()
 const settingsStore = useSettingsStore()
 const { settings } = storeToRefs(settingsStore)
 
+const settingsUserRef = ref()
+// Initialize with empty strings, populated in onMounted
 const accountForm = ref({
-  name: authStore.user?.Name || '',
-  email: authStore.user?.Email || '',
+  firstName: '',
+  lastName: '',
+  email: '',
   password: '',
   confirmPassword: '',
+})
+
+// Initialize account form from auth store
+onMounted(() => {
+    if (authStore.user) {
+        const parts = (authStore.user.Name || '').split(' ')
+        accountForm.value.firstName = parts[0] || ''
+        accountForm.value.lastName = parts.slice(1).join(' ') || ''
+        accountForm.value.email = authStore.user.Email || ''
+    }
 })
 
 const savingAccount = ref(false)
@@ -134,11 +59,14 @@ async function updateAccount(showToastOnSuccess = true) {
 
   savingAccount.value = true
   try {
+    const fullName = `${accountForm.value.firstName} ${accountForm.value.lastName}`.trim()
+
+    // Using existing endpoint logic
     const res = await fetch('/api/users', {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        name: accountForm.value.name,
+        name: fullName,
         email: accountForm.value.email,
         password: accountForm.value.password || undefined,
       }),
@@ -147,7 +75,7 @@ async function updateAccount(showToastOnSuccess = true) {
     if (!res.ok) throw new Error('Failed to update')
 
     const data = await res.json()
-    
+
     if (data.user) {
       authStore.user = data.user
     }
@@ -164,7 +92,7 @@ async function updateAccount(showToastOnSuccess = true) {
   } catch (e) {
     console.error(e)
     alert('Failed to update profile')
-    throw e 
+    throw e
   } finally {
     savingAccount.value = false
   }
@@ -174,21 +102,35 @@ async function saveSettings() {
   saving.value = true
 
   try {
-    
     if (activeCategory.value === 'general') {
+        const originalFullName = authStore.user?.Name || '';
+        const currentFullName = `${accountForm.value.firstName} ${accountForm.value.lastName}`.trim();
+
       if (
         accountForm.value.password ||
-        accountForm.value.name !== authStore.user?.Name ||
+        currentFullName !== originalFullName ||
         accountForm.value.email !== authStore.user?.Email
       ) {
-        await updateAccount(false) 
+        await updateAccount(false)
       }
+    } else if (activeCategory.value === 'user' && settingsUserRef.value) {
+      await settingsUserRef.value.save()
     }
 
     await new Promise((resolve) => setTimeout(resolve, 800))
 
     saving.value = false
-    activeCategory.value = null
+    activeCategory.value = 'general' // Return to main list? Or General? User might want to stay. But snippet said 'general'. I'll stick to 'general' or null if that was original behavior for "Back".
+    // Wait, activeCategory=null shows categories grid. activeCategory='general' shows General Settings.
+    // If I save, maybe I should stay on 'general'? or go back?
+    // The previous code set activeCategory = null (Back to grid).
+    // But if I'm in General Settings and hit Save, going back to grid is okay.
+    // However, the snippet earlier changed it to 'general'.
+    // I'll set it to null to go back to grid, or keep it.
+    // The user flow: Edit -> Save -> Success -> Link to overview?
+    // I'll set it to null (Overview) as it was originally 201.
+    activeCategory.value = null;
+
     showToast.value = true
     setTimeout(() => {
       showToast.value = false
@@ -202,13 +144,17 @@ async function saveSettings() {
 const activeCategoryLabel = computed(
   () => categories.find((t) => t.id === activeCategory.value)?.label,
 )
+
+const getCategoryDesc = (id: string) => {
+  return categories.find((t) => t.id === id)?.description || '';
+}
 </script>
 
 <template>
   <div class="admin-page">
     <div class="page-header">
       <div class="header-left">
-        
+
         <button v-if="activeCategory" class="back-btn" @click="activeCategory = null">
           ← Back
         </button>
@@ -222,19 +168,25 @@ const activeCategoryLabel = computed(
 
     <div v-if="showToast" class="toast-notification">✅ Settings saved successfully!</div>
 
-    <div v-if="!activeCategory" class="categories-grid">
+    <div v-if="!activeCategory || activeCategory === 'overview'" class="categories-grid">
       <button
         v-for="cat in categories"
         :key="cat.id"
         class="category-card"
         @click="activeCategory = cat.id"
       >
-        <div class="cat-icon-wrapper">
-          <span class="cat-icon">{{ cat.icon }}</span>
+        <div
+          class="cat-icon-wrapper"
+          :style="{
+            color: cat.color,
+            background: cat.color ? `${cat.color}15` : '#f3f4f6'
+          }"
+        >
+          <Icon :name="cat.icon" size="24" :viewBox="cat.viewBox" />
         </div>
         <div class="cat-details">
           <h3>{{ cat.label }}</h3>
-          <p>{{ cat.description }}</p>
+          <p>{{ getCategoryDesc(cat.id) }}</p>
         </div>
         <div class="cat-arrow">→</div>
       </button>
@@ -260,10 +212,15 @@ const activeCategoryLabel = computed(
 
       <SettingsPets v-if="activeCategory === 'pets'" v-model:settings="settings" />
 
+      <SettingsUser
+        v-if="activeCategory === 'user'"
+        ref="settingsUserRef"
+      />
+
       <div
         v-if="
           activeCategory &&
-          !['general', 'website', 'volunteers', 'overview', 'pets'].includes(activeCategory)
+          !['general', 'website', 'volunteers', 'overview', 'pets', 'user'].includes(activeCategory)
         "
         class="placeholder-content"
       >

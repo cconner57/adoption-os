@@ -19,7 +19,7 @@ export interface ICampaign {
   status: 'active' | 'draft' | 'completed' | 'scheduled' | 'rejected' | 'pending' | 'sent' | 'published' | 'archived'
   startDate: string
   endDate: string
-  goal: number
+  goal: number | string
   progress: number
   metric: 'entries' | 'dollars'
   type?: 'raffle' | 'standard'

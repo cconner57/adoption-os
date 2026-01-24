@@ -27,7 +27,7 @@ const activeTab = ref('basic')
 const formData = ref<Partial<IPet>>({})
 
 function initFormData(newPet: IPet) {
-  
+
   const defaults = {
     profileSettings: {
       isSpotlightFeatured: false,
@@ -44,12 +44,12 @@ function initFormData(newPet: IPet) {
   formData.value = {
     ...JSON.parse(JSON.stringify(newPet)),
   }
-  
+
   if (formData.value.litterName === undefined) formData.value.litterName = null
 
   if (!formData.value.profileSettings) formData.value.profileSettings = defaults.profileSettings
   else {
-    
+
     if (formData.value.profileSettings.isSpotlightFeatured === undefined)
       formData.value.profileSettings.isSpotlightFeatured = false
     if (formData.value.profileSettings.showMedicalHistory === undefined)
@@ -70,11 +70,11 @@ function initFormData(newPet: IPet) {
       microchip: { microchipped: false },
     }
   } else {
-    
+
     if (!formData.value.medical.microchip) {
       formData.value.medical.microchip = { microchipped: false }
     }
-    
+
     if (!formData.value.medical.vaccinations) {
       formData.value.medical.vaccinations = { other: [], rabies: { dateAdministered: '' } }
     } else {
@@ -114,7 +114,7 @@ function initFormData(newPet: IPet) {
       adopterContactInfo: { name: '', email: '', phone: '' },
     }
   } else {
-    
+
     if (!formData.value.adoption.adopterContactInfo) {
       formData.value.adoption.adopterContactInfo = { name: '', email: '', phone: '' }
     }
@@ -137,7 +137,7 @@ function initFormData(newPet: IPet) {
   if (!formData.value.returned) {
     formData.value.returned = { isReturned: false, history: [] }
   }
-  
+
   if (!Array.isArray(formData.value.returned.history)) {
     formData.value.returned.history = []
   }
@@ -149,7 +149,7 @@ watch(
     if (newPet) {
       initFormData(newPet)
     } else {
-      
+
       const defaults = settingsStore.settings.pets || {}
 
       activeTab.value = 'basic'
@@ -241,7 +241,7 @@ watch(
 )
 
 function handleSave() {
-  
+
   const defaults = settingsStore.settings.pets || {}
 
   if (defaults.requirePhotoForPublic && formData.value.details?.status === 'available') {
@@ -259,14 +259,14 @@ function handleClose() {
 }
 
 const tabs = [
-  { id: 'basic', label: 'Basic Info', icon: '📝' },
-  { id: 'physical', label: 'Physical', icon: '📏' },
-  { id: 'behavior', label: 'Behavior', icon: '🧠' },
-  { id: 'medical', label: 'Medical', icon: '⚕️' },
-  { id: 'status', label: 'Status', icon: '🏠' },
-  { id: 'descriptions', label: 'Story', icon: '📖' },
-  { id: 'photos', label: 'Photos', icon: '📸' },
-  { id: 'settings', label: 'Settings', icon: '⚙️' },
+  { id: 'basic', label: 'Basic Info', icon: 'fileText' },
+  { id: 'physical', label: 'Physical', icon: 'paw' },
+  { id: 'behavior', label: 'Behavior', icon: 'smile' },
+  { id: 'medical', label: 'Medical', icon: 'activity' },
+  { id: 'status', label: 'Status', icon: 'home' },
+  { id: 'descriptions', label: 'Story', icon: 'book' },
+  { id: 'photos', label: 'Photos', icon: 'camera' },
+  { id: 'settings', label: 'Settings', icon: 'cog' },
 ]
 </script>
 
@@ -374,9 +374,9 @@ const tabs = [
 
 .drawer-body {
   flex: 1;
-  overflow: hidden; 
+  overflow: hidden;
   display: flex;
-  flex-direction: row; 
+  flex-direction: row;
 }
 
 .editor-sidebar {

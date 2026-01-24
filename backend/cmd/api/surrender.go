@@ -40,7 +40,7 @@ func (app *application) submitSurrenderApplication(w http.ResponseWriter, r *htt
 
 	// Construct Email Body
 	var body strings.Builder
-	body.WriteString(fmt.Sprintf("New Surrender Application Received\n\n"))
+	body.WriteString("New Surrender Application Received\n\n")
 	body.WriteString(fmt.Sprintf("Applicant: %s %s\n", input.FirstName, input.LastName))
 	body.WriteString(fmt.Sprintf("Email: %s\n", input.Email))
 	body.WriteString(fmt.Sprintf("Phone: %s\n", input.PhoneNumber))
@@ -87,6 +87,8 @@ func (app *application) submitSurrenderApplication(w http.ResponseWriter, r *htt
 		app.serverErrorResponse(w, r, err)
 		return
 	}
+
+	app.notifier.SendToAll(fmt.Sprintf("New Surrender Application: %s (%s)", input.AnimalName, input.AnimalSex)) // Notify admins/all
 
 	app.JSONResponse(w, http.StatusCreated, map[string]string{"message": "Surrender application submitted successfully"})
 }

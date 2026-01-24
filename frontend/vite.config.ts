@@ -14,23 +14,23 @@ export default defineConfig(({ mode }) => {
   return {
     plugins: [vue(), VitePWA({
       registerType: 'autoUpdate',
-      includeAssets: ['favicon.ico', 'images/paw.svg'],
+      includeAssets: ['favicon.ico', 'images/paw.svg', 'apple-touch-icon.png'],
       manifest: {
         name: 'Adoption OS',
-        short_name: 'AdoptionOS',
+        short_name: 'IDOHR',
         description: 'Adoption Management System',
         theme_color: '#00a5ad',
         background_color: '#ffffff',
         icons: [
           {
-            src: '/images/paw.svg',
+            src: '/images/idohr-logo.png',
             sizes: '192x192',
-            type: 'image/svg+xml'
+            type: 'image/png'
           },
           {
-            src: '/images/paw.svg',
+            src: '/images/idohr-logo.png',
             sizes: '512x512',
-            type: 'image/svg+xml'
+            type: 'image/png'
           }
         ]
       },

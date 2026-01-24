@@ -1,5 +1,4 @@
-
-
+<script setup lang="ts">
 import { ButtonToggle } from '../../common/ui'
 import SettingsCard from './SettingsCard.vue'
 

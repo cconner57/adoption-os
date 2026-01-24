@@ -72,14 +72,14 @@ function getStatusColor(status?: string | null) {
 .stat-card {
   background: var(--text-inverse);
   border-radius: 12px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+  box-shadow: 0 4px 6px rgb(0 0 0 / 5%);
   padding: 24px;
   border: 1px solid var(--border-color);
 }
 
 .vitals-snapshot {
   h3 {
-    margin: 0 0 16px 0;
+    margin: 0 0 16px;
     font-size: 1rem;
     color: hsl(from var(--color-neutral) h s 50%);
   }
@@ -121,18 +121,22 @@ function getStatusColor(status?: string | null) {
     background: hsl(from var(--color-primary) h s 95%);
     color: var(--color-primary);
   }
+
   &.orange {
     background: hsl(from var(--color-warning) h s 95%);
     color: var(--color-warning);
   }
+
   &.red {
     background: hsl(from var(--color-danger) h s 95%);
     color: var(--color-danger);
   }
+
   &.blue {
     background: hsl(from var(--color-secondary) h s 95%);
     color: var(--color-secondary);
   }
+
   &.gray {
     background: hsl(from var(--color-neutral) h s 95%);
     color: hsl(from var(--color-neutral) h s 50%);
@@ -165,7 +169,7 @@ function getStatusColor(status?: string | null) {
   border: 1px solid var(--border-color);
 
   p {
-    margin: 0 0 8px 0;
+    margin: 0 0 8px;
     font-size: 0.9rem;
     color: var(--text-primary);
     line-height: 1.4;

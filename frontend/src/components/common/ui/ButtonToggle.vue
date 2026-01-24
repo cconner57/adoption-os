@@ -83,13 +83,13 @@ const displayFalseLabel = computed(() => {
 
 .toggle-container {
   display: flex;
-  background: #ffffff;
+  background: #fff;
   border: 1px solid var(--border-color);
   border-radius: 8px;
   padding: 4px;
   height: 48px;
   width: 100%;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 4px rgb(0 0 0 / 10%);
 }
 
 .toggle-container.has-error {
@@ -110,7 +110,7 @@ const displayFalseLabel = computed(() => {
   font-size: 1rem;
 
   &.active {
-    background: color-mix(in srgb, var(--color-primary) 10%, white);
+    background: color-mix(in srgb, var(--color-primary) 10%, #fff);
     border: 1px solid var(--color-primary);
     box-shadow: 0 0 0 1px var(--color-primary) inset;
     color: var(--text-primary);

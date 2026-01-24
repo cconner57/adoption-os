@@ -124,12 +124,15 @@ function getStatusColor(status?: string | null) {
   &.green {
     color: var(--color-primary);
   }
+
   &.orange {
     color: var(--color-warning);
   }
+
   &.red {
     color: var(--color-danger);
   }
+
   &.blue {
     color: var(--color-secondary);
   }

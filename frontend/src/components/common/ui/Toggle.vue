@@ -95,9 +95,9 @@ function toggle() {
 .toggle-thumb {
   width: 20px;
   height: 20px;
-  background-color: white;
+  background-color: #fff;
   border-radius: 50%;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 1px 3px rgb(0 0 0 / 30%);
   transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1);
   transform: translateX(0);
 }

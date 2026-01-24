@@ -10,7 +10,7 @@ const filterType = ref<'all' | ITransaction['type']>('all')
 const filteredTransactions = computed(() => {
   return mockTransactions.value
     .filter((tx) => {
-      
+
       const searchMatch =
         !searchQuery.value ||
         tx.donorName.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
@@ -46,15 +46,15 @@ const getTypeLabel = (type: ITransaction['type']) => {
 const getStatusColor = (status: ITransaction['status']) => {
   switch (status) {
     case 'completed':
-      return 'var(--color-primary)'
+      return 'green' // Primary is teal/greenish
     case 'pending':
-      return 'var(--color-warning)'
+      return 'orange'
     case 'failed':
-      return 'var(--color-danger)'
+      return 'red'
     case 'refunded':
-      return 'var(--color-neutral)'
+      return 'gray'
     default:
-      return 'var(--color-neutral)'
+      return 'gray'
   }
 }
 
@@ -87,7 +87,7 @@ const handleLogDonation = () => {
 
 <template>
   <div class="donations-page">
-    
+
     <div class="page-header">
       <h1>Donations & Revenue</h1>
       <Button title="Log Manual Donation" color="purple" :onClick="() => (showLogModal = true)" />
@@ -209,6 +209,7 @@ const handleLogDonation = () => {
   display: flex;
   justify-content: space-between;
   align-items: center;
+
   h1 {
     margin: 0;
     font-size: 1.8rem;
@@ -223,7 +224,7 @@ const handleLogDonation = () => {
 }
 
 .stat-card {
-  background: white;
+  background: #fff;
   padding: 20px;
   border-radius: 12px;
   border: 1px solid #e5e7eb;
@@ -261,7 +262,7 @@ const handleLogDonation = () => {
 }
 
 .table-container {
-  background: white;
+  background: #fff;
   border-radius: 12px;
   border: 1px solid #e5e7eb;
   overflow: hidden;
@@ -298,13 +299,16 @@ const handleLogDonation = () => {
   font-family: monospace;
   color: hsl(from var(--color-neutral) h s 50%);
 }
+
 .fw-bold {
   font-weight: 600;
 }
+
 .amount-cell {
   font-weight: 700;
   font-family: monospace;
 }
+
 .details-cell {
   display: flex;
   flex-direction: column;
@@ -341,7 +345,7 @@ const handleLogDonation = () => {
 .modal-overlay {
   position: fixed;
   inset: 0;
-  background: rgba(0, 0, 0, 0.5);
+  background: rgb(0 0 0 / 50%);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -349,17 +353,18 @@ const handleLogDonation = () => {
 }
 
 .modal-card {
-  background: white;
+  background: #fff;
   padding: 24px;
   border-radius: 12px;
   width: 100%;
   max-width: 450px;
-  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 20px 25px -5px rgb(0 0 0 / 10%);
 
   h3 {
     margin-top: 0;
     margin-bottom: 4px;
   }
+
   .subtitle {
     margin-top: 0;
     color: hsl(from var(--color-neutral) h s 50%);
@@ -373,6 +378,7 @@ const handleLogDonation = () => {
   display: flex;
   flex-direction: column;
   gap: 6px;
+
   label {
     font-weight: 500;
     font-size: 0.9rem;
@@ -390,7 +396,7 @@ const handleLogDonation = () => {
   border: 1px solid #e5e7eb;
   border-radius: 8px;
   font-size: 0.95rem;
-  background: white;
+  background: #fff;
 }
 
 .modal-actions {

@@ -320,7 +320,7 @@ const tabs = [
   left: 0;
   width: 100vw;
   height: 100vh;
-  background: rgba(0, 0, 0, 0.5);
+  background: rgb(0 0 0 / 50%);
   display: flex;
   justify-content: flex-end;
   opacity: 0;
@@ -337,9 +337,9 @@ const tabs = [
 .pet-editor-drawer {
   width: 900px;
   max-width: 95vw;
-  background: white;
+  background: #fff;
   height: 100%;
-  box-shadow: -4px 0 20px rgba(0, 0, 0, 0.1);
+  box-shadow: -4px 0 20px rgb(0 0 0 / 10%);
   display: flex;
   flex-direction: column;
   transform: translateX(100%);
@@ -356,7 +356,7 @@ const tabs = [
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background: white;
+  background: #fff;
   z-index: 10;
 }
 
@@ -398,13 +398,14 @@ const tabs = [
 .tab-content::-webkit-scrollbar {
   width: 6px;
 }
+
 .sidebar-nav::-webkit-scrollbar-thumb,
 .tab-content::-webkit-scrollbar-thumb {
   background-color: var(--border-color);
   border-radius: 3px;
 }
 
-@media (max-width: 768px) {
+@media (width <= 768px) {
   .pet-editor-drawer {
     width: 100vw;
     max-width: 100vw;
@@ -424,13 +425,12 @@ const tabs = [
     border-right: none;
     border-bottom: 1px solid var(--border-color);
     padding: 0;
-
     display: flex;
     flex-direction: row;
     overflow-x: auto;
     white-space: nowrap;
     gap: 0;
-    background: white;
+    background: #fff;
   }
 
   :deep(.nav-item) {

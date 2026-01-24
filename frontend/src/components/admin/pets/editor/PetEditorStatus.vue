@@ -35,7 +35,7 @@ function removeAdoptionPhoto() {
 </script>
 
 <style scoped>
-@import './form.css';
+@import url('./form.css');
 </style>
 
 <template>
@@ -124,8 +124,8 @@ function removeAdoptionPhoto() {
                 position: absolute;
                 top: 4px;
                 right: 4px;
-                background: rgba(0, 0, 0, 0.6);
-                color: white;
+                background: rgb(0 0 0 / 60%);
+                color: #fff;
                 border: none;
                 border-radius: 50%;
                 width: 20px;

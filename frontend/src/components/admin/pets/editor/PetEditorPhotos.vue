@@ -234,7 +234,7 @@ function removePhoto(index: number) {
 </template>
 
 <style scoped>
-@import './form.css';
+@import url('./form.css');
 
 .photos-grid {
   display: grid;
@@ -262,7 +262,7 @@ function removePhoto(index: number) {
 
 .photo-actions {
   height: 30%;
-  background: white;
+  background: #fff;
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -292,7 +292,7 @@ function removePhoto(index: number) {
 
 .action-pill.active {
   background: var(--color-secondary);
-  color: white;
+  color: #fff;
   border-color: var(--color-secondary);
 }
 
@@ -303,8 +303,8 @@ function removePhoto(index: number) {
   width: 20px;
   height: 20px;
   border-radius: 50%;
-  background: rgba(0, 0, 0, 0.5);
-  color: white;
+  background: rgb(0 0 0 / 50%);
+  color: #fff;
   border: none;
   cursor: pointer;
   display: flex;
@@ -330,14 +330,14 @@ function removePhoto(index: number) {
   cursor: pointer;
   color: var(--color-primary);
   transition: all 0.2s;
-  background: hsla(from var(--color-primary) h s l / 0.02);
+  background: hsl(from var(--color-primary) h s l / 2%);
   padding: 8px;
   text-align: center;
 }
 
 .add-photo-btn:hover,
 .add-photo-btn.is-dragging {
-  background: hsla(from var(--color-primary) h s l / 0.08);
+  background: hsl(from var(--color-primary) h s l / 8%);
   border-color: var(--color-primary);
   border-style: solid;
 }
@@ -373,7 +373,7 @@ function removePhoto(index: number) {
 .spinner {
   width: 30px;
   height: 30px;
-  border: 3px solid rgba(0, 0, 0, 0.1);
+  border: 3px solid rgb(0 0 0 / 10%);
   border-radius: 50%;
   border-top-color: var(--primary-color, #3b82f6);
   animation: spin 1s ease-in-out infinite;

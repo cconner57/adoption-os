@@ -186,6 +186,7 @@ watch(
   display: flex;
   justify-content: space-between;
   align-items: center;
+
   h1 {
     margin: 0;
     font-size: 1.8rem;
@@ -222,7 +223,7 @@ watch(
 }
 
 .settings-group {
-  background: white;
+  background: #fff;
   padding: 24px;
   border-radius: 12px;
   border: 1px solid #e5e7eb;
@@ -240,6 +241,7 @@ watch(
   display: flex;
   flex-direction: column;
   gap: 12px;
+
   label {
     font-weight: 500;
     font-size: 0.9rem;
@@ -278,6 +280,7 @@ watch(
   display: flex;
   justify-content: space-between;
   align-items: center;
+
   span {
     font-weight: 500;
   }
@@ -304,7 +307,7 @@ watch(
     left: 2px;
     width: 20px;
     height: 20px;
-    background: white;
+    background: #fff;
     border-radius: 50%;
     transition: transform 0.3s;
   }
@@ -330,7 +333,7 @@ watch(
   border-radius: 24px;
   padding: 16px;
   position: relative;
-  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+  box-shadow: 0 25px 50px -12px rgb(0 0 0 / 25%);
 }
 
 .camera-hole {
@@ -353,7 +356,7 @@ watch(
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  color: white;
+  color: #fff;
   padding: 40px;
   text-align: center;
 }
@@ -369,7 +372,7 @@ watch(
 .welcome-text {
   font-size: 2rem;
   font-weight: 800;
-  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+  text-shadow: 0 2px 4px rgb(0 0 0 / 50%);
   margin: 0;
 }
 
@@ -384,11 +387,11 @@ watch(
   padding: 16px 24px;
   border: none;
   border-radius: 12px;
-  color: white;
+  color: #fff;
   font-weight: 700;
   font-size: 1.1rem;
   cursor: pointer;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 4px 6px rgb(0 0 0 / 20%);
   display: flex;
   align-items: center;
   gap: 8px;
@@ -410,10 +413,11 @@ watch(
   font-size: 0.9rem;
 }
 
-@media (max-width: 1024px) {
+@media (width <= 1024px) {
   .split-view {
     grid-template-columns: 1fr;
   }
+
   .settings-panel {
     max-width: 100%;
   }

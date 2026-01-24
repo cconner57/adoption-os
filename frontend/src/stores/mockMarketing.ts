@@ -1,20 +1,39 @@
 import { ref } from 'vue'
 
+export interface IRaffleParticipant {
+  id: string
+  ticketNumber: number
+  name: string
+  contact: string
+  paid: boolean
+  date?: string
+  paymentMethod?: string
+  amount?: string
+  comments?: string
+}
+
+
 export interface ICampaign {
   id: string
   name: string
-  status: 'active' | 'draft' | 'completed'
+  status: 'active' | 'draft' | 'completed' | 'scheduled' | 'rejected' | 'pending' | 'sent' | 'published' | 'archived'
   startDate: string
   endDate: string
-  goal: string
-  progress: number 
-  metric: string 
+  goal: number
+  progress: number
+  metric: 'entries' | 'dollars'
+  type?: 'raffle' | 'standard'
+  prize?: string
+  ticketPrice?: number
+  participants?: IRaffleParticipant[]
+  winnerId?: string
 }
+
 
 export interface INewsletter {
   id: string
   subject: string
-  status: 'sent' | 'draft' | 'scheduled'
+  status: string
   sentDate?: string
   recipientCount?: number
   openRate?: number
@@ -26,42 +45,8 @@ export interface IHappyTail {
   adopterName: string
   story: string
   date: string
-  status: 'published' | 'pending' | 'rejected'
-  photoUrl?: string 
+  status: string
 }
-
-export const mockCampaigns = ref<ICampaign[]>([
-  {
-    id: 'camp-1',
-    name: 'Holiday Adoption Drive',
-    status: 'active',
-    startDate: '2023-11-01',
-    endDate: '2023-12-31',
-    goal: '50 Adoptions',
-    progress: 72,
-    metric: 'adoptions',
-  },
-  {
-    id: 'camp-2',
-    name: 'Winter Fundraiser',
-    status: 'draft',
-    startDate: '2023-12-01',
-    endDate: '2023-12-31',
-    goal: '$10,000',
-    progress: 0,
-    metric: '$ raised',
-  },
-  {
-    id: 'camp-3',
-    name: 'Spay/Neuter Awareness',
-    status: 'completed',
-    startDate: '2023-08-01',
-    endDate: '2023-08-31',
-    goal: '200 Procedures',
-    progress: 100,
-    metric: 'procedures',
-  },
-])
 
 export const mockNewsletters = ref<INewsletter[]>([
   {

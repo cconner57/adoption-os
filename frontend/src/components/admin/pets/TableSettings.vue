@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 
+import { SettingsButton } from '../../common/ui'
+
 const props = defineProps<{
   modelValue: Record<string, boolean>
 }>()
@@ -19,17 +21,15 @@ const updateCol = (key: string, val: boolean) => {
 
 <template>
   <div class="settings-dropdown-wrapper" @click.stop>
-    <button
-      class="icon-btn settings-btn"
-      @click="isOpen = !isOpen"
+    <SettingsButton
+      :active="isOpen"
       title="Table Settings"
-      :class="{ active: isOpen }"
-    >
-      ⚙️
-    </button>
+      @click="isOpen = !isOpen"
+    />
 
     <div v-if="isOpen" class="settings-dropdown">
       <div class="dropdown-header">Visible Columns</div>
+      <!-- ... existing dropdown items ... -->
       <label class="dropdown-item">
         <input
           type="checkbox"
@@ -127,28 +127,6 @@ const updateCol = (key: string, val: boolean) => {
   z-index: 40;
 }
 
-.settings-btn {
-  background: var(--text-inverse);
-  border: 1px solid var(--border-color);
-  width: 46px; 
-  height: 46px;
-  font-size: 1.2rem;
-  border-radius: 6px;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  &:hover {
-    background: hsl(from var(--color-neutral) h s 98%);
-  }
-
-  &.active {
-    background: hsl(from var(--color-neutral) h s 95%);
-    border-color: var(--color-secondary);
-  }
-}
-
 .settings-dropdown {
   position: absolute;
   top: 100%;
@@ -157,7 +135,7 @@ const updateCol = (key: string, val: boolean) => {
   background: var(--text-inverse);
   border: 1px solid var(--border-color);
   border-radius: 8px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 12px rgb(0 0 0 / 10%);
   width: 200px;
   padding: 8px 0;
   z-index: 50;

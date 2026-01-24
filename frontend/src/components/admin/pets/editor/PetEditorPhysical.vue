@@ -120,7 +120,7 @@ const breedOptions = computed(() => {
 </template>
 
 <style scoped>
-@import './form.css';
+@import url('./form.css');
 
 .dob-group {
   flex: 1;

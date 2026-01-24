@@ -45,7 +45,8 @@ fieldset.field {
   border: 0;
   padding: 0;
   margin: 0;
-  @media (max-width: 440px) {
+
+  @media (width <= 440px) {
     .col-span-2 {
       grid-column: span 1;
     }
@@ -53,32 +54,37 @@ fieldset.field {
 }
 
 .field {
-  @media (max-width: 440px) {
+  @media (width <= 440px) {
     margin-bottom: 8px;
   }
 }
+
 .col-span-2 {
   grid-column: span 2;
-  @media (max-width: 440px) {
+
+  @media (width <= 440px) {
     grid-column: span 1;
   }
 }
 
 .label {
   margin-bottom: 8px;
-  @media (max-width: 440px) {
+
+  @media (width <= 440px) {
     font-size: 13px;
     line-height: 1.5;
   }
 }
+
 .chips {
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
-  border: 1px solid transparent; 
+  border: 1px solid transparent;
   border-radius: 12px;
-  padding: 4px; 
-  @media (max-width: 440px) {
+  padding: 4px;
+
+  @media (width <= 440px) {
     margin-top: 8px;
     flex-direction: column;
     text-align: center;
@@ -106,7 +112,7 @@ fieldset.field {
     background 0.2s,
     border-color 0.2s,
     box-shadow 0.2s;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 4px rgb(0 0 0 / 10%);
 
   span {
     font-weight: 600;
@@ -119,39 +125,45 @@ fieldset.field {
     background: #f2f7ff;
   }
 
-  @media (max-width: 440px) {
+  @media (width <= 440px) {
     padding: 6px 10px;
     gap: 6px;
     display: flex;
     justify-content: center;
+
     span {
       font-size: 13px;
-      @media (max-width: 440px) {
+
+      @media (width <= 440px) {
         font-size: 13px;
         line-height: 1.5;
       }
     }
   }
 }
+
 .chip > input {
   position: absolute;
   opacity: 0;
   width: 1px;
   height: 1px;
   pointer-events: none;
-  @media (max-width: 440px) {
+
+  @media (width <= 440px) {
     width: 0;
     height: 0;
     padding: 0;
     margin: 0;
   }
 }
+
 .chip:has(> input:checked) {
-  background: color-mix(in srgb, var(--color-primary) 10%, white);
+  background: color-mix(in srgb, var(--color-primary) 10%, #fff);
   border-color: var(--color-primary);
   box-shadow: 0 0 0 1px var(--color-primary) inset;
   color: var(--text-primary);
 }
+
 .chip:has(> input:focus-visible) {
   box-shadow: 0 0 0 3px var(--ring);
 }
@@ -164,6 +176,7 @@ fieldset.field {
     margin: -6px -10px;
     box-shadow: 0 0 0 2px #bfd0ff inset;
   }
+
   .chip > input:focus-visible + span {
     box-shadow: 0 0 0 3px var(--ring);
   }

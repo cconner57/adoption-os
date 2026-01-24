@@ -177,7 +177,7 @@ const handleReset = () => {
   container-type: inline-size;
   container-name: shell;
 
-  @media (max-width: 440px) {
+  @media (width <= 440px) {
     padding: 6rem 16px 32px;
   }
 
@@ -187,7 +187,7 @@ const handleReset = () => {
     background: var(--text-inverse);
     color: var(--text-primary);
     border-radius: 24px;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 10px 30px rgb(0 0 0 / 10%);
     padding: 48px 48px 32px;
 
     @container shell (max-width: 800px) {
@@ -198,6 +198,7 @@ const handleReset = () => {
       border: 0;
       margin: 24px 0;
       padding: 0;
+
       .section-title {
         font-weight: 700;
         font-size: 18px;
@@ -214,9 +215,10 @@ const handleReset = () => {
 
       h2 {
         font-size: 1.5rem;
-        font-weight: bold;
+        font-weight: 700;
         color: var(--text-primary);
       }
+
       p {
         font-size: 1.5rem;
         font-weight: 600;
@@ -230,7 +232,7 @@ const handleReset = () => {
       gap: 16px;
       margin-top: 20px;
 
-      @media (max-width: 600px) {
+      @media (width <= 600px) {
         flex-direction: column;
 
         button {
@@ -257,7 +259,7 @@ const handleReset = () => {
       padding: 1.5rem;
       margin: 2rem 0;
       text-align: center;
-      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+      box-shadow: 0 4px 6px -1px rgb(0 0 0 / 10%);
 
       .summary-title {
         font-weight: 700;

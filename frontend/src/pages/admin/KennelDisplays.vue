@@ -200,6 +200,7 @@ const handleConfirmAssignment = (petId: string) => {
   display: flex;
   justify-content: space-between;
   align-items: center;
+
   h1 {
     margin: 0;
     font-size: 1.8rem;
@@ -213,7 +214,7 @@ const handleConfirmAssignment = (petId: string) => {
 }
 
 .stat-pill {
-  background: white;
+  background: #fff;
   padding: 6px 12px;
   border-radius: 20px;
   border: 1px solid #e2e8f0;
@@ -234,9 +235,11 @@ const handleConfirmAssignment = (petId: string) => {
   width: 8px;
   height: 8px;
   border-radius: 50%;
+
   &.green {
     background: var(--color-primary);
   }
+
   &.red {
     background: var(--color-danger);
   }
@@ -251,7 +254,7 @@ const handleConfirmAssignment = (petId: string) => {
 }
 
 .device-list-card {
-  background: white;
+  background: #fff;
   border-radius: 12px;
   border: 1px solid #e2e8f0;
   display: flex;
@@ -265,6 +268,7 @@ const handleConfirmAssignment = (petId: string) => {
   display: flex;
   justify-content: space-between;
   align-items: center;
+
   h2 {
     margin: 0;
     font-size: 1.1rem;
@@ -287,6 +291,7 @@ const handleConfirmAssignment = (petId: string) => {
   &:hover {
     background: #f8fafc;
   }
+
   &.active {
     background: hsl(from var(--color-neutral) h s 95%);
     border-left: 4px solid var(--color-secondary);
@@ -300,16 +305,19 @@ const handleConfirmAssignment = (petId: string) => {
 .device-info {
   flex: 1;
 }
+
 .top-line {
   display: flex;
   justify-content: space-between;
   align-items: center;
   margin-bottom: 4px;
 }
+
 .pet-name-lbl {
   font-weight: 600;
   color: var(--text-primary);
 }
+
 .mac {
   font-family: monospace;
   color: hsl(from var(--color-neutral) h s 50%);
@@ -326,7 +334,7 @@ const handleConfirmAssignment = (petId: string) => {
 }
 
 .details-panel {
-  background: white;
+  background: #fff;
   border-radius: 12px;
   border: 1px solid #e2e8f0;
   padding: 24px;
@@ -340,6 +348,7 @@ const handleConfirmAssignment = (petId: string) => {
   display: flex;
   justify-content: space-between;
   align-items: center;
+
   h2 {
     margin: 0;
     font-size: 1.4rem;
@@ -364,12 +373,14 @@ const handleConfirmAssignment = (petId: string) => {
   display: flex;
   flex-direction: column;
   gap: 4px;
+
   label {
     font-size: 0.75rem;
     text-transform: uppercase;
     color: hsl(from var(--color-neutral) h s 50%);
     font-weight: 600;
   }
+
   span,
   .assign-val {
     font-weight: 500;
@@ -381,6 +392,7 @@ const handleConfirmAssignment = (petId: string) => {
   justify-content: space-between;
   align-items: center;
 }
+
 .change-link {
   background: none;
   border: none;
@@ -394,7 +406,7 @@ const handleConfirmAssignment = (petId: string) => {
   padding: 6px;
   border: 1px solid #cbd5e1;
   border-radius: 6px;
-  background: white;
+  background: #fff;
   font-size: 0.9rem;
 }
 

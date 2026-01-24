@@ -122,7 +122,6 @@ import Footer from '../components/common/footer/Footer.vue'
 
 .header {
   text-align: center;
-  
   padding: 140px 20px 40px;
 }
 
@@ -169,13 +168,13 @@ import Footer from '../components/common/footer/Footer.vue'
   display: flex;
   flex-direction: column;
   align-items: center;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 10px 30px rgb(0 0 0 / 10%);
   transition: all 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
 }
 
 .donate-card:hover {
   transform: translateY(-8px);
-  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.12);
+  box-shadow: 0 16px 40px rgb(0 0 0 / 12%);
 }
 
 .donate-card h2 {
@@ -216,18 +215,18 @@ import Footer from '../components/common/footer/Footer.vue'
   font-weight: 600;
   font-size: 1.1rem;
   transition: all 0.2s cubic-bezier(0.2, 0.8, 0.2, 1);
-  color: white;
+  color: #fff;
   box-shadow:
-    0 4px 6px rgba(50, 50, 93, 0.11),
-    0 1px 3px rgba(0, 0, 0, 0.08);
+    0 4px 6px rgb(50 50 93 / 11%),
+    0 1px 3px rgb(0 0 0 / 8%);
   text-align: center;
 }
 
 .donate-btn:hover {
   transform: translateY(-2px);
   box-shadow:
-    0 7px 14px rgba(50, 50, 93, 0.1),
-    0 3px 6px rgba(0, 0, 0, 0.08);
+    0 7px 14px rgb(50 50 93 / 10%),
+    0 3px 6px rgb(0 0 0 / 8%);
   filter: brightness(1.1);
 }
 
@@ -260,10 +259,10 @@ import Footer from '../components/common/footer/Footer.vue'
   text-align: center;
   gap: 12px;
   border: none;
-  box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.03);
+  box-shadow: inset 0 2px 6px rgb(0 0 0 / 3%);
 }
 
-.qr-placeholder > span:not(.username):not(.handle) {
+.qr-placeholder > span:not(.username, .handle) {
   font-weight: 600;
   color: #222;
   letter-spacing: 0.5px;
@@ -299,14 +298,17 @@ import Footer from '../components/common/footer/Footer.vue'
 .cat-card h2 {
   color: var(--color-tertiary);
 }
+
 .cat-card .illustration img {
   border-color: hsl(from var(--color-tertiary) h s 90%);
 }
+
 .cat-card .qr-placeholder {
   background-color: var(--color-tertiary-weak);
   color: var(--color-tertiary);
   border: 2px solid hsl(from var(--color-tertiary) h s 90%);
 }
+
 .btn-paypal {
   background-color: var(--color-tertiary);
 }
@@ -314,37 +316,38 @@ import Footer from '../components/common/footer/Footer.vue'
 .dog-card h2 {
   color: var(--color-secondary);
 }
+
 .dog-card .illustration img {
   border-color: var(--color-secondary-light);
   padding: 40px;
   box-sizing: border-box;
   background-color: var(--color-secondary-weak);
   border-width: 6px;
-  box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.05);
-  
+  box-shadow: inset 0 0 20px rgb(0 0 0 / 5%);
   filter: brightness(0) saturate(100%) invert(42%) sepia(97%) saturate(1466%) hue-rotate(198deg)
     brightness(99%) contrast(94%);
 }
+
 .dog-card .qr-placeholder {
   background-color: var(--color-secondary-weak);
   color: var(--color-secondary);
   padding: 24px;
   border: 2px solid var(--color-secondary-light);
 }
+
 .dog-card .qr-icon {
   width: 80px;
   height: 80px;
   opacity: 0.9;
   margin-bottom: 12px;
-  
   filter: brightness(0) saturate(100%) invert(42%) sepia(97%) saturate(1466%) hue-rotate(198deg)
     brightness(99%) contrast(94%);
-  
   border: 2px solid var(--color-secondary-light);
   padding: 12px;
   border-radius: 12px;
-  background-color: white;
+  background-color: #fff;
 }
+
 .dog-card .btn-paypal {
   background-color: var(--color-secondary);
 }
@@ -352,11 +355,12 @@ import Footer from '../components/common/footer/Footer.vue'
 .cat-card .btn-venmo {
   background-color: var(--color-tertiary);
 }
+
 .dog-card .btn-venmo {
   background-color: var(--color-secondary);
 }
 
-@media (max-width: 1024px) {
+@media (width <= 1024px) {
   .donate-container {
     flex-direction: column;
     align-items: center;
@@ -368,7 +372,7 @@ import Footer from '../components/common/footer/Footer.vue'
   }
 }
 
-@media (max-width: 480px) {
+@media (width <= 480px) {
   .header {
     padding: 110px 20px 30px; 
   }

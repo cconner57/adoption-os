@@ -34,7 +34,7 @@ const emit = defineEmits<{
   display: none;
 }
 
-@media (min-width: 768px) {
+@media (width >= 768px) {
   .spacer {
     display: block;
   }

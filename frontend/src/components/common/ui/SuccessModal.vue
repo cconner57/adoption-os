@@ -43,12 +43,12 @@ const emit = defineEmits(['close'])
 .modal-overlay {
   position: fixed;
   inset: 0;
-  background-color: rgba(
-    0,
-    0,
-    0,
-    0.5
-  ); 
+  background-color: rgb(
+    0
+    0
+    0 /
+    50%
+  );
   display: flex;
   justify-content: center;
   align-items: center;
@@ -59,30 +59,30 @@ const emit = defineEmits(['close'])
 
 .modal-card {
   background: var(--text-inverse);
-  padding: 40px 32px; 
+  padding: 40px 32px;
   border-radius: 24px;
   width: 90%;
   max-width: 400px;
   display: flex;
   flex-direction: column;
-  align-items: center; 
+  align-items: center;
   justify-content: center;
   box-shadow:
-    0 20px 25px -5px rgba(0, 0, 0, 0.1),
-    0 10px 10px -5px rgba(0, 0, 0, 0.04);
+    0 20px 25px -5px rgb(0 0 0 / 10%),
+    0 10px 10px -5px rgb(0 0 0 / 4%);
   animation: scaleIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 
 .icon-wrapper {
   color: var(--color-primary);
-  background-color: color-mix(in srgb, var(--color-primary) 10%, white);
+  background-color: color-mix(in srgb, var(--color-primary) 10%, #fff);
   width: 80px;
   height: 80px;
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-bottom: 24px; 
+  margin-bottom: 24px;
   animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) 0.1s both;
 }
 
@@ -95,7 +95,7 @@ const emit = defineEmits(['close'])
 }
 
 .modal-message {
-  color: hsl(from var(--color-neutral) h s 30%); 
+  color: hsl(from var(--color-neutral) h s 30%);
   margin-bottom: 32px;
   line-height: 1.5;
   text-align: center;
@@ -111,6 +111,7 @@ const emit = defineEmits(['close'])
   from {
     opacity: 0;
   }
+
   to {
     opacity: 1;
   }
@@ -121,6 +122,7 @@ const emit = defineEmits(['close'])
     opacity: 0;
     transform: scale(0.8);
   }
+
   to {
     opacity: 1;
     transform: scale(1);
@@ -132,6 +134,7 @@ const emit = defineEmits(['close'])
     opacity: 0;
     transform: scale(0.5);
   }
+
   to {
     opacity: 1;
     transform: scale(1);

@@ -133,7 +133,7 @@ const handleAction = (action: string, inc: IIncident) => {
 }
 
 .incident-card {
-  background: white;
+  background: #fff;
   border: 1px solid #e5e7eb;
   border-left-width: 4px;
   border-radius: 8px;
@@ -172,6 +172,7 @@ const handleAction = (action: string, inc: IIncident) => {
 
 .inc-body {
   margin-bottom: 16px;
+
   p {
     margin: 0;
     line-height: 1.5;
@@ -206,10 +207,10 @@ const handleAction = (action: string, inc: IIncident) => {
   position: absolute;
   top: 100%;
   right: 0;
-  background: white;
+  background: #fff;
   border: 1px solid #e5e7eb;
   border-radius: 8px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 12px rgb(0 0 0 / 10%);
   min-width: 160px;
   z-index: 10;
   display: flex;

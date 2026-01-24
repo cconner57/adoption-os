@@ -57,7 +57,7 @@ const { headerTitle, headerText } = defineProps<{
     height: 80px;
   }
 
-  @media (max-width: 440px) {
+  @media (width <= 440px) {
     flex-direction: column;
     align-items: center;
     gap: 8px;
@@ -74,6 +74,7 @@ const { headerTitle, headerText } = defineProps<{
     }
   }
 }
+
 .lede {
   color: var(--text-primary);
   margin: 6px auto 18px;
@@ -82,7 +83,8 @@ const { headerTitle, headerText } = defineProps<{
   max-width: 900px;
   user-select: none;
   font-weight: 400;
-  @media (max-width: 440px) {
+
+  @media (width <= 440px) {
     font-size: 1rem;
     margin: 4px 0 12px;
   }

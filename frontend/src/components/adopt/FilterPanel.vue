@@ -127,11 +127,11 @@ const applyFilters = () => {
 .filter-panel {
   width: 100%;
   max-width: 800px; 
-  background: white;
+  background: #fff;
   border-radius: 24px;
   padding: 24px;
   margin-bottom: 32px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 20px rgb(0 0 0 / 10%);
   animation: slideDown 0.3s ease-out;
 }
 
@@ -140,6 +140,7 @@ const applyFilters = () => {
     opacity: 0;
     transform: translateY(-10px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);
@@ -188,7 +189,7 @@ section {
 
     &.active {
       background: var(--color-primary);
-      color: white;
+      color: #fff;
       border-color: var(--color-primary);
     }
   }
@@ -209,7 +210,7 @@ footer {
   gap: 12px;
 }
 
-@media (max-width: 480px) {
+@media (width <= 480px) {
   footer {
     flex-direction: column-reverse; 
     align-items: stretch;
@@ -226,7 +227,7 @@ footer {
   }
 }
 
-@media (min-width: 600px) {
+@media (width >= 600px) {
   .filter-sections {
     display: grid;
     grid-template-columns: 1fr 1fr;

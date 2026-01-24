@@ -128,7 +128,7 @@ const { modelValue } = defineProps<{
   gap: 1.5rem;
 }
 
-@media (min-width: 768px) {
+@media (width >= 768px) {
   .other-section {
     display: grid;
     grid-template-columns: 1fr 1fr;

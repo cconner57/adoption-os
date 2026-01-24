@@ -127,16 +127,19 @@ main {
   flex-direction: column;
   gap: 64px;
 
-  @media (min-width: 0px) and (max-width: 320px) {
+  @media (width >= 0) and (width <= 320px) {
     gap: 24px;
   }
-  @media (min-width: 321px) and (max-width: 430px) {
+
+  @media (width >= 321px) and (width <= 430px) {
     gap: 40px;
   }
-  @media (min-width: 431px) and (max-width: 768px) {
+
+  @media (width >= 431px) and (width <= 768px) {
     gap: 48px;
   }
-  @media (min-width: 769px) and (max-width: 1024px) {
+
+  @media (width >= 769px) and (width <= 1024px) {
     gap: 56px;
   }
 }
@@ -147,19 +150,22 @@ main {
   margin-top: -20px;
   min-height: auto;
 
-  @media (min-width: 0px) and (max-width: 320px) {
+  @media (width >= 0) and (width <= 320px) {
     margin-top: 0;
     padding-bottom: 40px;
   }
-  @media (min-width: 321px) and (max-width: 430px) {
+
+  @media (width >= 321px) and (width <= 430px) {
     margin-top: 0;
     padding-bottom: 60px;
   }
-  @media (min-width: 431px) and (max-width: 768px) {
+
+  @media (width >= 431px) and (width <= 768px) {
     margin-top: 0;
     padding-bottom: 80px;
   }
-  @media (min-width: 769px) and (max-width: 1024px) {
+
+  @media (width >= 769px) and (width <= 1024px) {
     padding-bottom: 120px;
   }
 }
@@ -169,19 +175,22 @@ main {
   padding: 60px var(--layout-padding-side) 80px;
   height: auto;
 
-  @media (min-width: 0px) and (max-width: 320px) {
+  @media (width >= 0) and (width <= 320px) {
     padding-top: 40px;
     padding-bottom: 24px;
   }
-  @media (min-width: 321px) and (max-width: 430px) {
+
+  @media (width >= 321px) and (width <= 430px) {
     padding-top: 60px;
     padding-bottom: 32px;
   }
-  @media (min-width: 431px) and (max-width: 768px) {
+
+  @media (width >= 431px) and (width <= 768px) {
     padding-top: 80px;
     padding-bottom: 100px;
   }
-  @media (min-width: 769px) and (max-width: 1024px) {
+
+  @media (width >= 769px) and (width <= 1024px) {
     padding-top: 100px;
     padding-bottom: 150px;
   }
@@ -198,24 +207,24 @@ main {
     flex: 1;
   }
 
-  @media (min-width: 0px) and (max-width: 320px) {
+  @media (width >= 0) and (width <= 320px) {
     flex-direction: column;
     gap: 16px;
     margin: 20px 0 0;
   }
 
-  @media (min-width: 321px) and (max-width: 430px) {
+  @media (width >= 321px) and (width <= 430px) {
     flex-direction: column;
     gap: 20px;
     margin: 20px 0 0;
   }
 
-  @media (min-width: 431px) and (max-width: 768px) {
+  @media (width >= 431px) and (width <= 768px) {
     flex-direction: column;
     gap: 32px;
   }
 
-  @media (min-width: 769px) and (max-width: 1024px) {
+  @media (width >= 769px) and (width <= 1024px) {
     gap: 40px;
   }
 }

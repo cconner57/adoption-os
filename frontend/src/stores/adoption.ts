@@ -3,8 +3,8 @@ import { computed,reactive, ref } from 'vue'
 
 import { useDemoMode } from '../composables/useDemoMode'
 import { useMetrics } from '../composables/useMetrics'
-import { API_ENDPOINTS } from '../constants/api'
 import type { FormState } from '../models/adopt-form'
+import { mockApplications } from './mockApplications'
 
 export const useAdoptionStore = defineStore('adoption', () => {
   const { isDemoMode } = useDemoMode()
@@ -182,42 +182,54 @@ export const useAdoptionStore = defineStore('adoption', () => {
 
   const submitApplication = async () => {
     try {
-      if (isDemoMode.value) {
-        console.log('Demo Mode: Simulating submission success')
-        await new Promise((resolve) => setTimeout(resolve, 1000))
-        isSubmitted.value = true
-        sessionStorage.removeItem(STORAGE_KEY)
-        return true
+      // Simulate API call
+      await new Promise((resolve) => setTimeout(resolve, 1500))
+
+      const petDetails = sessionStorage.getItem('adoption_pet')
+      let petInfo = { petId: 'unknown', petName: 'Unknown' }
+      if (petDetails) {
+        try {
+          petInfo = JSON.parse(petDetails)
+        } catch (e) {
+          console.error(e)
+        }
       }
 
-      let primaryOwner = null
-      if (formState.primaryOwner !== null) {
-        primaryOwner = formState.primaryOwner ? 'Yes' : 'No'
-      }
-
-      const payload = {
-        ...formState,
-        age: formState.age ? String(formState.age) : null,
-        primaryOwner,
-      }
-
-      const response = await fetch(API_ENDPOINTS.ADOPTION_APPLICATION, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
+      // Add to mock store
+      const newApp = {
+        id: `a-app-${Date.now()}`,
+        type: 'adoption' as const,
+        applicantName: `${formState.firstName} ${formState.lastName}`,
+        email: formState.email || '',
+        date: new Date().toISOString().split('T')[0],
+        status: 'pending' as const,
+        expiresAt: Date.now() + 7 * 24 * 60 * 60 * 1000, // 7 days from now
+        details: {
+          petName: petInfo.petName,
+          petId: petInfo.petId,
+          homeType: formState.homeType,
+          otherPets: formState.currentPets.length > 0 || formState.currentlyHavePets === 'Yes',
         },
-        body: JSON.stringify(payload),
-      })
-
-      if (!response.ok) {
-        const errorText = await response.text()
-
-        console.error('Backend Submission Error:', response.status, errorText)
-        throw new Error(`Server responded with ${response.status}: ${errorText}`)
+        fullApplication: {
+          Applicant: `${formState.firstName} ${formState.lastName}`,
+          Phone: formState.phoneNumber,
+          Address: `${formState.address}, ${formState.city}`,
+          Housing: `${formState.homeType} (${formState.homeOwnership})`,
+          'Landlord Contact': formState.landlordName ? `${formState.landlordName} (${formState.landlordPhoneNumber})` : 'N/A',
+          'Household Members': `Spouse: ${formState.spouseFirstName || 'N/A'}`,
+          'Current Pets': formState.currentPets.map(p => `${p.speciesBreedSize} (${p.name})`).join(', ') || 'None',
+          'Vet Reference': formState.alreadyHaveVeterinarian || 'N/A',
+          'Time alone': formState.catHomeAloneHours || 'N/A',
+        },
       }
 
-      const data = await response.json()
-      console.log('Submission success:', data)
+      mockApplications.value.unshift(newApp)
+
+      // Simulate Email
+      console.log(`[Email Service] Sending adoption confirmation to ${formState.email}...`)
+      console.log(`[Email Service] Subject: Application Received for ${petInfo.petName}`)
+      console.log(`[Email Service] Body: Dear ${formState.firstName}, we have received your application...`)
+
       isSubmitted.value = true
       sessionStorage.removeItem(STORAGE_KEY)
       return true

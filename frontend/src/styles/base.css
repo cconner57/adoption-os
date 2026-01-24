@@ -1,5 +1,5 @@
 @font-face {
-  font-family: 'Roboto-V';
+  font-family: Roboto-V;
   src: url('../assets/fonts/Roboto-Variable.ttf') format('truetype-variations');
   font-weight: 1 999;
   font-display: swap;
@@ -12,11 +12,9 @@
   --color-primary: #00a5ad; /* Green/Teal - Theme 1 */
   --color-secondary: #1976d2; /* Blue - Theme 2 */
   --color-tertiary: #6b5b95; /* Purple - Theme 3 */
-
   --color-danger: #c73a67; /* Red - Alerts/Error */
   --color-warning: #deb024; /* Yellow - Warning */
   --color-neutral: #1f2121; /* Dark Grey - Neutral/Text */
-
   --text-primary: var(--color-neutral); /* Main text color */
   --text-secondary: #374151; /* Secondary text color - Darkened for AA compliance */
   --text-inverse: #f8f8f3; /* White - Inverse text/Background */
@@ -29,10 +27,8 @@
   --mobile-breakpoint: 440px;
   --tablet-breakpoint: 1024px;
   --desktop-breakpoint: 1440px;
-
   --safe-top: env(safe-area-inset-top, 0px);
   --safe-bottom: env(safe-area-inset-bottom, 0px);
-
   --viewport-small-phone: 320px;
   --viewport-phone: 430px;
   --viewport-tablet: 768px;
@@ -65,19 +61,19 @@
 }
 */
 
-@media (min-width: 321px) and (max-width: 430px) {
+@media (width >= 321px) and (width <= 430px) {
   :root {
     --layout-padding-side: 2.85rem;
   }
 }
 
-@media (min-width: 1025px) and (max-width: 1440px) {
+@media (width >= 1025px) and (width <= 1440px) {
   :root {
     --layout-padding-side: 10rem;
   }
 }
 
-@media (min-width: 1441px) {
+@media (width >= 1441px) {
   :root {
     --layout-padding-side: 15rem;
   }
@@ -159,18 +155,23 @@ h6 {
 h1 {
   font-size: var(--font-size-h1);
 }
+
 h2 {
   font-size: var(--font-size-h2);
 }
+
 h3 {
   font-size: var(--font-size-h3);
 }
+
 h4 {
   font-size: var(--font-size-h4);
 }
+
 h5 {
   font-size: var(--font-size-h5);
 }
+
 h6 {
   font-size: var(--font-size-h6);
 }
@@ -197,13 +198,13 @@ p {
 }
 
 ::-webkit-scrollbar-track {
-  background: white;
+  background: #fff;
 }
 
 ::-webkit-scrollbar-thumb {
   background-color: #d1d5db;
   border-radius: 4px;
-  border: 2px solid white; /* Creates padding effect */
+  border: 2px solid #fff; /* Creates padding effect */
 }
 
 ::-webkit-scrollbar-thumb:hover {
@@ -213,5 +214,5 @@ p {
 /* Firefox */
 * {
   scrollbar-width: thin;
-  scrollbar-color: #d1d5db white;
+  scrollbar-color: #d1d5db #fff;
 }

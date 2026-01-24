@@ -189,7 +189,7 @@ const monthName = computed(() => {
 }
 
 .nav-btn {
-  background: white;
+  background: #fff;
   border: 1px solid #e5e7eb;
   padding: 6px 12px;
   border-radius: 6px;
@@ -210,8 +210,6 @@ const monthName = computed(() => {
 }
 
 .current-period {
-  font-size: 1.2rem;
-  font-weight: 600;
   font-size: 1.2rem;
   font-weight: 600;
   color: hsl(from var(--color-neutral) h s 50%);
@@ -235,21 +233,19 @@ const monthName = computed(() => {
   border-radius: 6px;
   font-size: 0.9rem;
   font-weight: 500;
-  font-size: 0.9rem;
-  font-weight: 500;
   color: hsl(from var(--color-neutral) h s 50%);
   cursor: pointer;
 
   &.active {
     background: var(--text-inverse);
     color: var(--text-primary);
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    box-shadow: 0 2px 4px rgb(0 0 0 / 5%);
   }
 }
 
 .add-event-btn {
   background-color: var(--color-secondary);
-  color: white;
+  color: #fff;
   border: none;
   padding: 8px 16px;
   border-radius: 8px;
@@ -271,23 +267,25 @@ const monthName = computed(() => {
   gap: 16px;
   margin-bottom: 8px;
 }
+
 .legend-item {
   display: flex;
   align-items: center;
   gap: 8px;
   font-size: 0.9rem;
-  gap: 8px;
-  font-size: 0.9rem;
   color: hsl(from var(--color-neutral) h s 50%);
 }
+
 .dot {
   width: 10px;
   height: 10px;
   border-radius: 50%;
 }
+
 .dot.volunteer {
   background-color: var(--color-secondary);
 }
+
 .dot.vet {
   background-color: var(--color-primary);
 }

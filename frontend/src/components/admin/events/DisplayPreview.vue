@@ -50,7 +50,7 @@ defineProps<{
 
       <div v-if="device.template === 'kennel-card'" class="layout-kennel-card">
         <div v-if="device.config.featuredPetIds.length" class="kc-container">
-          
+
           <div
             v-for="pid in device.config.featuredPetIds.slice(0, 1)"
             :key="pid"
@@ -88,7 +88,7 @@ defineProps<{
             </div>
           </div>
         </div>
-        <div v-else class="empty-msg" style="color: black; padding-top: 40px">
+        <div v-else class="empty-msg" style="color: #000; padding-top: 40px">
           Select a pet to view card
         </div>
       </div>
@@ -118,10 +118,10 @@ defineProps<{
     background: #f4f4f4;
     border: 8px solid #334155;
     border-radius: 4px;
-    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 10px 25px -5px rgb(0 0 0 / 20%);
     position: relative;
     overflow: hidden;
-    color: black;
+    color: #000;
 
     .layout-welcome {
       height: 100%;
@@ -139,13 +139,13 @@ defineProps<{
         font-size: 1.2rem;
         font-weight: 900;
         margin-bottom: 20px;
-        border-bottom: 2px solid black;
+        border-bottom: 2px solid #000;
         padding-bottom: 8px;
       }
 
       .big-title {
         font-size: 3rem;
-        margin: 0 0 16px 0;
+        margin: 0 0 16px;
         font-family: serif;
       }
 
@@ -164,8 +164,8 @@ defineProps<{
         .qr-mock {
           width: 50px;
           height: 50px;
-          background: black;
-          color: white;
+          background: #000;
+          color: #fff;
           display: flex;
           align-items: center;
           justify-content: center;
@@ -181,8 +181,8 @@ defineProps<{
 
       .grid-title {
         text-align: center;
-        margin: 0 0 20px 0;
-        border-bottom: 2px solid black;
+        margin: 0 0 20px;
+        border-bottom: 2px solid #000;
         padding-bottom: 10px;
       }
 
@@ -200,16 +200,16 @@ defineProps<{
           align-items: center;
           justify-content: center;
           text-align: center;
+        }
 
-          .pt-photo {
-            font-size: 2rem;
-            margin-bottom: 8px;
-          }
+        .pet-tile .pt-photo {
+          font-size: 2rem;
+          margin-bottom: 8px;
+        }
 
-          .pt-name {
-            font-weight: 800;
-            font-size: 1.2rem;
-          }
+        .pet-tile .pt-name {
+          font-weight: 800;
+          font-size: 1.2rem;
         }
       }
 
@@ -239,7 +239,7 @@ defineProps<{
 
       .way-title {
         font-size: 3.5rem;
-        margin: 0 0 10px 0;
+        margin: 0 0 10px;
         font-weight: 900;
       }
 
@@ -251,9 +251,9 @@ defineProps<{
 
     .layout-kennel-card {
       height: 100%;
-      background: white;
-      color: black;
-      font-family: 'Courier New', Courier, monospace; 
+      background: #fff;
+      color: #000;
+      font-family: 'Courier New', Courier, monospace;
       padding: 16px;
       box-sizing: border-box;
 
@@ -304,6 +304,7 @@ defineProps<{
           font-size: 1.1rem;
           margin-bottom: 4px;
         }
+
         .kc-tags-text {
           font-size: 1rem;
           line-height: 1.3;
@@ -322,8 +323,8 @@ defineProps<{
       .kc-qr {
         width: 130px;
         height: 130px;
-        background: white;
-        border: 2px solid black;
+        background: #fff;
+        border: 2px solid #000;
         padding: 4px;
       }
 

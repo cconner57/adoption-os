@@ -1,6 +1,5 @@
-<script setup lang="ts">
-import { defineEmits,defineProps } from 'vue'
 
+<script setup lang="ts">
 import { ButtonToggle, Capsules,InputField } from '../../common/ui'
 import Button from '../../common/ui/Button.vue'
 import SettingsCard from './SettingsCard.vue'
@@ -40,7 +39,7 @@ function removeEmail(type: 'volunteer' | 'surrender' | 'adoption', email: string
         <div class="toggle-wrapper">
           <ButtonToggle
             label=""
-            :modelValue="isDemoMode"
+            :modelValue="props.isDemoMode"
             @update:modelValue="emit('toggleDemoMode')"
             true-label="On"
             false-label="Off"
@@ -53,14 +52,14 @@ function removeEmail(type: 'volunteer' | 'surrender' | 'adoption', email: string
 
     <SettingsCard title="Applications & Forms" icon="📝">
       <div class="forms-grid">
-        
+
         <div class="form-config-col">
           <div class="config-header">
             <h4>Volunteer Application</h4>
             <div class="toggle-wrapper small">
               <ButtonToggle
                 label=""
-                v-model="settings.forms.volunteer.enabled"
+                v-model="props.settings.forms.volunteer.enabled"
                 true-label="Active"
                 false-label="Disabled"
                 :true-value="true"
@@ -72,7 +71,7 @@ function removeEmail(type: 'volunteer' | 'surrender' | 'adoption', email: string
             <label class="sub-label">Send Notifications To:</label>
             <div class="capsule-list">
               <Capsules
-                v-for="email in settings.forms.volunteer.emails"
+                v-for="email in props.settings.forms.volunteer.emails"
                 :key="email"
                 size="sm"
                 color="#f3e8ff"
@@ -85,7 +84,7 @@ function removeEmail(type: 'volunteer' | 'surrender' | 'adoption', email: string
               <InputField
                 label=""
                 placeholder="Add..."
-                v-model="settings.forms.volunteer.newEmail"
+                v-model="props.settings.forms.volunteer.newEmail"
                 @keydown.enter.prevent="addEmail('volunteer')"
               />
               <Button
@@ -104,7 +103,7 @@ function removeEmail(type: 'volunteer' | 'surrender' | 'adoption', email: string
             <div class="toggle-wrapper small">
               <ButtonToggle
                 label=""
-                v-model="settings.forms.surrender.enabled"
+                v-model="props.settings.forms.surrender.enabled"
                 true-label="Active"
                 false-label="Disabled"
                 :true-value="true"
@@ -116,7 +115,7 @@ function removeEmail(type: 'volunteer' | 'surrender' | 'adoption', email: string
             <label class="sub-label">Send Notifications To:</label>
             <div class="capsule-list">
               <Capsules
-                v-for="email in settings.forms.surrender.emails"
+                v-for="email in props.settings.forms.surrender.emails"
                 :key="email"
                 size="sm"
                 color="#fee2e2"
@@ -129,7 +128,7 @@ function removeEmail(type: 'volunteer' | 'surrender' | 'adoption', email: string
               <InputField
                 label=""
                 placeholder="Add..."
-                v-model="settings.forms.surrender.newEmail"
+                v-model="props.settings.forms.surrender.newEmail"
                 @keydown.enter.prevent="addEmail('surrender')"
               />
               <Button
@@ -148,7 +147,7 @@ function removeEmail(type: 'volunteer' | 'surrender' | 'adoption', email: string
             <div class="toggle-wrapper small">
               <ButtonToggle
                 label=""
-                v-model="settings.forms.adoption.enabled"
+                v-model="props.settings.forms.adoption.enabled"
                 true-label="Active"
                 false-label="Disabled"
                 :true-value="true"
@@ -160,7 +159,7 @@ function removeEmail(type: 'volunteer' | 'surrender' | 'adoption', email: string
             <label class="sub-label">Send Notifications To:</label>
             <div class="capsule-list">
               <Capsules
-                v-for="email in settings.forms.adoption.emails"
+                v-for="email in props.settings.forms.adoption.emails"
                 :key="email"
                 size="sm"
                 color="#dbeafe"
@@ -173,7 +172,7 @@ function removeEmail(type: 'volunteer' | 'surrender' | 'adoption', email: string
               <InputField
                 label=""
                 placeholder="Add..."
-                v-model="settings.forms.adoption.newEmail"
+                v-model="props.settings.forms.adoption.newEmail"
                 @keydown.enter.prevent="addEmail('adoption')"
               />
               <Button
@@ -197,9 +196,10 @@ function removeEmail(type: 'volunteer' | 'surrender' | 'adoption', email: string
   gap: 24px;
   align-items: start;
 }
+
 .settings-grid.single-col {
   grid-template-columns: 1fr;
-  max-width: 800px; 
+  max-width: 800px;
 }
 
 .setting-row {
@@ -209,15 +209,18 @@ function removeEmail(type: 'volunteer' | 'surrender' | 'adoption', email: string
   padding: 16px 0;
   border-bottom: 1px solid #f3f4f6;
 }
+
 .setting-row:last-child {
   border-bottom: none;
 }
+
 .setting-info label {
   display: block;
   font-weight: 500;
   color: var(--text-primary);
   margin-bottom: 4px;
 }
+
 .setting-desc {
   font-size: 0.85rem;
   color: #6b7280;
@@ -273,6 +276,7 @@ function removeEmail(type: 'volunteer' | 'surrender' | 'adoption', email: string
   cursor: pointer;
   opacity: 0.5;
 }
+
 .remove-x:hover {
   opacity: 1;
 }

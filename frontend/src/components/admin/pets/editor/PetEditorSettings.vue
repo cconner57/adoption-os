@@ -48,7 +48,7 @@ const formData = computed({
 </template>
 
 <style scoped>
-@import './form.css';
+@import url('./form.css');
 
 .danger-zone {
   margin-top: 40px;
@@ -69,7 +69,7 @@ const formData = computed({
 }
 
 .btn-archive {
-  background: white;
+  background: #fff;
   border: 1px solid var(--color-danger);
   color: var(--color-danger);
   padding: 10px 20px;
@@ -81,6 +81,6 @@ const formData = computed({
 
 .btn-archive:hover {
   background: var(--color-danger);
-  color: white;
+  color: #fff;
 }
 </style>

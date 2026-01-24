@@ -216,7 +216,7 @@ const formatSize = (bytes: number) => {
   border: 1px dashed var(--border-color);
   border-radius: 8px;
   background-color: var(--text-inverse);
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 4px rgb(0 0 0 / 10%);
   padding: 24px;
   text-align: center;
   cursor: pointer;

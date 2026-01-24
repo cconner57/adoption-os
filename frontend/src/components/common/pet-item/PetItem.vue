@@ -92,10 +92,9 @@ function handleAdopt() {
   width: 280px;
   border-radius: 8px;
   overflow: hidden;
-  overflow: hidden;
   background-color: var(--text-inverse);
   color: var(--text-primary);
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.25);
+  box-shadow: 0 4px 6px rgb(0 0 0 / 25%);
   height: 400px;
 
   img {
@@ -129,7 +128,7 @@ function handleAdopt() {
     overflow: hidden;
     text-overflow: ellipsis;
     line-height: 1.6;
-    padding: 4px 0 4px 0;
+    padding: 4px 0;
     flex-shrink: 0;
   }
 
@@ -156,10 +155,11 @@ function handleAdopt() {
     margin-top: auto;
   }
 
-  @media (min-width: 321px) and (max-width: 430px) {
+  @media (width >= 321px) and (width <= 430px) {
     & .img-fallback {
       background: url('/images/paw.svg') center center/100px 100px no-repeat #add8e6;
     }
+
     & .info-section {
       & .capsules {
         margin-bottom: 8px;
@@ -168,12 +168,14 @@ function handleAdopt() {
     }
   }
 
-  @media (min-width: 1025px) and (max-width: 1440px) {
+  @media (width >= 1025px) and (width <= 1440px) {
     width: 240px;
     height: 360px;
+
     & .img-fallback {
       background: url('/images/paw.svg') center center/100px 100px no-repeat #add8e6;
     }
+
     & .info-section {
       & .capsules {
         margin-bottom: 12px;
@@ -182,9 +184,10 @@ function handleAdopt() {
     }
   }
 
-  @media (min-width: 1441px) {
+  @media (width >= 1441px) {
     width: 260px;
     height: 380px;
+
     & .img-fallback {
       background: url('/images/paw.svg') center center/100px 100px no-repeat #add8e6;
     }

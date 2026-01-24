@@ -1,12 +1,13 @@
+
 <script setup lang="ts">
-import { defineProps } from 'vue'
+
 
 import type { IPet } from '../../../models/common'
 import { formatDate } from '../../../utils/common'
 import { useIsMobile } from '../../../utils/useIsMobile'
 import PetItem from '../../common/pet-item/PetItem.vue'
 
-defineProps<{
+const props = defineProps<{
   pet: IPet
 }>()
 
@@ -19,45 +20,45 @@ const isMobile = useIsMobile()
     <div class="adopt-detail__more-friends__list">
       <PetItem
         name="Crystal"
-        :id="pet.id"
+        :id="props.pet.id"
         :capsules="[
-          pet.species || '',
-          (pet.sex as string) || '',
-          formatDate((pet.physical?.ageGroup || '') as string),
+          props.pet.species || '',
+          (props.pet.sex as string) || '',
+          formatDate((props.pet.physical?.ageGroup || '') as string),
         ]"
-        :photo="pet.photos?.find((p) => p.isPrimary)?.url || pet.photos?.[0]?.url"
+        :photo="props.pet.photos?.find((p) => p.isPrimary)?.url || props.pet.photos?.[0]?.url"
       />
       <PetItem
         name="Crystal"
-        :id="pet.id"
+        :id="props.pet.id"
         :capsules="[
-          pet.species || '',
-          (pet.sex as string) || '',
-          formatDate((pet.physical?.ageGroup || '') as string),
+          props.pet.species || '',
+          (props.pet.sex as string) || '',
+          formatDate((props.pet.physical?.ageGroup || '') as string),
         ]"
-        :photo="pet.photos?.find((p) => p.isPrimary)?.url || pet.photos?.[0]?.url"
-      />
-      <PetItem
-        v-if="!isMobile"
-        :id="pet.id"
-        name="Crystal"
-        :capsules="[
-          pet.species || '',
-          (pet.sex as string) || '',
-          formatDate((pet.physical?.ageGroup || '') as string),
-        ]"
-        :photo="pet.photos?.find((p) => p.isPrimary)?.url || pet.photos?.[0]?.url"
+        :photo="props.pet.photos?.find((p) => p.isPrimary)?.url || props.pet.photos?.[0]?.url"
       />
       <PetItem
         v-if="!isMobile"
-        :id="pet.id"
+        :id="props.pet.id"
         name="Crystal"
         :capsules="[
-          pet.species || '',
-          (pet.sex as string) || '',
-          formatDate((pet.physical?.ageGroup || '') as string),
+          props.pet.species || '',
+          (props.pet.sex as string) || '',
+          formatDate((props.pet.physical?.ageGroup || '') as string),
         ]"
-        :photo="pet.photos?.find((p) => p.isPrimary)?.url || pet.photos?.[0]?.url"
+        :photo="props.pet.photos?.find((p) => p.isPrimary)?.url || props.pet.photos?.[0]?.url"
+      />
+      <PetItem
+        v-if="!isMobile"
+        :id="props.pet.id"
+        name="Crystal"
+        :capsules="[
+          props.pet.species || '',
+          (props.pet.sex as string) || '',
+          formatDate((props.pet.physical?.ageGroup || '') as string),
+        ]"
+        :photo="props.pet.photos?.find((p) => p.isPrimary)?.url || props.pet.photos?.[0]?.url"
       />
     </div>
   </div>
@@ -71,11 +72,13 @@ const isMobile = useIsMobile()
   color: var(--text-primary);
   padding: 20px 20px 30px;
   border-radius: 16px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.25);
+  box-shadow: 0 4px 6px rgb(0 0 0 / 25%);
+
   h2 {
     font-size: 1.5rem;
     margin-bottom: 16px;
   }
+
   .adopt-detail__more-friends__list {
     display: flex;
     flex-direction: row;
@@ -83,14 +86,17 @@ const isMobile = useIsMobile()
     width: 100%;
     padding: 0 30px;
   }
-  @media (min-width: 321px) and (max-width: 430px) {
+
+  @media (width >= 321px) and (width <= 430px) {
     margin: 30px auto 0;
     width: 90%;
     padding: 20px;
+
     h2 {
       font-size: 1.25rem;
       margin-bottom: 12px;
     }
+
     .adopt-detail__more-friends__list {
       flex-direction: column;
       gap: 15px;
@@ -98,18 +104,22 @@ const isMobile = useIsMobile()
       align-items: center;
     }
   }
-  @media (min-width: 1025px) and (max-width: 1440px) {
+
+  @media (width >= 1025px) and (width <= 1440px) {
     width: 100%;
     max-width: 1100px;
+
     .adopt-detail__more-friends__list {
-      padding: 0px;
+      padding: 0;
     }
   }
-  @media (min-width: 1441px) {
+
+  @media (width >= 1441px) {
     width: 100%;
     max-width: 1500px;
+
     .adopt-detail__more-friends__list {
-      padding: 0px;
+      padding: 0;
     }
   }
 }

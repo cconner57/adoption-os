@@ -68,8 +68,9 @@ function closeDrawer() {
   left: 0;
   width: 100dvw;
   height: 100dvh;
-  background-color: rgba(0, 0, 0, 0.5);
+  background-color: rgb(0 0 0 / 50%);
   z-index: 1000;
+
   .drawer {
     position: fixed;
     bottom: 0;
@@ -79,7 +80,7 @@ function closeDrawer() {
     height: 100dvh;
     z-index: 1005;
     background-color: var(--text-inverse);
-    box-shadow: -2px 0 10px rgba(0, 0, 0, 0.1);
+    box-shadow: -2px 0 10px rgb(0 0 0 / 10%);
     border-top-left-radius: 1rem;
     border-bottom-left-radius: 1rem;
     display: flex;
@@ -91,11 +92,13 @@ function closeDrawer() {
       display: flex;
       align-items: center;
       justify-content: space-between;
+
       & h2 {
         margin: 0 0 0 4rem;
         font-size: 1.5rem;
         color: var(--text-primary);
       }
+
       .hx-btn {
         all: unset;
         display: inline-flex;
@@ -106,14 +109,17 @@ function closeDrawer() {
         cursor: pointer;
         color: var(--text-inverse);
       }
+
       .hx-btn:focus-visible {
         outline: 2px solid var(--color-secondary);
         outline-offset: 2px;
       }
+
       svg {
         transition: transform 0.2s ease;
         color: var(--icon, currentColor);
       }
+
       line {
         transform-box: fill-box;
         transform-origin: center;
@@ -121,41 +127,52 @@ function closeDrawer() {
           transform 0.22s ease,
           opacity 0.18s ease;
       }
+
       .hx-top {
         transform: translateY(0) rotate(0);
       }
+
       .hx-mid {
         opacity: 1;
       }
+
       .hx-bot {
         transform: translateY(0) rotate(0);
       }
+
       svg[data-open='true'] .hx-top {
         transform: translateY(6px) rotate(45deg);
       }
+
       svg[data-open='true'] .hx-mid {
         opacity: 0;
       }
+
       svg[data-open='true'] .hx-bot {
         transform: translateY(-6px) rotate(-45deg);
       }
     }
+
     .drawer-body {
       padding: 1rem 2rem;
       overflow-y: auto;
       flex-grow: 1;
     }
   }
-  @media (min-width: 0px) and (max-width: 320px) {
+
+  @media (width >= 0) and (width <= 320px) {
   }
-  @media (min-width: 321px) and (max-width: 430px) {
+
+  @media (width >= 321px) and (width <= 430px) {
   }
-  @media (min-width: 431px) and (max-width: 768px) {
+
+  @media (width >= 431px) and (width <= 768px) {
     .drawer {
       border-top-left-radius: 1rem;
       border-top-right-radius: 1rem;
       border-bottom-left-radius: 0;
       height: 70dvh;
+
       .drawer-header {
         & h2 {
           margin: 0 0 0 3rem;

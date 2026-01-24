@@ -78,46 +78,57 @@ const toggleFaq = (faqIndex: number) => {
 <style scoped lang="css">
 .adopt-detail__adoption-faq {
   width: 50%;
+
   ul {
     list-style: none;
     padding: 0;
     margin: 0;
   }
+
   h2 {
     font-size: 1.5rem;
     margin-bottom: 16px;
-    @media (max-width: 440px) {
+
+    @media (width <= 440px) {
       font-size: 1.25rem;
     }
   }
+
   .faq-question {
-    font-weight: bold;
+    font-weight: 700;
     cursor: pointer;
     display: flex;
     align-items: center;
     gap: 8px;
+
     &:hover {
       color: var(--color-secondary);
     }
   }
+
   .faq-answer {
     margin: 8px 0 16px 34px;
     color: var(--text-primary);
     line-height: 1.4;
     font-weight: 400;
   }
-  @media (min-width: 321px) and (max-width: 430px) {
+
+  @media (width >= 321px) and (width <= 430px) {
     width: 100%;
     margin-right: 0;
+
     ul {
       padding: 0;
+
       li {
         margin-bottom: 12px;
       }
     }
+
     .faq-question {
       font-size: 1rem;
     }
+
     .faq-answer {
       font-size: 0.95rem;
       margin-left: 32px;
@@ -128,6 +139,7 @@ const toggleFaq = (faqIndex: number) => {
 .arrow {
   transition: transform 0.2s;
 }
+
 .rotated-arrow {
   transform: rotate(90deg);
 }

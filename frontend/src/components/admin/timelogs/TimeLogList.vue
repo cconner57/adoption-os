@@ -121,7 +121,7 @@ const handleAction = (action: string, log: ITimeLog) => {
 }
 
 .logs-table-container {
-  background: white;
+  background: #fff;
   border-radius: 12px;
   border: 1px solid #e5e7eb;
   overflow: hidden;
@@ -157,6 +157,7 @@ const handleAction = (action: string, log: ITimeLog) => {
 .fw-bold {
   font-weight: 600;
 }
+
 .desc-cell {
   max-width: 300px;
 }
@@ -208,10 +209,10 @@ const handleAction = (action: string, log: ITimeLog) => {
   position: absolute;
   top: 100%;
   right: 0;
-  background: white;
+  background: #fff;
   border: 1px solid #e5e7eb;
   border-radius: 8px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 12px rgb(0 0 0 / 10%);
   min-width: 160px;
   z-index: 10;
   display: flex;
@@ -240,6 +241,7 @@ const handleAction = (action: string, log: ITimeLog) => {
 
     &.danger {
       color: var(--color-danger);
+
       &:hover {
         background: hsl(from var(--color-danger) h s 98%);
       }

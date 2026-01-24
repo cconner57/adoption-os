@@ -86,10 +86,10 @@ onMounted(async () => {
   display: flex;
   flex-direction: column;
   gap: 16px;
-  padding: 24px 50px 40px 50px;
+  padding: 24px 50px 40px;
   border-radius: 12px;
   margin-top: -200px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.25);
+  box-shadow: 0 4px 6px rgb(0 0 0 / 25%);
   container-type: inline-size;
   container-name: impact;
 
@@ -98,6 +98,7 @@ onMounted(async () => {
     color: var(--text-primary);
     margin-bottom: 24px;
   }
+
   & .content {
     display: flex;
     align-items: center;
@@ -106,16 +107,19 @@ onMounted(async () => {
     color: var(--text-primary);
     gap: 40px;
   }
+
   & .awards {
     display: flex;
     gap: 40px;
     justify-content: center;
   }
+
   .divider {
     border-left: 2px solid var(--border-color);
     height: 120px;
     margin: 0 20px;
   }
+
   .stats {
     display: flex;
     gap: 40px;
@@ -135,6 +139,7 @@ onMounted(async () => {
         font-size: 3rem;
         color: var(--text-primary);
       }
+
       & p {
         font-size: 1.1rem;
         color: var(--text-primary);
@@ -143,7 +148,7 @@ onMounted(async () => {
     }
   }
 
-  @media (max-width: 900px) {
+  @media (width <= 900px) {
     margin-top: -80px;
     padding: 30px;
     height: auto;
@@ -191,7 +196,7 @@ onMounted(async () => {
     }
   }
 
-  @media (max-width: 480px) {
+  @media (width <= 480px) {
     margin-top: -30px; 
     padding: 24px;
 

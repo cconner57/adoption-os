@@ -97,7 +97,7 @@ const getStatusLabel = (status: ITrip['status']) => {
 }
 
 .trip-card {
-  background: white;
+  background: #fff;
   border: 1px solid #e5e7eb;
   border-radius: 12px;
   padding: 16px;
@@ -106,7 +106,7 @@ const getStatusLabel = (status: ITrip['status']) => {
   border-left: 4px solid transparent;
 
   &:hover {
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    box-shadow: 0 4px 12px rgb(0 0 0 / 5%);
     border-color: #d1d5db;
   }
 
@@ -140,6 +140,7 @@ const getStatusLabel = (status: ITrip['status']) => {
   &.to_vet {
     color: var(--color-secondary);
   }
+
   &.from_vet {
     color: var(--color-tertiary);
   }

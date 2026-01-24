@@ -176,7 +176,7 @@ const weekDays = computed(() => {
   }
 
   .event-details-list {
-    margin: 4px 0 0 0;
+    margin: 4px 0 0;
     padding-left: 16px;
     font-size: 0.8rem;
     opacity: 0.9;

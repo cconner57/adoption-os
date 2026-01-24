@@ -47,7 +47,7 @@
   font-size: 1.1rem;
   font-weight: 600;
   color: var(--text-primary);
-  margin: 0 0 8px 0;
+  margin: 0 0 8px;
 }
 
 /* Native inputs styling (for date/textarea fallback if used directly) */
@@ -59,7 +59,7 @@
   border-radius: 8px;
   font-size: 1rem;
   outline: none;
-  background-color: #ffffff;
+  background-color: #fff;
   color: var(--text-primary);
   font-family: inherit;
   width: 100%;
@@ -70,5 +70,5 @@
 .native-date-input:focus,
 .native-textarea:focus {
   border-color: var(--color-primary);
-  box-shadow: 0 0 0 3px hsla(from var(--color-primary) h s l / 0.1);
+  box-shadow: 0 0 0 3px hsl(from var(--color-primary) h s l / 10%);
 }

@@ -184,7 +184,7 @@ const pet = computed(() => {
   .divider {
     width: 1px;
     height: 24px;
-    background: rgba(255, 255, 255, 0.3);
+    background: rgb(255 255 255 / 30%);
     margin: 0 4px;
   }
 
@@ -197,7 +197,7 @@ const pet = computed(() => {
     all: unset;
     padding: 8px 20px;
     border-radius: 20px;
-    background-color: rgba(255, 255, 255, 0.2);
+    background-color: rgb(255 255 255 / 20%);
     color: var(--text-inverse);
     font-weight: 600;
     cursor: pointer;
@@ -209,7 +209,7 @@ const pet = computed(() => {
     white-space: nowrap;
 
     &:hover {
-      background-color: rgba(255, 255, 255, 0.3);
+      background-color: rgb(255 255 255 / 30%);
     }
 
     &.active {
@@ -220,6 +220,7 @@ const pet = computed(() => {
 
   .filter-btn {
     position: relative;
+
     .badge {
       background: var(--text-inverse);
       color: var(--color-primary);
@@ -244,7 +245,6 @@ const pet = computed(() => {
 
   .content-wrapper {
     width: 100%;
-    
     margin: 0 auto;
     padding: 8rem var(--layout-padding-side) 3rem;
     display: flex;
@@ -261,11 +261,13 @@ const pet = computed(() => {
     gap: 0.5rem;
     align-items: center;
     text-align: center;
+
     & h1 {
       font-size: 3.5rem;
       color: var(--text-inverse);
       min-width: 360px;
     }
+
     & p {
       font-size: 1.25rem;
       color: var(--text-inverse);
@@ -276,20 +278,23 @@ const pet = computed(() => {
     }
   }
 
-  @media (min-width: 0px) and (max-width: 320px) {
+  @media (width >= 0) and (width <= 320px) {
     
   }
-  @media (min-width: 321px) and (max-width: 430px) {
+
+  @media (width >= 321px) and (width <= 430px) {
     .content-wrapper {
       padding-top: 5.5rem;
       text-align: center;
     }
+
     & h1 {
       font-size: 2rem;
       color: var(--text-inverse);
       line-height: 1.2;
       margin-bottom: 12px;
     }
+
     & p {
       font-size: 1rem;
       min-width: auto;
@@ -298,32 +303,32 @@ const pet = computed(() => {
       padding: 0;
       line-height: 1.5;
     }
+
     main {
       width: 100%;
       max-width: 1600px;
     }
+
     .filters {
       flex-wrap: wrap;
       justify-content: center;
     }
   }
   
-  @media (max-width: 600px) {
+  @media (width <= 600px) {
     .filters {
       display: flex;
       flex-direction: column;
       align-items: center;
       gap: 16px;
-      
       overflow-x: visible;
 
       .species-group {
         display: flex;
-        flex-direction: row;
+        flex-flow: row nowrap;
         gap: 8px;
         width: 100%;
-        justify-content: center;
-        flex-wrap: nowrap; 
+        justify-content: center; 
       }
 
       .mobile-break {
@@ -334,7 +339,7 @@ const pet = computed(() => {
         width: 100%;
         max-width: 200px; 
         height: 1px;
-        background: rgba(255, 255, 255, 0.2);
+        background: rgb(255 255 255 / 20%);
         margin: 0;
       }
 
@@ -345,22 +350,27 @@ const pet = computed(() => {
       }
     }
   }
-  @media (min-width: 431px) and (max-width: 768px) {
+
+  @media (width >= 431px) and (width <= 768px) {
     .content-wrapper {
       padding: 6rem var(--layout-padding-side) 2rem;
       gap: 40px;
       align-items: center;
     }
+
     .header {
       max-width: 580px;
+
       h1 {
         font-size: 2.75rem;
         line-height: 3.25rem;
       }
+
       p {
         font-size: 1.1rem;
       }
     }
+
     .filters {
       flex-wrap: nowrap;
       justify-content: flex-start;
@@ -370,7 +380,6 @@ const pet = computed(() => {
       -webkit-overflow-scrolling: touch;
       padding-left: 16px; 
       padding-right: 16px;
-      
       box-sizing: border-box;
 
       &::-webkit-scrollbar {
@@ -396,10 +405,10 @@ const pet = computed(() => {
   color: var(--text-inverse);
   margin-top: 2rem;
   padding: 3rem;
-  background: rgba(255, 255, 255, 0.1);
+  background: rgb(255 255 255 / 10%);
   border-radius: 24px;
   backdrop-filter: blur(8px);
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  border: 1px solid rgb(255 255 255 / 20%);
   max-width: 400px;
 
   h2 {
@@ -426,11 +435,11 @@ const pet = computed(() => {
     transition:
       transform 0.2s,
       box-shadow 0.2s;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 12px rgb(0 0 0 / 10%);
 
     &:hover {
       transform: translateY(-2px);
-      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+      box-shadow: 0 6px 16px rgb(0 0 0 / 15%);
     }
 
     &:active {

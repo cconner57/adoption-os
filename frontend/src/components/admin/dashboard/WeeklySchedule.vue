@@ -116,7 +116,7 @@ const weekDays = computed(() => {
   padding: 24px;
   border-radius: 16px;
   border: 1px solid var(--border-color);
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+  box-shadow: 0 4px 6px rgb(0 0 0 / 5%);
   display: flex;
   flex-direction: column;
 }
@@ -142,7 +142,7 @@ const weekDays = computed(() => {
   grid-column: span 3;
 }
 
-@media (max-width: 900px) {
+@media (width <= 900px) {
   .weekly-schedule {
     grid-column: span 1;
   }
@@ -170,15 +170,19 @@ const weekDays = computed(() => {
 .dot.feeding {
   background-color: var(--color-secondary);
 }
+
 .dot.adoption {
   background-color: var(--color-tertiary);
 }
+
 .dot.transport {
   background-color: var(--color-warning);
 }
+
 .dot.vet {
   background-color: var(--color-danger);
 }
+
 .dot.default {
   background-color: var(--text-secondary);
 }
@@ -206,7 +210,7 @@ const weekDays = computed(() => {
 .calendar-day.today {
   background-color: var(--text-inverse);
   border-color: hsl(from var(--color-secondary) h s 70%);
-  box-shadow: 0 0 0 2px hsla(from var(--color-secondary) h s l / 0.1);
+  box-shadow: 0 0 0 2px hsl(from var(--color-secondary) h s l / 10%);
 }
 
 .calendar-day.today .day-header {

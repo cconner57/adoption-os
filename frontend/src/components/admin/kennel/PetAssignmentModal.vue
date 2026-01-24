@@ -56,14 +56,15 @@ const confirm = () => {
 .modal-overlay {
   position: fixed;
   inset: 0;
-  background: rgba(0, 0, 0, 0.5);
+  background: rgb(0 0 0 / 50%);
   display: flex;
   align-items: center;
   justify-content: center;
   z-index: 100;
 }
+
 .modal-card {
-  background: white;
+  background: #fff;
   padding: 24px;
   border-radius: 12px;
   width: 400px;
@@ -83,18 +84,22 @@ h3 {
   border: 1px solid #e2e8f0;
   border-radius: 8px;
 }
+
 .select-item {
   padding: 12px;
   cursor: pointer;
+
   &:hover {
     background: #f8fafc;
   }
+
   &.selected {
     background: hsl(from var(--color-secondary) h s 95%);
     color: var(--color-secondary);
     font-weight: 600;
   }
 }
+
 .modal-actions {
   display: flex;
   justify-content: flex-end;

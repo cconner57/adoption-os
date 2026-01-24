@@ -120,17 +120,21 @@ const emit = defineEmits<{
     & .name-date-container {
       display: flex;
       gap: 12px;
+
       & > :nth-child(1) {
         flex: 1;
       }
+
       & > :nth-child(2) {
         flex: 0 0 33%;
       }
     }
-    @media (max-width: 440px) {
+
+    @media (width <= 440px) {
       .name-date-container {
         flex-direction: column;
-        gap: 0px;
+        gap: 0;
+
         & > :nth-child(2) {
           flex: none;
         }
@@ -139,7 +143,7 @@ const emit = defineEmits<{
   }
 
   label {
-    border-top: 2px solid gray;
+    border-top: 2px solid #808080;
     padding-top: 12px;
     margin-top: 12px;
     font-weight: 600;
@@ -147,27 +151,27 @@ const emit = defineEmits<{
     text-align: center;
   }
 
-  @media (max-width: 440px) {
+  @media (width <= 440px) {
     grid-template-columns: repeat(1, minmax(0, 1fr));
     gap: 8px;
   }
 }
 
 .waiver {
-  color: black;
+  color: #000;
   background: #fff;
   border: 1px dashed #cfe2ff;
   padding: 12px;
   border-radius: 10px;
   font-size: 1rem;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 4px rgb(0 0 0 / 10%);
   line-height: 1.4;
   margin-bottom: 12px;
   width: 100%;
   max-width: 100%;
   grid-column: 1 / -1;
 
-  @media (max-width: 440px) {
+  @media (width <= 440px) {
     font-size: 0.9rem;
   }
 }

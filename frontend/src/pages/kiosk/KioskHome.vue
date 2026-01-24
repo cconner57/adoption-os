@@ -77,6 +77,7 @@ const menuItems = [
     margin-bottom: 12px;
     color: var(--text-primary);
   }
+
   p {
     font-size: 1.2rem;
     color: hsl(from var(--color-neutral) h s 50%);
@@ -90,7 +91,7 @@ const menuItems = [
 }
 
 .menu-card {
-  background: white;
+  background: #fff;
   border: 1px solid #e2e8f0;
   border-radius: 20px;
   padding: 32px;
@@ -101,11 +102,11 @@ const menuItems = [
   gap: 20px;
   cursor: pointer;
   transition: all 0.2s ease;
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+  box-shadow: 0 4px 6px -1px rgb(0 0 0 / 5%);
 
   &:hover {
     transform: translateY(-4px);
-    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 10px 15px -3px rgb(0 0 0 / 10%);
     border-color: var(--color-secondary);
   }
 
@@ -127,10 +128,11 @@ const menuItems = [
 
 .card-text {
   h3 {
-    margin: 0 0 8px 0;
+    margin: 0 0 8px;
     font-size: 1.4rem;
     color: var(--text-primary);
   }
+
   p {
     margin: 0;
     color: hsl(from var(--color-neutral) h s 50%);

@@ -1,5 +1,4 @@
-<script setup lang="ts">
-import { defineEmits,defineProps } from 'vue'
+
 
 import { ButtonToggle, InputField, InputSelectGroup } from '../../common/ui'
 import SettingsCard from './SettingsCard.vue'
@@ -160,6 +159,7 @@ defineEmits<{
   display: flex;
   gap: 16px;
 }
+
 .row > * {
   flex: 1;
 }
@@ -171,6 +171,7 @@ defineEmits<{
   padding: 16px 0;
   border-bottom: 1px solid #f3f4f6;
 }
+
 .setting-row:last-child {
   border-bottom: none;
 }
@@ -192,15 +193,19 @@ defineEmits<{
 .text-sm {
   font-size: 0.875rem;
 }
+
 .text-gray {
   color: #6b7280;
 }
+
 .mb-4 {
   margin-bottom: 1rem;
 }
+
 .mt-4 {
   margin-top: 1rem;
 }
+
 .u-label {
   font-size: 0.85rem;
   font-weight: 600;

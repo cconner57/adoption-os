@@ -84,14 +84,14 @@ const messageText = () => {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  filter: drop-shadow(0 0 8px #fff);
   text-align: center;
   animation: scaleIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 
 .icon-wrapper {
   color: var(--color-primary);
-  background-color: color-mix(in srgb, var(--color-primary) 10%, white);
+  background-color: color-mix(in srgb, var(--color-primary) 10%, #fff);
   width: 100px;
   height: 100px;
   border-radius: 50%;
@@ -133,6 +133,7 @@ const messageText = () => {
     opacity: 0;
     transform: scale(0.9);
   }
+
   to {
     opacity: 1;
     transform: scale(1);
@@ -144,6 +145,7 @@ const messageText = () => {
     opacity: 0;
     transform: scale(0.5);
   }
+
   to {
     opacity: 1;
     transform: scale(1);

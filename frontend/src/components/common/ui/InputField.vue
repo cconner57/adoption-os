@@ -103,9 +103,9 @@ input {
   border: 1px solid var(--border-color);
   font-size: 1rem;
   transition: all 0.2s;
-  background-color: #ffffff;
+  background-color: #fff;
   caret-color: var(--text-primary);
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 4px rgb(0 0 0 / 10%);
   color: var(--text-primary);
   flex: 1; 
 }

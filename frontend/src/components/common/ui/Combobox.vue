@@ -192,7 +192,7 @@ onUnmounted(() => {
 .combobox-wrapper {
   position: relative;
   border: 1px solid var(--border-color);
-  background: white;
+  background: #fff;
   border-radius: 8px;
   min-height: 48px;
   padding: 4px;
@@ -200,13 +200,13 @@ onUnmounted(() => {
   flex-wrap: wrap;
   align-items: center;
   gap: 6px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 4px rgb(0 0 0 / 10%);
   transition: all 0.2s;
 }
 
 .combobox-wrapper:focus-within {
   border-color: var(--color-secondary);
-  box-shadow: 0 0 0 2px hsla(from var(--color-secondary) h s l / 0.1);
+  box-shadow: 0 0 0 2px hsl(from var(--color-secondary) h s l / 10%);
 }
 
 .selected-tags {
@@ -278,14 +278,14 @@ onUnmounted(() => {
   top: 100%;
   left: 0;
   right: 0;
-  background: white;
+  background: #fff;
   border: 1px solid var(--border-color);
   border-radius: 8px;
   margin-top: 4px;
   max-height: 200px;
   overflow-y: auto;
   z-index: 1000;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 10px 30px rgb(0 0 0 / 15%);
 }
 
 .dropdown-item {
@@ -319,7 +319,7 @@ onUnmounted(() => {
 }
 
 .check {
-  font-weight: bold;
+  font-weight: 700;
 }
 
 .no-results {

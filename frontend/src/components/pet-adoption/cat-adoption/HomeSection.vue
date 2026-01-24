@@ -180,12 +180,11 @@ const handleBlur = (field: string) => {
   gap: 16px;
 }
 
-@media (min-width: 768px) {
+@media (width >= 768px) {
   .home-section {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
-    column-gap: 24px; 
-    row-gap: 24px; 
+    gap: 24px; 
     align-items: start;
   }
 }

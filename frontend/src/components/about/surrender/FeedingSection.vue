@@ -73,12 +73,11 @@ onMounted(() => {
   gap: 16px;
 }
 
-@media (min-width: 768px) {
+@media (width >= 768px) {
   .feeding-grid {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
-    column-gap: 24px;
-    row-gap: 16px;
+    gap: 16px 24px;
   }
 }
 

@@ -41,13 +41,13 @@ const toggleSelection = (row: string, col: string) => {
 
   if (props.singleSelect) {
     if (rowSelections.includes(col)) {
-      
+
       current[row] = []
     } else {
       current[row] = [col]
     }
   } else {
-    
+
     const isExclusive = props.exclusiveOptions.includes(col)
 
     if (isExclusive) {
@@ -157,7 +157,7 @@ const toggleSelection = (row: string, col: string) => {
   overflow: hidden;
   margin-top: 8px;
   overflow-x: auto;
-  background-color: var(--text-inverse); 
+  background-color: var(--text-inverse);
 }
 
 .grid-header {
@@ -172,7 +172,7 @@ const toggleSelection = (row: string, col: string) => {
 .grid-row {
   display: grid;
   border-bottom: 1px solid var(--border-color);
-  background-color: var(--text-inverse); 
+  background-color: var(--text-inverse);
 
   &:last-child {
     border-bottom: none;
@@ -210,15 +210,15 @@ const toggleSelection = (row: string, col: string) => {
   align-items: center;
   border-left: 1px solid var(--border-color);
   cursor: pointer;
-  background-color: var(--text-inverse); 
+  background-color: var(--text-inverse);
 
   &:hover {
-    background-color: hsl(from var(--color-neutral) h s 98%); 
+    background-color: hsl(from var(--color-neutral) h s 98%);
     box-shadow: 0 0 0 1px var(--border-color) inset;
   }
 
   &.selected {
-    background: color-mix(in srgb, var(--color-primary) 10%, white);
+    background: color-mix(in srgb, var(--color-primary) 10%, #fff);
     box-shadow: 0 0 0 1px var(--color-primary) inset;
 
     .check-indicator {
@@ -226,7 +226,7 @@ const toggleSelection = (row: string, col: string) => {
     }
 
     &:hover {
-      background: color-mix(in srgb, var(--color-primary) 15%, white);
+      background: color-mix(in srgb, var(--color-primary) 15%, #fff);
     }
   }
 }

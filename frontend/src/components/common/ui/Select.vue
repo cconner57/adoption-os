@@ -161,9 +161,9 @@ onUnmounted(() => {
   border-radius: 8px;
   border: 1px solid var(--border-color);
   font-size: 1rem;
-  background-color: #ffffff;
+  background-color: #fff;
   color: var(--text-primary);
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 4px rgb(0 0 0 / 10%);
   cursor: pointer;
   display: flex;
   justify-content: space-between;
@@ -177,7 +177,7 @@ onUnmounted(() => {
 
   &.is-open {
     border-color: var(--color-primary);
-    box-shadow: 0 0 0 2px hsla(from var(--color-primary) h s l / 0.2);
+    box-shadow: 0 0 0 2px hsl(from var(--color-primary) h s l / 20%);
   }
 }
 
@@ -208,10 +208,10 @@ onUnmounted(() => {
   left: 0;
   width: 100%;
   margin-top: 4px;
-  background: white;
+  background: #fff;
   border: 1px solid var(--border-color);
   border-radius: 8px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 12px rgb(0 0 0 / 10%);
   max-height: 250px;
   overflow-y: auto;
   z-index: 100;

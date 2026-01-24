@@ -58,14 +58,14 @@ const stats = computed(() => [
   align-items: center;
   gap: 16px;
   border: 1px solid var(--border-color);
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+  box-shadow: 0 4px 6px rgb(0 0 0 / 5%);
   transition: transform 0.2s;
 }
 
 .stat-card:hover {
   transform: translateY(-2px);
   border-color: #cbd5e1;
-  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 10px 15px -3px rgb(0 0 0 / 10%);
 }
 
 .stat-icon {
@@ -99,14 +99,17 @@ const stats = computed(() => [
   background-color: hsl(from var(--color-warning) h s 88%);
   color: var(--color-warning);
 }
+
 .stat-card.color-green .stat-icon {
   background-color: hsl(from var(--color-primary) h s 88%);
   color: var(--color-primary);
 }
+
 .stat-card.color-purple .stat-icon {
   background-color: hsl(from var(--color-secondary) h s 88%);
   color: var(--color-secondary);
 }
+
 .stat-card.color-blue .stat-icon {
   background-color: hsl(from var(--color-secondary) h s 85%);
   color: var(--color-secondary);

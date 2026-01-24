@@ -35,7 +35,7 @@ const currentYear = computed(() => new Date().getFullYear())
   align-items: center;
   overflow: hidden;
 
-  @media (max-width: 440px) {
+  @media (width <= 440px) {
     padding: 20px 10px;
     font-size: 14px;
   }
@@ -45,6 +45,7 @@ const currentYear = computed(() => new Date().getFullYear())
   margin-bottom: 15px;
   display: flex;
   align-items: center;
+
   a {
     margin: 0 10px;
     color: var(--text-inverse) !important;
@@ -52,6 +53,7 @@ const currentYear = computed(() => new Date().getFullYear())
     font-weight: 500;
     padding-bottom: 5px;
   }
+
   a:hover {
     color: hsl(from var(--text-inverse) h s 90%);
   }
@@ -63,7 +65,7 @@ const currentYear = computed(() => new Date().getFullYear())
   margin-bottom: 10px;
   color: var(--text-inverse) !important;
 
-  @media (max-width: 440px) {
+  @media (width <= 440px) {
     font-size: 16px;
     margin-bottom: 5px;
   }
@@ -71,6 +73,7 @@ const currentYear = computed(() => new Date().getFullYear())
 
 .footer__info {
   margin-bottom: 15px;
+
   p {
     line-height: 1.5;
     font-weight: 400;
@@ -78,10 +81,11 @@ const currentYear = computed(() => new Date().getFullYear())
     color: var(--text-inverse) !important;
   }
 
-  @media (max-width: 440px) {
+  @media (width <= 440px) {
     font-size: 14px;
     margin-bottom: 10px;
     width: 90%;
+
     p {
       margin: 2px 0;
       font-size: 12px;
@@ -92,14 +96,16 @@ const currentYear = computed(() => new Date().getFullYear())
 .footer__copyright {
   font-size: 12px;
   color: var(--text-inverse);
+
   p {
     line-height: 1.5;
     font-weight: 400;
     color: var(--text-inverse) !important;
   }
 
-  @media (max-width: 440px) {
+  @media (width <= 440px) {
     font-size: 10px;
+
     p {
       line-height: 1.4;
       font-size: 10px;

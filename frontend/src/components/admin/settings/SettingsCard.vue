@@ -20,7 +20,7 @@ defineProps<{
 <style scoped>
 
 .settings-card {
-  background: white;
+  background: #fff;
   border: 1px solid #e5e7eb;
   border-radius: 12px;
   overflow: hidden;
@@ -48,7 +48,7 @@ defineProps<{
   display: flex;
   align-items: center;
   justify-content: center;
-  background: white;
+  background: #fff;
   border: 1px solid #e5e7eb;
   border-radius: 8px;
   font-size: 1.2rem;

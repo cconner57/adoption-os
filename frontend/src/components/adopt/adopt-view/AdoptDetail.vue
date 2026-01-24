@@ -77,7 +77,7 @@ function onImgError() {
               @click="handleStartAdoption"
               :fullWidth="true"
             />
-            
+
             <Button title="Share" color="green" @click="handleShare" :fullWidth="true" />
           </div>
         </div>
@@ -168,7 +168,7 @@ function onImgError() {
       <AdoptionFAQ />
     </div>
   </div>
-  
+
   <AdoptDrawer
     :pet="pet"
     :isDrawerOpen="isDrawerOpen"
@@ -193,8 +193,9 @@ function onImgError() {
       object-fit: cover;
       object-position: top center;
       border-radius: 16px;
-      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.25);
+      box-shadow: 0 4px 6px rgb(0 0 0 / 25%);
     }
+
     & .img-fallback {
       flex: 3;
       width: 0;
@@ -202,8 +203,9 @@ function onImgError() {
       height: 600px;
       border-radius: 16px;
       background: url('/images/paw.svg') center/100px 100px no-repeat #add8e6;
-      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.25);
+      box-shadow: 0 4px 6px rgb(0 0 0 / 25%);
     }
+
     .adopt-detail__info {
       display: flex;
       flex-direction: column;
@@ -217,62 +219,32 @@ function onImgError() {
       min-width: 0;
       height: auto;
       min-height: 600px;
-      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.25);
-      @media (max-width: 1024px) {
+      box-shadow: 0 4px 6px rgb(0 0 0 / 25%);
+
+      @media (width <= 1024px) {
         width: 100%;
         min-height: auto;
       }
-      .adopt-detail__info__main {
-        display: flex;
-        flex-direction: column;
-        gap: 12px;
-        border-bottom: 1px solid rgb(178, 177, 177);
-        padding-bottom: 20px;
-        h1 {
-          font-size: 2.5rem; 
-        }
-        @media (min-width: 321px) and (max-width: 430px) {
-          h1 {
-            font-size: 1.5rem;
-          }
-        }
-        .adopt-detail__traits {
-          display: flex;
-          flex-direction: row;
-          gap: 10px;
-          flex-wrap: wrap;
-          & p {
-            background-color: hsl(from var(--color-primary) h s 95%);
-            padding: 4px 12px;
-            border-radius: 16px;
-          }
-        }
-        .adopt-detail__actions {
-          display: grid;
-          grid-template-columns: 1fr 1fr;
-          gap: 14px;
-          flex-wrap: wrap; 
-          @media (max-width: 440px) {
-            display: flex;
-            flex-direction: column;
-          }
-        }
-      }
+
     }
-    @media (max-width: 1024px) {
+
+    @media (width <= 1024px) {
       flex-direction: column;
+
       img,
       .img-fallback {
         width: 100%;
         height: 400px;
         flex: auto;
       }
+
       .adopt-detail__info {
         width: 100%;
         flex: auto;
       }
     }
   }
+
   .adopt-detail__about {
     display: flex;
     margin-top: 20px;
@@ -280,75 +252,92 @@ function onImgError() {
     padding: 32px;
     border-radius: 16px;
     color: var(--text-primary);
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.25);
+    box-shadow: 0 4px 6px rgb(0 0 0 / 25%);
     width: 100%;
+
     & .adopt-detail__about__content {
       width: 50%;
       margin-right: 20px;
+
       & .adopt-detail__about__fun {
         width: 100%;
         height: 50%;
       }
+
       & .adopt-detail__about__additional-info {
         margin-top: 2rem;
-        ul {
-          padding-left: 20px;
-          list-style: disc;
-          li {
-            margin-bottom: 8px;
-          }
-        }
+      }
+
+      & .adopt-detail__about__additional-info ul {
+        padding-left: 20px;
+        list-style: disc;
+      }
+
+      & .adopt-detail__about__additional-info li {
+        margin-bottom: 8px;
       }
     }
+
     & .adopt-detail__about__medical {
       width: 50%;
-      ul {
-        margin-bottom: 16px;
-        li {
-          margin-bottom: 8px;
-          display: flex;
-          border-bottom: 1px solid rgb(178, 177, 177);
-          width: 100%; 
-          justify-content: space-between; 
-          p {
-            margin-bottom: 8px;
-          }
-          p:first-child {
-            margin-right: 8px;
-            
-            flex: 1;
-          }
-          p:last-child {
-            font-weight: bold;
-          }
-        }
-        li:last-of-type {
-          border-bottom: none;
-          margin-bottom: 0px;
-        }
-      }
     }
+
+    & .adopt-detail__about__medical ul {
+      margin-bottom: 16px;
+    }
+
+    & .adopt-detail__about__medical li {
+      margin-bottom: 8px;
+      display: flex;
+      border-bottom: 1px solid rgb(178 177 177);
+      width: 100%;
+      justify-content: space-between;
+    }
+
+    & .adopt-detail__about__medical p {
+      margin-bottom: 8px;
+    }
+
+    & .adopt-detail__about__medical p:first-child {
+      margin-right: 8px;
+      flex: 1;
+    }
+
+    & .adopt-detail__about__medical p:last-child {
+      font-weight: 700;
+    }
+
+    & .adopt-detail__about__medical li:last-of-type {
+      border-bottom: none;
+      margin-bottom: 0;
+    }
+
     h2 {
       font-size: 1.5rem;
       margin-bottom: 16px;
     }
+
     p {
       font-size: 1rem;
       line-height: 1.5;
       margin-bottom: 12px;
     }
-    @media (max-width: 768px) {
+
+    @media (width <= 768px) {
       flex-direction: column;
+
       & .adopt-detail__about__content,
       & .adopt-detail__about__medical {
         width: 100%;
-        margin-right: 0px;
+        margin-right: 0;
       }
+
       & .adopt-detail__about__medical {
         margin-top: 2rem;
       }
     }
   }
+
   .adopt-detail__adoption {
     display: flex;
     margin-top: 30px;
@@ -356,15 +345,60 @@ function onImgError() {
     color: var(--text-primary);
     padding: 32px;
     border-radius: 16px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.25);
+    box-shadow: 0 4px 6px rgb(0 0 0 / 25%);
     width: 100%;
-    @media (max-width: 768px) {
+
+    @media (width <= 768px) {
       flex-direction: column;
     }
   }
 
-  @media (max-width: 430px) {
-    padding: 0; 
+  @media (width <= 430px) {
+    padding: 0;
+  }
+}
+
+.adopt-detail__info__main {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  border-bottom: 1px solid rgb(178 177 177);
+  padding-bottom: 20px;
+
+  h1 {
+    font-size: 2.5rem;
+  }
+
+  @media (width >= 321px) and (width <= 430px) {
+    h1 {
+      font-size: 1.5rem;
+    }
+  }
+
+  .adopt-detail__traits {
+    display: flex;
+    flex-flow: row wrap;
+    gap: 10px;
+  }
+
+  .adopt-detail__traits p {
+    background-color: hsl(from var(--color-primary) h s 95%);
+    padding: 4px 12px;
+    border-radius: 16px;
+  }
+
+  .adopt-detail__actions {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+    flex-wrap: wrap;
+  }
+
+  .adopt-detail__actions {
+    @media (width <= 440px) {
+      display: flex;
+      flex-direction: column;
+    }
   }
 }
 </style>

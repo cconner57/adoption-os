@@ -65,11 +65,10 @@ onMounted(() => {
   flex-direction: column;
   gap: 16px;
 
-  @media (min-width: 768px) {
+  @media (width >= 768px) {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
-    column-gap: 24px;
-    row-gap: 16px;
+    gap: 16px 24px;
   }
 }
 

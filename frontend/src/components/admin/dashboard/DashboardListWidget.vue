@@ -50,7 +50,7 @@ defineProps<{
   padding: 24px;
   border-radius: 16px;
   border: 1px solid var(--border-color);
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+  box-shadow: 0 4px 6px rgb(0 0 0 / 5%);
   display: flex;
   flex-direction: column;
 }

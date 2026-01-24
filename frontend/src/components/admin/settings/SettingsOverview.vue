@@ -1,5 +1,4 @@
-<script setup lang="ts">
-import { defineEmits,defineProps } from 'vue'
+
 
 import { ButtonToggle } from '../../common/ui'
 import SettingsCard from './SettingsCard.vue'
@@ -83,6 +82,7 @@ defineEmits<{
   padding: 16px 0;
   border-bottom: 1px solid #f3f4f6;
 }
+
 .setting-row:last-child {
   border-bottom: none;
 }

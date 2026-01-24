@@ -1,16 +1,19 @@
 <script setup lang="ts">
+import Icon from './Icon.vue'
+
 export interface NavItem {
   id?: string | number
   label: string
   icon?: string
-  to?: string 
+  viewBox?: string
+  to?: string
   exact?: boolean
 }
 
 const props = withDefaults(
   defineProps<{
     items: NavItem[]
-    modelValue?: string | number 
+    modelValue?: string | number
     variant?: 'default' | 'dashboard' | 'editor'
   }>(),
   {
@@ -34,7 +37,7 @@ function handleClick(item: NavItem) {
 <template>
   <nav class="sidebar-nav" :class="[`variant-${props.variant}`]">
     <template v-for="item in items" :key="item.label">
-      
+
       <router-link
         v-if="item.to"
         :to="item.to"
@@ -43,7 +46,9 @@ function handleClick(item: NavItem) {
         :exact-active-class="item.exact ? 'active' : ''"
         @click="handleClick(item)"
       >
-        <span class="icon" v-if="item.icon">{{ item.icon }}</span>
+        <span class="icon" v-if="item.icon">
+          <Icon :name="item.icon" :size="20" :viewBox="item.viewBox" />
+        </span>
         <span class="label">{{ item.label }}</span>
       </router-link>
 
@@ -54,7 +59,9 @@ function handleClick(item: NavItem) {
         :class="{ active: modelValue === item.id }"
         @click="handleClick(item)"
       >
-        <span class="icon" v-if="item.icon">{{ item.icon }}</span>
+        <span class="icon" v-if="item.icon">
+          <Icon :name="item.icon" :size="20" :viewBox="item.viewBox" />
+        </span>
         <span class="label">{{ item.label }}</span>
       </button>
     </template>
@@ -63,7 +70,6 @@ function handleClick(item: NavItem) {
 
 <style scoped>
 .sidebar-nav {
-  
   padding: 16px 0;
   display: flex;
   flex-direction: column;
@@ -77,7 +83,7 @@ function handleClick(item: NavItem) {
 }
 
 .sidebar-nav.variant-editor {
-  flex: none; 
+  flex: none;
   gap: 8px;
 }
 
@@ -96,7 +102,6 @@ function handleClick(item: NavItem) {
   border-bottom: none;
   width: 100%;
   text-align: left;
-
   color: hsl(from var(--color-neutral) h s 50%);
   font-weight: 500;
   font-size: 0.95rem;
@@ -105,7 +110,7 @@ function handleClick(item: NavItem) {
 }
 
 .sidebar-nav.variant-editor .nav-item {
-  padding: 12px 16px; 
+  padding: 12px 16px;
 }
 
 .nav-item:hover {
@@ -114,7 +119,7 @@ function handleClick(item: NavItem) {
 }
 
 .nav-item.active {
-  background-color: hsla(from var(--color-secondary) h s l / 0.12);
+  background-color: hsl(from var(--color-secondary) h s l / 12%);
   color: var(--color-secondary);
   border-left-color: var(--color-secondary);
   font-weight: 600;

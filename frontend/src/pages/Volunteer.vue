@@ -332,7 +332,7 @@ const handleReset = () => {
   background-color: var(--color-primary);
   padding: 9rem var(--layout-padding-side) 64px;
 
-  @media (max-width: 430px) {
+  @media (width <= 430px) {
     padding: 6rem 16px 32px;
   }
 
@@ -347,7 +347,7 @@ const handleReset = () => {
     background: var(--text-inverse);
     color: var(--text-primary);
     border-radius: 24px;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 10px 30px rgb(0 0 0 / 10%);
     padding: 48px 48px 32px;
 
     @container form-card (max-width: 768px) {

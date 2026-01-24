@@ -161,17 +161,21 @@ onBeforeUnmount(() => {
   color: #fff;
   transition: background-color 0.2s;
 }
+
 .hx-btn:hover {
-  background-color: rgba(255, 255, 255, 0.1);
+  background-color: rgb(255 255 255 / 10%);
 }
+
 .hx-btn:focus-visible {
   outline: 2px solid #fff;
   outline-offset: 2px;
 }
+
 svg {
   transition: transform 0.2s ease;
   color: var(--icon, currentColor);
 }
+
 line {
   transform-box: fill-box;
   transform-origin: center;
@@ -179,21 +183,27 @@ line {
     transform 0.22s ease,
     opacity 0.18s ease;
 }
+
 .hx-top {
   transform: translateY(0) rotate(0);
 }
+
 .hx-mid {
   opacity: 1;
 }
+
 .hx-bot {
   transform: translateY(0) rotate(0);
 }
+
 svg[data-open='true'] .hx-top {
   transform: translateY(6px) rotate(45deg);
 }
+
 svg[data-open='true'] .hx-mid {
   opacity: 0;
 }
+
 svg[data-open='true'] .hx-bot {
   transform: translateY(-6px) rotate(-45deg);
 }
@@ -202,14 +212,16 @@ svg[data-open='true'] .hx-bot {
 .fade-leave-to {
   opacity: 0;
 }
+
 .fade-enter-active,
 .fade-leave-active {
   transition: opacity 0.5s ease;
 }
+
 .drawer-backdrop {
   position: fixed;
   inset: 0;
-  background: rgba(0, 0, 0, 0.4);
+  background: rgb(0 0 0 / 40%);
   backdrop-filter: blur(4px);
   z-index: 9998;
 }
@@ -218,10 +230,12 @@ svg[data-open='true'] .hx-bot {
 .slide-in-right-leave-to {
   transform: translateX(100%);
 }
+
 .slide-in-right-enter-active,
 .slide-in-right-leave-active {
   transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
 }
+
 .drawer {
   position: fixed;
   top: 0;
@@ -230,39 +244,44 @@ svg[data-open='true'] .hx-bot {
   z-index: 9999;
   background: var(--text-inverse);
   color: var(--text-primary);
-  box-shadow: -8px 0 32px rgba(0, 0, 0, 0.12);
+  box-shadow: -8px 0 32px rgb(0 0 0 / 12%);
   display: grid;
   grid-template-rows: auto 1fr auto;
   outline: none;
 
-  @media (min-width: 431px) and (max-width: 768px) {
+  @media (width >= 431px) and (width <= 768px) {
     max-width: 400px;
     border-top-left-radius: 20px;
     border-bottom-left-radius: 20px;
   }
 }
+
 .drawer-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
   padding: 20px 24px;
 }
+
 .drawer-brand {
   display: flex;
   align-items: center;
   gap: 12px;
 }
+
 .drawer-logo {
   height: 40px;
   width: auto;
   border-radius: 8px;
 }
+
 .drawer-title {
   font-size: 20px;
   font-weight: 700;
   color: var(--text-primary);
   letter-spacing: -0.02em;
 }
+
 .drawer-close {
   all: unset;
   cursor: pointer;
@@ -274,9 +293,11 @@ svg[data-open='true'] .hx-bot {
   justify-content: center;
   transition: background-color 0.2s;
 }
+
 .drawer-close:hover {
   background-color: hsl(from var(--color-neutral) h s 95%);
 }
+
 .drawer-close:focus-visible {
   outline: 2px solid var(--color-primary);
   outline-offset: 2px;
@@ -301,12 +322,14 @@ svg[data-open='true'] .hx-bot {
   font-size: 1.1rem;
   transition: all 0.2s ease;
 }
+
 .nav-link:hover,
 .nav-link:active {
   background-color: hsl(from var(--color-neutral) h s 95%);
   color: var(--color-primary);
   transform: translateX(4px);
 }
+
 .nav-link.router-link-active {
   background-color: hsl(from var(--color-primary) h s 95%); 
   color: var(--color-primary);
@@ -329,16 +352,18 @@ svg[data-open='true'] .hx-bot {
   text-decoration: none;
   font-weight: 700;
   font-size: 1.1rem;
-  box-shadow: 0 4px 12px hsla(from var(--color-primary) h s l / 0.15);
+  box-shadow: 0 4px 12px hsl(from var(--color-primary) h s l / 15%);
   transition:
     transform 0.2s,
     box-shadow 0.2s;
 }
+
 .donate-btn:hover {
   transform: translateY(-2px);
-  box-shadow: 0 6px 16px hsla(from var(--color-primary) h s l / 0.2);
+  box-shadow: 0 6px 16px hsl(from var(--color-primary) h s l / 20%);
   background: hsl(from var(--color-primary) h s 40%);
 }
+
 .donate-btn:active {
   transform: translateY(0);
 }

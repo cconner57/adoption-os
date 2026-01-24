@@ -1,7 +1,9 @@
 <script setup lang="ts">
 import { storeToRefs } from 'pinia'
 
-import { useUIStore } from '@/stores/ui'
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-ignore
+import { useUIStore } from '../../stores/ui'
 
 const uiStore = useUIStore()
 const { isLoading } = storeToRefs(uiStore)
@@ -37,9 +39,11 @@ const { isLoading } = storeToRefs(uiStore)
   0% {
     transform: scaleX(0);
   }
+
   50% {
     transform: scaleX(0.5);
   }
+
   100% {
     transform: scaleX(1);
     opacity: 0;

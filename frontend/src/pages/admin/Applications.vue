@@ -50,9 +50,11 @@ const selectTab = (id: typeof activeTab.value) => {
   activeTab.value = id
   expandedId.value = null
   if (id !== 'history') {
-    
+
   }
 }
+
+import { type IApplication,mockApplications } from '../../stores/mockApplications'
 
 async function fetchApplications(autoFocus = false) {
   loading.value = true
@@ -60,16 +62,37 @@ async function fetchApplications(autoFocus = false) {
     const token = localStorage.getItem('token')
     const yearParam = activeTab.value === 'history' ? selectedYear.value : currentYear
 
-    const res = await fetch(`${API_url}/v1/applications?page_size=100&year=${yearParam}`, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    })
-    if (res.ok) {
-      const json = await res.json()
-      const rawApps = json.applications || []
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    let rawApps: any[] = []
 
-      applications.value = rawApps.map((app: { id: string; type: 'adoption' | 'volunteer' | 'surrender'; status: IApplicationItem['status']; created_at: string; data: Record<string, unknown> }) => {
+    // Fetch from API
+    try {
+      const res = await fetch(`${API_url}/v1/applications?page_size=100&year=${yearParam}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      if (res.ok) {
+        const json = await res.json()
+        rawApps = json.applications || []
+      }
+    } catch (e) {
+      console.warn('API fetch failed, falling back to mock data', e)
+    }
+
+    // Merge with Mock Store (Frontend persistence)
+    const mockApps = mockApplications.value.map(app => ({
+      id: app.id,
+      type: app.type,
+      status: app.status,
+      created_at: app.date,
+      data: { ...app.details, ...app.fullApplication, email: app.email, firstName: app.applicantName.split(' ')[0], lastName: app.applicantName.split(' ')[1] || '' }
+    }))
+
+    // Combine (Mock apps first)
+    rawApps = [...mockApps, ...rawApps]
+
+    applications.value = rawApps.map((app: { id: string; type: 'adoption' | 'volunteer' | 'surrender'; status: IApplicationItem['status']; created_at: string; data: Record<string, unknown> }) => {
         const d = app.data || {}
         let name = 'Unknown'
 
@@ -90,14 +113,14 @@ async function fetchApplications(autoFocus = false) {
           status: app.status,
           date: app.created_at,
           applicantName: name,
-          email: d.email || d.Email || '',
+          email: String(d.email || d.Email || ''),
           details: {
             petName:
-              d.catPreferenceName ||
+              String(d.petName || d.catPreferenceName ||
               d.animalName ||
-              (d.catPreferenceBreed ? `Breed: ${d.catPreferenceBreed}` : null),
+              (d.catPreferenceBreed ? `Breed: ${d.catPreferenceBreed}` : null) || ''),
             role: formatRole(d.positionPreferences),
-            reason: d.interestReason || d.adoptionReason || d.animalWhySurrendered,
+            reason: String(d.interestReason || d.adoptionReason || d.animalWhySurrendered || ''),
           },
           fullApplication: { ...d, createdAt: app.created_at },
         }
@@ -115,7 +138,7 @@ async function fetchApplications(autoFocus = false) {
         } else if (surrenderCount > 0) {
           activeTab.value = 'surrender'
         } else {
-          
+
           activeTab.value = 'history'
           expandedId.value = null
           filterStatus.value = 'all'
@@ -131,15 +154,33 @@ async function fetchApplications(autoFocus = false) {
         fetchApplications(false)
         return
       }
-    }
   } catch (e) {
-    console.error('Failed to fetch applications', e)
+    console.error('Failed to process applications', e)
   } finally {
     loading.value = false
   }
 }
 
 const updateStatus = (app: IApplicationItem, status: IApplicationItem['status']) => {
+  // Check if it's a mock application
+  if (app.id.startsWith('a-app-') || app.id.startsWith('v-app-') || app.id.startsWith('s-app-')) {
+    const mockApp = mockApplications.value.find(a => a.id === app.id)
+    if (mockApp) {
+      // Cast standard status to mock status if compatible, or ignore incompatibilities for mock
+      mockApp.status = status as IApplication['status']
+      app.status = status
+
+      // If approved, you would technically save to DB here
+      if (status === 'approved') {
+        console.log('Application approved! Saving to permanent database (Mock Action)')
+        // Example: Update pet status
+        // const petId = app.details.petId
+        // updatePetStatus(petId, 'Adopted')
+      }
+    }
+    return
+  }
+
   const token = localStorage.getItem('token')
   fetch(`${API_url}/v1/applications/${app.id}`, {
     method: 'PUT',

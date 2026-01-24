@@ -118,7 +118,7 @@ const monthDays = computed(() => {
 .month-view {
   background: var(--text-inverse);
   border-radius: 12px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+  box-shadow: 0 4px 6px rgb(0 0 0 / 5%);
   padding: 24px;
   display: flex;
   flex-direction: column;
@@ -155,6 +155,7 @@ const monthDays = computed(() => {
 
   &.today {
     background-color: hsl(from var(--color-secondary) h s 95%);
+
     .date-number {
       color: var(--color-secondary);
       font-weight: 700;
@@ -214,6 +215,7 @@ const monthDays = computed(() => {
   &.volunteer {
     background-color: hsl(from var(--color-secondary) h s 95%);
     color: var(--color-secondary);
+
     .dot {
       background-color: var(--color-secondary);
     }
@@ -222,6 +224,7 @@ const monthDays = computed(() => {
   &.vet {
     background-color: hsl(from var(--color-primary) h s 95%);
     color: var(--color-primary);
+
     .dot {
       background-color: var(--color-primary);
     }

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, defineProps,ref } from 'vue'
+import { computed, ref } from 'vue'
 
 const props = defineProps<{
   data: { date: string; value: number }[]
@@ -31,7 +31,7 @@ const chartComputeds = computed(() => {
   const dateRange = maxDate - minDate || 1
   const valueRange = maxValue - minValue || 1
 
-  const yMin = Math.max(0, minValue - valueRange * 0.2) 
+  const yMin = Math.max(0, minValue - valueRange * 0.2)
   const yMax = maxValue + valueRange * 0.1
   const yRange = yMax - yMin
 
@@ -60,7 +60,7 @@ const chartComputeds = computed(() => {
   const numXTicks = 5
   for (let i = 0; i < numXTicks; i++) {
     const time = minDate + dateRange * (i / (numXTicks - 1))
-    
+
     const dateStr = new Date(time).toISOString()
     xTicks.push({
       date: dateStr,
@@ -104,7 +104,7 @@ const formatWeight = (w: number) => `${w.toFixed(2)}kg / ${(w * 2.20462).toFixed
       </defs>
 
       <g class="grid">
-        
+
         <g v-for="tick in chartComputeds.yTicks" :key="tick.value">
           <line
             :x1="padding"
@@ -118,7 +118,7 @@ const formatWeight = (w: number) => `${w.toFixed(2)}kg / ${(w * 2.20462).toFixed
             {{ tick.value.toFixed(1) }}kg
           </text>
         </g>
-        
+
         <g v-for="tick in chartComputeds.xTicks" :key="tick.date">
           <text
             :x="tick.x"
@@ -144,7 +144,7 @@ const formatWeight = (w: number) => `${w.toFixed(2)}kg / ${(w * 2.20462).toFixed
       />
 
       <g v-for="(point, idx) in chartComputeds.interactivePoints" :key="idx">
-        
+
         <circle
           :cx="point.x"
           :cy="point.y"
@@ -153,7 +153,7 @@ const formatWeight = (w: number) => `${w.toFixed(2)}kg / ${(w * 2.20462).toFixed
           stroke="var(--color-secondary)"
           stroke-width="2"
         />
-        
+
         <circle
           :cx="point.x"
           :cy="point.y"
@@ -186,7 +186,6 @@ const formatWeight = (w: number) => `${w.toFixed(2)}kg / ${(w * 2.20462).toFixed
   width: 100%;
   height: 100%;
   position: relative;
-  
   display: flex;
   flex-direction: column;
 }
@@ -209,15 +208,15 @@ svg {
 .tooltip {
   position: absolute;
   transform: translate(-50%, -120%);
-  background: rgba(0, 0, 0, 0.8);
-  color: white;
+  background: rgb(0 0 0 / 80%);
+  color: #fff;
   padding: 8px 12px;
   border-radius: 6px;
   font-size: 0.8rem;
   pointer-events: none;
   z-index: 10;
   white-space: nowrap;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 6px rgb(0 0 0 / 10%);
 }
 
 .tooltip-date {

@@ -16,13 +16,13 @@ export interface IApplicationItem {
     role?: string | null
     reason?: string | null
   }
-  fullApplication: Record<string, unknown> 
+  fullApplication: Record<string, unknown>
 }
 
 const props = defineProps<{
   app: IApplicationItem
   expanded: boolean
-  isExpandedId: boolean 
+  isExpandedId: boolean
 }>()
 
 defineEmits<{
@@ -42,13 +42,13 @@ const formatDate = (dateStr: string) => {
 const getStatusColor = (status: string) => {
   switch (status) {
     case 'approved':
-      return '#d1fae5'
+      return 'green'
     case 'denied':
-      return '#fee2e2'
+      return 'red'
     case 'needs_info':
-      return '#ffedd5'
+      return 'orange'
     default:
-      return '#f3f4f6'
+      return 'neutral'
   }
 }
 
@@ -185,7 +185,7 @@ const displayFields = computed(() => {
     }"
     @click="$emit('toggle')"
   >
-    
+
     <div class="card-summary">
       <div class="app-main">
         <div class="app-header">
@@ -293,7 +293,7 @@ const displayFields = computed(() => {
 
 <style scoped>
 .app-card {
-  background: white;
+  background: #fff;
   border: 1px solid #e5e7eb;
   border-radius: 12px;
   overflow: hidden;
@@ -303,7 +303,7 @@ const displayFields = computed(() => {
 }
 
 .app-card:hover {
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  box-shadow: 0 4px 12px rgb(0 0 0 / 5%);
   border-color: #d1d5db;
 }
 
@@ -313,9 +313,9 @@ const displayFields = computed(() => {
 }
 
 .app-card.expanded {
-  background: white;
+  background: #fff;
   border-color: #d1d5db;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+  box-shadow: 0 8px 24px rgb(0 0 0 / 8%);
   cursor: default;
 }
 
@@ -350,7 +350,7 @@ const displayFields = computed(() => {
 }
 
 .email {
-  margin: 0 0 8px 0;
+  margin: 0 0 8px;
   font-size: 0.9rem;
   color: hsl(from var(--color-neutral) h s 50%);
 }
@@ -384,7 +384,7 @@ const displayFields = computed(() => {
 }
 
 .expanded-content {
-  padding: 0 24px 24px 24px;
+  padding: 0 24px 24px;
   animation: slideDown 0.2s ease-out;
 }
 
@@ -393,6 +393,7 @@ const displayFields = computed(() => {
     opacity: 0;
     transform: translateY(-10px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);
@@ -402,7 +403,7 @@ const displayFields = computed(() => {
 .divider {
   border: 0;
   border-top: 1px solid #f3f4f6;
-  margin: 0 0 20px 0;
+  margin: 0 0 20px;
 }
 
 .action-bar {
@@ -424,7 +425,7 @@ const displayFields = computed(() => {
 }
 
 .full-application h4 {
-  margin: 0 0 16px 0;
+  margin: 0 0 16px;
   font-size: 1rem;
   color: var(--text-primary);
   font-weight: 600;
@@ -436,7 +437,7 @@ const displayFields = computed(() => {
   gap: 20px;
 }
 
-@media (max-width: 1200px) {
+@media (width <= 1200px) {
   .qa-grid {
     grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
   }
@@ -460,6 +461,6 @@ const displayFields = computed(() => {
 }
 
 .answer {
-  
+
 }
 </style>

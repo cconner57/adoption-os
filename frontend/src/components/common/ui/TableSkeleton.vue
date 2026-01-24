@@ -35,7 +35,7 @@ withDefaults(
 <style scoped>
 .skeleton-table-container {
   width: 100%;
-  background: white;
+  background: #fff;
   border-radius: 12px;
   overflow: hidden;
 }
@@ -70,9 +70,11 @@ td {
   0% {
     opacity: 0.6;
   }
+
   50% {
     opacity: 0.3;
   }
+
   100% {
     opacity: 0.6;
   }

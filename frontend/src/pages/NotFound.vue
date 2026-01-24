@@ -28,7 +28,7 @@ const handleGoHome = () => {
   text-align: center;
 }
 
-@media (max-width: 768px) {
+@media (width <= 768px) {
   .not-found-container {
     padding-top: 6rem; 
     padding-left: 1rem;
@@ -50,7 +50,7 @@ const handleGoHome = () => {
   max-width: 100%;
   height: auto;
   border-radius: 20px;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 10px 30px rgb(0 0 0 / 10%);
   margin-bottom: 1rem;
   margin-top: 2rem;
 }
@@ -60,15 +60,15 @@ h1 {
   font-size: 2.5rem;
   font-weight: 800; 
   margin: 0;
-  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  text-shadow: 0 2px 4px rgb(0 0 0 / 20%);
 }
 
 p {
   color: var(--text-inverse); 
   font-size: 1.25rem; 
   font-weight: 600; 
-  margin: 0 0 1rem 0;
-  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3); 
+  margin: 0 0 1rem;
+  text-shadow: 0 2px 4px rgb(0 0 0 / 30%); 
   line-height: 1.5;
 }
 </style>

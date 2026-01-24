@@ -104,9 +104,11 @@ const { vScrollReveal } = useScrollReveal()
 :deep(.reveal-left) {
   transform: translateX(-30px);
 }
+
 :deep(.reveal-right) {
   transform: translateX(30px);
 }
+
 :deep(.reveal-left.active),
 :deep(.reveal-right.active) {
   transform: translateX(0);
@@ -121,6 +123,7 @@ const { vScrollReveal } = useScrollReveal()
   transform: translateY(20px);
   transition: all 0.6s cubic-bezier(0.2, 0.8, 0.2, 1);
 }
+
 :deep(.reveal.active .award-item) {
   opacity: 1;
   transform: translateY(0);
@@ -135,7 +138,6 @@ const { vScrollReveal } = useScrollReveal()
     width: 100%;
     max-width: 1600px;
     margin: 0 auto;
-    
     box-sizing: border-box;
   }
 
@@ -157,6 +159,7 @@ const { vScrollReveal } = useScrollReveal()
       font-size: 2.5rem;
       color: var(--text-inverse);
     }
+
     p {
       font-size: 1.25rem;
       max-width: 600px;
@@ -187,10 +190,12 @@ const { vScrollReveal } = useScrollReveal()
 
     .story-text {
       max-width: 600px;
+
       p {
         font-size: 1.15rem;
         margin-top: 12px;
       }
+
       h2 {
         font-size: 2.5rem;
       }
@@ -244,11 +249,13 @@ const { vScrollReveal } = useScrollReveal()
       font-weight: 400; 
       color: var(--text-inverse);
     }
+
     & .ticks li {
       position: relative;
       padding-left: 24px;
       margin: 6px 0;
     }
+
     & .ticks li::before {
       content: '✓';
       position: absolute;
@@ -260,7 +267,7 @@ const { vScrollReveal } = useScrollReveal()
 
   img {
     border-radius: 8px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.25);
+    box-shadow: 0 4px 6px rgb(0 0 0 / 25%);
   }
 
   .transparency {
@@ -282,6 +289,7 @@ const { vScrollReveal } = useScrollReveal()
       max-width: 600px;
       margin-top: 12px;
     }
+
     .notice {
       text-align: right; 
       display: flex;
@@ -291,12 +299,14 @@ const { vScrollReveal } = useScrollReveal()
       & h2 {
         font-size: 2.5rem;
       }
+
       .small {
         font-size: 0.85rem;
         color: hsl(from var(--color-neutral) h s 40%);
         margin-top: 12px;
       }
     }
+
     .awards {
       display: flex;
       gap: 3rem;
@@ -305,7 +315,7 @@ const { vScrollReveal } = useScrollReveal()
     }
   }
 
-  @media (max-width: 1024px) {
+  @media (width <= 1024px) {
     .story .content-wrapper,
     .mission .content-wrapper,
     .transparency .content-wrapper {
@@ -352,12 +362,14 @@ const { vScrollReveal } = useScrollReveal()
     }
   }
 
-  @media (min-width: 321px) and (max-width: 430px) {
+  @media (width >= 321px) and (width <= 430px) {
     .hero {
       padding: 100px var(--layout-padding-side) 50px;
+
       h1 {
         font-size: 2rem;
       }
+
       p {
         font-size: 1.15rem;
       }

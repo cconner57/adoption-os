@@ -63,7 +63,7 @@ const litterOptions = computed(() => {
 </script>
 
 <style scoped>
-@import './form.css';
+@import url('./form.css');
 </style>
 
 <template>

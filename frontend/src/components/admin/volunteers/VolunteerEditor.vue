@@ -262,7 +262,7 @@ function handleSave() {
   left: 0;
   width: 100vw;
   height: 100vh;
-  background: rgba(0, 0, 0, 0.4);
+  background: rgb(0 0 0 / 40%);
   backdrop-filter: blur(2px);
   z-index: 1000;
   display: flex;
@@ -273,7 +273,7 @@ function handleSave() {
   width: 800px; 
   background: #fff;
   height: 100%;
-  box-shadow: -4px 0 24px rgba(0, 0, 0, 0.15);
+  box-shadow: -4px 0 24px rgb(0 0 0 / 15%);
   display: flex;
   flex-direction: column;
   animation: slideIn 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
@@ -284,6 +284,7 @@ function handleSave() {
     transform: translateX(100%);
     opacity: 0;
   }
+
   to {
     transform: translateX(0);
     opacity: 1;
@@ -296,7 +297,7 @@ function handleSave() {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background: white;
+  background: #fff;
 }
 
 .header-left h2 {
@@ -327,7 +328,7 @@ function handleSave() {
   flex: 1;
   padding: 32px;
   overflow-y: auto;
-  background: white;
+  background: #fff;
   border-left: 1px solid var(--border-color);
 }
 
@@ -360,6 +361,7 @@ function handleSave() {
 .mt-6 {
   margin-top: 24px;
 }
+
 .mt-4 {
   margin-top: 16px;
 }
@@ -386,7 +388,7 @@ function handleSave() {
   padding: 10px 12px;
   border-radius: 8px;
   border: 1px solid var(--border-color);
-  background: white;
+  background: #fff;
   width: 100%;
   font-size: 0.95rem;
 
@@ -463,6 +465,6 @@ function handleSave() {
 
 .panel-actions {
   padding: 16px;
-  background: white;
+  background: #fff;
 }
 </style>

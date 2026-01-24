@@ -108,7 +108,7 @@ const device = computed({
 
 <style scoped>
 .settings-panel {
-  background: white;
+  background: #fff;
   border-radius: 12px;
   border: 1px solid #e2e8f0;
   padding: 24px;

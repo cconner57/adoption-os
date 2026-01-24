@@ -512,7 +512,7 @@ const colCount = computed(() => {
 }
 
 td {
-  padding: 16px 16px;
+  padding: 16px;
   vertical-align: middle;
   color: var(--text-primary);
 }
@@ -525,7 +525,6 @@ td {
 
 .details-row td {
   padding: 0;
-  
   background-color: var(--text-inverse);
 }
 
@@ -595,6 +594,7 @@ td {
   flex-wrap: wrap;
   margin-top: 4px;
 }
+
 .tag {
   font-size: 0.75rem;
   padding: 2px 6px;
@@ -603,11 +603,13 @@ td {
   color: #94a3b8;
   border: 1px solid #e2e8f0;
 }
+
 .tag.yes {
   background: #dcfce7;
   color: #166534;
   border-color: #bbf7d0;
 }
+
 .tag.no {
   background: #fee2e2;
   color: #991b1b;
@@ -622,6 +624,7 @@ td {
   gap: 6px;
   margin-top: 4px;
 }
+
 .p-tag {
   background: hsl(from var(--color-secondary) h s 96%);
   color: var(--color-secondary);
@@ -637,6 +640,7 @@ td {
   font-size: 0.9rem;
   color: var(--text-primary);
 }
+
 .italic {
   font-style: italic;
 }
@@ -709,22 +713,27 @@ td {
   background-color: hsl(from var(--color-primary) h s 95%);
   color: var(--color-primary);
 }
+
 .status-badge.orange {
   background-color: hsl(from var(--color-warning) h s 95%);
   color: var(--color-warning);
 }
+
 .status-badge.blue {
   background-color: hsl(from var(--color-secondary) h s 95%);
   color: var(--color-secondary);
 }
+
 .status-badge.purple {
   background-color: hsl(from var(--color-secondary) h s 92%); 
   color: var(--color-secondary);
 }
+
 .status-badge.red {
   background-color: hsl(from var(--color-danger) h s 95%);
   color: var(--color-danger);
 }
+
 .status-badge.gray {
   background-color: hsl(from var(--color-neutral) h s 95%);
   color: hsl(from var(--color-neutral) h s 50%);
@@ -776,6 +785,7 @@ td {
   background: hsl(from var(--color-secondary) h s 95%);
   color: var(--color-secondary);
 }
+
 .icon-btn.archive:hover {
   background: hsl(from var(--color-danger) h s 95%);
   color: var(--color-danger);
@@ -785,10 +795,12 @@ td {
   transition: transform 0.2s;
   color: hsl(from var(--color-neutral) h s 50%);
 }
+
 .expand-btn:hover {
   background: hsl(from var(--color-neutral) h s 95%);
   color: var(--text-primary);
 }
+
 .expand-btn.rotated {
   transform: rotate(
     -90deg
@@ -799,6 +811,7 @@ td {
   color: var(--text-primary);
   text-decoration: none;
 }
+
 .pet-link:hover {
   color: var(--color-secondary);
   text-decoration: underline;

@@ -107,7 +107,7 @@ defineEmits<{
 }
 
 .section-title {
-  padding: 0 8px 8px 8px;
+  padding: 0 8px 8px;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -122,6 +122,7 @@ defineEmits<{
     cursor: pointer;
     font-size: 1.2rem;
     line-height: 1;
+
     &:hover {
       color: var(--text-primary);
     }
@@ -177,6 +178,7 @@ defineEmits<{
   &.sms {
     color: var(--color-primary);
   }
+
   &.email {
     color: var(--color-warning);
   }

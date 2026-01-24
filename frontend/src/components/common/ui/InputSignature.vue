@@ -146,7 +146,7 @@ onUnmounted(() => {
   .signature-label {
     margin-bottom: 10px;
     font-size: 16px;
-    font-weight: bold;
+    font-weight: 700;
     color: var(--text-primary);
   }
 
@@ -154,10 +154,10 @@ onUnmounted(() => {
     border: 1px solid var(--border-color);
     border-radius: 4px;
     cursor: crosshair;
-    background-color: #ffffff;
+    background-color: #fff;
     width: 100%;
     height: 200px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 2px 4px rgb(0 0 0 / 10%);
     touch-action: none;
   }
 

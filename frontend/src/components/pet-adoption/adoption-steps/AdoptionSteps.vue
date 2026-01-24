@@ -66,7 +66,7 @@ const { formStep, selectedAnimal } = defineProps<{
     min-width: 0;
   }
 
-  @media (max-width: 600px) {
+  @media (width <= 600px) {
     flex-direction: column;
     align-items: flex-start;
     gap: 16px;
@@ -84,7 +84,7 @@ const { formStep, selectedAnimal } = defineProps<{
     position: relative;
     z-index: 2; 
 
-    @media (max-width: 600px) {
+    @media (width <= 600px) {
       flex-direction: row;
       gap: 12px;
       width: 100%;
@@ -103,20 +103,22 @@ const { formStep, selectedAnimal } = defineProps<{
       margin-bottom: 8px;
       z-index: 5;
 
-      @media (max-width: 600px) {
+      @media (width <= 600px) {
         margin-bottom: 0;
       }
     }
+
     .step-label {
       font-size: 0.875rem;
       text-align: center;
 
-      @media (max-width: 600px) {
+      @media (width <= 600px) {
         font-size: 1rem;
         font-weight: 500;
         text-align: left;
       }
     }
+
     &.active {
       .step-number {
         background-color: var(--color-primary);

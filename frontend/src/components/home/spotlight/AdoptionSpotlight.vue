@@ -70,16 +70,17 @@ const displayedPets = computed((): IPet[] => {
   min-height: 200px;
   width: 100%;
 }
+
 .adoption-spotlight {
   background-color: var(--text-inverse);
   border-radius: 12px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.25);
+  box-shadow: 0 4px 6px rgb(0 0 0 / 25%);
   display: flex;
   flex-direction: column;
   gap: 16px;
   margin: -120px 0 0;
   width: 100%;
-  padding: 24px 50px 40px 50px;
+  padding: 24px 50px 40px;
 
   & h2 {
     font-size: 2rem;
@@ -94,23 +95,23 @@ const displayedPets = computed((): IPet[] => {
     padding-bottom: 8px;
     -webkit-overflow-scrolling: touch;
     justify-content: center; 
-
     margin-left: -50px;
     margin-right: -50px;
     padding-left: 50px;
     padding-right: 50px;
   }
 
-  @media (max-width: 430px) {
+  @media (width <= 430px) {
     margin: 2rem 0 0;
     padding: 1rem 2rem;
     gap: 0.5rem;
+
     & h2 {
       font-size: 1.5rem;
     }
+
     .pet-list {
       gap: 1rem;
-      
       margin-left: -2rem;
       margin-right: -2rem;
       padding-left: 2rem;
@@ -118,26 +119,31 @@ const displayedPets = computed((): IPet[] => {
       justify-content: flex-start; 
     }
   }
-  @media (min-width: 431px) and (max-width: 768px) {
+
+  @media (width >= 431px) and (width <= 768px) {
     margin: -20px 0 0;
+
     & h2 {
       font-size: 1.75rem;
     }
   }
-  @media (min-width: 769px) and (max-width: 1024px) {
+
+  @media (width >= 769px) and (width <= 1024px) {
     & h2 {
       font-size: 1.75rem;
     }
   }
-  @media (min-width: 1025px) and (max-width: 1440px) {
+
+  @media (width >= 1025px) and (width <= 1440px) {
     width: 100%;
     padding: 24px 30px 30px;
+
     & h2 {
       font-size: 1.75rem;
     }
+
     .pet-list {
       gap: 2rem;
-      
       margin-left: -30px;
       margin-right: -30px;
       padding-left: 30px;

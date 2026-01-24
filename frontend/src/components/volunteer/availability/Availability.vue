@@ -273,9 +273,9 @@ const selected = computed({
   display: flex;
   align-items: center;
   justify-content: center;
-  color: white;
+  color: #fff;
   transition: all 0.2s;
-  background: white;
+  background: #fff;
 }
 
 .check-icon svg {
@@ -285,9 +285,9 @@ const selected = computed({
 }
 
 .time-card:has(> input:checked) {
-  background: color-mix(in srgb, var(--color-primary) 5%, white);
+  background: color-mix(in srgb, var(--color-primary) 5%, #fff);
   border-color: var(--color-primary);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  box-shadow: 0 4px 12px rgb(0 0 0 / 5%);
 }
 
 .time-card:has(> input:checked) .check-icon {

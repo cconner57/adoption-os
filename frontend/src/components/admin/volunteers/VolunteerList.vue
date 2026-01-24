@@ -52,7 +52,7 @@ watch(
   (newVal) => {
     const currentSelected = newVal.find((v) => String(v.id) === String(props.selectedId))
     if (!currentSelected && newVal.length > 0) {
-      
+
       emit('select', newVal[0])
     }
   },
@@ -96,38 +96,14 @@ function selectVolunteer(vol: IVolunteer) {
         <div class="sort-options">
           <Capsules
             label="A-Z"
-            :color="
-              sortType === 'alphabetical' ? 'hsl(from var(--color-secondary) h s 90%)' : 'white'
-            "
-            :text-color="
-              sortType === 'alphabetical'
-                ? 'var(--color-secondary)'
-                : 'hsl(from var(--color-neutral) h s 50%)'
-            "
+            :color="sortType === 'alphabetical' ? 'blue' : 'white'"
             style="cursor: pointer"
-            :style="{
-              borderColor:
-                sortType === 'alphabetical'
-                  ? 'hsl(from var(--color-secondary) h s 90%)'
-                  : 'var(--border-color)',
-            }"
             @click="sortType = 'alphabetical'"
           />
           <Capsules
             label="Level"
-            :color="sortType === 'level' ? 'hsl(from var(--color-secondary) h s 90%)' : 'white'"
-            :text-color="
-              sortType === 'level'
-                ? 'var(--color-secondary)'
-                : 'hsl(from var(--color-neutral) h s 50%)'
-            "
+            :color="sortType === 'level' ? 'blue' : 'white'"
             style="cursor: pointer"
-            :style="{
-              borderColor:
-                sortType === 'level'
-                  ? 'hsl(from var(--color-secondary) h s 90%)'
-                  : 'var(--border-color)',
-            }"
             @click="sortType = 'level'"
           />
         </div>
@@ -135,7 +111,7 @@ function selectVolunteer(vol: IVolunteer) {
     </div>
 
     <div class="vol-list">
-      
+
       <div v-if="loading" class="skeleton-list">
         <div v-for="n in 6" :key="n" class="vol-item skeleton-item">
           <div class="skeleton-avatar"></div>
@@ -217,7 +193,7 @@ function selectVolunteer(vol: IVolunteer) {
   height: 32px;
   border-radius: 8px;
   background: var(--color-secondary);
-  color: white;
+  color: #fff;
   border: none;
   font-size: 1.2rem;
   line-height: 1;
@@ -279,17 +255,17 @@ function selectVolunteer(vol: IVolunteer) {
   }
 
   &.selected {
-    background: white;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    background: #fff;
+    box-shadow: 0 2px 8px rgb(0 0 0 / 5%);
     transform: scale(1.02);
-    margin-bottom: 8px; 
+    margin-bottom: 8px;
     margin-top: 4px;
     z-index: 1;
 
     .name {
       color: var(
         --text-primary
-      ); 
+      );
     }
   }
 }
@@ -332,11 +308,13 @@ function selectVolunteer(vol: IVolunteer) {
 
   &.active {
     background: var(--color-primary);
-    box-shadow: 0 0 4px hsla(from var(--color-primary) h s l / 0.4);
+    box-shadow: 0 0 4px hsl(from var(--color-primary) h s l / 40%);
   }
+
   &.inactive {
     background: hsl(from var(--color-neutral) h s 80%);
   }
+
   &.pending {
     background: var(--color-warning);
   }
@@ -354,12 +332,15 @@ function selectVolunteer(vol: IVolunteer) {
   &.high {
     color: var(--color-primary);
   }
+
   &.mid {
     color: var(--color-warning);
   }
+
   &.neutral {
     color: hsl(from var(--color-neutral) h s 50%);
   }
+
   &.low {
     color: var(--color-danger);
   }
@@ -370,6 +351,7 @@ function selectVolunteer(vol: IVolunteer) {
 
 .skeleton-item {
   cursor: default;
+
   &:hover {
     background: transparent;
   }
@@ -394,6 +376,7 @@ function selectVolunteer(vol: IVolunteer) {
   &.w-60 {
     width: 60%;
   }
+
   &.w-40 {
     width: 40%;
   }
@@ -403,9 +386,11 @@ function selectVolunteer(vol: IVolunteer) {
   0% {
     opacity: 1;
   }
+
   50% {
     opacity: 0.5;
   }
+
   100% {
     opacity: 1;
   }

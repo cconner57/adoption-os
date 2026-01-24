@@ -261,13 +261,13 @@ function setEndOfYear() {
 
 <style scoped>
 .shift-form-card {
-  background: white;
+  background: #fff;
   border: 1px solid var(--border-color);
   border-radius: 12px;
   padding: 24px;
   margin-bottom: 24px;
   animation: slideDown 0.2s ease-out;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.02);
+  box-shadow: 0 4px 12px rgb(0 0 0 / 2%);
 }
 
 @keyframes slideDown {
@@ -275,6 +275,7 @@ function setEndOfYear() {
     opacity: 0;
     transform: translateY(-10px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);

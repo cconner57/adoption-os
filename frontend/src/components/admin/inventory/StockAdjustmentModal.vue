@@ -59,7 +59,7 @@ const save = () => {
 .modal-overlay {
   position: fixed;
   inset: 0;
-  background: rgba(0, 0, 0, 0.5);
+  background: rgb(0 0 0 / 50%);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -67,21 +67,21 @@ const save = () => {
 }
 
 .modal-card {
-  background: white;
+  background: #fff;
   padding: 24px;
   border-radius: 12px;
   width: 100%;
   max-width: 400px;
-  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 20px 25px -5px rgb(0 0 0 / 10%);
   text-align: center;
 
   h3 {
-    margin: 0 0 8px 0;
+    margin: 0 0 8px;
   }
 }
 
 .subtitle {
-  margin: 0 0 24px 0;
+  margin: 0 0 24px;
   color: hsl(from var(--color-neutral) h s 50%);
 }
 
@@ -98,7 +98,7 @@ const save = () => {
   height: 40px;
   border-radius: 8px;
   border: 1px solid #e5e7eb;
-  background: white;
+  background: #fff;
   font-size: 1.5rem;
   cursor: pointer;
   display: flex;

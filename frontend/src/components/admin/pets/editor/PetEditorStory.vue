@@ -30,7 +30,7 @@ const additionalInfoString = computed({
 </script>
 
 <style scoped>
-@import './form.css';
+@import url('./form.css');
 
 .form-section {
   gap: 12px;

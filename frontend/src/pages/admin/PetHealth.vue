@@ -199,12 +199,12 @@ watch(
 
 .sidebar {
   width: 320px;
-  background: white;
+  background: #fff;
   border-radius: 16px;
   display: flex;
   flex-direction: column;
   overflow: hidden;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+  box-shadow: 0 4px 12px rgb(0 0 0 / 3%);
   border: 1px solid #f3f4f6;
 }
 
@@ -225,7 +225,7 @@ watch(
 
 .add-log-btn {
   background: var(--color-primary);
-  color: white;
+  color: #fff;
   border: none;
   width: 32px;
   height: 32px;
@@ -256,7 +256,7 @@ watch(
 
     &:focus {
       border-color: var(--color-secondary);
-      background: white;
+      background: #fff;
     }
   }
 }
@@ -280,6 +280,7 @@ watch(
   &:hover {
     background: #f9fafb;
   }
+
   &.active {
     background: #eff6ff;
     border-color: hsl(from var(--color-secondary) h s 80%);
@@ -327,9 +328,9 @@ watch(
 
 .dashboard {
   flex: 1;
-  background: white;
+  background: #fff;
   border-radius: 16px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+  box-shadow: 0 4px 12px rgb(0 0 0 / 3%);
   border: 1px solid #f3f4f6;
   overflow: hidden;
   display: flex;
@@ -353,7 +354,7 @@ watch(
 
 .dash-title h1 {
   font-size: 2rem;
-  margin: 0 0 4px 0;
+  margin: 0 0 4px;
   color: var(--text-primary);
 }
 
@@ -371,7 +372,7 @@ watch(
   padding: 8px 16px;
   border-radius: 8px;
   border: 1px solid #e5e7eb;
-  background: white;
+  background: #fff;
   font-weight: 500;
   cursor: pointer;
   transition: all 0.2s;
@@ -382,7 +383,7 @@ watch(
 
   &.primary {
     background: var(--color-secondary);
-    color: white;
+    color: #fff;
     border: none;
 
     &:hover {
@@ -399,9 +400,9 @@ watch(
 }
 
 .stat-card {
-  background: white;
+  background: #fff;
   border-radius: 12px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+  box-shadow: 0 4px 6px rgb(0 0 0 / 5%);
   padding: 24px;
   border: 1px solid #f3f4f6;
 }
@@ -451,13 +452,13 @@ watch(
 
   &:hover {
     color: var(--text-primary);
-    background: rgba(0, 0, 0, 0.05);
+    background: rgb(0 0 0 / 5%);
   }
 
   &.active {
-    background: white;
+    background: #fff;
     color: var(--color-secondary);
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    box-shadow: 0 2px 4px rgb(0 0 0 / 5%);
   }
 }
 

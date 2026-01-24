@@ -21,22 +21,22 @@ const handleLogout = () => {
 }
 
 const navItems = [
-  { label: 'Overview', to: '/admin', icon: '📊', exact: true },
-  { label: 'Calendar', to: '/admin/calendar', icon: '📅' },
-  { label: 'Pet Records', to: '/admin/pets', icon: '🐾' },
-  { label: 'Applications', to: '/admin/applications', icon: '📝' },
-  { label: 'Medical', to: '/admin/pet-health', icon: '🩺' },
-  { label: 'Volunteers', to: '/admin/volunteers', icon: '🤝' },
-  { label: 'Transport', to: '/admin/transport', icon: '🚙' },
-  { label: 'Timesheets', to: '/admin/time-logs', icon: '⏱️' },
-  { label: 'Messages', to: '/admin/messages', icon: '✉️' },
-  { label: 'Donations', to: '/admin/donations', icon: '💰' },
-  { label: 'Inventory', to: '/admin/inventory', icon: '📦' },
-  { label: 'Marketing', to: '/admin/marketing', icon: '📣' },
-  { label: 'Intake Kiosk', to: '/admin/kiosk', icon: '🖥️' },
-  { label: 'Smart Kennel Cards', to: '/admin/kennel-displays', icon: '🏷️' },
-  { label: 'Event Signage', to: '/admin/event-displays', icon: '🎪' },
-  { label: 'Settings', to: '/admin/settings', icon: '⚙️' },
+  { label: 'Overview', to: '/admin', icon: 'dashboard', exact: true },
+  { label: 'Calendar', to: '/admin/calendar', icon: 'calendar' },
+  { label: 'Pet Records', to: '/admin/pets', icon: 'pawPrint', viewBox: '0 0 128 128' },
+  { label: 'Applications', to: '/admin/applications', icon: 'fileText' },
+  { label: 'Medical', to: '/admin/pet-health', icon: 'activity' },
+  { label: 'Volunteers', to: '/admin/volunteers', icon: 'users' },
+  { label: 'Transport', to: '/admin/transport', icon: 'truck' },
+  { label: 'Timesheets', to: '/admin/time-logs', icon: 'clock' },
+  { label: 'Messages', to: '/admin/messages', icon: 'mail' },
+  { label: 'Donations', to: '/admin/donations', icon: 'dollar' },
+  { label: 'Inventory', to: '/admin/inventory', icon: 'box' },
+  { label: 'Marketing', to: '/admin/marketing', icon: 'megaphone' },
+  { label: 'Intake Kiosk', to: '/admin/kiosk', icon: 'monitor' },
+  { label: 'Smart Kennel Cards', to: '/admin/kennel-displays', icon: 'tag' },
+  { label: 'Event Signage', to: '/admin/event-displays', icon: 'sign' },
+  { label: 'Settings', to: '/admin/settings', icon: 'cog' },
 ]
 
 const userName = computed(() => authStore.user?.Name || 'Admin User')
@@ -53,7 +53,7 @@ const userInitials = computed(() => {
 
 <template>
   <div class="admin-layout">
-    
+
     <aside class="sidebar" :class="{ 'mobile-open': isMobileMenuOpen }">
       <div class="sidebar-header">
         <img src="/images/idohr-logo.jpg" alt="IDOHR Logo" class="logo" />
@@ -106,7 +106,7 @@ const userInitials = computed(() => {
   flex-shrink: 0;
   transition: transform 0.3s ease;
   z-index: 50;
-  box-shadow: 4px 0 24px rgba(0, 0, 0, 0.02);
+  box-shadow: 4px 0 24px rgb(0 0 0 / 2%);
 }
 
 .sidebar-header {
@@ -120,7 +120,7 @@ const userInitials = computed(() => {
     height: 48px;
     border-radius: 12px;
     object-fit: cover;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    box-shadow: 0 4px 12px rgb(0 0 0 / 5%);
   }
 
   h2 {
@@ -150,14 +150,14 @@ const userInitials = computed(() => {
     width: 42px;
     height: 42px;
     background: linear-gradient(135deg, var(--color-tertiary), #8b5cf6);
-    color: white;
+    color: #fff;
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
     font-weight: 700;
     font-size: 0.9rem;
-    box-shadow: 0 2px 8px hsla(from var(--color-tertiary) h s l / 0.2);
+    box-shadow: 0 2px 8px hsl(from var(--color-tertiary) h s l / 20%);
   }
 
   .details {
@@ -170,6 +170,7 @@ const userInitials = computed(() => {
       font-weight: 700;
       color: var(--text-primary);
     }
+
     .role {
       font-size: 0.75rem;
       color: hsl(from var(--color-neutral) h s 50%);
@@ -205,11 +206,11 @@ const userInitials = computed(() => {
   display: flex;
   flex-direction: column;
   overflow: hidden;
-  background-color: hsl(from var(--color-neutral) h s 98%); 
+  background-color: hsl(from var(--color-neutral) h s 98%);
 }
 
 .top-bar {
-  display: none; 
+  display: none;
   height: 80px;
   background-color: transparent;
   align-items: center;
@@ -239,29 +240,26 @@ const userInitials = computed(() => {
 .page-content {
   flex: 1;
   overflow-y: auto;
-  padding: 32px 40px 40px 40px; 
+  padding: 32px 40px 40px;
 }
 
 .sidebar-overlay {
   position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-color: rgba(0, 0, 0, 0.5);
+  inset: 0;
+  background-color: rgb(0 0 0 / 50%);
   backdrop-filter: blur(4px);
   z-index: 40;
   display: none;
 }
 
-@media (max-width: 768px) {
+@media (width <= 768px) {
   .sidebar {
     position: fixed;
     top: 0;
     bottom: 0;
     left: 0;
     transform: translateX(-100%);
-    box-shadow: 4px 0 24px rgba(0, 0, 0, 0.1);
+    box-shadow: 4px 0 24px rgb(0 0 0 / 10%);
   }
 
   .sidebar.mobile-open {
@@ -277,11 +275,11 @@ const userInitials = computed(() => {
   }
 
   .top-bar {
-    display: flex; 
+    display: flex;
     padding: 0 24px;
     height: 64px;
     background-color: var(--white);
-    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+    border-bottom: 1px solid rgb(0 0 0 / 5%);
 
     h3 {
       font-size: 1.25rem;

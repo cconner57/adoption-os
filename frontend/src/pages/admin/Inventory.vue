@@ -214,6 +214,7 @@ const addItem = () => {
   display: flex;
   justify-content: space-between;
   align-items: center;
+
   h1 {
     margin: 0;
     font-size: 1.8rem;
@@ -246,7 +247,7 @@ const addItem = () => {
 }
 
 .stat-card {
-  background: white;
+  background: #fff;
   padding: 20px;
   border-radius: 12px;
   border: 1px solid #e5e7eb;
@@ -272,6 +273,7 @@ const addItem = () => {
   font-size: 2rem;
   font-weight: 700;
   color: var(--text-primary);
+
   &.warning-text {
     color: var(--color-danger);
   }
@@ -296,13 +298,13 @@ const addItem = () => {
   padding: 10px 16px;
   border: 1px solid #e5e7eb;
   border-radius: 8px;
-  background: white;
+  background: #fff;
   font-size: 0.95rem;
   min-width: 140px;
 }
 
 .table-container {
-  background: white;
+  background: #fff;
   border-radius: 12px;
   border: 1px solid #e5e7eb;
   overflow: hidden;

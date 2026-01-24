@@ -305,7 +305,7 @@ const activeCategoryLabel = computed(
 }
 
 .back-btn {
-  background: white;
+  background: #fff;
   border: 1px solid #e5e7eb;
   padding: 8px 16px;
   border-radius: 8px;
@@ -322,7 +322,7 @@ const activeCategoryLabel = computed(
 
 .save-btn {
   background: var(--color-primary);
-  color: white;
+  color: #fff;
   border: none;
   padding: 10px 20px;
   border-radius: 8px;
@@ -341,10 +341,10 @@ const activeCategoryLabel = computed(
   bottom: 24px;
   right: 24px;
   background: #10b981;
-  color: white;
+  color: #fff;
   padding: 12px 24px;
   border-radius: 8px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 4px 12px rgb(0 0 0 / 15%);
   animation: slideIn 0.3s ease-out;
   z-index: 100;
   font-weight: 500;
@@ -355,6 +355,7 @@ const activeCategoryLabel = computed(
     transform: translateY(20px);
     opacity: 0;
   }
+
   to {
     transform: translateY(0);
     opacity: 1;
@@ -369,7 +370,7 @@ const activeCategoryLabel = computed(
 }
 
 .category-card {
-  background: white;
+  background: #fff;
   border: 1px solid #e5e7eb;
   border-radius: 12px;
   padding: 24px;
@@ -385,7 +386,7 @@ const activeCategoryLabel = computed(
 
 .category-card:hover {
   transform: translateY(-2px);
-  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.05);
+  box-shadow: 0 12px 24px rgb(0 0 0 / 5%);
   border-color: var(--primary-color-light, #bfdbfe);
 }
 
@@ -401,7 +402,7 @@ const activeCategoryLabel = computed(
 }
 
 .cat-details h3 {
-  margin: 0 0 8px 0;
+  margin: 0 0 8px;
   font-size: 1.1rem;
   color: var(--text-primary);
 }
@@ -417,7 +418,7 @@ const activeCategoryLabel = computed(
   margin-top: auto;
   align-self: flex-end;
   color: #d1d5db;
-  font-weight: bold;
+  font-weight: 700;
   transition: color 0.2s;
 }
 
@@ -434,7 +435,7 @@ const activeCategoryLabel = computed(
 .placeholder-content {
   text-align: center;
   padding: 60px 20px;
-  background: white;
+  background: #fff;
   border-radius: 12px;
   border: 2px dashed #e5e7eb;
   color: var(--text-secondary);

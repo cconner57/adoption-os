@@ -5,7 +5,7 @@ const props = withDefaults(
   defineProps<{
     variant?: 'primary' | 'secondary' | 'tertiary' | 'text'
     theme?: 'primary' | 'secondary' | 'tertiary' | 'warning' | 'danger' | 'neutral'
-    color?: 'green' | 'blue' | 'purple' | 'green-weak' | 'orange' | 'white' 
+    color?: 'green' | 'blue' | 'purple' | 'green-weak' | 'orange' | 'white'
     onClick?: () => void
     size?: 'small' | 'medium' | 'large'
     align?: 'center' | 'start' | 'between'
@@ -26,7 +26,7 @@ const resolvedTheme = computed(() => {
 
   switch (props.color) {
     case 'green':
-    case 'green-weak': 
+    case 'green-weak':
       return 'primary'
     case 'blue':
       return 'secondary'
@@ -42,11 +42,14 @@ const resolvedTheme = computed(() => {
 })
 
 const resolvedVariant = computed(() => {
-  
-  if (props.color === 'white' && props.variant === 'primary') {
-    return 'tertiary'
+  if (['primary', 'secondary', 'tertiary', 'text'].includes(props.variant)) {
+    // Legacy support: if color is white/neutral and variant is primary, it should look like tertiary/neutral
+    if (props.color === 'white' && props.variant === 'primary') {
+      return 'tertiary'
+    }
+    return props.variant
   }
-  return props.variant
+  return 'primary'
 })
 
 const classes = computed(() => {
@@ -86,13 +89,13 @@ button {
   border-radius: 6px;
   transition: all 0.2s ease;
   white-space: nowrap;
-  border: 1px solid transparent; 
+  border: 1px solid transparent;
   font-family: inherit;
 
   &:hover:not(:disabled) {
     cursor: pointer;
     transform: translateY(-1px);
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+    box-shadow: 0 4px 6px rgb(0 0 0 / 5%);
   }
 
   &:active:not(:disabled) {
@@ -102,7 +105,7 @@ button {
 
 .small {
   height: 32px;
-  min-width: 80px; 
+  min-width: 80px;
   padding: 0 12px;
   font-size: 0.85rem;
 }
@@ -115,7 +118,7 @@ button {
 }
 
 .large {
-  height: 52px;
+  height: 48px;
   min-width: 180px;
   padding: 0 32px;
   font-size: 1.1rem;
@@ -124,36 +127,45 @@ button {
 .justify-center {
   justify-content: center;
 }
+
 .justify-start {
   justify-content: flex-start;
 }
+
 .justify-between {
   justify-content: space-between;
 }
+
 .w-full {
   width: 100%;
   display: flex;
 }
 
 .variant-primary {
-  color: white;
+  color: #fff;
   border: none;
 }
+
 .variant-primary.theme-primary {
   background-color: var(--color-primary);
 }
+
 .variant-primary.theme-secondary {
   background-color: var(--color-secondary);
 }
+
 .variant-primary.theme-tertiary {
   background-color: var(--color-tertiary);
 }
+
 .variant-primary.theme-warning {
   background-color: var(--color-warning);
 }
+
 .variant-primary.theme-danger {
   background-color: var(--color-danger);
 }
+
 .variant-primary.theme-neutral {
   background-color: var(--color-neutral);
 }
@@ -163,42 +175,49 @@ button {
 }
 
 .variant-secondary {
-  background-color: white;
-  border: 1px solid currentColor; 
+  background-color: #fff;
+  border: 1px solid currentcolor;
 }
+
 .variant-secondary.theme-primary {
   color: var(--color-primary);
 }
+
 .variant-secondary.theme-secondary {
   color: var(--color-secondary);
 }
+
 .variant-secondary.theme-tertiary {
   color: var(--color-tertiary);
 }
+
 .variant-secondary.theme-warning {
   color: var(--color-warning);
 }
+
 .variant-secondary.theme-danger {
   color: var(--color-danger);
 }
+
 .variant-secondary.theme-neutral {
   color: var(--text-primary);
   border-color: var(--border-color);
 }
 
 .variant-secondary:hover:not(:disabled) {
-  background-color: #f8fafc; 
+  background-color: #f8fafc;
 }
 
 .variant-tertiary {
-  background-color: white;
-  border: 1px solid #cbd5e1; 
+  background-color: #fff;
+  border: 1px solid #cbd5e1;
   color: var(--text-primary);
 }
 
 .variant-tertiary.theme-primary {
   color: var(--text-primary);
-} 
+}
+
 .variant-tertiary:hover:not(:disabled) {
   border-color: #94a3b8;
   background-color: #f1f5f9;
@@ -214,6 +233,7 @@ button {
   text-decoration: underline;
   text-underline-offset: 4px;
 }
+
 .variant-text:hover:not(:disabled) {
   transform: none;
   opacity: 0.8;
@@ -222,12 +242,15 @@ button {
 .variant-text.theme-primary {
   color: var(--color-primary);
 }
+
 .variant-text.theme-secondary {
   color: var(--color-secondary);
 }
+
 .variant-text.theme-tertiary {
   color: var(--color-tertiary);
 }
+
 .variant-text.theme-neutral {
   color: var(--text-secondary);
 }
@@ -237,6 +260,7 @@ button {
   color: var(--color-primary);
   border: none;
 }
+
 .legacy-green-weak:hover:not(:disabled) {
   background-color: hsl(from var(--color-primary) h s 85%);
 }
@@ -252,7 +276,7 @@ button {
 .spinner {
   width: 1em;
   height: 1em;
-  border: 2px solid currentColor;
+  border: 2px solid currentcolor;
   border-right-color: transparent;
   border-radius: 50%;
   animation: spin 0.75s linear infinite;
@@ -263,6 +287,7 @@ button {
   from {
     transform: rotate(0deg);
   }
+
   to {
     transform: rotate(360deg);
   }

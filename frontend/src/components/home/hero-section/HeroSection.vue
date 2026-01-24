@@ -32,12 +32,12 @@ function handleAdopt() {
     color: var(--text-inverse);
     max-width: 600px;
     margin-bottom: 24px;
-    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+    text-shadow: 2px 2px 4px rgb(0 0 0 / 50%);
     line-height: 100px;
     user-select: none;
   }
 
-  @media (min-width: 321px) and (max-width: 430px) {
+  @media (width >= 321px) and (width <= 430px) {
     padding-top: 8rem;
     padding-bottom: 2rem;
     min-height: 400px;
@@ -52,7 +52,7 @@ function handleAdopt() {
     }
   }
 
-  @media (min-width: 431px) and (max-width: 768px) {
+  @media (width >= 431px) and (width <= 768px) {
     padding-top: 8rem;
     padding-bottom: 2rem;
     min-height: 400px;
@@ -67,17 +67,20 @@ function handleAdopt() {
     }
   }
 
-  @media (min-width: 1025px) and (max-width: 1440px) {
+  @media (width >= 1025px) and (width <= 1440px) {
     padding-top: 8rem;
     padding-bottom: 2rem;
+
     & h1 {
       font-size: 5rem;
       line-height: 80px;
     }
   }
-  @media (min-width: 1441px) {
+
+  @media (width >= 1441px) {
     padding-top: 8rem;
     padding-bottom: 2rem;
+
     & h1 {
       font-size: 6rem;
       line-height: 100px;

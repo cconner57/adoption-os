@@ -177,7 +177,7 @@ function formatDoB(dateString?: string | null) {
 .pet-card {
   background: var(--text-inverse);
   border-radius: 12px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  box-shadow: 0 2px 8px rgb(0 0 0 / 5%);
   overflow: hidden;
   border: 1px solid var(--border-color);
   margin-bottom: 16px;
@@ -186,7 +186,7 @@ function formatDoB(dateString?: string | null) {
 
 .pet-card.expanded {
   border-color: var(--color-secondary);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  box-shadow: 0 4px 12px rgb(0 0 0 / 8%);
 }
 
 .card-header {
@@ -210,11 +210,13 @@ function formatDoB(dateString?: string | null) {
   background: #f1f5f9;
   flex-shrink: 0;
 }
+
 .pet-avatar img {
   width: 100%;
   height: 100%;
   object-fit: cover;
 }
+
 .avatar-placeholder {
   width: 100%;
   height: 100%;
@@ -273,22 +275,27 @@ function formatDoB(dateString?: string | null) {
   background: #dcfce7;
   color: #166534;
 }
+
 .status-badge.orange {
   background: #ffedd5;
   color: #9a3412;
 }
+
 .status-badge.blue {
   background: #dbeafe;
   color: #1e40af;
 }
+
 .status-badge.purple {
   background: #f3e8ff;
   color: #6b21a8;
 }
+
 .status-badge.red {
   background: #fee2e2;
   color: #991b1b;
 }
+
 .status-badge.gray {
   background: #f1f5f9;
   color: #64748b;
@@ -299,6 +306,7 @@ function formatDoB(dateString?: string | null) {
   transition: transform 0.3s;
   margin-top: 4px; 
 }
+
 .expand-icon.rotated {
   transform: rotate(180deg);
 }
@@ -313,11 +321,13 @@ function formatDoB(dateString?: string | null) {
   grid-template-columns: 1fr 1fr;
   gap: 16px;
 }
+
 .stat {
   display: flex;
   flex-direction: column;
   gap: 2px;
 }
+
 .stat .label {
   font-size: 0.65rem;
   color: #94a3b8;
@@ -325,6 +335,7 @@ function formatDoB(dateString?: string | null) {
   letter-spacing: 0.5px;
   font-weight: 600;
 }
+
 .stat .value {
   font-size: 0.9rem;
   color: #334155;
@@ -340,6 +351,7 @@ function formatDoB(dateString?: string | null) {
 .detail-section {
   margin-bottom: 20px;
 }
+
 .detail-section h4 {
   font-size: 0.8rem;
   text-transform: uppercase;
@@ -347,15 +359,18 @@ function formatDoB(dateString?: string | null) {
   margin-bottom: 10px;
   font-weight: 700;
 }
+
 .detail-row {
   display: flex;
   justify-content: space-between;
   margin-bottom: 8px;
   font-size: 0.95rem;
 }
+
 .detail-row .label {
   color: #64748b;
 }
+
 .detail-row .value {
   color: #334155;
   font-weight: 500;
@@ -367,17 +382,20 @@ function formatDoB(dateString?: string | null) {
   gap: 8px;
   margin-top: 8px;
 }
+
 .tag {
   padding: 4px 8px;
   border-radius: 6px;
   font-size: 0.8rem;
   border: 1px solid #e2e8f0;
 }
+
 .tag.yes {
   background: #dcfce7;
   color: #166534;
   border-color: #bbf7d0;
 }
+
 .tag.no {
   background: #fee2e2;
   color: #991b1b;
@@ -391,6 +409,7 @@ function formatDoB(dateString?: string | null) {
   gap: 12px;
   margin-top: 24px;
 }
+
 .action-btn {
   flex: 1;
   padding: 10px;
@@ -400,12 +419,14 @@ function formatDoB(dateString?: string | null) {
   cursor: pointer;
   font-size: 0.95rem;
 }
+
 .action-btn.edit {
   background: var(--color-primary);
-  color: white;
+  color: #fff;
 }
+
 .action-btn.archive {
-  background: white;
+  background: #fff;
   border: 1px solid #cbd5e1;
   color: #64748b;
 }

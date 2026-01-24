@@ -95,9 +95,11 @@ const isTablet = useIsTablet()
         text-decoration: none;
       }
     }
+
     & .nav-links {
       display: flex;
       gap: 4rem;
+
       & .nav-item {
         color: var(--text-inverse);
         text-decoration: none;
@@ -107,13 +109,16 @@ const isTablet = useIsTablet()
           font-weight: 500;
         }
       }
+
       & .nav-item.active {
         font-weight: 600;
         border-bottom: 2px solid var(--text-inverse);
         padding-bottom: 4px;
+
         p {
           font-size: 1.2rem;
         }
+
         &:hover {
           cursor: pointer;
         }
@@ -122,62 +127,64 @@ const isTablet = useIsTablet()
   }
 
   .nav-blurred {
-    background-color: hsla(
-      from var(--color-primary) h s 25% / 0.85
-    ); 
+    background-color: hsl(
+      from var(--color-primary) h s 25% / 85%
+    );
     backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
+    backdrop-filter: blur(10px);
     transition:
       background-color 0.3s ease,
       backdrop-filter 0.3s ease;
   }
 
-  @media (min-width: 321px) and (max-width: 430px) {
+  @media (width >= 321px) and (width <= 430px) {
     nav {
       margin: 0;
-      padding: calc(1rem + var(--safe-top)) 1rem 1rem 1rem;
+      padding: calc(1rem + var(--safe-top)) 1rem 1rem;
       gap: 0.5rem;
       width: 100dvw;
       justify-content: space-between;
 
-      & .nav-logo {
-        & a {
-          display: flex;
-          align-items: center;
-          gap: 0.5rem;
-          & img {
-            height: 40px;
-            width: auto;
-            border-radius: 8px;
-          }
+      /* Flattened .nav-logo nesting */
+      & .nav-logo a {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+      }
 
-          & h1 {
-            font-size: 1.2rem;
-            color: var(--text-inverse);
-          }
-        }
+      & .nav-logo img {
+        height: 40px;
+        width: auto;
+        border-radius: 8px;
+      }
+
+      & .nav-logo h1 {
+        font-size: 1.2rem;
+        color: var(--text-inverse);
       }
     }
   }
 
-  @media (min-width: 431px) and (max-width: 768px) {
+  @media (width >= 431px) and (width <= 768px) {
     nav {
       gap: 2rem;
-      padding: calc(1rem + var(--safe-top)) 1.5rem 1rem 1.5rem;
+      padding: calc(1rem + var(--safe-top)) 1.5rem 1rem;
       width: 100dvw;
       justify-content: space-between;
-      .nav-logo {
-        a {
-          display: flex;
-          align-items: center;
-          gap: 0.75rem;
-          img {
-            height: 45px;
-          }
-          h1 {
-            font-size: 1.5rem;
-          }
-        }
+
+      /* Flattened .nav-logo nesting */
+      .nav-logo a {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+      }
+
+      .nav-logo img {
+        height: 45px;
+      }
+
+      .nav-logo h1 {
+        font-size: 1.5rem;
       }
     }
   }

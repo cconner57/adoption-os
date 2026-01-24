@@ -112,7 +112,7 @@ const directionOptions = [
 
 .page-header {
   h1 {
-    margin: 0 0 24px 0;
+    margin: 0 0 24px;
     color: var(--text-primary);
     font-size: 1.8rem;
   }
@@ -127,7 +127,7 @@ const directionOptions = [
 
 .sidebar {
   width: 300px;
-  background: white;
+  background: #fff;
   border: 1px solid #e2e8f0;
   border-radius: 12px;
   display: flex;

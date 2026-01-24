@@ -62,8 +62,8 @@ onUnmounted(() => {
   right: 24px;
   padding: 16px 24px;
   border-radius: 12px;
-  background: white;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  background: #fff;
+  box-shadow: 0 10px 30px rgb(0 0 0 / 10%);
   display: flex;
   align-items: center;
   gap: 12px;
@@ -87,17 +87,17 @@ onUnmounted(() => {
   display: flex;
   align-items: center;
   justify-content: center;
-  font-weight: bold;
+  font-weight: 700;
   font-size: 14px;
 }
 
 .success .icon {
-  background: hsla(from var(--color-primary) h s l / 0.1);
+  background: hsl(from var(--color-primary) h s l / 10%);
   color: var(--color-primary);
 }
 
 .error .icon {
-  background: hsla(from var(--color-danger) h s l / 0.1);
+  background: hsl(from var(--color-danger) h s l / 10%);
   color: var(--color-danger);
 }
 

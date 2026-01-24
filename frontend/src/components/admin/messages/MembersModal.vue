@@ -50,7 +50,7 @@ defineEmits<{
 .modal-overlay {
   position: fixed;
   inset: 0;
-  background: rgba(0, 0, 0, 0.5);
+  background: rgb(0 0 0 / 50%);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -58,18 +58,19 @@ defineEmits<{
 }
 
 .modal-card {
-  background: white;
+  background: #fff;
   padding: 24px;
   border-radius: 12px;
   width: 100%;
   max-width: 450px;
   box-shadow:
-    0 20px 25px -5px rgba(0, 0, 0, 0.1),
-    0 10px 10px -5px rgba(0, 0, 0, 0.04);
+    0 20px 25px -5px rgb(0 0 0 / 10%),
+    0 10px 10px -5px rgb(0 0 0 / 4%);
 
   h3 {
     margin-top: 0;
   }
+
   .subtitle {
     color: hsl(from var(--color-neutral) h s 50%);
     margin-bottom: 20px;
@@ -113,6 +114,7 @@ defineEmits<{
 .m-avatar {
   font-size: 1.2rem;
 }
+
 .admin-badge {
   background: hsl(from var(--color-secondary) h s 95%);
   color: var(--color-secondary);
@@ -129,6 +131,7 @@ defineEmits<{
   border: none;
   font-size: 0.85rem;
   cursor: pointer;
+
   &:hover {
     text-decoration: underline;
   }

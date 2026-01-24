@@ -128,7 +128,7 @@ watch(
   flex: 1;
   display: flex;
   flex-direction: column;
-  background: white;
+  background: #fff;
 }
 
 .chat-header {
@@ -145,8 +145,9 @@ watch(
     align-items: center;
     gap: 8px;
   }
+
   .topic {
-    margin: 4px 0 0 0;
+    margin: 4px 0 0;
     font-size: 0.85rem;
     color: hsl(from var(--color-neutral) h s 50%);
   }
@@ -163,6 +164,7 @@ watch(
     cursor: pointer;
     font-size: 1.1rem;
     opacity: 0.6;
+
     &:hover {
       opacity: 1;
     }
@@ -190,7 +192,7 @@ watch(
 .input-wrapper {
   display: flex;
   gap: 8px;
-  background: white;
+  background: #fff;
   border: 1px solid #cbd5e1;
   border-radius: 8px;
   padding: 8px 12px;
@@ -239,12 +241,14 @@ watch(
   }
 
   h2 {
-    margin: 0 0 8px 0;
+    margin: 0 0 8px;
   }
+
   p {
     margin: 0;
     color: hsl(from var(--color-neutral) h s 50%);
   }
+
   .highlight {
     color: var(--color-secondary);
     font-weight: 600;
@@ -287,6 +291,7 @@ watch(
     font-weight: 700;
     color: var(--text-primary);
   }
+
   .timestamp {
     font-size: 0.75rem;
     color: hsl(from var(--color-neutral) h s 60%);

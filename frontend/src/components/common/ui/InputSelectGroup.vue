@@ -108,10 +108,9 @@ const toggleOption = (value: string) => {
   padding: 0;
   margin: 0;
 
-  @media (max-width: 440px) {
+  @media (width <= 440px) {
     flex-direction: column;
     text-align: center;
-    
     align-items: stretch;
   }
 }
@@ -124,17 +123,17 @@ const toggleOption = (value: string) => {
   padding: 8px 12px;
   border-radius: 999px;
   border: 1px solid var(--border-color);
-  background-color: #ffffff;
+  background-color: #fff;
   cursor: pointer;
   user-select: none;
   font-size: 1rem;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 4px rgb(0 0 0 / 10%);
   transition:
     background 0.2s,
     border-color 0.2s,
     box-shadow 0.2s;
 
-  @media (max-width: 440px) {
+  @media (width <= 440px) {
     width: 100%;
     justify-content: center;
   }
@@ -160,14 +159,14 @@ const toggleOption = (value: string) => {
 }
 
 .chip:has(> input:checked) {
-  background: color-mix(in srgb, var(--color-primary) 10%, white);
+  background: color-mix(in srgb, var(--color-primary) 10%, #fff);
   border: 1px solid var(--color-primary);
   box-shadow: 0 0 0 1px var(--color-primary) inset;
   color: var(--text-primary);
 }
 
 .chip:has(> input:focus-visible) {
-  box-shadow: 0 0 0 3px rgba(from var(--color-secondary) r g b / 0.4);
+  box-shadow: 0 0 0 3px rgb(from var(--color-secondary) r g b / 40%);
 }
 
 @supports not (selector(:has(*))) {
@@ -178,8 +177,9 @@ const toggleOption = (value: string) => {
     margin: -6px -10px;
     box-shadow: 0 0 0 2px hsl(from var(--color-primary) h s 80%) inset;
   }
+
   .chip > input:focus-visible + span {
-    box-shadow: 0 0 0 3px rgba(from var(--color-secondary) r g b / 0.4);
+    box-shadow: 0 0 0 3px rgb(from var(--color-secondary) r g b / 40%);
   }
 }
 

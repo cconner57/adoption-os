@@ -92,7 +92,7 @@ const handleLogin = async () => {
   max-width: 440px;
   padding: 48px;
   border-radius: 24px;
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 20px 40px rgb(0 0 0 / 10%);
   display: flex;
   flex-direction: column;
   gap: 32px;
@@ -106,7 +106,7 @@ const handleLogin = async () => {
 .logo {
   height: 80px;
   width: auto;
-  margin: 0 auto 24px auto;
+  margin: 0 auto 24px;
   display: block;
 }
 
@@ -146,13 +146,14 @@ const handleLogin = async () => {
     opacity: 0;
     transform: translateY(30px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);
   }
 }
 
-@media (max-width: 480px) {
+@media (width <= 480px) {
   .login-card {
     padding: 32px 24px;
   }

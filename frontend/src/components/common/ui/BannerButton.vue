@@ -58,25 +58,29 @@ const imgSrcComputed = computed(() => (props.imgSrc && props.imgSrc.length ? pro
   color: var(--text-inverse);
   overflow: hidden;
 
-  @media (max-width: 440px) {
+  @media (width <= 440px) {
     width: 100%;
   }
 }
+
 .banner-text {
   text-align: center;
   display: flex;
   flex-direction: column;
   gap: 4px;
 }
+
 img {
   border-radius: 8px;
 }
+
 h5 {
   margin: 0;
   font-size: 1.5rem;
   font-weight: 600;
   color: inherit;
 }
+
 p {
   margin: 0;
   font-size: 1rem;

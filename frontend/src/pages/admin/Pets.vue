@@ -55,13 +55,13 @@ async function fetchPets() {
     const response = await fetch(`${import.meta.env.VITE_API_URL}/pets?${params.toString()}`, {
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token')}`, 
+        Authorization: `Bearer ${localStorage.getItem('token')}`,
       },
     })
 
     if (!response.ok) throw new Error('Failed to fetch pets')
     const data = await response.json()
-    
+
     pets.value = Array.isArray(data) ? data : data.data || []
   } catch (error) {
     console.error('Error fetching pets:', error)
@@ -84,7 +84,7 @@ onMounted(() => {
 })
 
 watch([statusFilter, searchQuery], () => {
-  
+
   fetchPets()
 })
 
@@ -97,7 +97,7 @@ watch(
 )
 
 const filteredPets = computed(() => {
-  
+
   let result = pets.value
 
   if (speciesFilter.value !== 'all') {
@@ -124,7 +124,7 @@ async function handleSavePet(petData: Partial<IPet>) {
     let successMessage = 'Pet added successfully!'
 
     if (petData.id) {
-      
+
       url = `${import.meta.env.VITE_API_URL}/pets/${petData.id}`
       method = 'PUT'
       successMessage = 'Pet updated successfully!'
@@ -147,16 +147,16 @@ async function handleSavePet(petData: Partial<IPet>) {
     }
 
     const savedPet = await response.json()
-    const finalPet = savedPet.data || savedPet 
+    const finalPet = savedPet.data || savedPet
 
     if (petData.id) {
-      
+
       const idx = pets.value.findIndex((p) => p.id === petData.id)
       if (idx !== -1) {
         pets.value[idx] = finalPet
       }
     } else {
-      
+
       pets.value.unshift(finalPet)
     }
 
@@ -180,7 +180,7 @@ async function handleQuickAdopt(pet: IPet) {
 
 function handleArchivePet(pet: IPet) {
   if (confirm(`Are you sure you want to archive ${pet.name}?`)) {
-    
+
     console.log('Archive logic pending API implementation')
   }
 }
@@ -233,7 +233,7 @@ const statusOptions = [
           <TableSettings v-model="visibleColumns" />
         </div>
 
-        <Button title="New Pet +" color="green" :onClick="handleAddPet" />
+        <Button title="New Pet +" color="green" :onClick="handleAddPet" size="large" />
       </div>
     </div>
 
@@ -315,7 +315,7 @@ const statusOptions = [
   gap: 16px;
   position: relative;
   align-items: center;
-  z-index: 20; 
+  z-index: 20;
 }
 
 .filter-group {
@@ -338,7 +338,7 @@ const statusOptions = [
   gap: 8px;
 }
 
-@media (max-width: 768px) {
+@media (width <= 768px) {
   .page-header {
     flex-direction: column;
     align-items: flex-start;
@@ -349,15 +349,13 @@ const statusOptions = [
     width: 100%;
     flex-direction: column;
     align-items: stretch;
-    isolation: isolate; 
+    isolation: isolate;
   }
 
   .filter-group {
     width: 100%;
-    
     padding-bottom: 4px;
-    flex-wrap: wrap; 
-    
+    flex-wrap: wrap;
     overflow: visible;
   }
 
@@ -381,7 +379,7 @@ const statusOptions = [
   }
 }
 
-@media (min-width: 769px) {
+@media (width >= 769px) {
   .mobile-pet-list {
     display: none;
   }

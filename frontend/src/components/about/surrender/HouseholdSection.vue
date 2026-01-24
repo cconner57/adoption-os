@@ -317,7 +317,7 @@ const { formState, touched, handleBlur, hasAttemptedSubmit, selectedAnimal } = d
     flex-direction: column;
     gap: 16px;
 
-    @media (min-width: 768px) {
+    @media (width >= 768px) {
       display: grid;
       grid-template-columns: repeat(2, minmax(0, 1fr));
     }
@@ -360,7 +360,7 @@ const { formState, touched, handleBlur, hasAttemptedSubmit, selectedAnimal } = d
       border-radius: 12px;
       border: 1px solid var(--border-color);
 
-      @media (max-width: 640px) {
+      @media (width <= 640px) {
         flex-direction: column;
         align-items: stretch;
       }
@@ -376,16 +376,16 @@ const { formState, touched, handleBlur, hasAttemptedSubmit, selectedAnimal } = d
     .age-group,
     .quantity-group {
       flex: 1;
-      width: 0; 
+      width: 0;
 
-      @media (max-width: 640px) {
+      @media (width <= 640px) {
         width: 100%;
         flex: none;
       }
     }
 
     .gender-group .label {
-      @media (max-width: 640px) {
+      @media (width <= 640px) {
         text-align: center;
       }
     }
@@ -402,7 +402,7 @@ const { formState, touched, handleBlur, hasAttemptedSubmit, selectedAnimal } = d
       border: 1px solid var(--border-color);
       border-radius: 8px;
       padding: 4px;
-      height: 48px; 
+      height: 48px;
 
       .toggle-btn {
         flex: 1;
@@ -416,7 +416,7 @@ const { formState, touched, handleBlur, hasAttemptedSubmit, selectedAnimal } = d
         transition: all 0.2s;
 
         &.active {
-          background: color-mix(in srgb, var(--color-primary) 10%, white);
+          background: color-mix(in srgb, var(--color-primary) 10%, #fff);
           border: 1px solid var(--color-primary);
           box-shadow: 0 0 0 1px var(--color-primary) inset;
           color: var(--text-primary);
@@ -442,13 +442,13 @@ const { formState, touched, handleBlur, hasAttemptedSubmit, selectedAnimal } = d
       cursor: pointer;
       transition: all 0.2s;
       flex-shrink: 0;
-      margin-top: 29px; 
+      margin-top: 29px;
 
       &:hover {
         background: hsl(from var(--color-danger) h s 98%);
       }
 
-      @media (max-width: 640px) {
+      @media (width <= 640px) {
         margin-top: 0;
         width: 100%;
         height: 40px;
@@ -471,7 +471,7 @@ const { formState, touched, handleBlur, hasAttemptedSubmit, selectedAnimal } = d
 
       &:hover {
         border: 1px solid var(--color-primary);
-        background: color-mix(in srgb, var(--color-primary) 10%, white);
+        background: color-mix(in srgb, var(--color-primary) 10%, #fff);
         color: var(--text-primary);
         box-shadow: 0 0 0 1px var(--color-primary) inset;
         font-weight: 600;
@@ -483,7 +483,7 @@ const { formState, touched, handleBlur, hasAttemptedSubmit, selectedAnimal } = d
 fieldset.has-error .chips {
   outline: 2px solid var(--color-danger);
   border-color: var(--color-danger);
-  border-radius: 12px; 
-  padding: 8px; 
+  border-radius: 12px;
+  padding: 8px;
 }
 </style>

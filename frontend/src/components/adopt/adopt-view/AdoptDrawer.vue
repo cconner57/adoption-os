@@ -109,20 +109,24 @@ p {
   color: var(--text-primary);
   margin-bottom: 1rem;
   font-weight: 300;
+
   &:last-of-type {
     margin-bottom: 2rem;
     text-align: center;
   }
 }
+
 ul {
   margin: 0 0 1rem 1.5rem;
   padding: 0;
   list-style-type: disc;
   color: var(--text-primary);
 }
+
 li {
   margin-bottom: 0.5rem;
 }
+
 .actions {
   display: flex;
   justify-content: center;

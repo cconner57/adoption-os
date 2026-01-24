@@ -44,7 +44,7 @@ const exitKiosk = () => {
   display: flex;
   flex-direction: column;
   overflow: hidden;
-  font-family: 'Inter', system-ui, sans-serif;
+  font-family: Inter, system-ui, sans-serif;
 }
 
 .kiosk-header {
@@ -55,7 +55,7 @@ const exitKiosk = () => {
   align-items: center;
   justify-content: space-between;
   padding: 0 32px;
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+  box-shadow: 0 4px 6px -1px rgb(0 0 0 / 5%);
   z-index: 10;
 }
 

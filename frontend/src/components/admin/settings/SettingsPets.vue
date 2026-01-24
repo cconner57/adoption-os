@@ -209,7 +209,7 @@ const compatibilityOptions = [
 <style scoped>
 .settings-section {
   max-width: 800px;
-  background: white;
+  background: #fff;
   border: 1px solid var(--border-color);
   border-radius: 12px;
   padding: 32px;
@@ -225,7 +225,7 @@ const compatibilityOptions = [
 
 h3 {
   font-size: 1.1rem;
-  margin: 0 0 8px 0;
+  margin: 0 0 8px;
   color: var(--text-primary);
 }
 
@@ -248,7 +248,7 @@ h3 {
   gap: 12px;
 }
 
-@media (max-width: 640px) {
+@media (width <= 640px) {
   .form-row {
     grid-template-columns: 1fr;
   }

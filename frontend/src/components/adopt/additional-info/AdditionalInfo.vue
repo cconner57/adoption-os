@@ -85,15 +85,17 @@ const houseTrainedText = () => {
   gap: 8px;
   max-height: 250px;
 
-  @media (max-width: 440px) {
+  @media (width <= 440px) {
     gap: 5px;
     flex-direction: column;
     align-items: flex-start;
+
     p {
       font-size: 0.9rem;
       line-height: 1.5;
       text-wrap: wrap;
     }
+
     p:last-child {
       text-wrap: wrap;
       width: auto; 
@@ -105,22 +107,27 @@ const houseTrainedText = () => {
 .adopt-detail__additional-info__item {
   display: flex;
   flex-direction: row;
+
   p {
     text-transform: capitalize;
     text-align: left;
   }
+
   & p:first-child {
     width: 200px;
     flex-shrink: 0;
-    @media (max-width: 440px) {
+
+    @media (width <= 440px) {
       width: 110px;
       margin-right: 12px;
     }
   }
+
   & p:last-child {
-    font-weight: bold;
+    font-weight: 700;
     width: 300px;
-    @media (max-width: 440px) {
+
+    @media (width <= 440px) {
       width: auto;
       flex: 1;
     }

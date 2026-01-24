@@ -119,7 +119,7 @@ const goHome = () => router.push('/kiosk')
 }
 
 .search-box {
-  background: white;
+  background: #fff;
   padding: 12px 20px;
   border-radius: 50px;
   border: 1px solid #cbd5e1;
@@ -127,11 +127,12 @@ const goHome = () => router.push('/kiosk')
   align-items: center;
   gap: 12px;
   width: 350px;
-  box-shadow: 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  box-shadow: 0 4px 6px -2px rgb(0 0 0 / 5%);
 
   .icon {
     font-size: 1.2rem;
   }
+
   input {
     border: none;
     outline: none;
@@ -148,11 +149,11 @@ const goHome = () => router.push('/kiosk')
 }
 
 .pet-card {
-  background: white;
+  background: #fff;
   border-radius: 20px;
   overflow: hidden;
   border: 1px solid #e2e8f0;
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+  box-shadow: 0 4px 6px -1px rgb(0 0 0 / 5%);
   display: flex;
   flex-direction: column;
 }
@@ -178,6 +179,7 @@ const goHome = () => router.push('/kiosk')
   justify-content: space-between;
   align-items: center;
   margin-bottom: 4px;
+
   h2 {
     margin: 0;
     font-size: 1.4rem;
@@ -187,7 +189,7 @@ const goHome = () => router.push('/kiosk')
 
 .breed {
   color: hsl(from var(--color-neutral) h s 50%);
-  margin: 0 0 16px 0;
+  margin: 0 0 16px;
   font-size: 1rem;
 }
 

@@ -115,13 +115,13 @@ const goHome = () => router.push('/kiosk')
 }
 
 .apt-card {
-  background: white;
+  background: #fff;
   padding: 24px;
   border-radius: 20px;
   display: flex;
   align-items: center;
   border: 1px solid #e2e8f0;
-  box-shadow: 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  box-shadow: 0 4px 6px -2px rgb(0 0 0 / 5%);
 
   &.urgent {
     border-left: 6px solid var(--color-danger);
@@ -138,8 +138,9 @@ const goHome = () => router.push('/kiosk')
 
 .info-col {
   flex: 1;
+
   h2 {
-    margin: 0 0 6px 0;
+    margin: 0 0 6px;
     font-size: 1.6rem;
     color: var(--text-primary);
   }
@@ -152,7 +153,7 @@ const goHome = () => router.push('/kiosk')
 
 .urgent-badge {
   background: var(--color-danger);
-  color: white;
+  color: #fff;
   font-weight: 700;
   padding: 6px 16px;
   border-radius: 50px;
@@ -166,7 +167,7 @@ const goHome = () => router.push('/kiosk')
   color: hsl(from var(--color-neutral) h s 50%);
   padding: 60px;
   font-size: 1.2rem;
-  background: white;
+  background: #fff;
   border-radius: 20px;
   border: 2px dashed #e2e8f0;
 }

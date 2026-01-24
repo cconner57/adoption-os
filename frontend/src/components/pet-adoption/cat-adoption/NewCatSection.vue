@@ -153,19 +153,22 @@ const { modelValue } = defineProps<{
   gap: 2rem;
 }
 
-@media (max-width: 768px) {
+@media (width <= 768px) {
   .new-cat-section {
     grid-template-columns: 1fr;
   }
+
   .desktop-only {
     display: none;
   }
 }
+
 .section-group {
   display: flex;
   flex-direction: column;
   gap: 1rem;
 }
+
 h3 {
   font-size: 1.25rem;
   font-weight: 600;

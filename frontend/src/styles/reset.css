@@ -3,6 +3,7 @@
 *::after {
   box-sizing: border-box;
 }
+
 * {
   margin: 0;
 }
@@ -11,25 +12,27 @@ html,
 body {
   height: 100%;
 }
+
 html {
-  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
 }
+
 body {
   line-height: 1.5;
   font-family:
     system-ui,
     -apple-system,
-    Segoe UI,
+    "Segoe UI",
     Roboto,
     Ubuntu,
     Cantarell,
-    Noto Sans,
-    Helvetica Neue,
+    "Noto Sans",
+    "Helvetica Neue",
     Arial,
     'Apple Color Emoji',
     'Segoe UI Emoji';
   -webkit-font-smoothing: antialiased;
-  text-rendering: optimizeLegibility;
+  text-rendering: optimizelegibility;
 }
 
 img,
@@ -70,6 +73,7 @@ a {
   color: inherit;
   text-decoration: none;
 }
+
 a:hover {
   text-decoration: underline;
 }
@@ -87,6 +91,7 @@ table {
 :focus {
   outline: none;
 }
+
 :focus-visible {
   outline: 2px solid var(--color-secondary);
   outline-offset: 2px;

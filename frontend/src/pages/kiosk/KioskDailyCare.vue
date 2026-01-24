@@ -192,10 +192,12 @@ const goHome = () => router.push('/kiosk')
 
 .title-group {
   text-align: center;
+
   h1 {
     margin: 0;
     font-size: 2rem;
   }
+
   .date-badge {
     color: hsl(from var(--color-neutral) h s 50%);
     font-size: 1.1rem;
@@ -221,14 +223,14 @@ const goHome = () => router.push('/kiosk')
   cursor: pointer;
 
   &.active {
-    background: white;
+    background: #fff;
     color: var(--color-secondary);
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    box-shadow: 0 2px 4px rgb(0 0 0 / 5%);
   }
 }
 
 .volunteer-row {
-  background: white;
+  background: #fff;
   padding: 16px 24px;
   border-radius: 12px;
   border: 1px solid #cbd5e1;
@@ -247,13 +249,14 @@ const goHome = () => router.push('/kiosk')
   border: none;
   border-bottom: 2px solid #e2e8f0;
   outline: none;
+
   &:focus {
     border-color: var(--color-secondary);
   }
 }
 
 .grid-container {
-  background: white;
+  background: #fff;
   border-radius: 16px;
   border: 2px solid #000; 
   overflow: hidden;
@@ -285,13 +288,16 @@ const goHome = () => router.push('/kiosk')
   text-align: center;
   font-weight: 700;
 }
+
 .pet-col {
   width: 180px;
   font-size: 1.1rem;
 }
+
 .center-text {
   text-align: center;
 }
+
 .fw-bold {
   font-weight: 700;
 }
@@ -302,9 +308,11 @@ const goHome = () => router.push('/kiosk')
   align-items: center;
   gap: 4px;
 }
+
 .col-icon {
   font-size: 1.4rem;
 }
+
 .col-lbl {
   font-size: 0.7rem;
 }
@@ -328,7 +336,7 @@ const goHome = () => router.push('/kiosk')
   border: none;
   background: transparent;
   outline: none;
-  font-family: 'Inter', sans-serif; 
+  font-family: Inter, sans-serif; 
 }
 
 .bottom-section {
@@ -338,10 +346,11 @@ const goHome = () => router.push('/kiosk')
 }
 
 .card {
-  background: white;
+  background: #fff;
   padding: 24px;
   border-radius: 16px;
   border: 1px solid #cbd5e1;
+
   h3 {
     margin-top: 0;
     margin-bottom: 20px;
@@ -378,6 +387,7 @@ const goHome = () => router.push('/kiosk')
   display: flex;
   flex-direction: column;
   gap: 8px;
+
   label {
     font-weight: 600;
     font-size: 0.95rem;

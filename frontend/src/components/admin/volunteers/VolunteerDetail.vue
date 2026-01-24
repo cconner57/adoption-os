@@ -835,7 +835,7 @@ function getStatusColors(status: string) {
 }
 
 .header-text h1 {
-  margin: 0 0 8px 0;
+  margin: 0 0 8px;
   font-size: 1.8rem;
   color: var(--text-primary);
 }
@@ -863,6 +863,7 @@ function getStatusColors(status: string) {
     background: var(--text-inverse);
     border: 1px solid var(--border-color);
     color: var(--text-primary);
+
     &:hover {
       background: hsl(from var(--color-neutral) h s 98%);
     }
@@ -877,7 +878,7 @@ function getStatusColors(status: string) {
   border-radius: 12px;
   padding: 16px 24px;
   margin-bottom: 24px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02);
+  box-shadow: 0 2px 4px rgb(0 0 0 / 2%);
 }
 
 .tab-content {
@@ -918,9 +919,11 @@ function getStatusColors(status: string) {
   &.high {
     color: var(--color-primary);
   }
+
   &.mid {
     color: var(--color-warning);
   }
+
   &.low {
     color: var(--color-danger);
   }
@@ -950,11 +953,11 @@ function getStatusColors(status: string) {
   border: 1px solid var(--border-color);
   border-radius: 12px;
   padding: 24px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02);
+  box-shadow: 0 2px 4px rgb(0 0 0 / 2%);
   height: fit-content;
 
   h3 {
-    margin: 0 0 20px 0;
+    margin: 0 0 20px;
     font-size: 1.1rem;
     color: var(--text-primary);
     border-bottom: 1px solid var(--border-color);
@@ -972,6 +975,7 @@ function getStatusColors(status: string) {
     color: hsl(from var(--color-neutral) h s 50%);
     font-weight: 500;
   }
+
   span {
     font-weight: 500;
     color: var(--text-primary);
@@ -999,6 +1003,7 @@ function getStatusColors(status: string) {
 
 .app-section {
   margin-bottom: 20px;
+
   label {
     display: block;
     font-size: 0.85rem;
@@ -1006,6 +1011,7 @@ function getStatusColors(status: string) {
     margin-bottom: 8px;
     font-weight: 600;
   }
+
   p {
     margin: 0;
     color: var(--text-primary);
@@ -1028,9 +1034,11 @@ function getStatusColors(status: string) {
   padding-top: 16px;
   border-top: 1px solid var(--border-color);
   font-size: 0.9rem;
+
   label {
     color: hsl(from var(--color-neutral) h s 50%);
   }
+
   span {
     font-weight: 600;
   }
@@ -1079,6 +1087,7 @@ function getStatusColors(status: string) {
     font-weight: 700;
     color: var(--text-primary);
   }
+
   .month {
     font-size: 0.8rem;
     text-transform: uppercase;
@@ -1088,11 +1097,13 @@ function getStatusColors(status: string) {
 
 .shift-info {
   flex: 1;
+
   .shift-role {
     font-weight: 600;
     font-size: 1.1rem;
     margin-bottom: 4px;
   }
+
   .shift-time {
     color: hsl(from var(--color-neutral) h s 50%);
     font-size: 0.9rem;
@@ -1110,30 +1121,37 @@ function getStatusColors(status: string) {
     background: hsl(from var(--color-primary) h s 95%);
     color: var(--color-primary);
   }
+
   &.orange {
     background: hsl(from var(--color-warning) h s 95%);
     color: var(--color-warning);
   }
+
   &.red {
     background: hsl(from var(--color-danger) h s 95%);
     color: var(--color-danger);
   }
+
   &.gray {
     background: hsl(from var(--color-neutral) h s 95%);
     color: hsl(from var(--color-neutral) h s 50%);
   }
+
   &.blue {
     background: hsl(from var(--color-secondary) h s 95%);
     color: var(--color-secondary);
   }
+
   &.purple {
-    background: hsl(270 95% 95%);
-    color: hsl(270 60% 50%);
+    background: hsl(270deg 95% 95%);
+    color: hsl(270deg 60% 50%);
   }
+
   &.pink {
-    background: hsl(330 60% 90%);
-    color: hsl(330 60% 40%);
+    background: hsl(330deg 60% 90%);
+    color: hsl(330deg 60% 40%);
   }
+
   &.neutral {
     background: hsl(from var(--color-neutral) h s 95%);
     color: hsl(from var(--color-neutral) h s 50%);
@@ -1165,6 +1183,7 @@ function getStatusColors(status: string) {
     font-size: 0.9rem;
     border-bottom: 1px solid var(--border-color);
   }
+
   td {
     padding: 12px;
     border-bottom: 1px solid var(--border-color);
@@ -1187,6 +1206,7 @@ function getStatusColors(status: string) {
   border-radius: 8px;
   font-weight: 600;
   cursor: pointer;
+
   &:hover {
     background: hsl(from var(--color-danger) h s 98%);
   }
@@ -1208,7 +1228,7 @@ function getStatusColors(status: string) {
 
 .inc-severity {
   font-size: 0.75rem;
-  background: white;
+  background: #fff;
   padding: 2px 8px;
   border-radius: 4px;
   font-weight: 700;
@@ -1217,10 +1237,12 @@ function getStatusColors(status: string) {
     color: var(--color-warning);
     border: 1px solid hsl(from var(--color-warning) h s 80%);
   }
+
   &.medium {
     color: hsl(from var(--color-warning) h s 40%);
     border: 1px solid hsl(from var(--color-warning) h s 60%);
   }
+
   &.high {
     color: var(--color-danger);
     border: 1px solid hsl(from var(--color-danger) h s 80%);
@@ -1228,7 +1250,7 @@ function getStatusColors(status: string) {
 }
 
 .inc-desc {
-  margin: 0 0 12px 0;
+  margin: 0 0 12px;
   color: hsl(from var(--color-danger) h s 30%);
   line-height: 1.5;
 }
@@ -1289,7 +1311,7 @@ function getStatusColors(status: string) {
     filter: none;
     background: var(--text-inverse);
     border-color: var(--color-warning);
-    box-shadow: 0 4px 6px hsla(from var(--color-warning) h s l / 0.1);
+    box-shadow: 0 4px 6px hsl(from var(--color-warning) h s l / 10%);
   }
 }
 
@@ -1380,7 +1402,6 @@ function getStatusColors(status: string) {
   margin-left: auto;
   display: flex;
   gap: 8px;
-  
   opacity: 0;
   transition: opacity 0.2s;
 }
@@ -1433,9 +1454,10 @@ function getStatusColors(status: string) {
   color: var(--color-primary);
   border: 1px solid var(--color-primary);
 }
+
 .action-btn.green:hover {
   background: var(--color-primary);
-  color: white;
+  color: #fff;
 }
 
 .action-btn.red {
@@ -1443,19 +1465,21 @@ function getStatusColors(status: string) {
   color: var(--color-danger);
   border: 1px solid var(--color-danger);
 }
+
 .action-btn.red:hover {
   background: var(--color-danger);
-  color: white;
+  color: #fff;
 }
 
 .action-btn.purple {
-  background: hsl(270 95% 95%); 
-  color: hsl(270 60% 50%);
-  border: 1px solid hsl(270 60% 50%);
+  background: hsl(270deg 95% 95%); 
+  color: hsl(270deg 60% 50%);
+  border: 1px solid hsl(270deg 60% 50%);
 }
+
 .action-btn.purple:hover {
-  background: hsl(270 60% 50%);
-  color: white;
+  background: hsl(270deg 60% 50%);
+  color: #fff;
 }
 
 .action-btn.orange {
@@ -1463,19 +1487,21 @@ function getStatusColors(status: string) {
   color: var(--color-warning);
   border: 1px solid var(--color-warning);
 }
+
 .action-btn.orange:hover {
   background: var(--color-warning);
-  color: white;
+  color: #fff;
 }
 
 .action-btn.pink {
-  background: hsl(330 60% 90%);
-  color: hsl(330 60% 40%);
-  border: 1px solid hsl(330 60% 40%);
+  background: hsl(330deg 60% 90%);
+  color: hsl(330deg 60% 40%);
+  border: 1px solid hsl(330deg 60% 40%);
 }
+
 .action-btn.pink:hover {
-  background: hsl(330 60% 50%);
-  color: white;
+  background: hsl(330deg 60% 50%);
+  color: #fff;
 }
 
 .text-btn {
@@ -1487,6 +1513,7 @@ function getStatusColors(status: string) {
   cursor: pointer;
   padding: 4px 8px;
 }
+
 .text-btn:hover {
   text-decoration: underline;
 }
@@ -1507,7 +1534,7 @@ function getStatusColors(status: string) {
 }
 
 .warning-content h3 {
-  margin: 0 0 4px 0;
+  margin: 0 0 4px;
   color: #991b1b;
   font-size: 1rem;
   font-weight: 600;

@@ -82,7 +82,7 @@ const { formStep, selectedAnimal } = defineProps<{
     z-index: 0; 
   }
 
-  @media (max-width: 600px) {
+  @media (width <= 600px) {
     flex-direction: column;
     align-items: flex-start;
     gap: 16px;
@@ -95,6 +95,7 @@ const { formStep, selectedAnimal } = defineProps<{
 
   -ms-overflow-style: none;
   scrollbar-width: none;
+
   &::-webkit-scrollbar {
     display: none;
   }
@@ -107,7 +108,7 @@ const { formStep, selectedAnimal } = defineProps<{
     flex-shrink: 0;
     margin: 0 12px;
 
-    @media (max-width: 600px) {
+    @media (width <= 600px) {
       flex-direction: row;
       margin: 0;
       gap: 12px;
@@ -127,7 +128,7 @@ const { formStep, selectedAnimal } = defineProps<{
       margin-bottom: 8px;
       z-index: 5; 
 
-      @media (max-width: 600px) {
+      @media (width <= 600px) {
         margin-bottom: 0;
       }
     }
@@ -137,7 +138,7 @@ const { formStep, selectedAnimal } = defineProps<{
       text-align: center;
       white-space: nowrap;
 
-      @media (max-width: 600px) {
+      @media (width <= 600px) {
         font-size: 1rem;
         font-weight: 500;
       }

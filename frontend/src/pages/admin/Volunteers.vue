@@ -343,7 +343,7 @@ async function handleDeleteShift(shiftId: string | number) {
   display: flex;
   flex-direction: column;
   overflow: hidden;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+  box-shadow: 0 4px 12px rgb(0 0 0 / 3%);
   border: 1px solid var(--border-color);
 }
 
@@ -374,6 +374,7 @@ async function handleDeleteShift(shiftId: string | number) {
   display: flex;
   align-items: center;
   justify-content: center;
+
   &:hover {
     opacity: 0.9;
   }
@@ -382,6 +383,7 @@ async function handleDeleteShift(shiftId: string | number) {
 .search-box {
   padding: 16px;
   border-bottom: 1px solid var(--border-color);
+
   input {
     width: 100%;
     padding: 10px 12px;
@@ -389,6 +391,7 @@ async function handleDeleteShift(shiftId: string | number) {
     border-radius: 8px;
     background: hsl(from var(--color-neutral) h s 98%);
     outline: none;
+
     &:focus {
       border-color: var(--color-secondary);
       background: var(--text-inverse);
@@ -400,7 +403,7 @@ async function handleDeleteShift(shiftId: string | number) {
   flex: 1;
   background: var(--text-inverse);
   border-radius: 16px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+  box-shadow: 0 4px 12px rgb(0 0 0 / 3%);
   border: 1px solid var(--border-color);
   overflow: hidden;
   display: flex;
@@ -422,6 +425,7 @@ async function handleDeleteShift(shiftId: string | number) {
     margin-bottom: 24px;
     opacity: 0.5;
   }
+
   h2 {
     color: var(--text-primary);
     margin-bottom: 8px;

@@ -50,16 +50,19 @@ h2 {
   margin-bottom: 12px;
   font-size: 1.5rem;
 }
+
 .times {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
   gap: 12px;
   margin-bottom: 4rem;
 }
+
 .times.has-error .time-card {
   border-color: var(--color-danger);
   box-shadow: 0 0 0 1px var(--color-danger);
 }
+
 .time-card {
   position: relative;
   display: flex;
@@ -68,8 +71,8 @@ h2 {
   padding: 12px;
   border: 1px solid var(--border-color);
   border-radius: 12px;
-  background: white;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+  background: #fff;
+  box-shadow: 0 2px 8px rgb(0 0 0 / 4%);
   cursor: pointer;
   user-select: none;
   transition:
@@ -77,6 +80,7 @@ h2 {
     border-color 0.2s,
     box-shadow 0.2s;
 }
+
 .time-card > input {
   position: absolute;
   opacity: 0;
@@ -84,19 +88,23 @@ h2 {
   height: 1px;
   pointer-events: none;
 }
+
 .time-card:has(> input:checked) {
-  background: color-mix(in srgb, var(--color-primary) 10%, white);
+  background: color-mix(in srgb, var(--color-primary) 10%, #fff);
   border-color: var(--color-primary);
   box-shadow: 0 0 0 1px var(--color-primary) inset;
 }
+
 .time-card:has(> input:focus-visible) {
-  box-shadow: 0 0 0 3px hsla(from var(--color-secondary) h s l / 0.45);
+  box-shadow: 0 0 0 3px hsl(from var(--color-secondary) h s l / 45%);
 }
+
 .time-card__content small {
   color: hsl(from var(--color-neutral) h s 50%);
   display: block;
   margin-top: 4px;
 }
+
 @supports not (selector(:has(*))) {
   .time-card > input:checked + .time-card__content {
     background: hsl(from var(--color-primary) h s 95%);
@@ -106,6 +114,7 @@ h2 {
     box-shadow: 0 0 0 2px hsl(from var(--color-primary) h s 80%) inset;
   }
 }
+
 .error {
   color: var(--color-danger);
   font-size: 1.5rem;

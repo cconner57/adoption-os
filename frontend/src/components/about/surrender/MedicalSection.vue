@@ -238,11 +238,10 @@ watch(
   flex-direction: column;
   gap: 16px;
 
-  @media (min-width: 768px) {
+  @media (width >= 768px) {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
-    column-gap: 24px;
-    row-gap: 16px;
+    gap: 16px 24px;
   }
 }
 
@@ -306,7 +305,7 @@ watch(
 }
 
 .chip:has(> input:checked) {
-  background: color-mix(in srgb, var(--color-primary) 10%, white);
+  background: color-mix(in srgb, var(--color-primary) 10%, #fff);
   border: 1px solid var(--color-primary);
   box-shadow: 0 0 0 1px var(--color-primary) inset;
   color: var(--text-primary);
@@ -324,6 +323,7 @@ watch(
     margin: -6px -10px;
     box-shadow: 0 0 0 2px #bfd0ff inset;
   }
+
   .chip > input:focus-visible + span {
     box-shadow: 0 0 0 3px var(--ring);
   }
@@ -333,7 +333,6 @@ fieldset.field {
   border: 0;
   padding: 0;
   margin: 0;
-  
   min-width: 0;
 }
 

@@ -127,7 +127,7 @@ const addMember = () => {
 .messages-page {
   display: flex;
   height: calc(100vh - 140px); 
-  background: white;
+  background: #fff;
   border-radius: 12px;
   overflow: hidden;
   border: 1px solid #e5e7eb;

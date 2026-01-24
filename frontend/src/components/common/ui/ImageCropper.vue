@@ -165,12 +165,12 @@ onUnmounted(() => {
 
 <style scoped>
 .cropper-container {
-  background: white;
+  background: #fff;
   border: 1px solid var(--border-color);
   border-radius: 8px;
   padding: 16px;
   margin-top: 16px;
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 6px -1px rgb(0 0 0 / 10%);
 }
 
 .cropper-header h3 {
@@ -208,11 +208,9 @@ onUnmounted(() => {
 }
 
 .image-layer img {
-  
   max-width: 100%;
   max-height: 100%;
   object-fit: contain;
-  
   display: block;
 }
 
@@ -220,8 +218,8 @@ onUnmounted(() => {
   position: absolute;
   inset: 0;
   pointer-events: none;
-  border: 1px solid rgba(255, 255, 255, 0.3);
-  box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.1);
+  border: 1px solid rgb(255 255 255 / 30%);
+  box-shadow: inset 0 0 20px rgb(0 0 0 / 10%);
 }
 
 .controls {
@@ -241,7 +239,7 @@ onUnmounted(() => {
 
 .zoom-icon {
   color: var(--text-secondary);
-  font-weight: bold;
+  font-weight: 700;
 }
 
 .actions {
@@ -262,7 +260,7 @@ onUnmounted(() => {
 }
 
 .btn-secondary {
-  background: white;
+  background: #fff;
   border: 1px solid var(--border-color);
   color: var(--text-base);
 }
@@ -274,7 +272,7 @@ onUnmounted(() => {
 .btn-primary {
   background: var(--color-primary);
   border: 1px solid var(--color-primary);
-  color: white;
+  color: #fff;
 }
 
 .btn-primary:hover {

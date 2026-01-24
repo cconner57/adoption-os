@@ -195,7 +195,7 @@ const formattedAnimal = computed(() => {
   container-type: inline-size;
   container-name: shell;
 
-  @media (max-width: 440px) {
+  @media (width <= 440px) {
     padding: 6rem 16px 32px;
   }
 
@@ -205,7 +205,7 @@ const formattedAnimal = computed(() => {
     background: var(--text-inverse);
     color: var(--text-primary);
     border-radius: 24px;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 10px 30px rgb(0 0 0 / 10%);
     padding: 48px 48px 32px;
 
     @container shell (max-width: 800px) {
@@ -226,6 +226,7 @@ const formattedAnimal = computed(() => {
         letter-spacing: 0.2px;
         color: var(--color-primary);
       }
+
       img {
         width: 100px;
       }
@@ -233,12 +234,14 @@ const formattedAnimal = computed(() => {
       @container shell (max-width: 800px) {
         flex-direction: column;
         align-items: center;
-        gap: 0px;
+        gap: 0;
         margin-bottom: 1rem;
+
         h1 {
           font-size: 2.25rem;
           text-align: center;
         }
+
         img {
           width: 60px;
           height: 60px;
@@ -258,7 +261,7 @@ const formattedAnimal = computed(() => {
       gap: 16px;
       margin-top: 20px;
 
-      @media (max-width: 600px) {
+      @media (width <= 600px) {
         flex-direction: column;
 
         button {
@@ -276,7 +279,7 @@ const formattedAnimal = computed(() => {
     padding: 1.5rem;
     margin: 2rem 0;
     text-align: center;
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 6px -1px rgb(0 0 0 / 10%);
 
     .summary-title {
       font-weight: 700;

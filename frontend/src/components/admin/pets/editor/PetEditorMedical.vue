@@ -40,7 +40,7 @@ const medicalConcernOptions = [
 </script>
 
 <style scoped>
-@import './form.css';
+@import url('./form.css');
 </style>
 
 <template>

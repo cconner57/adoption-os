@@ -60,6 +60,7 @@ defineProps<{
   display: flex;
   flex-direction: column;
   align-items: center;
+
   h3 {
     margin-top: 0;
     font-size: 1.1rem;
@@ -71,7 +72,7 @@ defineProps<{
   background: #e2e8f0;
   padding: 12px;
   border-radius: 8px;
-  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
+  box-shadow: inset 0 2px 4px rgb(0 0 0 / 10%);
   margin-bottom: 8px;
 }
 
@@ -80,8 +81,8 @@ defineProps<{
   height: 300px;
   background: #f4f4f4; 
   border: 1px solid #d4d4d4;
-  color: black;
-  font-family: 'Georgia', serif; 
+  color: #000;
+  font-family: Georgia, serif; 
   display: flex;
   flex-direction: column;
   padding: 16px;
@@ -95,17 +96,19 @@ defineProps<{
 }
 
 .screen-header {
-  border-bottom: 2px solid black;
+  border-bottom: 2px solid #000;
   margin-bottom: 12px;
   padding-bottom: 8px;
   display: flex;
   justify-content: space-between;
   align-items: baseline;
 }
+
 .p-name {
   font-size: 2rem;
   font-weight: 900;
 }
+
 .p-id {
   font-size: 1.2rem;
   font-style: italic;
@@ -132,11 +135,12 @@ defineProps<{
   gap: 12px;
   margin-top: auto;
 }
+
 .qr-box {
   width: 40px;
   height: 40px;
-  background: black;
-  color: white;
+  background: #000;
+  color: #fff;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -144,15 +148,16 @@ defineProps<{
 }
 
 .alert-banner {
-  background: black;
-  color: white;
+  background: #000;
+  color: #fff;
   text-align: center;
   font-weight: 700;
   padding: 4px;
   margin-top: 12px;
+
   &.urgent {
-    background: black;
-    border: 2px dashed white;
+    background: #000;
+    border: 2px dashed #fff;
   }
 }
 
@@ -163,6 +168,7 @@ defineProps<{
   align-items: center;
   justify-content: center;
   gap: 12px;
+
   .logo-txt {
     font-weight: 900;
     font-size: 1.5rem;

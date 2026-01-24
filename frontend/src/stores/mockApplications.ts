@@ -9,11 +9,33 @@ export interface IApplication {
   status: 'pending' | 'approved' | 'denied' | 'needs_info'
   notes?: string
   details: Record<string, unknown>
-  fullApplication: Record<string, unknown> 
+  fullApplication: Record<string, unknown>
 }
 
-export const mockApplications = ref<IApplication[]>([
-  
+export const mockApplications = ref<IApplication[]>([])
+
+// Initialize from localStorage or use defaults
+const storedApps = localStorage.getItem('mock_applications')
+if (storedApps) {
+  try {
+    const parsed = JSON.parse(storedApps)
+    // Filter out expired pending applications (7 days)
+    const now = new Date().getTime()
+    mockApplications.value = parsed.filter((app: IApplication & { expiresAt?: number }) => {
+      if (app.status === 'pending' && app.expiresAt && now > app.expiresAt) {
+        return false // Expired
+      }
+      return true
+    })
+  } catch (e) {
+    console.error('Failed to parse stored applications', e)
+    mockApplications.value = []
+  }
+}
+
+// Add defaults if empty (only for demo purposes)
+if (mockApplications.value.length === 0) {
+  mockApplications.value = [
   {
     id: 'v-app-1',
     type: 'volunteer',
@@ -161,4 +183,11 @@ export const mockApplications = ref<IApplication[]>([
       'Time alone': '8 hours (work from home 2 days)',
     },
   },
-])
+  ]
+}
+
+// Watcher to save to localStorage
+import { watch } from 'vue'
+watch(mockApplications, (val) => {
+  localStorage.setItem('mock_applications', JSON.stringify(val))
+}, { deep: true })

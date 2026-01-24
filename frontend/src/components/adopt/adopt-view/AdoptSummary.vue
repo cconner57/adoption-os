@@ -31,9 +31,7 @@ defineProps<{
 .adopt-summary {
   display: flex;
   flex-wrap: wrap;
-  row-gap: 30px;
-  column-gap: 20px;
-  
+  gap: 30px 20px;
   justify-content: center;
 
 }

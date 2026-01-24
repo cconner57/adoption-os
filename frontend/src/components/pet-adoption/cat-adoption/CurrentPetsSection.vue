@@ -126,10 +126,11 @@ const removePet = (index: number) => {
   gap: 2rem;
 }
 
-@media (max-width: 768px) {
+@media (width <= 768px) {
   .current-pets-section {
     grid-template-columns: 1fr;
   }
+
   .desktop-spacer {
     display: none;
   }
@@ -166,7 +167,7 @@ const removePet = (index: number) => {
   gap: 1.5rem;
 }
 
-@media (min-width: 768px) {
+@media (width >= 768px) {
   .pet-fields {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -212,7 +213,7 @@ const removePet = (index: number) => {
 .add-btn-large {
   padding: 12px 24px;
   background-color: var(--color-primary);
-  color: white;
+  color: #fff;
   border: none;
   border-radius: 8px;
   cursor: pointer;

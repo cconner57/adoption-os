@@ -212,7 +212,7 @@ const updateVehicle = () => {
 
 <style scoped>
 .action-center {
-  background: white;
+  background: #fff;
   border-radius: 16px;
   border: 1px solid #e5e7eb;
   display: flex;
@@ -224,6 +224,7 @@ const updateVehicle = () => {
     justify-content: center;
     background: #f9fafb;
     border-style: dashed;
+
     .icon {
       font-size: 2rem;
       margin-bottom: 16px;
@@ -243,6 +244,7 @@ const updateVehicle = () => {
     margin: 0;
     font-size: 1.2rem;
   }
+
   .trip-id {
     color: hsl(from var(--color-neutral) h s 50%);
     font-family: monospace;
@@ -347,6 +349,7 @@ const updateVehicle = () => {
     background: hsl(from var(--color-primary) h s 95%);
     color: var(--color-primary);
   }
+
   &.shelter {
     background: hsl(from var(--color-secondary) h s 95%);
     color: var(--color-secondary);
@@ -363,7 +366,7 @@ const updateVehicle = () => {
   font-size: 0.9rem;
   color: hsl(from var(--color-neutral) h s 50%);
   line-height: 1.4;
-  background: white;
+  background: #fff;
   padding: 8px;
   border-radius: 6px;
   border: 1px dashed #e5e7eb;

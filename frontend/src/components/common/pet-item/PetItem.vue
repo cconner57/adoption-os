@@ -99,7 +99,7 @@ function handleAdopt() {
 
   img {
     width: 100%;
-    height: 260px;
+    height: 180px;
     object-fit: cover;
     object-position: top center;
     background: url('/images/paw.svg') 90px 60px/100px 100px no-repeat #f9fafb;
@@ -135,7 +135,8 @@ function handleAdopt() {
   .capsules {
     display: flex;
     gap: 8px;
-    flex-wrap: wrap;
+    flex-wrap: nowrap;
+    overflow: hidden;
     margin-bottom: 16px;
   }
 

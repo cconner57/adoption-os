@@ -141,8 +141,8 @@ _(Status: In Progress)_
 #### Phase 2: Agency Administration & Workflow
 
 - [ ] **Admin Shell:** Build the secure internal layout including secure token-based authentication, role-based route guards, and a responsive sidebar navigation for staff.
-- [ ] **Admin Dashboard:** Create a "Morning Overview" widget showing pending applications, urgent medical tasks, and recent donations at a glance.
-- [ ] **Pet Record Management:** Develop full CRUD (Create, Read, Update, Delete) views for animal profiles, including status toggles (Available/Pending/Adopted).
+- [x] **Admin Dashboard:** Create a "Morning Overview" widget showing pending applications, urgent medical tasks, and recent donations at a glance.
+- [x] **Pet Record Management:** Develop full CRUD (Create, Read, Update, Delete) views for animal profiles, including status toggles (Available/Pending/Adopted).
 - [ ] **Mobile Image Compression:** Implement client-side image resizing (Canvas API) to auto-convert 10MB phone photos to optimized WebP thumbnails _before_ upload.
 - [ ] **External API Sync:** Build a scheduled job to securely sync pet data with Petfinder and RescueGroups API standards.
 - [ ] **Volunteer Hours:** Create a digital "Time Clock" for volunteers to log start/stop times, generating reports needed for grant compliance.

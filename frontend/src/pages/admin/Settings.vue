@@ -37,7 +37,10 @@ const accountForm = ref({
 })
 
 // Initialize account form from auth store
+// Initialize account form from auth store
+const isMounted = ref(false)
 onMounted(() => {
+    isMounted.value = true
     if (authStore.user) {
         const parts = (authStore.user.Name || '').split(' ')
         accountForm.value.firstName = parts[0] || ''
@@ -45,58 +48,6 @@ onMounted(() => {
         accountForm.value.email = authStore.user.Email || ''
     }
 })
-
-const savingAccount = ref(false)
-
-async function updateAccount(showToastOnSuccess = true) {
-  if (
-    accountForm.value.password &&
-    accountForm.value.password !== accountForm.value.confirmPassword
-  ) {
-    alert('Passwords do not match')
-    throw new Error('Passwords do not match')
-  }
-
-  savingAccount.value = true
-  try {
-    const fullName = `${accountForm.value.firstName} ${accountForm.value.lastName}`.trim()
-
-    // Using existing endpoint logic
-    const res = await fetch('/api/users', {
-      method: 'PUT',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        name: fullName,
-        email: accountForm.value.email,
-        password: accountForm.value.password || undefined,
-      }),
-    })
-
-    if (!res.ok) throw new Error('Failed to update')
-
-    const data = await res.json()
-
-    if (data.user) {
-      authStore.user = data.user
-    }
-
-    accountForm.value.password = ''
-    accountForm.value.confirmPassword = ''
-
-    if (showToastOnSuccess) {
-      showToast.value = true
-      setTimeout(() => {
-        showToast.value = false
-      }, 3000)
-    }
-  } catch (e) {
-    console.error(e)
-    alert('Failed to update profile')
-    throw e
-  } finally {
-    savingAccount.value = false
-  }
-}
 
 async function saveSettings() {
   saving.value = true
@@ -111,7 +62,13 @@ async function saveSettings() {
         currentFullName !== originalFullName ||
         accountForm.value.email !== authStore.user?.Email
       ) {
-        await updateAccount(false)
+            const fullName = `${accountForm.value.firstName} ${accountForm.value.lastName}`.trim()
+
+            await authStore.updateProfile({
+            name: fullName,
+            email: accountForm.value.email,
+            password: accountForm.value.password || undefined,
+            })
       }
     } else if (activeCategory.value === 'user' && settingsUserRef.value) {
       await settingsUserRef.value.save()
@@ -152,7 +109,7 @@ const getCategoryDesc = (id: string) => {
 
 <template>
   <div class="admin-page">
-    <Teleport to="#mobile-header-target" :disabled="false">
+    <Teleport v-if="isMounted" to="#mobile-header-target" :disabled="false">
       <h1 class="mobile-header-title">{{ activeCategory ? activeCategoryLabel : 'Settings' }}</h1>
     </Teleport>
 

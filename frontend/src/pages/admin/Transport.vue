@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed,ref } from 'vue'
+import { computed, onMounted, ref } from 'vue'
 
 import ActionCenter from '../../components/admin/transport/ActionCenter.vue'
 import ShiftList from '../../components/admin/transport/ShiftList.vue'
@@ -7,14 +7,19 @@ import { type ITrip,mockTrips } from '../../stores/mockTransport'
 
 const selectedTripId = ref<string | null>(null)
 const loadingAction = ref<string | null>(null)
+const isMounted = ref(false)
+
+onMounted(() => {
+  isMounted.value = true
+})
 
 const filteredTrips = computed(() => {
 
   return [...mockTrips.value].sort((a, b) => {
 
-    const activeStatuses = ['en_route_vet', 'en_route_shelter']
-    const aActive = activeStatuses.includes(a.status)
-    const bActive = activeStatuses.includes(b.status)
+    const activeStatuses = new Set(['en_route_vet', 'en_route_shelter'])
+    const aActive = activeStatuses.has(a.status)
+    const bActive = activeStatuses.has(b.status)
     if (aActive && !bActive) return -1
     if (!aActive && bActive) return 1
 
@@ -55,7 +60,6 @@ const reportIssue = (issueType: string) => {
       break
     case 'traffic':
       message = '🐢 Stuck in heavy traffic. Will be delayed.'
-      newStatus = 'delayed'
       break
     case 'pet_issue':
       message = '🤢 Pet is having an issue (anxiety/sickness) in transit.'
@@ -101,7 +105,7 @@ const updateVehicleInfo = (info: string) => {
 
 <template>
   <div class="transport-page">
-    <Teleport to="#mobile-header-target" :disabled="false">
+    <Teleport v-if="isMounted" to="#mobile-header-target" :disabled="false">
       <h1 class="mobile-header-title">Transport & Dispatch</h1>
     </Teleport>
 

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, ref, watch } from 'vue'
+import { computed, onMounted, ref, watch } from 'vue'
 
 import CalendarMonthView from '../../components/admin/calendar/CalendarMonthView.vue'
 import CalendarWeekView from '../../components/admin/calendar/CalendarWeekView.vue'
@@ -102,11 +102,16 @@ const monthName = computed(() => {
     }
   }
 })
+
+const isMounted = ref(false)
+onMounted(() => {
+  isMounted.value = true
+})
 </script>
 
 <template>
   <div class="calendar-page">
-    <Teleport to="#mobile-header-target" :disabled="false">
+    <Teleport v-if="isMounted" to="#mobile-header-target" :disabled="false">
       <h1 class="mobile-header-title">Calendar</h1>
     </Teleport>
 

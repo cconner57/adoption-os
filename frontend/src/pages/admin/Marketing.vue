@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { onMounted, ref } from 'vue'
 
 import MarketingCampaigns from '../../components/admin/marketing/MarketingCampaigns.vue'
 import MarketingHappyTails from '../../components/admin/marketing/MarketingHappyTails.vue'
@@ -9,11 +9,16 @@ import type { ICampaign } from '../../stores/mockMarketing'
 
 const activeTab = ref<'campaigns' | 'newsletters' | 'stories'>('campaigns')
 const selectedCampaign = ref<ICampaign | null>(null)
+const isMounted = ref(false)
+
+onMounted(() => {
+  isMounted.value = true
+})
 </script>
 
 <template>
   <div class="marketing-page">
-    <Teleport to="#mobile-header-target" :disabled="false">
+    <Teleport v-if="isMounted" to="#mobile-header-target" :disabled="false">
       <h1 class="mobile-header-title">{{ selectedCampaign ? selectedCampaign.name : 'Marketing Center' }}</h1>
     </Teleport>
 

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed,ref } from 'vue'
+import { computed, onMounted, ref } from 'vue'
 
 import { Button,Capsules, InputField } from '../../components/common/ui'
 import { type IInventoryItem,inventoryStats, mockInventory } from '../../stores/mockInventory'
@@ -79,11 +79,16 @@ const addItem = () => {
     })
   }
 }
+
+const isMounted = ref(false)
+onMounted(() => {
+  isMounted.value = true
+})
 </script>
 
 <template>
   <div class="inventory-page">
-    <Teleport to="#mobile-header-target" :disabled="false">
+    <Teleport v-if="isMounted" to="#mobile-header-target" :disabled="false">
       <h1 class="mobile-header-title">Inventory Management</h1>
     </Teleport>
 

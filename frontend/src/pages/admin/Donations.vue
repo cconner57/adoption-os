@@ -1,11 +1,16 @@
 <script setup lang="ts">
-import { computed,ref } from 'vue'
+import { computed, onMounted, ref } from 'vue'
 
 import { Button,Capsules, InputField, InputSelectGroup } from '../../components/common/ui'
 import { donationStats, type ITransaction,mockTransactions } from '../../stores/mockDonations'
 
 const searchQuery = ref('')
 const filterType = ref<'all' | ITransaction['type']>('all')
+const isMounted = ref(false)
+
+onMounted(() => {
+  isMounted.value = true
+})
 
 const filteredTransactions = computed(() => {
   return mockTransactions.value
@@ -73,7 +78,7 @@ const handleLogDonation = () => {
     id: `tx-${Date.now()}`,
     date: new Date().toISOString().split('T')[0],
     donorName: newDonation.value.donorName,
-    amount: parseFloat(newDonation.value.amount),
+    amount: Number.parseFloat(newDonation.value.amount),
     type: 'donation',
     method: newDonation.value.method as any, // eslint-disable-line @typescript-eslint/no-explicit-any
     status: 'completed',
@@ -87,7 +92,7 @@ const handleLogDonation = () => {
 
 <template>
   <div class="donations-page">
-    <Teleport to="#mobile-header-target" :disabled="false">
+    <Teleport v-if="isMounted" to="#mobile-header-target" :disabled="false">
       <h1 class="mobile-header-title">Donations & Revenue</h1>
     </Teleport>
 
@@ -170,17 +175,17 @@ const handleLogDonation = () => {
 
         <div class="form-group">
           <label>Donor Name</label>
-          <InputField v-model="newDonation.donorName" placeholder="e.g. John Doe" />
+          <InputField v-model="newDonation.donorName" aria-label="Donor Name" placeholder="e.g. John Doe" />
         </div>
 
         <div class="form-row">
           <div class="form-group">
             <label>Amount ($)</label>
-            <InputField v-model="newDonation.amount" type="number" placeholder="0.00" />
+            <InputField v-model="newDonation.amount" aria-label="Amount" type="number" placeholder="0.00" />
           </div>
           <div class="form-group">
             <label>Method</label>
-            <select v-model="newDonation.method" class="native-select">
+            <select v-model="newDonation.method" class="native-select" aria-label="Method">
               <option>Cash</option>
               <option>Check</option>
             </select>
@@ -189,7 +194,7 @@ const handleLogDonation = () => {
 
         <div class="form-group">
           <label>Notes</label>
-          <InputField v-model="newDonation.notes" placeholder="Optional notes..." />
+          <InputField v-model="newDonation.notes" aria-label="Notes" placeholder="Optional notes..." />
         </div>
 
         <div class="modal-actions">

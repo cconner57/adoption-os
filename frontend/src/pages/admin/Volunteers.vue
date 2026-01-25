@@ -41,7 +41,10 @@ const selectedVolunteer = computed(() => {
   )
 })
 
+const isMounted = ref(false)
+
 onMounted(async () => {
+  isMounted.value = true
   await fetchVolunteers()
 
   if (!selectedVolunteerId.value && allVolunteers.value.length > 0) {
@@ -164,49 +167,12 @@ async function handleUpdateSave(updatedData: any) { // eslint-disable-line @type
   }
 }
 
-async function handleAddShift(shiftData: any) { // eslint-disable-line @typescript-eslint/no-explicit-any
+import { generateShifts, type IShiftData } from '../../utils/shifts'
+
+async function handleAddShift(shiftData: IShiftData) {
   if (!selectedVolunteerId.value) return
 
-  const shiftsToCreate = []
-  const baseDate = new Date(shiftData.date)
-
-  if (shiftData.isRecurring) {
-    const endDate = shiftData.endDate
-      ? new Date(shiftData.endDate)
-      : new Date(baseDate.getTime() + 90 * 24 * 60 * 60 * 1000)
-
-    const currentDate = new Date(baseDate)
-
-    let count = 0
-    while (currentDate <= endDate && count < 50) {
-      shiftsToCreate.push({
-        volunteerId: selectedVolunteerId.value,
-        date: currentDate.toISOString().split('T')[0],
-        startTime: shiftData.startTime,
-        endTime: shiftData.endTime,
-        role: shiftData.role,
-      })
-
-      if (shiftData.frequency === 'weekly') {
-        currentDate.setDate(currentDate.getDate() + 7)
-      } else if (shiftData.frequency === 'biweekly') {
-        currentDate.setDate(currentDate.getDate() + 14)
-      } else if (shiftData.frequency === 'monthly') {
-        currentDate.setMonth(currentDate.getMonth() + 1)
-      } else {
-        break
-      }
-      count++
-    }
-  } else {
-    shiftsToCreate.push({
-      volunteerId: selectedVolunteerId.value,
-      date: shiftData.date,
-      startTime: shiftData.startTime,
-      endTime: shiftData.endTime,
-      role: shiftData.role,
-    })
-  }
+  const shiftsToCreate = generateShifts(shiftData, selectedVolunteerId.value)
 
   try {
     for (const s of shiftsToCreate) {
@@ -285,7 +251,7 @@ async function handleDeleteShift(shiftId: string | number) {
 
 <template>
   <div class="volunteers-page">
-    <Teleport to="#mobile-header-target" :disabled="false">
+    <Teleport v-if="isMounted" to="#mobile-header-target" :disabled="false">
       <h1 class="mobile-header-title">Volunteers</h1>
     </Teleport>
 

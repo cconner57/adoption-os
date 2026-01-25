@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed,ref } from 'vue'
+import { computed, onMounted, ref } from 'vue'
 
 import IncidentList from '../../components/admin/timelogs/IncidentList.vue'
 import TimeLogList from '../../components/admin/timelogs/TimeLogList.vue'
@@ -69,11 +69,16 @@ const handleIncidentAction = (action: string, inc: IIncident) => {
     alert('Generating PDF report for insurance...')
   }
 }
+
+const isMounted = ref(false)
+onMounted(() => {
+  isMounted.value = true
+})
 </script>
 
 <template>
   <div class="time-logs-page">
-    <Teleport to="#mobile-header-target" :disabled="false">
+    <Teleport v-if="isMounted" to="#mobile-header-target" :disabled="false">
       <h1 class="mobile-header-title">Time Logs & Incidents</h1>
     </Teleport>
 

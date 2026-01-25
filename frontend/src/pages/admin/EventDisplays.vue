@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed,ref } from 'vue'
+import { computed, onMounted, ref } from 'vue'
 
 import DeviceSettings from '../../components/admin/events/DeviceSettings.vue'
 import DisplayPreview from '../../components/admin/events/DisplayPreview.vue'
@@ -23,12 +23,10 @@ const togglePetSelection = (petId: string) => {
   const ids = selectedDevice.value.config.featuredPetIds
   if (ids.includes(petId)) {
     selectedDevice.value.config.featuredPetIds = ids.filter((id) => id !== petId)
+  } else if (ids.length < 4) {
+    selectedDevice.value.config.featuredPetIds.push(petId)
   } else {
-    if (ids.length < 4) {
-      selectedDevice.value.config.featuredPetIds.push(petId)
-    } else {
-      alert('Max 4 pets for this template')
-    }
+    alert('Max 4 pets for this template')
   }
 }
 
@@ -55,11 +53,16 @@ const directionOptions = [
   { label: '⬆ Straight', value: 'straight' },
   { label: '➡ Right', value: 'right' },
 ]
+
+const isMounted = ref(false)
+onMounted(() => {
+  isMounted.value = true
+})
 </script>
 
 <template>
   <div class="event-displays-page">
-    <Teleport to="#mobile-header-target" :disabled="false">
+    <Teleport v-if="isMounted" to="#mobile-header-target" :disabled="false">
       <h1 class="mobile-header-title">Event Displays</h1>
     </Teleport>
 

@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 
+import { useIsTablet } from '../../../utils/useIsMobile'
 import { Icon } from '../../common/ui'
 
 const props = defineProps<{
@@ -8,10 +9,12 @@ const props = defineProps<{
   adoptablePetsCount: number
 }>()
 
+const isTablet = useIsTablet()
+
 const stats = computed(() => [
   {
     id: 'pending',
-    label: 'Pending Applications',
+    label: isTablet.value ? 'Pending Applicants' : 'Pending Applications',
     value: props.pendingCount,
     icon: 'fileText',
     color: 'var(--color-danger)',
@@ -33,7 +36,7 @@ const stats = computed(() => [
   },
   {
     id: 'money',
-    label: 'Donations (Month)',
+    label: isTablet.value ? 'Donations' : 'Donations (Month)',
     value: '$3,250',
     icon: 'dollar',
     color: 'var(--color-tertiary)',
@@ -84,8 +87,6 @@ const stats = computed(() => [
   display: flex;
   align-items: center;
   justify-content: center;
-
-  /* backgrounds removed as requested */
 }
 
 .stat-info {
@@ -104,5 +105,40 @@ const stats = computed(() => [
   font-size: 0.9rem;
 }
 
-/* Unused color classes removed */
+@media (width <= 768px) {
+  .stats-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+  }
+
+  .stat-card {
+    flex-direction: row;
+    align-items: center;
+    padding: 12px 12px; /* Reduced side padding slightly */
+    gap: 8px; /* Reduced gap from 12px to 8px */
+    min-height: 80px;
+  }
+
+  .stat-icon-wrapper {
+    margin-bottom: 0;
+    transform: scale(0.85); /* Slightly smaller icon */
+  }
+
+  .stat-info {
+    align-items: flex-start;
+    min-width: 0;
+  }
+
+  .stat-value {
+    font-size: 1.25rem;
+    line-height: 1;
+    margin-bottom: 4px;
+  }
+
+  .stat-label {
+    font-size: 0.75rem; /* Reduced from 0.8rem */
+    line-height: 1.1;
+    white-space: normal;
+  }
+}
 </style>

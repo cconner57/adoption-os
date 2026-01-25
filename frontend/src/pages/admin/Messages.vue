@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed,ref } from 'vue'
+import { computed, onMounted, ref } from 'vue'
 
 import CreateChannelModal from '../../components/admin/messages/CreateChannelModal.vue'
 import MembersModal from '../../components/admin/messages/MembersModal.vue'
@@ -82,11 +82,16 @@ const removeMember = (userId: string) => {
 const addMember = () => {
   alert('In a real app, this would open a user picker!')
 }
+
+const isMounted = ref(false)
+onMounted(() => {
+  isMounted.value = true
+})
 </script>
 
 <template>
   <div class="messages-page">
-    <Teleport to="#mobile-header-target" :disabled="false">
+    <Teleport v-if="isMounted" to="#mobile-header-target" :disabled="false">
       <h1 class="mobile-header-title">Messages</h1>
     </Teleport>
     <MessageThreadList

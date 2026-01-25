@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, ref, watch } from 'vue'
+import { computed, onMounted, ref, watch } from 'vue'
 
 import PetHealthSidebar from '../../components/admin/pet-health/PetHealthSidebar.vue'
 import RecentLogsTable from '../../components/admin/pet-health/RecentLogsTable.vue'
@@ -11,6 +11,11 @@ import { mockPetsData } from '../../stores/mockPetData'
 const searchQuery = ref('')
 const selectedPetId = ref<string | null>(null)
 const chartTimeframe = ref<'1M' | '3M' | '6M' | '1Y' | 'ALL'>('ALL')
+const isMounted = ref(false)
+
+onMounted(() => {
+  isMounted.value = true
+})
 
 const petsWithLogs = computed(() => {
   return mockPetsData
@@ -98,7 +103,7 @@ watch(
 
 <template>
   <div class="health-page">
-    <Teleport to="#mobile-header-target" :disabled="false">
+    <Teleport v-if="isMounted" to="#mobile-header-target" :disabled="false">
       <h1 class="mobile-header-title">Pet Health</h1>
     </Teleport>
     <PetHealthSidebar

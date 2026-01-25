@@ -48,7 +48,7 @@ const userInitials = computed(() => {
     .join('')
     .substring(0, 2)
     .toUpperCase()
-})
+  })
 </script>
 
 <template>
@@ -88,6 +88,24 @@ const userInitials = computed(() => {
     </div>
   </div>
 </template>
+
+<style>
+/* Global style to ensure teleported mobile headers are visible */
+/* This MUST be global/unscoped because Teleport moves content outside of scoped component's reach */
+.mobile-header-title {
+  display: none !important; /* Force hide on desktop by default */
+  font-size: 1.25rem;
+  font-weight: 800;
+  color: #1f2121; /* var(--text-primary) equivalent */
+  margin: 0;
+}
+
+@media (width <= 768px) {
+  .mobile-header-title {
+    display: block !important; /* Force show on mobile */
+  }
+}
+</style>
 
 <style scoped>
 .admin-layout {

@@ -44,7 +44,7 @@ export const useAuthStore = defineStore('auth', () => {
       const data = await response.json()
 
       if (response.ok) {
-        
+
         if (data.token) {
           localStorage.setItem('token', data.token)
         }
@@ -74,7 +74,7 @@ export const useAuthStore = defineStore('auth', () => {
     } finally {
       localStorage.removeItem('token')
       user.value = null
-      window.location.reload() 
+      window.location.reload()
     }
   }
 
@@ -93,5 +93,16 @@ export const useAuthStore = defineStore('auth', () => {
     logout,
     initialize,
     initialized,
+    updateProfile: async (data: { name: string; email: string; password?: string }) => {
+      const res = await fetch('/api/users', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data),
+      })
+      if (!res.ok) throw new Error('Failed to update')
+      const result = await res.json()
+      if (result.user) user.value = result.user
+      return result
+    },
   }
 })

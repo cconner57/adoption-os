@@ -26,6 +26,7 @@ const searchQuery = ref('')
 const statusFilter = ref('available')
 const speciesFilter = ref('all')
 const expandedPetId = ref<string | null>(null)
+const isMounted = ref(false)
 
 const visibleColumns = ref({
   photo: true,
@@ -80,6 +81,7 @@ onMounted(() => {
       console.error('Failed to parse saved columns', e)
     }
   }
+  isMounted.value = true
   fetchPets()
 })
 
@@ -215,7 +217,7 @@ const statusOptions = [
 
 <template>
   <div class="admin-page">
-    <Teleport to="#mobile-header-target" :disabled="false">
+    <Teleport v-if="isMounted" to="#mobile-header-target" :disabled="false">
       <h1 class="mobile-header-title">Pet Records</h1>
     </Teleport>
 

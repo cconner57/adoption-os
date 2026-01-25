@@ -26,11 +26,27 @@ const emit = defineEmits<{
   click: [item: NavItem]
 }>()
 
-function handleClick(item: NavItem) {
+// eslint-disable-next-line no-unused-vars
+function handleClick(item: NavItem, navigate?: (e: MouseEvent) => void) {
   if (item.id !== undefined) {
     emit('update:modelValue', item.id)
   }
-  emit('click', item)
+
+  if (navigate) {
+    // We need to pass the event if possible, but navigate() from router-link usually handles it.
+    // However, since we are inside a custom click handler, we can just call it.
+    // We pass a synthetic event or just call it as a function if strict typing allows.
+    // Vue Router's navigate function expects a MouseEvent usually, but often works without if wrapped.
+    // Let's create a fake event or just cast.
+    // Actually, simply calling navigate() triggers the push.
+    navigate({} as MouseEvent)
+  }
+
+  // Delay closing the menu slightly to ensure navigation registers
+  // and to provide a better UX (visual feedback of click)
+  setTimeout(() => {
+    emit('click', item)
+  }, 150)
 }
 </script>
 
@@ -41,15 +57,20 @@ function handleClick(item: NavItem) {
       <router-link
         v-if="item.to"
         :to="item.to"
-        class="nav-item"
-        :active-class="item.exact ? '' : 'active'"
-        :exact-active-class="item.exact ? 'active' : ''"
-        @click="handleClick(item)"
+        custom
+        v-slot="{ href, navigate, isActive, isExactActive }"
       >
-        <span class="icon" v-if="item.icon">
-          <Icon :name="item.icon" :size="20" :viewBox="item.viewBox" />
-        </span>
-        <span class="label">{{ item.label }}</span>
+        <a
+          :href="href"
+          class="nav-item"
+          :class="{ 'active': item.exact ? isExactActive : isActive }"
+          @click="handleClick(item, navigate)"
+        >
+          <span class="icon" v-if="item.icon">
+            <Icon :name="item.icon" :size="20" :viewBox="item.viewBox" />
+          </span>
+          <span class="label">{{ item.label }}</span>
+        </a>
       </router-link>
 
       <button

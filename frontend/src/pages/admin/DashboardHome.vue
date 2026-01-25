@@ -45,7 +45,10 @@ const fetchPendingCount = async () => {
   }
 }
 
+const isMounted = ref(false)
+
 onMounted(() => {
+  isMounted.value = true
   petStore.fetchPets()
   volunteerStore.fetchActiveCount()
   const { start, end } = getWeekRange()
@@ -210,7 +213,7 @@ const newIntakesItems = computed(() => [
 
 <template>
   <div class="dashboard-home">
-    <Teleport to="#mobile-header-target" :disabled="false">
+    <Teleport v-if="isMounted" to="#mobile-header-target" :disabled="false">
       <h1 class="mobile-header-title">Overview</h1>
     </Teleport>
 

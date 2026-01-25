@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed,ref } from 'vue'
+import { computed, onMounted, ref } from 'vue'
 
 import { Button,Capsules } from '../../components/common/ui'
 import { mockDevices } from '../../stores/mockKennelDisplays'
@@ -75,11 +75,16 @@ const handleConfirmAssignment = (petId: string) => {
     showAssignModal.value = false
   }
 }
+
+const isMounted = ref(false)
+onMounted(() => {
+  isMounted.value = true
+})
 </script>
 
 <template>
   <div class="kennel-displays-page">
-    <Teleport to="#mobile-header-target" :disabled="false">
+    <Teleport v-if="isMounted" to="#mobile-header-target" :disabled="false">
       <h1 class="mobile-header-title">Kennel Displays</h1>
     </Teleport>
 
@@ -152,15 +157,15 @@ const handleConfirmAssignment = (petId: string) => {
 
         <div class="meta-grid">
           <div class="meta-item">
-            <label>MAC Address</label>
+            <span class="field-lbl">MAC Address</span>
             <span>{{ selectedDevice.macAddress }}</span>
           </div>
           <div class="meta-item">
-            <label>Last Sync</label>
+            <span class="field-lbl">Last Sync</span>
             <span>{{ selectedDevice.lastSync }}</span>
           </div>
           <div class="meta-item">
-            <label>Assigned To</label>
+            <span class="field-lbl">Assigned To</span>
             <div class="assign-row">
               <span class="assign-val">{{ getPetName(selectedDevice.assignedPetId) }}</span>
               <button class="change-link" @click="openAssignModal">Change</button>
@@ -168,7 +173,7 @@ const handleConfirmAssignment = (petId: string) => {
           </div>
           <div class="meta-item">
             <label>Template</label>
-            <select v-model="selectedDevice.template" class="native-select">
+            <select v-model="selectedDevice.template" class="native-select" aria-label="Template">
               <option value="standard">Standard Profile</option>
               <option value="medical">Medical Alert</option>
               <option value="urgent">Urgent / Adopt Me</option>
@@ -395,7 +400,7 @@ const handleConfirmAssignment = (petId: string) => {
   flex-direction: column;
   gap: 4px;
 
-  label {
+  .field-lbl, label {
     font-size: 0.75rem;
     text-transform: uppercase;
     color: hsl(from var(--color-neutral) h s 50%);

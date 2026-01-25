@@ -1,11 +1,16 @@
 <script setup lang="ts">
-import { ref, watch } from 'vue'
+import { onMounted, ref, watch } from 'vue'
 
 import { Button,InputField } from '../../components/common/ui'
 import { mockKioskSettings } from '../../stores/mockKiosk'
 
 const isSaving = ref(false)
 const hasChanges = ref(false)
+const isMounted = ref(false)
+
+onMounted(() => {
+  isMounted.value = true
+})
 
 const saveSettings = () => {
   isSaving.value = true
@@ -27,7 +32,7 @@ watch(
 
 <template>
   <div class="kiosk-page">
-    <Teleport to="#mobile-header-target" :disabled="false">
+    <Teleport v-if="isMounted" to="#mobile-header-target" :disabled="false">
       <h1 class="mobile-header-title">Kiosk Management</h1>
     </Teleport>
 
@@ -47,15 +52,16 @@ watch(
           <h2>General</h2>
           <div class="form-stack">
             <label>Kiosk Name</label>
-            <InputField v-model="mockKioskSettings.general.kioskName" placeholder="Enter Kiosk Name" />
+            <InputField v-model="mockKioskSettings.general.kioskName" aria-label="Kiosk Name" placeholder="Enter Kiosk Name" />
 
             <label>Welcome Message</label>
-            <InputField v-model="mockKioskSettings.general.welcomeMessage" placeholder="Welcome Message" />
+            <InputField v-model="mockKioskSettings.general.welcomeMessage" aria-label="Welcome Message" placeholder="Welcome Message" />
 
             <label>Screen Timeout (Seconds)</label>
             <input
               type="range"
               v-model.number="mockKioskSettings.general.timeoutSeconds"
+              aria-label="Screen Timeout"
               min="30"
               max="300"
               step="30"
@@ -72,13 +78,14 @@ watch(
               <input
                 type="color"
                 v-model="mockKioskSettings.theme.primaryColor"
+                aria-label="Primary Color"
                 class="native-color"
               />
               <span>{{ mockKioskSettings.theme.primaryColor }}</span>
             </div>
 
             <label>Background Image URL</label>
-            <InputField v-model="mockKioskSettings.theme.backgroundImage" placeholder="https://..." />
+            <InputField v-model="mockKioskSettings.theme.backgroundImage" aria-label="Background Image URL" placeholder="https://..." />
           </div>
         </div>
 
@@ -90,6 +97,7 @@ watch(
               <input
                 type="checkbox"
                 v-model="mockKioskSettings.features.allowCheckIn"
+                aria-label="Volunteer Check-In"
                 class="toggle-switch"
               />
             </div>
@@ -98,6 +106,7 @@ watch(
               <input
                 type="checkbox"
                 v-model="mockKioskSettings.features.showAvailablePets"
+                aria-label="Browse Available Pets"
                 class="toggle-switch"
               />
             </div>
@@ -106,6 +115,7 @@ watch(
               <input
                 type="checkbox"
                 v-model="mockKioskSettings.features.showEvents"
+                aria-label="Upcoming Events"
                 class="toggle-switch"
               />
             </div>
@@ -114,6 +124,7 @@ watch(
               <input
                 type="checkbox"
                 v-model="mockKioskSettings.features.donationsEnabled"
+                aria-label="Accept Donations"
                 class="toggle-switch"
               />
             </div>

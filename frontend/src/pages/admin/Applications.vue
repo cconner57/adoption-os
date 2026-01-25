@@ -48,14 +48,17 @@ const selectTab = (id: typeof activeTab.value) => {
   expandedId.value = null
 }
 
+const isMounted = ref(false)
+
 onMounted(() => {
+  isMounted.value = true
   fetchApplications(true)
 })
 </script>
 
 <template>
   <div class="applications-page">
-    <Teleport to="#mobile-header-target" :disabled="false">
+    <Teleport v-if="isMounted" to="#mobile-header-target" :disabled="false">
       <h1 class="mobile-header-title">Applications</h1>
     </Teleport>
 

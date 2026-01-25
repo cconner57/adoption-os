@@ -19,7 +19,7 @@ const filterSeverity = ref<'all' | 'low' | 'medium' | 'high' | 'critical'>('all'
 const filteredLogs = computed(() => {
   return mockTimeLogs.value
     .filter((log) => {
-      
+
       const searchMatch =
         !searchQuery.value ||
         log.volunteerName.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
@@ -73,8 +73,12 @@ const handleIncidentAction = (action: string, inc: IIncident) => {
 
 <template>
   <div class="time-logs-page">
+    <Teleport to="#mobile-header-target" :disabled="false">
+      <h1 class="mobile-header-title">Time Logs & Incidents</h1>
+    </Teleport>
+
     <div class="page-header">
-      <h1>Time Logs & Incidents</h1>
+      <h1 class="desktop-only">Time Logs & Incidents</h1>
       <div class="search-bar">
         <InputField v-model="searchQuery" placeholder="Search volunteers or descriptions..." />
       </div>
@@ -122,10 +126,28 @@ const handleIncidentAction = (action: string, inc: IIncident) => {
   justify-content: space-between;
   align-items: center;
 
-  h1 {
+  h1.desktop-only {
     margin: 0;
     font-size: 1.8rem;
     color: var(--text-primary);
+  }
+}
+
+.mobile-header-title {
+  display: none;
+}
+
+@media (width <= 768px) {
+  .page-header h1.desktop-only {
+    display: none;
+  }
+
+  .mobile-header-title {
+    display: block;
+    font-size: 1.25rem;
+    font-weight: 800;
+    color: var(--text-primary);
+    margin: 0;
   }
 }
 

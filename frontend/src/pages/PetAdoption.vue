@@ -79,8 +79,8 @@ const handleReset = () => {
         :header-title="selectedPet?.species === 'cat' ? 'Cat' : 'Dog'"
         :header-text="
           selectedPet?.species === 'cat'
-            ? 'This application is intended as a means to match the right cat with the right home. The more detail you provide, the better.  All of our adoptable pets are spayed/neutered, vaccinated, and microchipped. Typical adoption fees are $300 for kittens and $250 for adults. Adoption fees are tax-deductible donations, not purchase prices. Thank you for considering adoption!'
-            : 'This application is intended as a means to match the right dog with the right home. The more detail you provide, the better.  All of our adoptable pets are spayed/neutered, vaccinated, and microchipped. Typical adoption fees are $450 for puppies, $400 for adults, and $350 for seniors. Adoption fees are tax-deductible donations, not purchase prices. Thank you for considering adoption!'
+            ? 'This application is intended as a means to match the right cat with the right home. The more detail you provide, the better. Most adoptable pets are spayed/neutered, vaccinated, and microchipped. For younger kittens, we offer a foster-to-adopt program where you take them home now and return for scheduled vet care until they are ready for official adoption. Typical adoption fees are $300 for kittens and $250 for adults. Adoption fees are tax-deductible donations, not purchase prices. Thank you for considering adoption!'
+            : 'This application is intended as a means to match the right dog with the right home. The more detail you provide, the better. Most adoptable pets are spayed/neutered, vaccinated, and microchipped. Typical adoption fees are $450 for puppies, $400 for adults, and $350 for seniors. Adoption fees are tax-deductible donations, not purchase prices. Thank you for considering adoption!'
         "
       />
       <AdoptionSteps :formStep="step" selectedAnimal="cat" />
@@ -100,36 +100,42 @@ const handleReset = () => {
         v-model="formState"
         :touched="touched"
         :handleBlur="handleBlur"
+        :hasAttemptedSubmit="hasAttemptedSubmit"
       />
       <NewCatSection
         v-show="step === 2"
         v-model="formState"
         :touched="touched"
         :handleBlur="handleBlur"
+        :hasAttemptedSubmit="hasAttemptedSubmit"
       />
       <CurrentPetsSection
         v-show="step === 3"
         v-model="formState"
         :touched="touched"
         :handleBlur="handleBlur"
+        :hasAttemptedSubmit="hasAttemptedSubmit"
       />
       <PastPetsSection
         v-show="step === 4"
         v-model="formState"
         :touched="touched"
         :handleBlur="handleBlur"
+        :hasAttemptedSubmit="hasAttemptedSubmit"
       />
       <OtherSection
         v-show="step === 5"
         v-model="formState"
         :touched="touched"
         :handleBlur="handleBlur"
+        :hasAttemptedSubmit="hasAttemptedSubmit"
       />
       <SummarySection
         v-show="step === 6"
         v-model="formState"
         :touched="touched"
         :handleBlur="handleBlur"
+        :hasAttemptedSubmit="hasAttemptedSubmit"
       />
 
       <div v-if="hasAttemptedSubmit && validationErrors.length > 0" class="validation-summary">

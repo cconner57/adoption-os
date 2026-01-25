@@ -128,6 +128,7 @@ async function handleSavePet(petData: Partial<IPet>) {
       url = `${import.meta.env.VITE_API_URL}/pets/${petData.id}`
       method = 'PUT'
       successMessage = 'Pet updated successfully!'
+      delete payload.id
     }
 
     const response = await fetch(url, {
@@ -172,7 +173,7 @@ async function handleSavePet(petData: Partial<IPet>) {
 async function handleQuickAdopt(pet: IPet) {
   if (!confirm(`Mark ${pet.name} as Adopted?`)) return
 
-  const updatedPet = JSON.parse(JSON.stringify(pet))
+  const updatedPet = structuredClone(pet)
   updatedPet.details.status = 'adopted'
 
   await handleSavePet(updatedPet)
@@ -214,9 +215,13 @@ const statusOptions = [
 
 <template>
   <div class="admin-page">
+    <Teleport to="#mobile-header-target" :disabled="false">
+      <h1 class="mobile-header-title">Pet Records</h1>
+    </Teleport>
+
     <div class="page-header">
       <div class="header-left">
-        <h1>Pet Records</h1>
+        <h1 class="desktop-only">Pet Records</h1>
         <span class="count-badge">{{ filteredPets.length }} Pets</span>
       </div>
       <div class="header-actions">
@@ -294,8 +299,26 @@ const statusOptions = [
   align-items: center;
   gap: 12px;
 
-  h1 {
+  h1.desktop-only {
     font-size: 1.8rem;
+    color: var(--text-primary);
+    margin: 0;
+  }
+}
+
+.mobile-header-title {
+  display: none;
+}
+
+@media (width <= 768px) {
+  .header-left h1.desktop-only {
+    display: none;
+  }
+
+  .mobile-header-title {
+    display: block;
+    font-size: 1.25rem;
+    font-weight: 800;
     color: var(--text-primary);
     margin: 0;
   }
@@ -354,7 +377,6 @@ const statusOptions = [
 
   .filter-group {
     width: 100%;
-    padding-bottom: 4px;
     padding-bottom: 4px;
     flex-wrap: wrap;
     overflow: visible;

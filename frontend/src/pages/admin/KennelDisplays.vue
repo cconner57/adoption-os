@@ -15,14 +15,14 @@ const getPetName = (id: string | null) => {
 
 const getBatteryIcon = (level: number) => {
   if (level > 90) return '🔋'
-  if (level > 50) return '🔋' 
+  if (level > 50) return '🔋'
   if (level > 20) return '🪫'
   return '🔌'
 }
 
 const getBatteryColor = (level: number) => {
-  if (level <= 20) return '#ef4444' 
-  return '#10b981' 
+  if (level <= 20) return '#ef4444'
+  return '#10b981'
 }
 
 const selectedDeviceId = ref<string | null>(null)
@@ -79,9 +79,12 @@ const handleConfirmAssignment = (petId: string) => {
 
 <template>
   <div class="kennel-displays-page">
-    
+    <Teleport to="#mobile-header-target" :disabled="false">
+      <h1 class="mobile-header-title">Kennel Displays</h1>
+    </Teleport>
+
     <div class="page-header">
-      <h1>Kennel Displays</h1>
+      <h1 class="desktop-only">Kennel Displays</h1>
       <div class="header-stats">
         <div class="stat-pill">
           <span class="dot green"></span>
@@ -95,7 +98,7 @@ const handleConfirmAssignment = (petId: string) => {
     </div>
 
     <div class="split-layout">
-      
+
       <div class="device-list-card">
         <div class="list-header">
           <h2>Connected Tags</h2>
@@ -193,7 +196,7 @@ const handleConfirmAssignment = (petId: string) => {
   display: flex;
   flex-direction: column;
   gap: 24px;
-  height: calc(100vh - 100px); 
+  height: calc(100vh - 100px);
 }
 
 .page-header {
@@ -201,10 +204,28 @@ const handleConfirmAssignment = (petId: string) => {
   justify-content: space-between;
   align-items: center;
 
-  h1 {
+  h1.desktop-only {
     margin: 0;
     font-size: 1.8rem;
     color: var(--text-primary);
+  }
+}
+
+.mobile-header-title {
+  display: none;
+}
+
+@media (width <= 768px) {
+  .page-header h1.desktop-only {
+    display: none;
+  }
+
+  .mobile-header-title {
+    display: block;
+    font-size: 1.25rem;
+    font-weight: 800;
+    color: var(--text-primary);
+    margin: 0;
   }
 }
 
@@ -250,7 +271,7 @@ const handleConfirmAssignment = (petId: string) => {
   grid-template-columns: 350px 1fr;
   gap: 24px;
   flex: 1;
-  min-height: 0; 
+  min-height: 0;
 }
 
 .device-list-card {

@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { computed, ref, watch } from 'vue'
 
+import PetHealthSidebar from '../../components/admin/pet-health/PetHealthSidebar.vue'
 import RecentLogsTable from '../../components/admin/pet-health/RecentLogsTable.vue'
 import VitalsCard from '../../components/admin/pet-health/VitalsCard.vue'
 import WeightChart from '../../components/common/WeightChart.vue'
@@ -84,10 +85,6 @@ function formatWeight(grams?: number | null) {
   return `${kg}kg (${lbs}lbs)`
 }
 
-function formatDate(date: string) {
-  return new Date(date).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })
-}
-
 watch(
   filteredPets,
   (newPets) => {
@@ -101,41 +98,14 @@ watch(
 
 <template>
   <div class="health-page">
-    <aside class="sidebar">
-      <div class="sidebar-header">
-        <h2>Pet Health</h2>
-        <button class="add-log-btn" title="Add Vitals record">+</button>
-      </div>
-      <div class="search-box">
-        <input v-model="searchQuery" type="text" placeholder="Search pets..." />
-      </div>
-
-      <div class="pet-list">
-        <div
-          v-for="pet in filteredPets"
-          :key="pet.id"
-          class="pet-card"
-          :class="{ active: selectedPetId === pet.id }"
-          @click="selectedPetId = pet.id"
-        >
-          <div class="pet-avatar">
-            <img
-              v-if="pet.photos && pet.photos.length > 0"
-              :src="`/images/${pet.photos?.find((p) => p.isPrimary)?.url ?? ''}`"
-            />
-            <span v-else>{{ pet.species === 'cat' ? '🐱' : '🐶' }}</span>
-          </div>
-          <div class="pet-info">
-            <div class="pet-name">{{ pet.name }}</div>
-            <div class="pet-meta">
-              <span v-if="pet.latestLog">Last update: {{ formatDate(pet.latestLog.date) }}</span>
-              <span v-else>No records</span>
-            </div>
-          </div>
-          <div class="chevron">›</div>
-        </div>
-      </div>
-    </aside>
+    <Teleport to="#mobile-header-target" :disabled="false">
+      <h1 class="mobile-header-title">Pet Health</h1>
+    </Teleport>
+    <PetHealthSidebar
+      :pets="filteredPets"
+      v-model="selectedPetId"
+      v-model:searchQuery="searchQuery"
+    />
 
     <main class="dashboard">
       <div v-if="selectedPet" class="dashboard-content">
@@ -197,133 +167,18 @@ watch(
   margin: 0 auto;
 }
 
-.sidebar {
-  width: 320px;
-  background: #fff;
-  border-radius: 16px;
-  display: flex;
-  flex-direction: column;
-  overflow: hidden;
-  box-shadow: 0 4px 12px rgb(0 0 0 / 3%);
-  border: 1px solid #f3f4f6;
+.mobile-header-title {
+  display: none;
 }
 
-.sidebar-header {
-  padding: 20px;
-  border-bottom: 1px solid #f3f4f6;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-
-  h2 {
-    font-size: 1.2rem;
-    font-weight: 700;
+@media (width <= 768px) {
+  .mobile-header-title {
+    display: block;
+    font-size: 1.25rem;
+    font-weight: 800;
     color: var(--text-primary);
     margin: 0;
   }
-}
-
-.add-log-btn {
-  background: var(--color-primary);
-  color: #fff;
-  border: none;
-  width: 32px;
-  height: 32px;
-  border-radius: 8px;
-  cursor: pointer;
-  font-size: 1.2rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: opacity 0.2s;
-
-  &:hover {
-    opacity: 0.9;
-  }
-}
-
-.search-box {
-  padding: 16px;
-  border-bottom: 1px solid #f3f4f6;
-
-  input {
-    width: 100%;
-    padding: 10px 12px;
-    border: 1px solid #e5e7eb;
-    border-radius: 8px;
-    background: #f9fafb;
-    outline: none;
-
-    &:focus {
-      border-color: var(--color-secondary);
-      background: #fff;
-    }
-  }
-}
-
-.pet-list {
-  flex: 1;
-  overflow-y: auto;
-  padding: 8px;
-}
-
-.pet-card {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  padding: 12px;
-  border-radius: 12px;
-  cursor: pointer;
-  transition: all 0.2s;
-  border: 1px solid transparent;
-
-  &:hover {
-    background: #f9fafb;
-  }
-
-  &.active {
-    background: #eff6ff;
-    border-color: hsl(from var(--color-secondary) h s 80%);
-  }
-}
-
-.pet-avatar {
-  width: 40px;
-  height: 40px;
-  border-radius: 10px;
-  background: #e5e7eb;
-  overflow: hidden;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 1.2rem;
-
-  img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-  }
-}
-
-.pet-info {
-  flex: 1;
-}
-
-.pet-name {
-  font-weight: 600;
-  color: var(--text-primary);
-  font-size: 0.95rem;
-}
-
-.pet-meta {
-  font-size: 0.8rem;
-  color: hsl(from var(--color-neutral) h s 50%);
-  margin-top: 2px;
-}
-
-.chevron {
-  color: #cbd5e1;
-  font-size: 1.2rem;
 }
 
 .dashboard {

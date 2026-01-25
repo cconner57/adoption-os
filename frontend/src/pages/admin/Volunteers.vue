@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, onMounted,ref } from 'vue'
+import { computed, onMounted, ref, watch } from 'vue'
 
 import VolunteerDetail from '../../components/admin/volunteers/VolunteerDetail.vue'
 import VolunteerEditor from '../../components/admin/volunteers/VolunteerEditor.vue'
@@ -21,7 +21,7 @@ async function fetchVolunteers() {
     const res = await fetch('/v1/volunteers?page_size=100')
     if (res.ok) {
       const data = await res.json()
-      
+
       allVolunteers.value = data.data.volunteers || []
     }
   } catch (err) {
@@ -45,7 +45,7 @@ onMounted(async () => {
   await fetchVolunteers()
 
   if (!selectedVolunteerId.value && allVolunteers.value.length > 0) {
-    
+
     selectedVolunteerId.value = allVolunteers.value[0].id
   }
 })
@@ -75,7 +75,7 @@ async function fetchShifts(volunteerId: string) {
   }
 }
 
-import { watch } from 'vue'
+
 watch(selectedVolunteerId, (newId) => {
   if (newId) {
     fetchShifts(newId)
@@ -97,7 +97,7 @@ const isCreating = ref(false)
 
 function sanitizeVolunteerData(data: any) { // eslint-disable-line @typescript-eslint/no-explicit-any
   const payload = { ...data }
-  
+
   if (!payload.birthday) payload.birthday = null
   if (!payload.joinDate) payload.joinDate = null
   console.log('Sanitized payload:', payload)
@@ -150,7 +150,7 @@ async function handleUpdateSave(updatedData: any) { // eslint-disable-line @type
 
     if (res.ok) {
       await fetchVolunteers()
-      
+
     } else {
       const errText = await res.text()
       console.error('Update failed:', res.status, errText)
@@ -176,7 +176,7 @@ async function handleAddShift(shiftData: any) { // eslint-disable-line @typescri
       : new Date(baseDate.getTime() + 90 * 24 * 60 * 60 * 1000)
 
     const currentDate = new Date(baseDate)
-    
+
     let count = 0
     while (currentDate <= endDate && count < 50) {
       shiftsToCreate.push({
@@ -216,11 +216,11 @@ async function handleAddShift(shiftData: any) { // eslint-disable-line @typescri
         body: JSON.stringify(s),
       })
     }
-    
+
     await new Promise((resolve) => setTimeout(resolve, 300))
-    
+
     await fetchShifts(selectedVolunteerId.value)
-    
+
     await fetchVolunteers()
   } catch (e) {
     console.error('Error creating shifts', e)
@@ -231,7 +231,7 @@ async function handleAddShift(shiftData: any) { // eslint-disable-line @typescri
 async function handleUpdateShift(shiftData: any) { // eslint-disable-line @typescript-eslint/no-explicit-any
   if (!shiftData.id) return
   try {
-    
+
     const payload = {
       id: shiftData.id,
       volunteerId: shiftData.volunteerId,
@@ -251,7 +251,7 @@ async function handleUpdateShift(shiftData: any) { // eslint-disable-line @types
 
     if (res.ok) {
       await fetchShifts(selectedVolunteerId.value!)
-      await fetchVolunteers() 
+      await fetchVolunteers()
     } else {
       const err = await res.text()
       alert(`Failed to update shift: ${  err}`)
@@ -285,7 +285,10 @@ async function handleDeleteShift(shiftId: string | number) {
 
 <template>
   <div class="volunteers-page">
-    
+    <Teleport to="#mobile-header-target" :disabled="false">
+      <h1 class="mobile-header-title">Volunteers</h1>
+    </Teleport>
+
     <aside class="sidebar">
       <VolunteerList
         :volunteers="allVolunteers"
@@ -334,6 +337,20 @@ async function handleDeleteShift(shiftId: string | number) {
   gap: 24px;
   max-width: 1400px;
   margin: 0 auto;
+}
+
+.mobile-header-title {
+  display: none;
+}
+
+@media (width <= 768px) {
+  .mobile-header-title {
+    display: block;
+    font-size: 1.25rem;
+    font-weight: 800;
+    color: var(--text-primary);
+    margin: 0;
+  }
 }
 
 .sidebar {
@@ -452,7 +469,7 @@ async function handleDeleteShift(shiftId: string | number) {
 }
 
 .add-btn {
-  background-color: var(--color-secondary); 
+  background-color: var(--color-secondary);
   color: var(--text-inverse);
   border: none;
   padding: 10px 20px;

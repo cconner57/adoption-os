@@ -152,13 +152,17 @@ const getCategoryDesc = (id: string) => {
 
 <template>
   <div class="admin-page">
-    <div class="page-header">
+    <Teleport to="#mobile-header-target" :disabled="false">
+      <h1 class="mobile-header-title">{{ activeCategory ? activeCategoryLabel : 'Settings' }}</h1>
+    </Teleport>
+
+    <div class="page-header" :class="{ 'header-hidden-mobile': !activeCategory }">
       <div class="header-left">
 
         <button v-if="activeCategory" class="back-btn" @click="activeCategory = null">
           ← Back
         </button>
-        <h1>{{ activeCategory ? activeCategoryLabel : 'Settings' }}</h1>
+        <h1 class="desktop-only">{{ activeCategory ? activeCategoryLabel : 'Settings' }}</h1>
       </div>
 
       <button v-if="activeCategory" class="save-btn" :disabled="saving" @click="saveSettings">
@@ -248,8 +252,30 @@ const getCategoryDesc = (id: string) => {
   flex-shrink: 0;
   min-height: 48px;
 
-  h1 {
+  h1.desktop-only {
     font-size: 1.8rem;
+    color: var(--text-primary);
+    margin: 0;
+  }
+}
+
+.mobile-header-title {
+  display: none;
+}
+
+@media (width <= 768px) {
+  .page-header.header-hidden-mobile {
+    display: none;
+  }
+
+  .page-header h1.desktop-only {
+    display: none;
+  }
+
+  .mobile-header-title {
+    display: block;
+    font-size: 1.25rem;
+    font-weight: 800;
     color: var(--text-primary);
     margin: 0;
   }
@@ -403,5 +429,71 @@ const getCategoryDesc = (id: string) => {
   margin-bottom: 20px;
   display: inline-block;
   opacity: 0.5;
+}
+
+@media (width <= 768px) {
+  .categories-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 1px; /* Divider line thickness */
+    background: #e5e7eb; /* Color of dividers */
+    border-radius: 12px;
+    border: 1px solid #e5e7eb;
+    overflow: hidden;
+    padding-bottom: 0;
+  }
+
+  .category-card {
+    flex-direction: row;
+    align-items: center;
+    border: none;
+    border-radius: 0;
+    padding: 16px;
+    gap: 16px;
+    height: auto;
+    min-height: 56px;
+    box-shadow: none;
+    background: #fff;
+  }
+
+  .category-card:hover {
+    transform: none;
+    box-shadow: none;
+    background-color: #f9fafb;
+    border-color: transparent;
+  }
+
+  /* Adjust icon size for list view */
+  .cat-icon-wrapper {
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    font-size: 1.1rem;
+    flex-shrink: 0;
+  }
+
+  .cat-details {
+    flex: 1;
+    display: flex;
+    align-items: center;
+  }
+
+  .cat-details h3 {
+    margin: 0;
+    font-size: 1rem;
+    font-weight: 500;
+  }
+
+  /* Hide descriptions on mobile for cleaner list look */
+  .cat-details p {
+    display: none;
+  }
+
+  .cat-arrow {
+    margin: 0;
+    align-self: center;
+    color: #cbd5e1;
+    font-size: 1.2rem;
+  }
 }
 </style>

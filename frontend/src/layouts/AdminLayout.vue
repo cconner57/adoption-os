@@ -79,6 +79,7 @@ const userInitials = computed(() => {
     <div class="main-content">
       <header class="top-bar">
         <button class="menu-toggle" @click="toggleMobileMenu">☰</button>
+        <div id="mobile-header-target"></div>
       </header>
 
       <div class="page-content">
@@ -272,6 +273,7 @@ const userInitials = computed(() => {
 
   .menu-toggle {
     display: block;
+    z-index: 10;
   }
 
   .top-bar {
@@ -280,9 +282,19 @@ const userInitials = computed(() => {
     height: 64px;
     background-color: var(--white);
     border-bottom: 1px solid rgb(0 0 0 / 5%);
+    position: relative;
 
     h3 {
       font-size: 1.25rem;
+    }
+
+    #mobile-header-target {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      pointer-events: none;
     }
   }
 

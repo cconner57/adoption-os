@@ -7,7 +7,7 @@ import Button from '../../common/ui/Button.vue'
 export interface IApplicationItem {
   id: string
   type: string
-  status: 'pending' | 'approved' | 'denied' | 'needs_info' | 'autodeleted' | 'all'
+  status: 'pending' | 'approved' | 'denied' | 'needs_info' | 'autodeleted' | 'all' | 'video_approved'
   date: string
   applicantName: string
   email: string
@@ -23,157 +23,32 @@ const props = defineProps<{
   app: IApplicationItem
   expanded: boolean
   isExpandedId: boolean
+  isResending?: boolean
+  isResendSuccess?: boolean
 }>()
 
 defineEmits<{
   toggle: []
   'update-status': [app: IApplicationItem, status: IApplicationItem['status']]
   'view-original': [id: string]
+  'resend-email': [id: string]
 }>()
 
-const formatDate = (dateStr: string) => {
-  return new Date(dateStr).toLocaleDateString(undefined, {
-    month: 'short',
-    day: 'numeric',
-    year: 'numeric',
-  })
-}
-
-const getStatusColor = (status: string) => {
-  switch (status) {
-    case 'approved':
-      return 'green'
-    case 'denied':
-      return 'red'
-    case 'needs_info':
-      return 'orange'
-    default:
-      return 'neutral'
-  }
-}
-
-const getStatusText = (status: string) => {
-  switch (status) {
-    case 'approved':
-      return 'Approved'
-    case 'denied':
-      return 'Denied'
-    case 'needs_info':
-      return 'Needs Info'
-    default:
-      return 'Pending'
-  }
-}
-
-const getDaysPending = (dateStr: string) => {
-  if (!dateStr) return 0
-  const created = new Date(dateStr)
-  const now = new Date()
-  const diffTime = Math.abs(now.getTime() - created.getTime())
-  return Math.ceil(diffTime / (1000 * 60 * 60 * 24))
-}
-
-const formatKey = (key: string) => {
-  const withSpaces = key.replace(/([a-z])([A-Z])/g, '$1 $2').replace(/_/g, ' ')
-  return withSpaces
-    .split(' ')
-    .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
-    .join(' ')
-}
-
-const getSignatureSrc = (data: string) => {
-  if (!data) return ''
-  if (data === 'base64data') {
-    return 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMDAiIGhlaWdodD0iNTAiPjxwYXRoIGQ9Ik0xMCwyNSBRNDAsNSA3MCwyNSBUMTMwLDI1IiBzdHJva2U9ImJsYWNrIiBzdHJva2Utd2lkdGg9IjIiIGZpbGw9Im5vbmUiLz48L3N2Zz4='
-  }
-  if (data.length < 50) return ''
-  if (data.startsWith('data:image')) return data
-  return `data:image/png;base64,${data}`
-}
+import {
+  formatDate,
+  formatValue,
+  getDaysPending,
+  getDisplayFields,
+  getSignatureSrc,
+  getStatusColor,
+  getStatusText,
+} from './utils'
 
 const displayFields = computed(() => {
-  const data = props.app.fullApplication
-  if (!data) return []
-  const entries = Object.entries(data)
-
-  const filtered = entries.filter(([key, value]) => {
-    if (key === 'id') return false
-    if ((key === 'parentSignatureData' || key === 'parentSignatureDate') && !value) return false
-    if (key === 'signatureData' || key === 'parentSignatureData') return false
-    if (value === null || value === '' || value === undefined) return false
-    return true
-  })
-
-  filtered.sort(([keyA], [keyB]) => {
-    const priority = [
-      'firstName',
-      'lastName',
-      'age',
-      'birthday',
-      'address',
-      'city',
-      'zip',
-      'createdAt',
-      'nameFull',
-      'signatureDate',
-      'allergies',
-      'phoneNumber',
-      'availability',
-      'positionPreferences',
-      'interestReason',
-      'volunteerExperience',
-      'emergencyContactName',
-      'emergencyContactPhone',
-    ]
-    const idxA = priority.indexOf(keyA)
-    const idxB = priority.indexOf(keyB)
-
-    if (idxA !== -1 && idxB !== -1) return idxA - idxB
-    if (idxA !== -1) return -1
-    if (idxB !== -1) return 1
-
-    return 0
-  })
-
-  return filtered.map(([key, value]) => {
-    let label = formatKey(key)
-    let displayValue: unknown = value
-
-    if (key === 'createdAt') {
-      label = 'Submitted At'
-    }
-
-    const dateKeys = ['birthday', 'signatureDate', 'parentSignatureDate']
-    if (dateKeys.includes(key) && typeof value === 'string') {
-      if (value.startsWith('0001-01-01')) {
-        displayValue = 'N/A'
-      } else {
-        displayValue = formatDate(value)
-      }
-    }
-
-    if (key === 'createdAt' && typeof value === 'string') {
-      if (value.startsWith('0001-01-01')) {
-        displayValue = 'N/A'
-      } else {
-        const date = new Date(value)
-        displayValue = `${formatDate(value)} at ${date.toLocaleTimeString('en-US', {
-          hour: 'numeric',
-          minute: '2-digit',
-        })}`
-      }
-    }
-
-    if (value === true || value === 'true') displayValue = 'Yes'
-    if (value === false || value === 'false') displayValue = 'No'
-
-    return {
-      key,
-      label,
-      value: displayValue,
-    }
-  })
+  return getDisplayFields(props.app.fullApplication)
 })
+
+
 </script>
 
 <template>
@@ -215,36 +90,65 @@ const displayFields = computed(() => {
       <hr class="divider" />
 
       <div class="action-bar">
-        <Button
-          title="Approve"
-          size="small"
-          variant="primary"
-          theme="primary"
-          :disabled="app.status === 'approved'"
-          :onClick="() => $emit('update-status', app, 'approved')"
-        />
-        <Button
-          title="Request Info"
-          size="small"
-          variant="primary"
-          theme="warning"
-          :disabled="app.status === 'needs_info'"
-          :onClick="() => $emit('update-status', app, 'needs_info')"
-        />
-        <Button
-          title="Deny"
-          size="small"
-          variant="secondary"
-          theme="danger"
-          :disabled="app.status === 'denied'"
-          :onClick="() => $emit('update-status', app, 'denied')"
-        />
-        <Button
-          title="View Original Application"
-          size="small"
-          variant="tertiary"
-          :onClick="() => $emit('view-original', app.id)"
-        />
+        <div class="action-group left">
+          <!-- Pending State Actions -->
+          <template v-if="app.status === 'pending'">
+            <Button
+              title="Approve"
+              size="small"
+              variant="primary"
+              theme="primary"
+              :onClick="() => $emit('update-status', app, 'approved')"
+            />
+            <Button
+              title="Deny"
+              size="small"
+              variant="secondary"
+              theme="danger"
+              :onClick="() => $emit('update-status', app, 'denied')"
+            />
+          </template>
+
+          <!-- Approved State Actions (Video Tour - Adoption Only) -->
+          <template v-if="app.status === 'approved' && app.type === 'adoption'">
+            <Button
+              title="Confirm Video Tour"
+              size="small"
+              variant="primary"
+              theme="primary"
+              :onClick="() => $emit('update-status', app, 'video_approved')"
+            />
+            <Button
+              title="Reject Video Tour"
+              size="small"
+              variant="secondary"
+              theme="danger"
+              :onClick="() => $emit('update-status', app, 'denied')"
+            />
+          </template>
+
+          <!-- Video Approved State -->
+          <template v-if="app.status === 'video_approved'">
+            <span class="text-sm text-green-600 font-medium px-2">✓ Video Verified</span>
+          </template>
+        </div>
+
+        <div class="action-group right">
+          <Button
+            :title="isResendSuccess ? 'Sent!' : 'Resend Email'"
+            size="small"
+            :variant="isResendSuccess ? 'primary' : 'tertiary'"
+            :color="isResendSuccess ? 'green' : undefined"
+            :loading="isResending"
+            :onClick="() => $emit('resend-email', app.id)"
+          />
+          <Button
+            title="View Original Application"
+            size="small"
+            variant="tertiary"
+            :onClick="() => $emit('view-original', app.id)"
+          />
+        </div>
       </div>
 
       <div
@@ -256,13 +160,22 @@ const displayFields = computed(() => {
         {{ 7 - getDaysPending(app.date) }} day(s) due to the 7-day retention policy.
       </div>
 
+      <div
+        v-if="app.status === 'denied'"
+        class="mt-4 p-3 bg-red-50 border border-red-200 rounded-md text-sm text-red-700 flex items-center gap-2"
+        style="margin-bottom: 20px"
+      >
+        ⚠️ <strong>Warning:</strong> This application and all its data will be permanently deleted in 24
+        hours.
+      </div>
+
       <div class="full-application" v-if="app.fullApplication">
         <h4>Application Information</h4>
         <div class="qa-grid">
           <div v-for="field in displayFields" :key="field.key" class="qa-item">
             <span class="question">{{ field.label }}</span>
             <span class="answer">
-              {{ Array.isArray(field.value) ? field.value.join(', ') : field.value }}
+              {{ formatValue(field.value) }}
             </span>
           </div>
 
@@ -271,6 +184,7 @@ const displayFields = computed(() => {
             <img
               v-if="getSignatureSrc(app.fullApplication.signatureData as string)"
               :src="getSignatureSrc(app.fullApplication.signatureData as string)"
+              alt="Applicant Signature"
               class="max-h-24 w-auto border rounded bg-white p-2 mt-1"
             />
             <p v-else class="text-sm text-gray-400 italic">Invalid Signature Data</p>
@@ -281,6 +195,7 @@ const displayFields = computed(() => {
             <img
               v-if="getSignatureSrc(app.fullApplication.parentSignatureData as string)"
               :src="getSignatureSrc(app.fullApplication.parentSignatureData as string)"
+              alt="Parent Signature"
               class="max-h-24 w-auto border rounded bg-white p-2 mt-1"
             />
             <p v-else class="text-sm text-gray-400 italic">Invalid Signature Data</p>
@@ -408,13 +323,15 @@ const displayFields = computed(() => {
 
 .action-bar {
   display: flex;
-  gap: 12px;
+  justify-content: space-between;
   margin-bottom: 24px;
   align-items: center;
 }
 
-.action-bar > :last-child {
-  margin-left: auto;
+.action-group {
+  display: flex;
+  gap: 12px;
+  align-items: center;
 }
 
 .full-application {
@@ -460,7 +377,55 @@ const displayFields = computed(() => {
   color: hsl(from var(--color-neutral) h s 50%);
 }
 
-.answer {
 
+</style>
+
+<style scoped>
+@media (width <= 768px) {
+  .card-summary {
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .app-status {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .details-preview {
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  /* Reset grid to single column on mobile */
+  .qa-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .span-full {
+    grid-column: 1;
+  }
+
+  .action-bar {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 16px;
+  }
+
+  .action-group {
+    flex-direction: column;
+    width: 100%;
+    justify-content: stretch;
+    gap: 12px;
+  }
+
+  .action-group button {
+    width: 100%;
+  }
+
+  /* Ensure left/right groups both take full width */
+  .action-group.right {
+    flex-direction: column-reverse; /* Resend/View Original order on mobile */
+  }
 }
 </style>

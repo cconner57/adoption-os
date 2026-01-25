@@ -1,26 +1,27 @@
 <script setup lang="ts">
-import { computed,ref } from 'vue'
+import { onMounted, ref } from 'vue'
 
-import ApplicationCard, {
-  type IApplicationItem,
-} from '../../components/admin/applications/ApplicationCard.vue'
+import ApplicationCard from '../../components/admin/applications/ApplicationCard.vue'
 import { InputSelectGroup } from '../../components/common/ui'
-import { API_ENDPOINTS } from '../../constants/api'
+import { useApplications } from '../../composables/useApplications'
 
-function formatRole(prefs: unknown): string | null {
-  if (!prefs) return null
-  return Array.isArray(prefs) ? prefs.join(', ') : String(prefs || '')
-}
-const activeTab = ref<'volunteer' | 'surrender' | 'adoption' | 'history'>('adoption')
-const filterStatus = ref<'all' | 'pending' | 'approved' | 'denied' | 'needs_info' | 'autodeleted'>(
-  'all',
-)
-const expandedId = ref<string | null>(null)
-const currentYear = new Date().getFullYear()
-const selectedYear = ref(currentYear)
-
-const applications = ref<IApplicationItem[]>([])
-const loading = ref(true)
+const {
+  activeTab,
+  filterStatus,
+  selectedYear,
+  currentYear,
+  applications,
+  loading,
+  filteredApplications,
+  pendingGroup,
+  approvedGroup,
+  resendingAppId,
+  resendSuccessAppId,
+  fetchApplications,
+  updateStatus,
+  viewOriginal,
+  resendEmail,
+} = useApplications()
 
 const tabs = [
   { id: 'adoption', label: 'Adoption', icon: '🐾' },
@@ -29,17 +30,10 @@ const tabs = [
   { id: 'history', label: 'Past Years', icon: '🕰️' },
 ] as const
 
-// Used for base logic below
-// const API_url = API_ENDPOINTS.APPLICATIONS
-// Refactoring to use API_ENDPOINTS directly
-
-const filteredApplications = computed(() => {
-  return applications.value.filter((app) => {
-    const typeMatch = activeTab.value === 'history' ? true : app.type === activeTab.value
-    const statusMatch = filterStatus.value === 'all' || app.status === filterStatus.value
-    return typeMatch && statusMatch
-  })
-})
+const expandedId = ref<string | null>(null)
+const isPendingOpen = ref(true)
+const isApprovedOpen = ref(true)
+const isFiltersOpen = ref(false)
 
 const toggleExpand = (id: string) => {
   if (expandedId.value === id) {
@@ -52,197 +46,51 @@ const toggleExpand = (id: string) => {
 const selectTab = (id: typeof activeTab.value) => {
   activeTab.value = id
   expandedId.value = null
-  if (id !== 'history') {
-
-  }
 }
 
-import { type IApplication,mockApplications } from '../../stores/mockApplications'
-
-async function fetchApplications(autoFocus = false) {
-  loading.value = true
-  try {
-    const token = localStorage.getItem('token')
-    const yearParam = activeTab.value === 'history' ? selectedYear.value : currentYear
-
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    let rawApps: any[] = []
-
-    // Fetch from API
-    try {
-      const res = await fetch(`${API_ENDPOINTS.APPLICATIONS}?page_size=100&year=${yearParam}`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      })
-      if (res.ok) {
-        const json = await res.json()
-        rawApps = json.applications || []
-      }
-    } catch (e) {
-      console.warn('API fetch failed, falling back to mock data', e)
-    }
-
-    // Merge with Mock Store (Frontend persistence)
-    const mockApps = mockApplications.value.map(app => ({
-      id: app.id,
-      type: app.type,
-      status: app.status,
-      created_at: app.date,
-      data: { ...app.details, ...app.fullApplication, email: app.email, firstName: app.applicantName.split(' ')[0], lastName: app.applicantName.split(' ')[1] || '' }
-    }))
-
-    // Combine (Mock apps first)
-    rawApps = [...mockApps, ...rawApps]
-
-    applications.value = rawApps.map((app: { id: string; type: 'adoption' | 'volunteer' | 'surrender'; status: IApplicationItem['status']; created_at: string; data: Record<string, unknown> }) => {
-        const d = app.data || {}
-        let name = 'Unknown'
-
-        if (app.type === 'volunteer') {
-          name =
-            d.firstName && d.lastName
-              ? `${d.firstName} ${d.lastName}`
-              : String(d.nameFull || 'Volunteer Applicant')
-        } else if (app.type === 'adoption') {
-          name = d.firstName && d.lastName ? `${d.firstName} ${d.lastName}` : 'Adoption Applicant'
-        } else if (app.type === 'surrender') {
-          name = d.firstName && d.lastName ? `${d.firstName} ${d.lastName}` : 'Surrender Applicant'
-        }
-
-        return {
-          id: app.id,
-          type: app.type,
-          status: app.status,
-          date: app.created_at,
-          applicantName: name,
-          email: String(d.email || d.Email || ''),
-          details: {
-            petName:
-              String(d.petName || d.catPreferenceName ||
-              d.animalName ||
-              (d.catPreferenceBreed ? `Breed: ${d.catPreferenceBreed}` : null) || ''),
-            role: formatRole(d.positionPreferences),
-            reason: String(d.interestReason || d.adoptionReason || d.animalWhySurrendered || ''),
-          },
-          fullApplication: { ...d, createdAt: app.created_at },
-        }
-      })
-
-      if (autoFocus && activeTab.value !== 'history') {
-        const adoptionCount = applications.value.filter((a) => a.type === 'adoption').length
-        const volunteerCount = applications.value.filter((a) => a.type === 'volunteer').length
-        const surrenderCount = applications.value.filter((a) => a.type === 'surrender').length
-
-        if (adoptionCount > 0) {
-          activeTab.value = 'adoption'
-        } else if (volunteerCount > 0) {
-          activeTab.value = 'volunteer'
-        } else if (surrenderCount > 0) {
-          activeTab.value = 'surrender'
-        } else {
-
-          activeTab.value = 'history'
-          expandedId.value = null
-          filterStatus.value = 'all'
-          selectedYear.value = currentYear - 1
-          fetchApplications()
-          return
-        }
-      }
-
-      if (autoFocus && activeTab.value === 'history' && applications.value.length === 0) {
-        activeTab.value = 'adoption'
-        selectedYear.value = currentYear
-        fetchApplications(false)
-        return
-      }
-  } catch (e) {
-    console.error('Failed to process applications', e)
-  } finally {
-    loading.value = false
-  }
-}
-
-const updateStatus = (app: IApplicationItem, status: IApplicationItem['status']) => {
-  // Check if it's a mock application
-  if (app.id.startsWith('a-app-') || app.id.startsWith('v-app-') || app.id.startsWith('s-app-')) {
-    const mockApp = mockApplications.value.find(a => a.id === app.id)
-    if (mockApp) {
-      // Cast standard status to mock status if compatible, or ignore incompatibilities for mock
-      mockApp.status = status as IApplication['status']
-      app.status = status
-
-      // If approved, you would technically save to DB here
-      if (status === 'approved') {
-        console.log('Application approved! Saving to permanent database (Mock Action)')
-        // Example: Update pet status
-        // const petId = app.details.petId
-        // updatePetStatus(petId, 'Adopted')
-      }
-    }
-    return
-  }
-
-  const token = localStorage.getItem('token')
-  fetch(`${API_ENDPOINTS.APPLICATIONS}/${app.id}`, {
-    method: 'PUT',
-    headers: {
-      'Content-Type': 'application/json',
-      Authorization: `Bearer ${token}`,
-    },
-    body: JSON.stringify({ status }),
-  }).then((res) => {
-    if (res.ok) {
-      app.status = status
-    }
-  })
-}
-
-const viewOriginal = async (appId: string) => {
-  try {
-    const token = localStorage.getItem('token')
-    const res = await fetch(`${API_ENDPOINTS.APPLICATIONS}/${appId}/original`, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    })
-    if (res.ok) {
-      const text = await res.text()
-      const blob = new Blob([text], { type: 'text/html' })
-      const url = URL.createObjectURL(blob)
-      window.open(url, '_blank')
-    } else {
-      console.error('Failed to fetch original application')
-    }
-  } catch (e) {
-    console.error(e)
-  }
-}
-
+onMounted(() => {
+  fetchApplications(true)
+})
 </script>
 
 <template>
   <div class="applications-page">
+    <Teleport to="#mobile-header-target" :disabled="false">
+      <h1 class="mobile-header-title">Applications</h1>
+    </Teleport>
+
     <div class="page-header">
-      <h1>Applications</h1>
+      <h1 class="desktop-only">Applications</h1>
       <div class="header-actions">
-        <InputSelectGroup
-          :modelValue="filterStatus"
-          @update:modelValue="(val) => (filterStatus = val as typeof filterStatus)"
-          :options="[
-            { label: 'View All', value: 'all' },
-            { label: 'Pending', value: 'pending' },
-            { label: 'Approved', value: 'approved' },
-            { label: 'Denied', value: 'denied' },
-            { label: 'Needs Info', value: 'needs_info' },
-            { label: 'Auto-Deleted', value: 'autodeleted' },
-          ]"
-        />
-        <div v-if="activeTab === 'history'" class="ml-4">
-          <select v-model="selectedYear" @change="() => fetchApplications()" class="p-2 border rounded-md">
-            <option v-for="y in 5" :key="y" :value="currentYear - y">{{ currentYear - y }}</option>
-          </select>
+        <!-- Desktop Filter Group (Always Visible) / Mobile (Collapsible) -->
+        <div class="filter-wrapper" :class="{ open: isFiltersOpen }">
+          <InputSelectGroup
+            :modelValue="filterStatus"
+            @update:modelValue="(val) => (filterStatus = val as typeof filterStatus)"
+            :options="[
+              { label: 'View All', value: 'all' },
+              { label: 'Pending', value: 'pending' },
+              { label: 'Approved', value: 'approved' },
+              { label: 'Denied', value: 'denied' },
+            ]"
+          />
+        </div>
+
+        <div class="mobile-actions">
+          <button
+            class="filter-toggle-btn"
+            :class="{ active: isFiltersOpen }"
+            @click="isFiltersOpen = !isFiltersOpen"
+          >
+            Filters
+            <span v-if="filterStatus !== 'all'" class="badge">1</span>
+          </button>
+
+          <div v-if="activeTab === 'history'" class="year-select">
+            <select v-model="selectedYear" @change="() => fetchApplications()" class="p-2 border rounded-md">
+              <option v-for="y in 5" :key="y" :value="currentYear - y">{{ currentYear - y }}</option>
+            </select>
+          </div>
         </div>
       </div>
     </div>
@@ -271,17 +119,65 @@ const viewOriginal = async (appId: string) => {
         <p>No applications found.</p>
       </div>
 
-      <ApplicationCard
-        v-else
-        v-for="app in filteredApplications"
-        :key="app.id"
-        :app="app"
-        :expanded="expandedId === app.id"
-        :isExpandedId="expandedId === app.id"
-        @toggle="toggleExpand(app.id)"
-        @update-status="updateStatus"
-        @view-original="viewOriginal"
-      />
+      <template v-else>
+        <!-- Pending / Denied / Needs Info Section -->
+        <div class="section-container" v-if="pendingGroup.length > 0">
+          <div class="section-header" @click="isPendingOpen = !isPendingOpen">
+             <div class="section-title-group">
+              <h2>Pending & Denied</h2>
+              <span class="count-badge">{{ pendingGroup.length }}</span>
+             </div>
+             <div class="expand-arrow" :class="{ 'rotated': !isPendingOpen }">
+               ▼
+             </div>
+          </div>
+
+          <div v-if="isPendingOpen" class="section-content">
+            <ApplicationCard
+              v-for="app in pendingGroup"
+              :key="app.id"
+              :app="app"
+              :expanded="expandedId === app.id"
+              :isExpandedId="expandedId === app.id"
+              :isResending="resendingAppId === app.id"
+              :isResendSuccess="resendSuccessAppId === app.id"
+              @toggle="toggleExpand(app.id)"
+              @update-status="updateStatus"
+              @view-original="viewOriginal"
+              @resend-email="resendEmail"
+            />
+          </div>
+        </div>
+
+        <!-- Approved Section -->
+        <div class="section-container" v-if="approvedGroup.length > 0">
+           <div class="section-header" @click="isApprovedOpen = !isApprovedOpen">
+             <div class="section-title-group">
+              <h2>Approved</h2>
+              <span class="count-badge">{{ approvedGroup.length }}</span>
+             </div>
+             <div class="expand-arrow" :class="{ 'rotated': !isApprovedOpen }">
+               ▼
+             </div>
+          </div>
+
+          <div v-if="isApprovedOpen" class="section-content">
+            <ApplicationCard
+              v-for="app in approvedGroup"
+              :key="app.id"
+              :app="app"
+              :expanded="expandedId === app.id"
+              :isExpandedId="expandedId === app.id"
+              :isResending="resendingAppId === app.id"
+              :isResendSuccess="resendSuccessAppId === app.id"
+              @toggle="toggleExpand(app.id)"
+              @update-status="updateStatus"
+              @view-original="viewOriginal"
+              @resend-email="resendEmail"
+            />
+          </div>
+        </div>
+      </template>
     </div>
   </div>
 </template>
@@ -298,12 +194,31 @@ const viewOriginal = async (appId: string) => {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  flex-shrink: 0;
 }
 
-.page-header h1 {
+.page-header h1.desktop-only {
   font-size: 1.8rem;
   color: var(--text-primary);
   margin: 0;
+}
+
+.mobile-header-title {
+  display: none;
+}
+
+@media (width <= 768px) {
+  .page-header h1.desktop-only {
+    display: none;
+  }
+
+  .mobile-header-title {
+    display: block;
+    font-size: 1.25rem;
+    font-weight: 800;
+    color: var(--text-primary);
+    margin: 0;
+  }
 }
 
 .tabs {
@@ -311,6 +226,7 @@ const viewOriginal = async (appId: string) => {
   gap: 16px;
   border-bottom: 1px solid #e5e7eb;
   margin-bottom: 24px;
+  flex-shrink: 0;
 }
 
 .tab-btn {
@@ -369,5 +285,154 @@ const viewOriginal = async (appId: string) => {
   color: var(--text-secondary);
   background: #f9fafb;
   border-radius: 12px;
+}
+
+.section-container {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 16px;
+  background: #f3f4f6;
+  border-radius: 8px;
+  cursor: pointer;
+  user-select: none;
+  transition: background-color 0.2s;
+}
+
+.section-header:hover {
+  background: #e5e7eb;
+}
+
+.section-header h2 {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin: 0;
+}
+
+.section-content {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.section-title-group {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.expand-arrow {
+  color: hsl(from var(--color-neutral) h s 50%);
+  font-size: 0.8rem;
+  transition: transform 0.2s ease;
+}
+
+.expand-arrow.rotated {
+  transform: rotate(-90deg);
+}
+
+.filter-toggle-btn {
+  display: none;
+}
+
+.filter-wrapper {
+  display: block;
+}
+
+@media (width <= 768px) {
+  .page-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+  }
+
+  .header-actions {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .mobile-actions {
+    display: flex;
+    width: 100%;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  /* Collapsible Wrapper */
+  .filter-wrapper {
+    display: none;
+    width: 100%;
+  }
+
+  /* When open, show filters */
+  .filter-wrapper.open {
+    display: block;
+    animation: fadeIn 0.2s ease-out;
+  }
+
+  /* Filter Button Styling (Matches Reference) */
+  .filter-toggle-btn {
+    all: unset;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 20px;
+    border-radius: 20px;
+    background-color: #f3f4f6;
+    color: var(--text-secondary);
+    font-weight: 600;
+    cursor: pointer;
+    border: 1px solid transparent;
+    transition: all 0.2s;
+  }
+
+  .filter-toggle-btn.active {
+    background-color: var(--text-primary);
+    color: var(--text-inverse);
+  }
+
+  .filter-toggle-btn .badge {
+    background: var(--color-primary);
+    color: #fff;
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.75rem;
+    font-weight: 700;
+  }
+
+  /* Make tabs scrollable on mobile */
+  .tabs {
+    overflow-x: auto;
+    padding-bottom: 4px;
+    margin-right: -16px;
+    scrollbar-width: none;
+  }
+
+  .tabs::-webkit-scrollbar {
+    display: none;
+  }
+
+  .tab-btn {
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-5px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 </style>

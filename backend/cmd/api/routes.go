@@ -24,15 +24,16 @@ func (app *application) routes() http.Handler {
 	// Pet Management
 	mux.Handle("PUT /pets/{id}", app.requireLogin(http.HandlerFunc(app.updatePet)))
 	mux.Handle("POST /pets", app.requireLogin(http.HandlerFunc(app.createPet)))
-	mux.Handle("POST /applications/volunteer", app.requireAuthentication(http.HandlerFunc(app.submitVolunteerApplication)))
-	mux.Handle("POST /applications/adoption", app.requireAuthentication(http.HandlerFunc(app.submitAdoptionApplication)))
-	mux.Handle("POST /applications/surrender", app.requireAuthentication(http.HandlerFunc(app.submitSurrenderApplication)))
+	mux.Handle("POST /applications/volunteer", http.HandlerFunc(app.submitVolunteerApplication))
+	mux.Handle("POST /applications/adoption", http.HandlerFunc(app.submitAdoptionApplication))
+	mux.Handle("POST /applications/surrender", http.HandlerFunc(app.submitSurrenderApplication))
 	mux.Handle("POST /metrics", app.requireAuthentication(http.HandlerFunc(app.submitMetric)))
 
 	// Application Management
 	mux.Handle("GET /v1/applications", app.requireLogin(http.HandlerFunc(app.listApplicationsHandler)))
 	mux.Handle("PUT /v1/applications/{id}", app.requireLogin(http.HandlerFunc(app.updateApplicationStatusHandler)))
 	mux.Handle("GET /v1/applications/{id}/original", app.requireLogin(http.HandlerFunc(app.getApplicationOriginalHandler)))
+	mux.Handle("POST /v1/applications/{id}/resend-email", app.requireLogin(http.HandlerFunc(app.resendApplicationEmailHandler)))
 
 	// Volunteer Management
 	mux.Handle("POST /v1/volunteers", app.requireLogin(http.HandlerFunc(app.createVolunteerHandler)))

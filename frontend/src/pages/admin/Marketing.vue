@@ -13,11 +13,15 @@ const selectedCampaign = ref<ICampaign | null>(null)
 
 <template>
   <div class="marketing-page">
+    <Teleport to="#mobile-header-target" :disabled="false">
+      <h1 class="mobile-header-title">{{ selectedCampaign ? selectedCampaign.name : 'Marketing Center' }}</h1>
+    </Teleport>
+
     <div class="page-header">
        <div v-if="selectedCampaign" class="header-breadcrumb">
         <button class="back-link" @click="selectedCampaign = null">← Marketing Center</button>
       </div>
-      <h1>{{ selectedCampaign ? selectedCampaign.name : 'Marketing Center' }}</h1>
+      <h1 class="desktop-only">{{ selectedCampaign ? selectedCampaign.name : 'Marketing Center' }}</h1>
 
       <div v-if="!selectedCampaign" class="tabs">
         <button class="tab-btn" :class="{ active: activeTab === 'campaigns' }" @click="activeTab = 'campaigns'">
@@ -63,10 +67,28 @@ const selectedCampaign = ref<ICampaign | null>(null)
   flex-direction: column;
   gap: 16px;
 
-  h1 {
+  h1.desktop-only {
     margin: 0;
     font-size: 1.8rem;
     color: var(--text-primary);
+  }
+}
+
+.mobile-header-title {
+  display: none;
+}
+
+@media (width <= 768px) {
+  .page-header h1.desktop-only {
+    display: none;
+  }
+
+  .mobile-header-title {
+    display: block;
+    font-size: 1.25rem;
+    font-weight: 800;
+    color: var(--text-primary);
+    margin: 0;
   }
 }
 

@@ -16,6 +16,7 @@ export const useVolunteerStore = defineStore('volunteer', () => {
     fax_number: '',
     firstName: '',
     lastName: '',
+    email: '',
     address: '',
     city: '',
     zip: '',
@@ -42,6 +43,8 @@ export const useVolunteerStore = defineStore('volunteer', () => {
 
     if (!formState.firstName) errors.push('First Name')
     if (!formState.lastName) errors.push('Last Name')
+    if (!formState.email) errors.push('Email')
+    if (formState.email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formState.email)) errors.push('Valid Email')
     if (!formState.address) errors.push('Address')
     if (!formState.city) errors.push('City')
     if (!formState.zip) errors.push('Zip Code')

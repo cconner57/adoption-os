@@ -17,7 +17,7 @@ export interface PastPet {
 }
 
 export interface FormState {
-  fax_number: string | null 
+  fax_number: string | null
   firstName: string | null
   lastName: string | null
   age: number | null
@@ -52,7 +52,7 @@ export interface FormState {
   previousAddress: string | null
   expectToMove: string | null
   travelPlan: string | null
-  catAccess: string | null
+  catAccess: string[]
   catIndoorOutdoor: string | null
   catPreferenceBreed: string | null
   catPreferencePhysical: string | null

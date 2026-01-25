@@ -7,9 +7,9 @@ const volunteerStore = useActiveVolunteersStore()
 
 const formatTime = (timeStr: string) => {
   if (!timeStr) return ''
-  
+
   const [h, m] = timeStr.split(':')
-  const hour = parseInt(h)
+  const hour = Number.parseInt(h)
   const ampm = hour >= 12 ? 'PM' : 'AM'
   const hour12 = hour % 12 || 12
   return `${hour12}:${m} ${ampm}`
@@ -17,8 +17,8 @@ const formatTime = (timeStr: string) => {
 
 const getWeekRange = () => {
   const today = new Date()
-  const day = today.getDay() 
-  const diff = today.getDate() - day + (day === 0 ? -6 : 1) 
+  const day = today.getDay()
+  const diff = today.getDate() - day + (day === 0 ? -6 : 1)
   const monday = new Date(today.setDate(diff))
   const sunday = new Date(today.setDate(diff + 6))
 
@@ -44,7 +44,7 @@ const weekDays = computed(() => {
   const shifts = volunteerStore.weeklyShifts || []
 
   return days.map((name, index) => {
-    
+
     const currentDay = new Date(mondayObject)
     currentDay.setDate(mondayObject.getDate() + index)
     const dateStr = currentDay.toISOString().split('T')[0]
@@ -82,27 +82,29 @@ const weekDays = computed(() => {
       </div>
     </div>
 
-    <div class="calendar-grid">
-      <div
-        v-for="day in weekDays"
-        :key="day.date"
-        class="calendar-day"
-        :class="{ today: day.isToday }"
-      >
-        <div class="day-header">
-          <span class="day-name">{{ day.name }}</span>
-          <span class="day-date">{{ day.date }}</span>
-        </div>
-        <div class="day-events">
-          <div
-            v-for="event in day.events"
-            :key="event.id"
-            class="event-pill"
-            :class="event.type"
-            :title="`${event.name} (${event.time})`"
-          >
-            <span class="event-name">{{ event.name }}</span>
-            <span class="event-time">{{ event.time }}</span>
+    <div class="calendar-scroll-container">
+      <div class="calendar-grid">
+        <div
+          v-for="day in weekDays"
+          :key="day.date"
+          class="calendar-day"
+          :class="{ today: day.isToday }"
+        >
+          <div class="day-header">
+            <span class="day-name">{{ day.name }}</span>
+            <span class="day-date">{{ day.date }}</span>
+          </div>
+          <div class="day-events">
+            <div
+              v-for="event in day.events"
+              :key="event.id"
+              class="event-pill"
+              :class="event.type"
+              :title="`${event.name} (${event.time})`"
+            >
+              <span class="event-name">{{ event.name }}</span>
+              <span class="event-time">{{ event.time }}</span>
+            </div>
           </div>
         </div>
       </div>
@@ -151,49 +153,20 @@ const weekDays = computed(() => {
 .legend {
   display: flex;
   gap: 12px;
+  flex-wrap: wrap; /* Allow legend to wrap on mobile */
 }
 
-.legend-item {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  font-size: 0.85rem;
-  color: var(--text-secondary);
-}
-
-.dot {
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-}
-
-.dot.feeding {
-  background-color: var(--color-secondary);
-}
-
-.dot.adoption {
-  background-color: var(--color-tertiary);
-}
-
-.dot.transport {
-  background-color: var(--color-warning);
-}
-
-.dot.vet {
-  background-color: var(--color-danger);
-}
-
-.dot.default {
-  background-color: var(--text-secondary);
+.calendar-scroll-container {
+  overflow-x: auto;
+  width: 100%;
+  padding-bottom: 8px;
 }
 
 .calendar-grid {
   display: grid;
   grid-template-columns: repeat(7, 1fr);
   gap: 12px;
-  overflow-x: auto;
-  padding-bottom: 8px;
-  flex: 1;
+  min-width: 800px; /* Force minimum width to trigger scroll inside container */
 }
 
 .calendar-day {

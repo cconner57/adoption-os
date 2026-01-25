@@ -43,25 +43,31 @@ func (m Mailer) Send(recipient, subject, body string, attachments map[string][]b
 		"%s\r\n", boundary, body)
 
 	// Attachments
+	// Attachments processing
+	// We want to ensure specific order if possible, or at least robustness.
+	// 1. Logo (Inline)
+	if data, ok := attachments["logo.jpg"]; ok {
+		message += fmt.Sprintf("\r\n--%s\r\n"+
+			"Content-Type: image/jpeg\r\n"+
+			"Content-Transfer-Encoding: base64\r\n"+
+			"Content-Disposition: inline; filename=\"logo.jpg\"\r\n"+
+			"Content-ID: <logo>\r\n"+
+			"\r\n"+
+			"%s\r\n", boundary, base64.StdEncoding.EncodeToString(data))
+	}
+
+	// 2. Others (Regular Attachments)
 	for filename, data := range attachments {
 		if filename == "logo.jpg" {
-			// Inline logo
-			message += fmt.Sprintf("\r\n--%s\r\n"+
-				"Content-Type: image/jpeg\r\n"+
-				"Content-Transfer-Encoding: base64\r\n"+
-				"Content-Disposition: inline; filename=\"%s\"\r\n"+
-				"Content-ID: <logo>\r\n"+
-				"\r\n"+
-				"%s\r\n", boundary, filename, base64.StdEncoding.EncodeToString(data))
-		} else {
-			// Regular attachment
-			message += fmt.Sprintf("\r\n--%s\r\n"+
-				"Content-Type: application/octet-stream\r\n"+
-				"Content-Transfer-Encoding: base64\r\n"+
-				"Content-Disposition: attachment; filename=\"%s\"\r\n"+
-				"\r\n"+
-				"%s\r\n", boundary, filename, base64.StdEncoding.EncodeToString(data))
+			continue // Already handled
 		}
+		// Regular attachment
+		message += fmt.Sprintf("\r\n--%s\r\n"+
+			"Content-Type: application/octet-stream\r\n"+
+			"Content-Transfer-Encoding: base64\r\n"+
+			"Content-Disposition: attachment; filename=\"%s\"\r\n"+
+			"\r\n"+
+			"%s\r\n", boundary, filename, base64.StdEncoding.EncodeToString(data))
 	}
 
 	// Close the boundary

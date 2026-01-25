@@ -38,7 +38,7 @@ const fetchPendingCount = async () => {
     })
     if (res.ok) {
       const data = await res.json()
-      pendingCount.value = data.metadata.total_records
+      pendingCount.value = data.metadata.totalRecords
     }
   } catch (e) {
     console.error('Failed to fetch pending count', e)
@@ -210,6 +210,10 @@ const newIntakesItems = computed(() => [
 
 <template>
   <div class="dashboard-home">
+    <Teleport to="#mobile-header-target" :disabled="false">
+      <h1 class="mobile-header-title">Overview</h1>
+    </Teleport>
+
     <header class="welcome-section">
       <h1>Hello, {{ userName }}</h1>
       <p>Here's what's happening at the rescue today.</p>
@@ -272,6 +276,20 @@ const newIntakesItems = computed(() => [
   gap: 32px;
 }
 
+.mobile-header-title {
+  display: none;
+}
+
+@media (width <= 768px) {
+  .mobile-header-title {
+    display: block;
+    font-size: 1.25rem;
+    font-weight: 800;
+    color: var(--text-primary);
+    margin: 0;
+  }
+}
+
 .welcome-section h1 {
   font-size: 2rem;
   color: var(--text-primary);
@@ -287,9 +305,11 @@ const newIntakesItems = computed(() => [
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: 24px;
+  min-width: 0; /* Prevent grid blowout */
 
   @media (width <= 900px) {
     grid-template-columns: 1fr;
+    gap: 16px; /* Tighter gap for mobile */
   }
 }
 
@@ -297,9 +317,11 @@ const newIntakesItems = computed(() => [
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 24px;
+  min-width: 0; /* Prevent grid blowout */
 
   @media (width <= 900px) {
     grid-template-columns: 1fr;
+    gap: 16px;
   }
 }
 
@@ -311,6 +333,8 @@ const newIntakesItems = computed(() => [
   box-shadow: 0 4px 6px rgb(0 0 0 / 5%);
   display: flex;
   flex-direction: column;
+  min-width: 0; /* Essential for grid items to shrink */
+  overflow: hidden; /* Prevent internal content from spilling out */
 }
 
 .widget h3 {

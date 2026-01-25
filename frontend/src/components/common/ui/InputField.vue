@@ -15,6 +15,8 @@ const props = defineProps<{
   fullWidth?: boolean
   required?: boolean
   hasError?: boolean
+  maxlength?: string | number
+  inputmode?: 'none' | 'text' | 'decimal' | 'numeric' | 'tel' | 'search' | 'email' | 'url'
 }>()
 
 const emit = defineEmits<{
@@ -84,6 +86,8 @@ function onBlur(e: Event) {
       @input="onInput"
       @blur="onBlur"
       :required="props.required"
+      :maxlength="props.maxlength"
+      :inputmode="props.inputmode"
     />
   </div>
 </template>
@@ -93,7 +97,7 @@ function onBlur(e: Event) {
   display: flex;
   flex-direction: column;
   gap: 8px;
-  width: 100%; 
+  width: 100%;
 }
 
 input {
@@ -107,7 +111,12 @@ input {
   caret-color: var(--text-primary);
   box-shadow: 0 2px 4px rgb(0 0 0 / 10%);
   color: var(--text-primary);
-  flex: 1; 
+  flex: 1;
+}
+
+.control.has-error input {
+  border-color: var(--color-danger);
+  outline: 1px solid var(--color-danger);
 }
 
 </style>

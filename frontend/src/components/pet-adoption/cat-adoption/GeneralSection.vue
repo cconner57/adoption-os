@@ -1,52 +1,63 @@
 <script setup lang="ts">
+import { storeToRefs } from 'pinia'
 
+import { useAdoptionStore } from '../../../stores/adoption'
 import ButtonToggle from '../../common/ui/ButtonToggle.vue'
 import InputField from '../../common/ui/InputField.vue'
 
-const { modelValue } = defineProps<{
-  modelValue: {
-    firstName: string | null
-    lastName: string | null
-    age: number | null
-    roommatesNames: string[]
-    childrenNamesAges: { name: string; age: string }[]
-    email: string | null
-    address: string | null
-    addressLine2: string | null
-    city: string | null
-    state: string | null
-    zip: string | null
-    phoneNumber: string | null
-    cellPhoneNumber: string | null
-    spouseFirstName: string | null
-    spouseLastName: string | null
-    adultMembersAgreed: string | null
-    fax_number: string | null
-  }
+defineProps<{
   touched?: Record<string, boolean>
   // eslint-disable-next-line no-unused-vars
   handleBlur: (_field: string) => void
   hasAttemptedSubmit?: boolean
 }>()
 
+const adoptionStore = useAdoptionStore()
+const { formState } = storeToRefs(adoptionStore)
+
+const formatPhoneNumber = (value: string | number | null): string => {
+  if (!value) return ''
+  const digits = String(value).replace(/\D/g, '').substring(0, 10)
+  if (digits.length === 0) return ''
+  if (digits.length <= 3) return digits
+  if (digits.length <= 6) return `${digits.slice(0, 3)}-${digits.slice(3)}`
+  return `${digits.slice(0, 3)}-${digits.slice(3, 6)}-${digits.slice(6, 10)}`
+}
+const sanitizeName = (value: string | number | null): string => {
+  if (!value) return ''
+  return String(value).replace(/[^a-zA-Z0-9 ]/g, '')
+}
+const sanitizeCity = (value: string | number | null): string => {
+  if (!value) return ''
+  return String(value).replace(/[^a-zA-Z0-9 -]/g, '')
+}
+const sanitizeZip = (value: string | number | null): string => {
+  if (!value) return ''
+  return String(value).replace(/\D/g, '').substring(0, 5)
+}
+const sanitizeAddress = (value: string | number | null): string => {
+  if (!value) return ''
+  return String(value).replace(/[^a-zA-Z0-9 -]/g, '')
+}
+
 function addRoommate() {
-  modelValue.roommatesNames.push('')
+  formState.value.roommatesNames.push('')
 }
 
 function removeRoommate(index: number) {
-  modelValue.roommatesNames.splice(index, 1)
+  formState.value.roommatesNames.splice(index, 1)
 }
 
 function addChild() {
-  modelValue.childrenNamesAges.push({ name: '', age: '' })
+  formState.value.childrenNamesAges.push({ name: '', age: '' })
 }
 
 function removeChild(index: number) {
-  modelValue.childrenNamesAges.splice(index, 1)
+  formState.value.childrenNamesAges.splice(index, 1)
 }
 
 function handleAgreementUpdate(val: string | number | boolean | null) {
-  modelValue.adultMembersAgreed = val as 'Yes' | 'No'
+  formState.value.adultMembersAgreed = val as 'Yes' | 'No'
 }
 </script>
 
@@ -59,7 +70,7 @@ function handleAgreementUpdate(val: string | number | boolean | null) {
         <label for="fax_number">Fax Number</label>
         <input
           id="fax_number"
-          v-model="modelValue.fax_number"
+          v-model="formState.fax_number"
           type="text"
           name="fax_number"
           tabindex="-1"
@@ -69,106 +80,126 @@ function handleAgreementUpdate(val: string | number | boolean | null) {
 
       <div class="form-grid">
         <InputField
-          v-model="modelValue.firstName"
+          :modelValue="formState.firstName"
+          @update:modelValue="(val) => (formState.firstName = sanitizeName(val))"
           label="First Name"
           name="firstName"
           placeholder="First Name"
           required
-          :hasError="(touched?.firstName || hasAttemptedSubmit) && !modelValue.firstName"
+          :hasError="(touched?.firstName || hasAttemptedSubmit) && !formState.firstName"
           @blur="handleBlur?.('firstName')"
         />
         <InputField
-          v-model="modelValue.lastName"
+          :modelValue="formState.lastName"
+          @update:modelValue="(val) => (formState.lastName = sanitizeName(val))"
           label="Last Name"
           name="lastName"
           placeholder="Last Name"
           required
-          :hasError="(touched?.lastName || hasAttemptedSubmit) && !modelValue.lastName"
+          :hasError="(touched?.lastName || hasAttemptedSubmit) && !formState.lastName"
           @blur="handleBlur?.('lastName')"
         />
         <InputField
-          v-model="modelValue.age"
+          :modelValue="formState.age"
+          @update:modelValue="
+            (val) => {
+              const str = String(val).replace(/\D/g, '').substring(0, 3)
+              formState.age = str ? Number(str) : null
+            }
+          "
           label="Age"
           name="age"
           placeholder="Age"
           required
-          :hasError="(touched?.age || hasAttemptedSubmit) && !modelValue.age"
+          :hasError="(touched?.age || hasAttemptedSubmit) && !formState.age"
           @blur="handleBlur?.('age')"
         />
         <InputField
-          v-model="modelValue.email"
+          v-model="formState.email"
           label="Email"
           name="email"
           placeholder="Email"
           required
-          :hasError="(touched?.email || hasAttemptedSubmit) && !modelValue.email"
+          :hasError="(touched?.email || hasAttemptedSubmit) && !formState.email"
           @blur="handleBlur?.('email')"
         />
         <InputField
           class="full-width"
-          v-model="modelValue.address"
+          :modelValue="formState.address"
+          @update:modelValue="(val) => (formState.address = sanitizeAddress(val))"
           label="Address"
           name="address"
           placeholder="Street Address"
           required
-          :hasError="(touched?.address || hasAttemptedSubmit) && !modelValue.address"
+          :hasError="(touched?.address || hasAttemptedSubmit) && !formState.address"
           @blur="handleBlur?.('address')"
         />
         <InputField
           class="full-width"
-          v-model="modelValue.addressLine2"
+          :modelValue="formState.addressLine2"
+          @update:modelValue="(val) => (formState.addressLine2 = sanitizeAddress(val))"
           label="Address Line 2"
           name="addressLine2"
           placeholder="Address Line 2"
-          required
-          :hasError="(touched?.addressLine2 || hasAttemptedSubmit) && !modelValue.addressLine2"
           @blur="handleBlur?.('addressLine2')"
         />
         <InputField
-          v-model="modelValue.city"
+          :modelValue="formState.city"
+          @update:modelValue="(val) => (formState.city = sanitizeCity(val))"
           label="City"
           name="city"
           placeholder="City"
           required
-          :hasError="(touched?.city || hasAttemptedSubmit) && !modelValue.city"
+          :hasError="(touched?.city || hasAttemptedSubmit) && !formState.city"
           @blur="handleBlur?.('city')"
         />
         <InputField
-          v-model="modelValue.state"
+          :modelValue="formState.state"
+          @update:modelValue="(val) => (formState.state = sanitizeCity(val))"
           label="State"
           name="state"
           placeholder="State"
           required
-          :hasError="(touched?.state || hasAttemptedSubmit) && !modelValue.state"
+          :hasError="(touched?.state || hasAttemptedSubmit) && !formState.state"
           @blur="handleBlur?.('state')"
         />
         <InputField
-          v-model="modelValue.zip"
+          :modelValue="formState.zip"
+          @update:modelValue="(val) => (formState.zip = sanitizeZip(val))"
           label="Zip Code"
           name="zip"
           placeholder="Zip Code"
           required
-          :hasError="(touched?.zip || hasAttemptedSubmit) && !modelValue.zip"
+          maxlength="5"
+          inputmode="numeric"
+          pattern="[0-9]*"
+          :hasError="(touched?.zip || hasAttemptedSubmit) && !formState.zip"
           @blur="handleBlur?.('zip')"
         />
         <InputField
-          v-model="modelValue.phoneNumber"
+          :modelValue="formState.phoneNumber"
+          @update:modelValue="(val) => (formState.phoneNumber = formatPhoneNumber(val))"
           label="Phone Number"
           name="phoneNumber"
-          placeholder="Phone Number"
+          placeholder="555-555-5555"
           required
-          :hasError="(touched?.phoneNumber || hasAttemptedSubmit) && !modelValue.phoneNumber"
+          type="tel"
+          maxlength="12"
+          inputmode="numeric"
+          :hasError="(touched?.phoneNumber || hasAttemptedSubmit) && !formState.phoneNumber"
           @blur="handleBlur?.('phoneNumber')"
         />
         <InputField
-          v-model="modelValue.spouseFirstName"
+          :modelValue="formState.spouseFirstName"
+          @update:modelValue="(val) => (formState.spouseFirstName = sanitizeName(val))"
           label="Spouse/Partner First Name"
           name="spouseFirstName"
           placeholder="First Name"
           required
         />
         <InputField
-          v-model="modelValue.spouseLastName"
+          :modelValue="formState.spouseLastName"
+          @update:modelValue="(val) => (formState.spouseLastName = sanitizeName(val))"
           label="Spouse/Partner Last Name"
           name="spouseLastName"
           placeholder="Last Name"
@@ -180,13 +211,14 @@ function handleAgreementUpdate(val: string | number | boolean | null) {
             >Name of roommmate(s) and other adults in the household</label
           >
           <div
-            v-for="(roommate, index) in modelValue.roommatesNames"
+            v-for="(roommate, index) in formState.roommatesNames"
             :key="index"
             class="dynamic-input-row"
           >
             <div class="flex-grow">
               <InputField
-                v-model="modelValue.roommatesNames[index]"
+                :modelValue="formState.roommatesNames[index]"
+                @update:modelValue="(val) => (formState.roommatesNames[index] = sanitizeName(val))"
                 :name="`roommate-${index}`"
                 placeholder="Names"
                 required
@@ -222,13 +254,14 @@ function handleAgreementUpdate(val: string | number | boolean | null) {
         <div class="children">
           <label class="section-label">Name and ages of children (under 18) in the household</label>
           <div
-            v-for="(child, index) in modelValue.childrenNamesAges"
+            v-for="(child, index) in formState.childrenNamesAges"
             :key="index"
             class="dynamic-input-row"
           >
             <div class="flex-grow">
               <InputField
-                v-model="child.name"
+                :modelValue="child.name"
+                @update:modelValue="(val) => (child.name = sanitizeName(val))"
                 :name="`child-name-${index}`"
                 placeholder="Name"
                 required
@@ -237,7 +270,13 @@ function handleAgreementUpdate(val: string | number | boolean | null) {
             </div>
             <div class="age-wrapper">
               <InputField
-                v-model="child.age"
+                :modelValue="child.age"
+                @update:modelValue="
+                    (val) => {
+                        const str = String(val).replace(/\D/g, '').substring(0, 3)
+                        child.age = str || ''
+                    }
+                "
                 :name="`child-age-${index}`"
                 placeholder="Age"
                 required
@@ -272,9 +311,9 @@ function handleAgreementUpdate(val: string | number | boolean | null) {
         </div>
         <ButtonToggle
           label="Have all adult members of the household agreed to this adoption?"
-          :modelValue="modelValue.adultMembersAgreed"
+          :modelValue="formState.adultMembersAgreed"
           @update:modelValue="handleAgreementUpdate"
-          :hasError="hasAttemptedSubmit && !modelValue.adultMembersAgreed"
+          :hasError="hasAttemptedSubmit && !formState.adultMembersAgreed"
         />
       </div>
     </div>

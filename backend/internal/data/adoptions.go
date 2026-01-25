@@ -42,6 +42,8 @@ type AdoptionApplication struct {
 	FirstName          string      `json:"firstName"`
 	LastName           string      `json:"lastName"`
 	Age                interface{} `json:"age"`
+	PetID              *string     `json:"petId"`
+	PetName            *string     `json:"petName"`
 	SpouseFirstName    *string     `json:"spouseFirstName"`
 	SpouseLastName     *string     `json:"spouseLastName"`
 	RoommatesNames     []string    `json:"roommatesNames"`

@@ -169,6 +169,11 @@ func main() {
 			if err != nil {
 				app.logger.Error("Background Worker: Failed to archive", "error", err)
 			}
+
+			err = app.models.Applications.DeleteDeniedApplications(ctx)
+			if err != nil {
+				app.logger.Error("Background Worker: Failed to delete denied", "error", err)
+			}
 			cancel()
 		}
 	}()

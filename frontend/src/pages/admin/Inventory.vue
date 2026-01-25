@@ -13,7 +13,7 @@ const categories = computed(() => ['All', ...new Set(mockInventory.value.map((i)
 const filteredItems = computed(() => {
   return mockInventory.value
     .filter((item) => {
-      
+
       const searchMatch =
         !searchQuery.value ||
         item.name.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
@@ -28,7 +28,7 @@ const filteredItems = computed(() => {
       return searchMatch && catMatch && statusMatch
     })
     .sort((a, b) => {
-      
+
       const aRatio = a.quantity / a.minThreshold
       const bRatio = b.quantity / b.minThreshold
       return aRatio - bRatio
@@ -36,13 +36,13 @@ const filteredItems = computed(() => {
 })
 
 const getStockStatus = (item: IInventoryItem) => {
-  if (item.quantity === 0) return { label: 'Out of Stock', color: '#fee2e2' } 
-  if (item.quantity <= item.minThreshold) return { label: 'Low Stock', color: '#fef3c7' } 
-  return { label: 'In Stock', color: '#d1fae5' } 
+  if (item.quantity === 0) return { label: 'Out of Stock', color: '#fee2e2' }
+  if (item.quantity <= item.minThreshold) return { label: 'Low Stock', color: '#fef3c7' }
+  return { label: 'In Stock', color: '#d1fae5' }
 }
 
 const getStockWidth = (item: IInventoryItem) => {
-  
+
   const max = item.minThreshold * 2
   return `${Math.min((item.quantity / max) * 100, 100)  }%`
 }
@@ -83,9 +83,12 @@ const addItem = () => {
 
 <template>
   <div class="inventory-page">
-    
+    <Teleport to="#mobile-header-target" :disabled="false">
+      <h1 class="mobile-header-title">Inventory Management</h1>
+    </Teleport>
+
     <div class="page-header">
-      <h1>Inventory Management</h1>
+      <h1 class="desktop-only">Inventory Management</h1>
       <Button title="+ Add Item" color="white" :onClick="addItem" />
     </div>
 
@@ -215,10 +218,28 @@ const addItem = () => {
   justify-content: space-between;
   align-items: center;
 
-  h1 {
+  h1.desktop-only {
     margin: 0;
     font-size: 1.8rem;
     color: var(--text-primary);
+  }
+}
+
+.mobile-header-title {
+  display: none;
+}
+
+@media (width <= 768px) {
+  .page-header h1.desktop-only {
+    display: none;
+  }
+
+  .mobile-header-title {
+    display: block;
+    font-size: 1.25rem;
+    font-weight: 800;
+    color: var(--text-primary);
+    margin: 0;
   }
 }
 

@@ -59,8 +59,12 @@ const directionOptions = [
 
 <template>
   <div class="event-displays-page">
+    <Teleport to="#mobile-header-target" :disabled="false">
+      <h1 class="mobile-header-title">Event Displays</h1>
+    </Teleport>
+
     <div class="page-header">
-      <h1>Event Displays</h1>
+      <h1 class="desktop-only">Event Displays</h1>
     </div>
 
     <div class="main-layout">
@@ -111,10 +115,28 @@ const directionOptions = [
 }
 
 .page-header {
-  h1 {
+  h1.desktop-only {
     margin: 0 0 24px;
     color: var(--text-primary);
     font-size: 1.8rem;
+  }
+}
+
+.mobile-header-title {
+  display: none;
+}
+
+@media (width <= 768px) {
+  .page-header h1.desktop-only {
+    display: none;
+  }
+
+  .mobile-header-title {
+    display: block;
+    font-size: 1.25rem;
+    font-weight: 800;
+    color: var(--text-primary);
+    margin: 0;
   }
 }
 

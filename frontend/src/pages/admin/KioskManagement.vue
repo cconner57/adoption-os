@@ -27,9 +27,12 @@ watch(
 
 <template>
   <div class="kiosk-page">
-    
+    <Teleport to="#mobile-header-target" :disabled="false">
+      <h1 class="mobile-header-title">Kiosk Management</h1>
+    </Teleport>
+
     <div class="page-header">
-      <h1>Kiosk Management</h1>
+      <h1 class="desktop-only">Kiosk Management</h1>
       <div class="header-actions">
         <span v-if="hasChanges" class="unsaved-badge">Unsaved Changes</span>
         <Button title="Publish Changes" color="white" :loading="isSaving" :onClick="saveSettings" />
@@ -37,9 +40,9 @@ watch(
     </div>
 
     <div class="split-view">
-      
+
       <div class="settings-panel">
-        
+
         <div class="settings-group">
           <h2>General</h2>
           <div class="form-stack">
@@ -187,10 +190,28 @@ watch(
   justify-content: space-between;
   align-items: center;
 
-  h1 {
+  h1.desktop-only {
     margin: 0;
     font-size: 1.8rem;
     color: var(--text-primary);
+  }
+}
+
+.mobile-header-title {
+  display: none;
+}
+
+@media (width <= 768px) {
+  .page-header h1.desktop-only {
+    display: none;
+  }
+
+  .mobile-header-title {
+    display: block;
+    font-size: 1.25rem;
+    font-weight: 800;
+    color: var(--text-primary);
+    margin: 0;
   }
 }
 
@@ -201,8 +222,8 @@ watch(
 }
 
 .unsaved-badge {
-  background: #fef08a; 
-  color: #854d0e; 
+  background: #fef08a;
+  color: #854d0e;
   padding: 6px 12px;
   border-radius: 20px;
   font-size: 0.85rem;

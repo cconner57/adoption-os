@@ -54,8 +54,6 @@ func (app *application) submitAdoptionApplication(w http.ResponseWriter, r *http
 			}
 		}()
 
-		subject := fmt.Sprintf("New Adoption Application: %s %s", input.FirstName, input.LastName)
-
 		// Helpers
 		safeStr := func(s *string) string {
 			if s == nil {
@@ -64,48 +62,46 @@ func (app *application) submitAdoptionApplication(w http.ResponseWriter, r *http
 			return *s
 		}
 
-		// Helper to read logo as Base64
-		readLogoBase64 := func() string {
-			cwd, _ := os.Getwd()
-			app.logger.Info("Current working directory", "cwd", cwd)
-
+		// Helper to find and read logo base64
+		getLogoBase64 := func() string {
 			candidates := []string{
 				"../frontend/public/images/idohr-logo.jpg",
 				"../../frontend/public/images/idohr-logo.jpg",
 				"./frontend/public/images/idohr-logo.jpg",
-				"/Users/conner/Desktop/adoption-os/frontend/public/images/idohr-logo.jpg", // Fallback absolute
+				"/Users/conner/Desktop/adoption-os/frontend/public/images/idohr-logo.jpg",
 			}
-
-			var data []byte
-			var err error
-
 			for _, path := range candidates {
-				data, err = os.ReadFile(path)
+				data, err := os.ReadFile(path)
 				if err == nil {
-					app.logger.Info("Found logo at", "path", path)
+					fmt.Printf("DEBUG: Found logo at %s (size: %d)\n", path, len(data))
 					return base64.StdEncoding.EncodeToString(data)
+				} else {
+					fmt.Printf("DEBUG: Failed to read logo at %s: %v\n", path, err)
 				}
 			}
-
-			app.logger.Error("Failed to read logo from any candidate path", "error", err)
+			fmt.Println("DEBUG: Could not find any logo file")
 			return ""
 		}
 
-		logoBase64 := readLogoBase64()
+		subject := fmt.Sprintf("New Adoption Application for %s: %s %s", safeStr(input.PetName), input.FirstName, input.LastName)
+
+		logoBase64 := getLogoBase64()
 		logoSrc := ""
 		if logoBase64 != "" {
 			logoSrc = fmt.Sprintf("data:image/jpeg;base64,%s", logoBase64)
+		} else {
+			logoSrc = "https://idohr.org/images/idohr-logo.jpg"
 		}
 
 		var sb strings.Builder
-		sb.WriteString(fmt.Sprintf(`<!DOCTYPE html>
+		sb.WriteString(`<!DOCTYPE html>
 <html>
 <head>
 <style>
   body { font-family: Arial, sans-serif; color: #333; line-height: 1.6; }
   .container { max-width: 800px; margin: 0 auto; padding: 20px; border: 1px solid #e0e0e0; border-radius: 8px; }
   .header { text-align: center; margin-bottom: 30px; }
-  .logo { max-width: 150px; height: auto; }
+  .logo { max-width: 150px; height: auto; margin-bottom: 20px; }
   h1 { color: #00a5ad; font-size: 24px; text-align: center; }
   h2 { color: #00a5ad; font-size: 18px; border-bottom: 2px solid #00a5ad; padding-bottom: 5px; margin-top: 25px; }
   .section { margin-bottom: 20px; }
@@ -120,13 +116,20 @@ func (app *application) submitAdoptionApplication(w http.ResponseWriter, r *http
 <body>
 <div class="container">
   <div class="header">
-    <img src="%s" alt="IDOHR Logo" class="logo">
+`)
+		if logoSrc != "" {
+			fmt.Fprintf(&sb, `<img src="%s" alt="IDOHR Logo" class="logo">`, logoSrc)
+		}
+		sb.WriteString(`
+    <h1>New Adoption Application</h1>
+    <h2 style="margin-top:0; color:#555;">For: `)
+		fmt.Fprintf(&sb, `<span style="color: #00a5ad;">%s</span></h2>`, safeStr(input.PetName))
+		sb.WriteString(`
   </div>
-  <h1>New Adoption Application</h1>
-`, logoSrc))
+`)
 
-		// --- Personal Information ---
-		sb.WriteString(`<h2>Personal Information</h2>`)
+		sb.WriteString(`
+		<h2>Personal Information</h2>`)
 		fmt.Fprintf(&sb, `<div class="field"><span class="label">Name:</span> %s %s</div>`, input.FirstName, input.LastName)
 		if input.SpouseFirstName != nil && *input.SpouseFirstName != "" {
 			fmt.Fprintf(&sb, `<div class="field"><span class="label">Spouse/Partner:</span> %s %s</div>`, *input.SpouseFirstName, safeStr(input.SpouseLastName))
@@ -253,7 +256,7 @@ func (app *application) submitAdoptionApplication(w http.ResponseWriter, r *http
 			Type:         "adoption",
 			Status:       "pending",
 			Data:         []byte("{}"), // We should marshal input to JSON, but 'input' is struct.
-			OriginalHTML: body,
+			OriginalHTML: &body,
 		}
 		// Marshal input
 		jsonData, err := json.Marshal(input)
@@ -276,20 +279,20 @@ func (app *application) submitAdoptionApplication(w http.ResponseWriter, r *http
 			recipient = "cats@idohr.org" // Fallback
 		}
 
-		// Attachments (Logo + Signature)
+		// Prepare attachments
 		attachments := make(map[string][]byte)
 
-		// Logo is embedded now.
-
-		// Attach Final Signature Image
+		// Signature
 		if input.SignatureData != nil && *input.SignatureData != "" {
+			// signatureData is likely "data:image/png;base64,....."
+			// Split by comma to get the actual base64 part
 			parts := strings.Split(*input.SignatureData, ",")
 			if len(parts) == 2 {
 				sigBytes, err := base64.StdEncoding.DecodeString(parts[1])
 				if err == nil {
 					attachments["signature.png"] = sigBytes
 				} else {
-					app.logger.Error("Failed to decode adoption signature", "error", err)
+					app.logger.Error("Failed to decode signature", "error", err)
 				}
 			}
 		}

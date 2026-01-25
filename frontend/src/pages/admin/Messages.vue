@@ -20,7 +20,7 @@ const activeThread = computed(() => mockThreads.value.find((t) => t.id === activ
 
 const threadMessages = computed(
   () => mockMessages.value.filter((m) => m.threadId === activeThreadId.value),
-  
+
 )
 
 const getUser = (userId: string) =>
@@ -72,7 +72,7 @@ const deleteActiveThread = () => {
 }
 
 const removeMember = (userId: string) => {
-   
+
   console.log('removing user', userId)
   if (confirm('Remove this user from the thread?')) {
     alert('User removed (mock action)')
@@ -86,6 +86,9 @@ const addMember = () => {
 
 <template>
   <div class="messages-page">
+    <Teleport to="#mobile-header-target" :disabled="false">
+      <h1 class="mobile-header-title">Messages</h1>
+    </Teleport>
     <MessageThreadList
       :currentUser="currentUser"
       :channels="sortedChannels"
@@ -126,10 +129,24 @@ const addMember = () => {
 <style scoped>
 .messages-page {
   display: flex;
-  height: calc(100vh - 140px); 
+  height: calc(100vh - 140px);
   background: #fff;
   border-radius: 12px;
   overflow: hidden;
   border: 1px solid #e5e7eb;
+}
+
+.mobile-header-title {
+  display: none;
+}
+
+@media (width <= 768px) {
+  .mobile-header-title {
+    display: block;
+    font-size: 1.25rem;
+    font-weight: 800;
+    color: var(--text-primary);
+    margin: 0;
+  }
 }
 </style>

@@ -14,6 +14,7 @@ type VolunteerApplication struct {
 	CreatedAt             time.Time `json:"createdAt"`
 	FirstName             string    `json:"firstName"`
 	LastName              string    `json:"lastName"`
+	Email                 string    `json:"email"`
 	Address               string    `json:"address"`
 	City                  string    `json:"city"`
 	Zip                   string    `json:"zip"`
@@ -45,17 +46,17 @@ type VolunteerModel struct {
 func (m VolunteerModel) Insert(application *VolunteerApplication) error {
 	query := `
 		INSERT INTO volunteer_applications (
-			first_name, last_name, address, city, zip, phone_number, birthday, age,
+			first_name, last_name, email, address, city, zip, phone_number, birthday, age,
 			allergies, emergency_contact_name, emergency_contact_phone,
 			volunteer_experience, interest_reason, position_preferences, availability,
 			full_name_signature, signature_data, signature_date,
 			parent_name, parent_signature_data, parent_signature_date
 		)
-		VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20, $21)
+		VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20, $21, $22)
 		RETURNING id, created_at, status`
 
 	args := []any{
-		application.FirstName, application.LastName, application.Address, application.City, application.Zip, application.PhoneNumber, application.Birthday, application.Age,
+		application.FirstName, application.LastName, application.Email, application.Address, application.City, application.Zip, application.PhoneNumber, application.Birthday, application.Age,
 		application.Allergies, application.EmergencyContactName, application.EmergencyContactPhone,
 		application.VolunteerExperience, application.InterestReason, pq.Array(application.PositionPreferences), pq.Array(application.Availability),
 		application.NameFull, application.SignatureData, application.SignatureDate,
@@ -71,6 +72,10 @@ func (m VolunteerModel) Insert(application *VolunteerApplication) error {
 func ValidateVolunteerApplication(v *validator.Validator, application *VolunteerApplication) {
 	v.Check(application.FirstName != "", "firstName", "must be provided")
 	v.Check(application.LastName != "", "lastName", "must be provided")
+	v.Check(application.Email != "", "email", "must be provided")
+	if application.Email != "" {
+		v.Check(validator.Matches(application.Email, validator.EmailRX), "email", "must be a valid email address")
+	}
 	v.Check(application.Address != "", "address", "must be provided")
 	v.Check(application.City != "", "city", "must be provided")
 	v.Check(application.Zip != "", "zip", "must be provided")

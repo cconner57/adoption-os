@@ -32,9 +32,9 @@ const formatPhoneNumber = (value: FormInput): string => {
   if (!value) return ''
   const digits = String(value).replace(/\D/g, '').substring(0, 10)
   if (digits.length === 0) return ''
-  if (digits.length <= 3) return `(${digits}`
-  if (digits.length <= 6) return `(${digits.slice(0, 3)})${digits.slice(3)}`
-  return `(${digits.slice(0, 3)})${digits.slice(3, 6)}-${digits.slice(6, 10)}`
+  if (digits.length <= 3) return digits
+  if (digits.length <= 6) return `${digits.slice(0, 3)}-${digits.slice(3)}`
+  return `${digits.slice(0, 3)}-${digits.slice(3, 6)}-${digits.slice(6, 10)}`
 }
 const sanitizeName = (value: FormInput): string => {
   if (!value) return ''
@@ -210,6 +210,20 @@ const handleReset = () => {
             @blur="handleBlur('age')"
           />
 
+          <InputField
+            :modelValue="formState.email"
+            @update:modelValue="(val) => (formState.email = String(val).trim())"
+            label="Email"
+            placeholder="Email address"
+            autocomplete="email"
+            name="email"
+            type="text"
+            inputmode="email"
+            maxlength="100"
+            :hasError="touched.email && (!formState.email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formState.email))"
+            @blur="handleBlur('email')"
+          />
+
           <Allergies
             v-model="formState.allergies"
             :class="{ 'has-error': touched.allergies && !formState.allergies }"
@@ -229,7 +243,7 @@ const handleReset = () => {
           <InputField
             :modelValue="formState.emergencyContactPhone"
             @update:modelValue="(val) => (formState.emergencyContactPhone = formatPhoneNumber(val))"
-            label="Phone Number"
+            label="Emergency Contact Phone Number"
             placeholder="Phone Number"
             type="tel"
             name="emergencyContactPhone"
@@ -343,6 +357,11 @@ const handleReset = () => {
     margin: 0 auto;
   }
 
+  /* Fix for Allergies component spacer breaking grid layout */
+  :deep(.spacer) {
+    display: none !important;
+  }
+
   .form-card {
     background: var(--text-inverse);
     color: var(--text-primary);
@@ -381,6 +400,7 @@ const handleReset = () => {
       @container form-card (min-width: 700px) {
         display: grid;
         grid-template-columns: repeat(2, minmax(0, 1fr));
+        align-items: start;
       }
     }
 
@@ -430,7 +450,7 @@ const handleReset = () => {
 
   :deep(.reveal) {
     opacity: 0;
-    transform: translateY(20px); 
+    transform: translateY(20px);
     transition: all 0.6s cubic-bezier(0.2, 0.8, 0.2, 1);
   }
 
@@ -450,7 +470,7 @@ const handleReset = () => {
   :deep(input:focus),
   :deep(textarea:focus),
   :deep(select:focus) {
-    
+
   }
 }
 </style>

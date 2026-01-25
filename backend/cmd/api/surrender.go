@@ -64,11 +64,12 @@ func (app *application) submitSurrenderApplication(w http.ResponseWriter, r *htt
 	body.WriteString(fmt.Sprintf("\nFull Request Data:\n%+v\n", input))
 
 	// Save to Database
+	bodyString := body.String()
 	appRecord := &data.Application{
 		Type:         "surrender",
 		Status:       "pending",
 		Data:         []byte("{}"),
-		OriginalHTML: body.String(),
+		OriginalHTML: &bodyString,
 	}
 
 	jsonData, err := json.Marshal(input)

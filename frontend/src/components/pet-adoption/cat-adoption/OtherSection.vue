@@ -8,6 +8,7 @@ const { modelValue } = defineProps<{
   touched?: Record<string, boolean>
   // eslint-disable-next-line no-unused-vars
   handleBlur: (_field: string) => void
+  hasAttemptedSubmit?: boolean
 }>()
 </script>
 
@@ -18,7 +19,11 @@ const { modelValue } = defineProps<{
       label="If you have ever bred an animal, please describe the circumstances"
       name="bredAnimalDescription"
       placeholder="Describe the circumstances"
-      :hasError="touched?.bredAnimalDescription && !modelValue.bredAnimalDescription"
+      required
+      :hasError="
+        (touched?.bredAnimalDescription && !modelValue.bredAnimalDescription) ||
+        (hasAttemptedSubmit && !modelValue.bredAnimalDescription)
+      "
       @blur="handleBlur?.('bredAnimalDescription')"
     />
     <InputField
@@ -26,7 +31,11 @@ const { modelValue } = defineProps<{
       label="Have you ever owned a declawed cat or a debarked dog?"
       name="ownedDeclawedOrDebarked"
       placeholder="Yes/No and details"
-      :hasError="touched?.ownedDeclawedOrDebarked && !modelValue.ownedDeclawedOrDebarked"
+      required
+      :hasError="
+        (touched?.ownedDeclawedOrDebarked && !modelValue.ownedDeclawedOrDebarked) ||
+        (hasAttemptedSubmit && !modelValue.ownedDeclawedOrDebarked)
+      "
       @blur="handleBlur?.('ownedDeclawedOrDebarked')"
     />
     <InputField
@@ -34,7 +43,11 @@ const { modelValue } = defineProps<{
       label="Have you ever moved with a pet?"
       name="movedWithPet"
       placeholder="Yes/No and details"
-      :hasError="touched?.movedWithPet && !modelValue.movedWithPet"
+      required
+      :hasError="
+        (touched?.movedWithPet && !modelValue.movedWithPet) ||
+        (hasAttemptedSubmit && !modelValue.movedWithPet)
+      "
       @blur="handleBlur?.('movedWithPet')"
     />
     <InputField
@@ -42,7 +55,11 @@ const { modelValue } = defineProps<{
       label="Have you ever owned a special needs pet?"
       name="ownedSpecialNeedsPet"
       placeholder="Yes/No and details"
-      :hasError="touched?.ownedSpecialNeedsPet && !modelValue.ownedSpecialNeedsPet"
+      required
+      :hasError="
+        (touched?.ownedSpecialNeedsPet && !modelValue.ownedSpecialNeedsPet) ||
+        (hasAttemptedSubmit && !modelValue.ownedSpecialNeedsPet)
+      "
       @blur="handleBlur?.('ownedSpecialNeedsPet')"
     />
     <InputField
@@ -50,7 +67,11 @@ const { modelValue } = defineProps<{
       label="Does anyone in your home use a mobility device?"
       name="mobilityDevice"
       placeholder="Yes/No and details"
-      :hasError="touched?.mobilityDevice && !modelValue.mobilityDevice"
+      required
+      :hasError="
+        (touched?.mobilityDevice && !modelValue.mobilityDevice) ||
+        (hasAttemptedSubmit && !modelValue.mobilityDevice)
+      "
       @blur="handleBlur?.('mobilityDevice')"
     />
     <InputField
@@ -58,7 +79,11 @@ const { modelValue } = defineProps<{
       label="What type and brand of food do you plan on feeding your new cat?"
       name="foodTypeBrand"
       placeholder="Type and Brand"
-      :hasError="touched?.foodTypeBrand && !modelValue.foodTypeBrand"
+      required
+      :hasError="
+        (touched?.foodTypeBrand && !modelValue.foodTypeBrand) ||
+        (hasAttemptedSubmit && !modelValue.foodTypeBrand)
+      "
       @blur="handleBlur?.('foodTypeBrand')"
     />
     <InputSelectGroup
@@ -89,7 +114,10 @@ const { modelValue } = defineProps<{
       multiple
       :modelValue="modelValue.surrenderConditions"
       @update:modelValue="(val) => (modelValue.surrenderConditions = val as string[])"
-      :hasError="touched?.surrenderConditions && modelValue.surrenderConditions.length === 0"
+      :hasError="
+        (touched?.surrenderConditions && modelValue.surrenderConditions.length === 0) ||
+        (hasAttemptedSubmit && modelValue.surrenderConditions.length === 0)
+      "
       @blur="handleBlur?.('surrenderConditions')"
     />
     <InputField
@@ -98,7 +126,11 @@ const { modelValue } = defineProps<{
       label="What would you do with your cat if you could not keep it for the above reason(s)?"
       name="surrenderPlan"
       placeholder="Details"
-      :hasError="touched?.surrenderPlan && !modelValue.surrenderPlan"
+      required
+      :hasError="
+        (touched?.surrenderPlan && !modelValue.surrenderPlan) ||
+        (hasAttemptedSubmit && !modelValue.surrenderPlan)
+      "
       @blur="handleBlur?.('surrenderPlan')"
     />
 
@@ -107,7 +139,11 @@ const { modelValue } = defineProps<{
       label="Can you afford regular veterinary care for this cat - including yearly vaccinations, annual physical exams, dental care, etc. ($300 or more per year)?"
       name="affordVetCare"
       placeholder="Yes/No"
-      :hasError="touched?.affordVetCare && !modelValue.affordVetCare"
+      required
+      :hasError="
+        (touched?.affordVetCare && !modelValue.affordVetCare) ||
+        (hasAttemptedSubmit && !modelValue.affordVetCare)
+      "
       @blur="handleBlur?.('affordVetCare')"
     />
     <InputField
@@ -115,7 +151,11 @@ const { modelValue } = defineProps<{
       label="Can you afford serious injury or illness costs ($1000 or more)?"
       name="affordEmergencyCost"
       placeholder="Yes/No"
-      :hasError="touched?.affordEmergencyCost && !modelValue.affordEmergencyCost"
+      required
+      :hasError="
+        (touched?.affordEmergencyCost && !modelValue.affordEmergencyCost) ||
+        (hasAttemptedSubmit && !modelValue.affordEmergencyCost)
+      "
       @blur="handleBlur?.('affordEmergencyCost')"
     />
   </div>

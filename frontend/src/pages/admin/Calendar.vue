@@ -44,37 +44,37 @@ const currentYear = computed(() => activeDate.value.getFullYear())
 
 const recurringShifts: Record<number, Array<{ time: string; title: string; type: string }>> = {
   0: [
-    
+
     { time: '10:00 AM', title: 'Allison (10AM-12PM)', type: 'volunteer' },
     { time: '4:00 PM', title: 'Brandon (4PM-6PM)', type: 'volunteer' },
   ],
   1: [
-    
+
     { time: '10:00 AM', title: 'Leanne (10AM-12PM)', type: 'volunteer' },
     { time: '6:00 PM', title: 'Arianna (6PM-8PM)', type: 'volunteer' },
   ],
   2: [
-    
+
     { time: '10:00 AM', title: 'Sonia (10AM-12PM)', type: 'volunteer' },
     { time: '6:00 PM', title: 'Lynn (6PM-8PM)', type: 'volunteer' },
   ],
   3: [
-    
+
     { time: '10:00 AM', title: 'Bella (10AM-12PM)', type: 'volunteer' },
     { time: '6:00 PM', title: 'Katelyn (6PM-8PM)', type: 'volunteer' },
   ],
   4: [
-    
+
     { time: '10:00 AM', title: 'Alejandra (10AM-12PM)', type: 'volunteer' },
     { time: '6:00 PM', title: 'Nathan (6PM-8PM)', type: 'volunteer' },
   ],
   5: [
-    
+
     { time: '10:00 AM', title: 'Linda (10AM-12PM)', type: 'volunteer' },
     { time: '6:00 PM', title: 'Katie (6PM-8PM)', type: 'volunteer' },
   ],
   6: [
-    
+
     { time: '10:00 AM', title: 'Lindsey & Celina (10AM-12PM)', type: 'volunteer' },
     { time: '6:00 PM', title: 'Chris (6PM-8PM)', type: 'volunteer' },
   ],
@@ -87,7 +87,7 @@ const monthName = computed(() => {
       year: 'numeric',
     })
   } else {
-    
+
     const start = new Date(activeDate.value)
     const day = start.getDay()
     const diff = start.getDate() - day + (day === 0 ? -6 : 1)
@@ -106,8 +106,12 @@ const monthName = computed(() => {
 
 <template>
   <div class="calendar-page">
+    <Teleport to="#mobile-header-target" :disabled="false">
+      <h1 class="mobile-header-title">Calendar</h1>
+    </Teleport>
+
     <div class="page-header">
-      <h1>Calendar</h1>
+      <h1 class="desktop-only">Calendar</h1>
 
       <div class="controls">
         <div class="nav-buttons">
@@ -170,8 +174,26 @@ const monthName = computed(() => {
   justify-content: space-between;
   align-items: center;
 
-  h1 {
+  h1.desktop-only {
     font-size: 1.8rem;
+    color: var(--text-primary);
+    margin: 0;
+  }
+}
+
+.mobile-header-title {
+  display: none;
+}
+
+@media (width <= 768px) {
+  .page-header h1.desktop-only {
+    display: none;
+  }
+
+  .mobile-header-title {
+    display: block;
+    font-size: 1.25rem;
+    font-weight: 800;
     color: var(--text-primary);
     margin: 0;
   }

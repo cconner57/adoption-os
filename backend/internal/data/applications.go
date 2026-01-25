@@ -16,7 +16,7 @@ type Application struct {
 	Type         string          `json:"type"`          // 'volunteer', 'adoption', 'surrender'
 	Status       string          `json:"status"`        // 'pending', 'approved', 'denied', 'needs_info'
 	Data         json.RawMessage `json:"data"`          // Full form data
-	OriginalHTML string          `json:"original_html"` // Generated email HTML
+	OriginalHTML *string         `json:"original_html"` // Generated email HTML
 	CreatedAt    time.Time       `json:"created_at"`
 	UpdatedAt    time.Time       `json:"updated_at"`
 	Version      int32           `json:"version"`
@@ -132,6 +132,93 @@ func (m ApplicationModel) ArchiveOldPending(ctx context.Context) error {
 	}
 
 	// Double check rows error
+	if err = rows.Err(); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (m ApplicationModel) DeleteDeniedApplications(ctx context.Context) error {
+	query := `
+		SELECT id, type, data 
+		FROM applications 
+		WHERE status = 'denied' 
+		AND updated_at < NOW() - INTERVAL '24 hours'
+		LIMIT 100`
+
+	rows, err := m.DB.QueryContext(ctx, query)
+	if err != nil {
+		return err
+	}
+	defer rows.Close()
+
+	// Minimal data to retain
+	type minimalData struct {
+		FirstName string `json:"firstName,omitempty"`
+		LastName  string `json:"lastName,omitempty"`
+		Email     string `json:"email,omitempty"`
+		// Universal "Pet/Animal" name field for our record
+		PetName string `json:"petName,omitempty"`
+	}
+
+	for rows.Next() {
+		var id int64
+		var appType string
+		var rawData []byte
+
+		if err := rows.Scan(&id, &appType, &rawData); err != nil {
+			continue
+		}
+
+		// Parse full data
+		var fullMap map[string]interface{}
+		if err := json.Unmarshal(rawData, &fullMap); err != nil {
+			continue
+		}
+
+		// Extract Minimal Data
+		sanitized := minimalData{}
+		getString := func(key string) string {
+			if v, ok := fullMap[key].(string); ok {
+				return v
+			}
+			return ""
+		}
+
+		sanitized.FirstName = getString("firstName")
+		sanitized.LastName = getString("lastName")
+		sanitized.Email = getString("email")
+		if sanitized.Email == "" {
+			sanitized.Email = getString("Email")
+		}
+
+		// Logic from frontend to find best pet name candidate
+		sanitized.PetName = getString("petName")
+		if sanitized.PetName == "" {
+			sanitized.PetName = getString("catPreferenceName")
+		}
+		if sanitized.PetName == "" {
+			sanitized.PetName = getString("animalName")
+		}
+		if sanitized.PetName == "" {
+			breed := getString("catPreferenceBreed")
+			if breed != "" {
+				sanitized.PetName = "Breed: " + breed
+			}
+		}
+
+		newJSON, _ := json.Marshal(sanitized)
+
+		// Update Row
+		updateQuery := `
+			UPDATE applications 
+			SET status = 'autodeleted', original_html = NULL, data = $1, updated_at = NOW(), version = version + 1
+			WHERE id = $2`
+
+		_, _ = m.DB.ExecContext(ctx, updateQuery, newJSON, id)
+	}
+
 	if err = rows.Err(); err != nil {
 		return err
 	}

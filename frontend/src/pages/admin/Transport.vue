@@ -9,9 +9,9 @@ const selectedTripId = ref<string | null>(null)
 const loadingAction = ref<string | null>(null)
 
 const filteredTrips = computed(() => {
-  
+
   return [...mockTrips.value].sort((a, b) => {
-    
+
     const activeStatuses = ['en_route_vet', 'en_route_shelter']
     const aActive = activeStatuses.includes(a.status)
     const bActive = activeStatuses.includes(b.status)
@@ -59,7 +59,7 @@ const reportIssue = (issueType: string) => {
       break
     case 'pet_issue':
       message = '🤢 Pet is having an issue (anxiety/sickness) in transit.'
-      newStatus = 'incident' 
+      newStatus = 'incident'
       break
   }
 
@@ -76,7 +76,7 @@ const reportIssue = (issueType: string) => {
 
 const selectTrip = (trip: ITrip) => {
   selectedTripId.value = trip.id
-  
+
 }
 
 const sendEta = (eta: string) => {
@@ -101,15 +101,19 @@ const updateVehicleInfo = (info: string) => {
 
 <template>
   <div class="transport-page">
+    <Teleport to="#mobile-header-target" :disabled="false">
+      <h1 class="mobile-header-title">Transport & Dispatch</h1>
+    </Teleport>
+
     <div class="page-header">
-      <h1>Transport & Dispatch</h1>
+      <h1 class="desktop-only">Transport & Dispatch</h1>
       <div class="header-actions">
         <span class="user-role-badge">Volunteer View</span>
       </div>
     </div>
 
     <div class="content-grid">
-      
+
       <ShiftList
         :trips="filteredTrips"
         :selected-trip-id="selectedTripId"
@@ -141,10 +145,28 @@ const updateVehicleInfo = (info: string) => {
   justify-content: space-between;
   align-items: center;
 
-  h1 {
+  h1.desktop-only {
     margin: 0;
     font-size: 1.8rem;
     color: var(--text-primary);
+  }
+}
+
+.mobile-header-title {
+  display: none;
+}
+
+@media (width <= 768px) {
+  .page-header h1.desktop-only {
+    display: none;
+  }
+
+  .mobile-header-title {
+    display: block;
+    font-size: 1.25rem;
+    font-weight: 800;
+    color: var(--text-primary);
+    margin: 0;
   }
 }
 

@@ -8,6 +8,7 @@ const { modelValue } = defineProps<{
   touched?: Record<string, boolean>
   // eslint-disable-next-line no-unused-vars
   handleBlur: (_field: string) => void
+  hasAttemptedSubmit?: boolean
 }>()
 
 const addPet = () => {
@@ -33,6 +34,10 @@ const removePet = (index: number) => {
       :options="['Yes', 'No']"
       :modelValue="modelValue.ownPetsBefore"
       @update:modelValue="(val) => (modelValue.ownPetsBefore = val as string)"
+      :hasError="
+        (touched?.ownPetsBefore && !modelValue.ownPetsBefore) ||
+        (hasAttemptedSubmit && !modelValue.ownPetsBefore)
+      "
     />
     <div class="desktop-spacer"></div>
     <div class="children" v-if="modelValue.ownPetsBefore === 'Yes'">
@@ -75,30 +80,51 @@ const removePet = (index: number) => {
             label="Name:"
             :name="`pet-name-${index}`"
             placeholder="Ex: Fluffy"
+            required
+            :hasError="
+              (touched?.[`pet-name-${index}`] && !pet.name) || (hasAttemptedSubmit && !pet.name)
+            "
           />
           <InputField
             v-model="pet.speciesBreedSize"
             label="Species, Breed and Size:"
             :name="`pet-breed-${index}`"
             placeholder="Ex: Dog, Boxer, 50lbs"
+            required
+            :hasError="
+              (touched?.[`pet-breed-${index}`] && !pet.speciesBreedSize) ||
+              (hasAttemptedSubmit && !pet.speciesBreedSize)
+            "
           />
           <InputField
             v-model="pet.age"
             label="How long did you have this pet (and when did you get this pet)?:"
             :name="`pet-age-${index}`"
             placeholder="Ex: I've had him 10 years - from 2010 to Current"
+            required
+            :hasError="
+              (touched?.[`pet-age-${index}`] && !pet.age) || (hasAttemptedSubmit && !pet.age)
+            "
           />
           <InputSelectGroup
             label="Where did you get this pet?"
             :options="['Friend/Family', 'Rescue', 'Shelter', 'Breeder', 'Online Ad', 'Found it']"
             :modelValue="pet.source"
             @update:modelValue="(val) => (pet.source = val as string)"
+            :hasError="
+              (touched?.[`pet-source-${index}`] && !pet.source) ||
+              (hasAttemptedSubmit && !pet.source)
+            "
           />
           <InputSelectGroup
             label="Is this pet spayed/neutered?"
             :options="['Yes', 'No', 'Not sure']"
             :modelValue="pet.spayedNeutered"
             @update:modelValue="(val) => (pet.spayedNeutered = val as string)"
+            :hasError="
+              (touched?.[`pet-spayed-${index}`] && !pet.spayedNeutered) ||
+              (hasAttemptedSubmit && !pet.spayedNeutered)
+            "
           />
           <InputSelectGroup
             label="What happened to this pet?"
@@ -113,6 +139,10 @@ const removePet = (index: number) => {
             ]"
             :modelValue="pet.passedAwayReason"
             @update:modelValue="(val) => (pet.passedAwayReason = val as string)"
+            :hasError="
+              (touched?.[`pet-outcome-${index}`] && !pet.passedAwayReason) ||
+              (hasAttemptedSubmit && !pet.passedAwayReason)
+            "
           />
           <hr class="pet-divider" v-if="index < modelValue.pastPets.length - 1" />
         </div>
@@ -184,8 +214,8 @@ const removePet = (index: number) => {
 
 .pet-divider {
   border: 0;
-  border-top: 2px solid #cbd5e1; 
-  margin: 2rem 0; 
+  border-top: 2px solid #cbd5e1;
+  margin: 2rem 0;
   grid-column: 1 / -1;
 }
 

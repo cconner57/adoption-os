@@ -8,6 +8,7 @@ defineProps<{
   touched: Record<string, boolean>
   // eslint-disable-next-line no-unused-vars
   handleBlur: (_field: string) => void
+  hasAttemptedSubmit?: boolean
 }>()
 </script>
 
@@ -35,8 +36,12 @@ defineProps<{
       v-model="modelValue.agreementSignature1"
       label="Type your name"
       name="agreementSignature1"
-      placeholder="Type your full name to acknowledge commitment"
-      :hasError="touched.agreementSignature1 && !modelValue.agreementSignature1"
+      placeholder="Type full name to acknowledge"
+      required
+      :hasError="
+        (touched.agreementSignature1 && !modelValue.agreementSignature1) ||
+        (hasAttemptedSubmit && !modelValue.agreementSignature1)
+      "
       @blur="handleBlur('agreementSignature1')"
     />
     <p>
@@ -49,8 +54,12 @@ defineProps<{
       v-model="modelValue.agreementSignature2"
       label="Type your name"
       name="agreementSignature2"
-      placeholder="Type your full name to consent to homecheck"
-      :hasError="touched.agreementSignature2 && !modelValue.agreementSignature2"
+      placeholder="Type full name to consent"
+      required
+      :hasError="
+        (touched.agreementSignature2 && !modelValue.agreementSignature2) ||
+        (hasAttemptedSubmit && !modelValue.agreementSignature2)
+      "
       @blur="handleBlur('agreementSignature2')"
     />
 
@@ -58,7 +67,10 @@ defineProps<{
       label="Signature"
       :modelValue="modelValue.signatureData"
       @update:modelValue="(val) => (modelValue.signatureData = val)"
-      :hasError="touched.signatureData && !modelValue.signatureData"
+      :hasError="
+        (touched.signatureData && !modelValue.signatureData) ||
+        (hasAttemptedSubmit && !modelValue.signatureData)
+      "
     />
   </div>
 </template>
@@ -78,11 +90,12 @@ p {
   color: var(--text-primary);
   font-size: 1rem;
   max-width: 100%;
+  font-weight: 400;
 }
 
 p:has(+ .field),
 p:last-of-type {
-  font-weight: 500;
+  font-weight: 400;
   margin-bottom: -1rem;
 }
 </style>

@@ -2,7 +2,7 @@
 import { onMounted, ref } from 'vue'
 
 import ApplicationCard from '../../components/admin/applications/ApplicationCard.vue'
-import { InputSelectGroup } from '../../components/common/ui'
+import { InputSelectGroup, Select } from '../../components/common/ui'
 import { useApplications } from '../../composables/useApplications'
 
 const {
@@ -90,9 +90,12 @@ onMounted(() => {
           </button>
 
           <div v-if="activeTab === 'history'" class="year-select">
-            <select v-model="selectedYear" @change="() => fetchApplications()" class="p-2 border rounded-md">
-              <option v-for="y in 5" :key="y" :value="currentYear - y">{{ currentYear - y }}</option>
-            </select>
+            <Select
+              v-model="selectedYear"
+              :options="Array.from({ length: 5 }, (_, i) => currentYear - i).map(y => ({ label: String(y), value: y }))"
+              @update:modelValue="() => fetchApplications()"
+              placeholder="Select Year"
+            />
           </div>
         </div>
       </div>

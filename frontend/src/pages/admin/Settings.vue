@@ -129,7 +129,7 @@ const getCategoryDesc = (id: string) => {
 
     <div v-if="showToast" class="toast-notification">✅ Settings saved successfully!</div>
 
-    <div v-if="!activeCategory || activeCategory === 'overview'" class="categories-grid">
+    <div v-if="!activeCategory" class="categories-grid">
       <button
         v-for="cat in categories"
         :key="cat.id"
@@ -235,6 +235,14 @@ const getCategoryDesc = (id: string) => {
     font-weight: 800;
     color: var(--text-primary);
     margin: 0;
+  }
+
+  /* Add border to the page actions header (Back/Save) on mobile */
+  .page-header {
+    border-bottom: none;
+    box-shadow: 0 4px 6px -1px rgb(0 0 0 / 10%), 0 2px 4px -1px rgb(0 0 0 / 6%);
+    padding-bottom: 12px;
+    width: 100%;
   }
 }
 

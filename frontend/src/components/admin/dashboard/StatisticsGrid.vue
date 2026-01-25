@@ -14,7 +14,7 @@ const isTablet = useIsTablet()
 const stats = computed(() => [
   {
     id: 'pending',
-    label: isTablet.value ? 'Pending Applicants' : 'Pending Applications',
+    label: isTablet.value ? 'Applications' : 'Pending Applications',
     value: props.pendingCount,
     icon: 'fileText',
     color: 'var(--color-danger)',

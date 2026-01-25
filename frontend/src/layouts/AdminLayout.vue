@@ -299,7 +299,8 @@ const userInitials = computed(() => {
     padding: 0 24px;
     height: 64px;
     background-color: var(--white);
-    border-bottom: 1px solid rgb(0 0 0 / 5%);
+    border-bottom: none;
+    box-shadow: 0 4px 6px -1px rgb(0 0 0 / 10%), 0 2px 4px -1px rgb(0 0 0 / 6%);
     position: relative;
 
     h3 {

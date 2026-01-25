@@ -33,8 +33,6 @@ function onInput(e: Event) {
   const target = e.target as HTMLInputElement | null
   let val: string | number | null = target?.value ?? null
 
-  console.log(`DEBUG: InputField[${props.label}] onInput:`, val)
-
   if (props.type === 'number' && val !== null && val !== '') {
     const num = Number(val)
     if (!isNaN(num)) {
@@ -44,11 +42,7 @@ function onInput(e: Event) {
   emit('update:modelValue', val)
 
   nextTick(() => {
-    console.log(
-      `DEBUG: InputField[${props.label}] nextTick check. Prop: '${props.modelValue}', Input: '${inputRef.value?.value}'`,
-    )
     if (inputRef.value && String(props.modelValue ?? '') !== inputRef.value.value) {
-      console.warn(`DEBUG: InputField[${props.label}] RESETTING value to prop`)
       inputRef.value.value = String(props.modelValue ?? '')
     }
   })

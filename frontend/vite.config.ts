@@ -24,6 +24,9 @@ export default defineConfig(({ mode }) => {
         description: 'Adoption Management System',
         theme_color: '#00a5ad',
         background_color: '#ffffff',
+        start_url: '/admin',
+        scope: '/admin/',
+        display: 'standalone',
         icons: [
           {
             src: '/images/idohr-logo.png',

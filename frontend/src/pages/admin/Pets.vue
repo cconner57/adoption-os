@@ -120,17 +120,19 @@ function handleEditPet(pet: IPet) {
 
 async function handleSavePet(petData: Partial<IPet>) {
   try {
-    const payload = { ...petData }
+    // Exclude read-only fields that backend might reject or that we don't want to send
+    // eslint-disable-next-line no-unused-vars, @typescript-eslint/no-unused-vars
+    const { id, createdAt, updatedAt, ...rest } = petData
+    const payload = { ...rest }
+
     let url = `${import.meta.env.VITE_API_URL}/pets`
     let method = 'POST'
     let successMessage = 'Pet added successfully!'
 
     if (petData.id) {
-
       url = `${import.meta.env.VITE_API_URL}/pets/${petData.id}`
       method = 'PUT'
       successMessage = 'Pet updated successfully!'
-      delete payload.id
     }
 
     const response = await fetch(url, {

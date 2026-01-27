@@ -11,6 +11,14 @@ import (
 	"time"
 )
 
+const (
+	MasterListCSV     = "Master Pet List - Cats Master List.csv"
+	DateFormat        = "1/2/2006"
+	ErrDBNotAvailable = "database connection not available"
+	DefaultSpecies    = "cat"
+	MaxSpotlightPets  = 4
+)
+
 // Define the Pet struct (matching your DB table)
 type SpotlightPet struct {
 	ID           string          `json:"id"`
@@ -362,11 +370,12 @@ func (m PetModel) GetAll(status string, search, sort string, filters map[string]
 		traits := strings.Split(val, ",")
 		for _, trait := range traits {
 			trait = strings.TrimSpace(strings.ToLower(trait))
-			if trait == "kids" {
+			switch trait {
+			case "kids":
 				query += " AND behavior->>'isGoodWithKids' = 'true'"
-			} else if trait == "dogs" {
+			case "dogs":
 				query += " AND behavior->>'isGoodWithDogs' = 'true'"
-			} else if trait == "cats" {
+			case "cats":
 				query += " AND behavior->>'isGoodWithCats' = 'true'"
 			}
 		}
@@ -436,7 +445,7 @@ func (m PetModel) GetAll(status string, search, sort string, filters map[string]
 
 func (m PetModel) Get(id string) (*Pet, error) {
 	if m.DB == nil {
-		return nil, fmt.Errorf("database connection not available")
+		return nil, fmt.Errorf(ErrDBNotAvailable)
 	}
 
 	query := `
@@ -507,7 +516,7 @@ func (m PetModel) Get(id string) (*Pet, error) {
 
 func (m PetModel) GetByName(name string) (*Pet, error) {
 	if m.DB == nil {
-		return nil, fmt.Errorf("database connection not available")
+		return nil, fmt.Errorf(ErrDBNotAvailable)
 	}
 
 	query := `
@@ -578,7 +587,7 @@ func (m PetModel) GetByName(name string) (*Pet, error) {
 
 func (m PetModel) Update(p *Pet) error {
 	if m.DB == nil {
-		return fmt.Errorf("database connection not available")
+		return fmt.Errorf(ErrDBNotAvailable)
 	}
 
 	var settingsMap map[string]interface{}
@@ -633,134 +642,20 @@ func (m PetModel) Update(p *Pet) error {
 	}
 
 	// Validate max 4 spotlight pets
-	if isSpotlight {
-		// Count OTHER pets that are featured AND available
-		countQuery := `SELECT count(*) FROM pets WHERE profile_settings->>'isSpotlightFeatured' = 'true' AND id != $1 AND status = 'available'`
-		var count int
-		ctxCount, cancelCount := context.WithTimeout(context.Background(), 3*time.Second)
-		defer cancelCount()
-
-		err := m.DB.QueryRowContext(ctxCount, countQuery, p.ID).Scan(&count)
-		if err != nil {
-			return err
-		}
-
-		if count >= 4 {
-			return fmt.Errorf("maximum of 4 spotlight pets allowed. Please turn this setting off for another pet and return to enable it on CAUTION_ADMIN_ERROR") // Including a special marker or just text?
-			// User text: "4 spotlight pets is the maximum and to please turn this setting off for another pet and return to enable it on the new pet"
-			// I'll return the error text. The frontend handles errors generically usually, but I should make it clear.
-			return fmt.Errorf("maximum of 4 spotlight pets allowed. Please unfeature another pet first")
-		}
+	if err := m.validateSpotlight(p, isSpotlight); err != nil {
+		return err
 	}
 
 	// --- Bidirectional Bonding Logic ---
 	// 1. Fetch current state to compare
 	currentPet, err := m.Get(p.ID)
 	if err == nil {
-		// Define helper struct for parsing
-		type behaviorStruct struct {
-			Bonded struct {
-				IsBonded   bool     `json:"isBonded"`
-				BondedWith []string `json:"bondedWith"`
-			} `json:"bonded"`
-		}
-
-		// Parse Current
-		var currentB behaviorStruct
-		_ = json.Unmarshal(currentPet.Behavior, &currentB)
-
-		// Parse New
-		var newB behaviorStruct
-		_ = json.Unmarshal(p.Behavior, &newB)
-
-		// Calculate Diff
-		currentMap := make(map[string]bool)
-		for _, name := range currentB.Bonded.BondedWith {
-			currentMap[name] = true
-		}
-
-		newMap := make(map[string]bool)
-		for _, name := range newB.Bonded.BondedWith {
-			newMap[name] = true
-		}
-
-		// Added: In New but not Current
-		for _, name := range newB.Bonded.BondedWith {
-			if !currentMap[name] {
-				// ADD BOND: Find other pet and add p.Name to its list
-				otherPet, err := m.GetByName(name)
-				if err == nil {
-					var otherB behaviorStruct
-					_ = json.Unmarshal(otherPet.Behavior, &otherB)
-
-					// Check if already connected (avoid infinite loop if bi-directional already)
-					exists := false
-					for _, existing := range otherB.Bonded.BondedWith {
-						if existing == p.Name {
-							exists = true
-							break
-						}
-					}
-
-					if !exists {
-						otherB.Bonded.BondedWith = append(otherB.Bonded.BondedWith, p.Name)
-						otherB.Bonded.IsBonded = true
-
-						var fullBehavior map[string]interface{}
-						_ = json.Unmarshal(otherPet.Behavior, &fullBehavior)
-
-						bondedMap := make(map[string]interface{})
-						if b, ok := fullBehavior["bonded"].(map[string]interface{}); ok {
-							bondedMap = b
-						}
-						bondedMap["isBonded"] = true
-						bondedMap["bondedWith"] = otherB.Bonded.BondedWith
-						fullBehavior["bonded"] = bondedMap
-
-						finalJSON, _ := json.Marshal(fullBehavior)
-						otherPet.Behavior = json.RawMessage(finalJSON)
-
-						m.Update(otherPet)
-					}
-				}
-			}
-		}
-
-		// Removed: In Current but not New
-		for _, name := range currentB.Bonded.BondedWith {
-			if !newMap[name] {
-				// REMOVE BOND
-				otherPet, err := m.GetByName(name)
-				if err == nil {
-					var otherB behaviorStruct
-					_ = json.Unmarshal(otherPet.Behavior, &otherB)
-
-					filtered := []string{}
-					for _, n := range otherB.Bonded.BondedWith {
-						if n != p.Name {
-							filtered = append(filtered, n)
-						}
-					}
-
-					var fullBehavior map[string]interface{}
-					_ = json.Unmarshal(otherPet.Behavior, &fullBehavior)
-
-					bondedMap := make(map[string]interface{})
-					if b, ok := fullBehavior["bonded"].(map[string]interface{}); ok {
-						bondedMap = b
-					}
-					bondedMap["bondedWith"] = filtered
-					if len(filtered) == 0 {
-						bondedMap["isBonded"] = false
-					}
-					fullBehavior["bonded"] = bondedMap
-
-					finalJSON, _ := json.Marshal(fullBehavior)
-					otherPet.Behavior = json.RawMessage(finalJSON)
-
-					m.Update(otherPet)
-				}
-			}
+		if err := m.syncBonding(p, currentPet); err != nil {
+			fmt.Println("Warning: Bonding sync failed:", err)
+			// Continue with update even if bonding sync fails?
+			// The original logic didn't return error, it just logged/swallowed or did nothing explicitly?
+			// The original logic didn't assume error returns from GetByName.
+			// Let's keep going.
 		}
 	}
 
@@ -854,7 +749,7 @@ func (m PetModel) Update(p *Pet) error {
 
 func (m PetModel) Insert(p *Pet) error {
 	if m.DB == nil {
-		return fmt.Errorf("database connection not available")
+		return fmt.Errorf(ErrDBNotAvailable)
 	}
 
 	// Generate Slug

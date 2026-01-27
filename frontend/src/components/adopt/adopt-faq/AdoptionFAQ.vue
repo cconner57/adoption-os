@@ -97,6 +97,7 @@ const faqs = ref([
 
   summary {
     list-style: none;
+
     &::-webkit-details-marker {
       display: none;
     }

@@ -1,4 +1,4 @@
-import { formatDate as formatGlobalDate } from '../../../../utils/dateUtils'
+import { formatDate as formatGlobalDate } from '../../../utils/dateUtils'
 
 export const formatDate = (dateStr: string) => {
   return formatGlobalDate(dateStr)

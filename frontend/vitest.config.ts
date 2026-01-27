@@ -4,13 +4,18 @@ import { configDefaults,defineConfig, mergeConfig } from 'vitest/config'
 
 import viteConfig from './vite.config'
 
-export default mergeConfig(
-  viteConfig as any, // eslint-disable-line @typescript-eslint/no-explicit-any
-  defineConfig({
-    test: {
-      environment: 'jsdom',
-      exclude: [...configDefaults.exclude, 'e2e/**'],
-      root: fileURLToPath(new URL('./', import.meta.url)),
-    },
-  }),
-)
+export default defineConfig(async (env) => {
+   
+  const viteConfigObj = await (typeof viteConfig === 'function' ? viteConfig(env) : viteConfig)
+
+  return mergeConfig(
+    viteConfigObj,
+    defineConfig({
+      test: {
+        environment: 'jsdom',
+        exclude: [...configDefaults.exclude, 'e2e/**'],
+        root: fileURLToPath(new URL('./', import.meta.url)),
+      },
+    }),
+  )
+})

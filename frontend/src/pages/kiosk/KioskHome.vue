@@ -80,7 +80,7 @@ const menuItems = [
 
   p {
     font-size: 1.2rem;
-    color: hsl(from var(--color-neutral) h s 50%);
+    color: var(--color-neutral-text-soft);
   }
 }
 
@@ -135,7 +135,7 @@ const menuItems = [
 
   p {
     margin: 0;
-    color: hsl(from var(--color-neutral) h s 50%);
+    color: var(--color-neutral-text-soft);
     font-size: 1rem;
     line-height: 1.4;
   }

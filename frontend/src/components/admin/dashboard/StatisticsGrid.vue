@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { computed } from 'vue'
+import { useRouter } from 'vue-router'
 
 import { useIsTablet } from '../../../utils/useIsMobile'
 import { Icon } from '../../common/ui'
@@ -9,6 +10,7 @@ const props = defineProps<{
   adoptablePetsCount: number
 }>()
 
+const router = useRouter()
 const isTablet = useIsTablet()
 
 const stats = computed(() => [
@@ -18,6 +20,7 @@ const stats = computed(() => [
     value: props.pendingCount,
     icon: 'fileText',
     color: 'var(--color-danger)',
+    to: '/admin/applications',
   },
   {
     id: 'pets',
@@ -26,6 +29,7 @@ const stats = computed(() => [
     icon: 'pawPrint',
     viewBox: '0 0 128 128',
     color: 'var(--color-primary)',
+    to: '/admin/pets',
   },
   {
     id: 'vols',
@@ -33,6 +37,7 @@ const stats = computed(() => [
     value: '16',
     icon: 'users',
     color: 'var(--color-secondary)',
+    to: '/admin/volunteers',
   },
   {
     id: 'money',
@@ -40,13 +45,29 @@ const stats = computed(() => [
     value: '$3,250',
     icon: 'dollar',
     color: 'var(--color-tertiary)',
+    to: '/admin/donations',
   },
 ])
+
+function handleCardClick(route?: string) {
+  if (route) {
+    router.push(route)
+  }
+}
 </script>
 
 <template>
   <div class="stats-grid">
-    <div v-for="stat in stats" :key="stat.id" class="stat-card">
+    <div
+      v-for="stat in stats"
+      :key="stat.id"
+      class="stat-card"
+      @click="handleCardClick(stat.to)"
+      @keydown.enter="handleCardClick(stat.to)"
+      @keydown.space.prevent="handleCardClick(stat.to)"
+      role="button"
+      :tabindex="0"
+    >
       <div class="stat-icon-wrapper" :style="{ color: stat.color }">
         <Icon :name="stat.icon" size="40" :viewBox="stat.viewBox" />
       </div>
@@ -74,13 +95,22 @@ const stats = computed(() => [
   gap: 20px;
   border: 1px solid var(--border-color);
   box-shadow: 0 4px 6px rgb(0 0 0 / 5%);
-  transition: transform 0.2s;
+  transition:
+    transform 0.2s,
+    box-shadow 0.2s;
+  cursor: pointer;
+  outline: none;
 }
 
 .stat-card:hover {
   transform: translateY(-2px);
   border-color: #cbd5e1;
   box-shadow: 0 10px 15px -3px rgb(0 0 0 / 10%);
+}
+
+.stat-card:focus-visible {
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 2px oklch(from var(--color-primary) l c h / 0.20);
 }
 
 .stat-icon-wrapper {

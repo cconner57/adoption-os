@@ -103,7 +103,7 @@ const displayFalseLabel = computed(() => {
   background: transparent;
   border-radius: 6px;
   font-weight: 500;
-  color: hsl(from var(--color-neutral) h s 60%);
+  color: var(--color-neutral-text-soft);
   cursor: pointer;
   padding: 0 4px;
   transition: all 0.2s;
@@ -118,7 +118,7 @@ const displayFalseLabel = computed(() => {
   }
 
   &:hover:not(.active) {
-    background-color: hsl(from var(--color-neutral) h s 95%);
+    background-color: var(--color-neutral-weak);
   }
 }
 </style>

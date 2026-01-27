@@ -256,13 +256,13 @@ button {
 }
 
 .legacy-green-weak {
-  background-color: hsl(from var(--color-primary) h s 95%);
+  background-color: var(--color-primary-weak);
   color: var(--color-primary);
   border: none;
 }
 
 .legacy-green-weak:hover:not(:disabled) {
-  background-color: hsl(from var(--color-primary) h s 85%);
+  background-color: var(--color-primary-border);
 }
 
 .button-disabled {

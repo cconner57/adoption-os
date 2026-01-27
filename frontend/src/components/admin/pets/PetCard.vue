@@ -2,7 +2,7 @@
 import { ref } from 'vue'
 
 import type { IPet } from '../../../models/common'
-import { calculateAge,formatDate } from '../../../utils/date'
+import { calculateAge } from '../../../utils/date'
 import { Button } from '../../common/ui'
 
 defineProps<{
@@ -31,14 +31,44 @@ function getStatusColor(status: string) {
   return map[status] || 'gray'
 }
 
-function formatDoB(dateString?: string | null) {
-  return formatDate(dateString)
+function formatDigitDate(dateString?: string | null) {
+  if (!dateString) return '-'
+  const date = new Date(dateString)
+  if (Number.isNaN(date.getTime())) return '-'
+
+  // Format as MM/DD/YYYY
+  const mm = String(date.getMonth() + 1).padStart(2, '0')
+  const dd = String(date.getDate()).padStart(2, '0')
+  const yyyy = date.getFullYear()
+
+  return `${mm}/${dd}/${yyyy}`
+}
+
+function formatSpayNeuter(pet: IPet) {
+  if (!pet.medical.spayedOrNeutered) {
+    return 'No'
+  }
+
+  const dateStr = pet.medical.spayedOrNeuteredDate
+  if (dateStr) {
+     return formatDigitDate(dateStr)
+  }
+
+  return 'Yes'
+}
+
+function getSpayNeuterLabel(sex?: string) {
+  const s = sex?.toLowerCase()
+  if (s === 'female') return 'Spayed'
+  if (s === 'male') return 'Neutered'
+  return 'Spayed/Neutered'
 }
 </script>
 
+
 <template>
   <div class="pet-card" :class="{ expanded: isExpanded }">
-    
+
     <div class="card-header" @click="isExpanded = !isExpanded">
       <div class="header-main">
         <div class="pet-avatar">
@@ -82,92 +112,99 @@ function formatDoB(dateString?: string | null) {
       </div>
     </div>
 
-    <div class="card-body" v-if="!isExpanded">
-      <div class="quick-stats">
-        <div class="stat">
-          <span class="label">LOCATION</span>
-          <span class="value">{{ pet.details.shelterLocation || '-' }}</span>
-        </div>
-        <div class="stat">
-          <span class="label">INTAKE</span>
-          <span class="value">{{ formatDoB(pet.details.intakeDate) }}</span>
+    <div class="summary-wrapper" :class="{ 'is-collapsed': isExpanded }">
+      <div class="expand-inner">
+        <div class="card-body">
+          <div class="quick-stats">
+            <div class="stat">
+              <span class="label">{{ getSpayNeuterLabel(pet.sex).toUpperCase() }}</span>
+              <span class="value">{{ formatSpayNeuter(pet) }}</span>
+            </div>
+            <div class="stat">
+              <span class="label">DATE OF BIRTH</span>
+              <span class="value">{{ formatDigitDate(pet.physical.dateOfBirth) }}</span>
+            </div>
+          </div>
         </div>
       </div>
     </div>
 
-    <div v-if="isExpanded" class="card-details">
-      
-      <div class="detail-section">
-        <h4>Basic Info</h4>
-        <div class="detail-row">
-          <span class="label">Litter:</span>
-          <span class="value">{{ pet.litterName || '-' }}</span>
-        </div>
-        <div class="detail-row">
-          <span class="label">Color:</span>
-          <span class="value">{{ pet.physical.color || '-' }}</span>
-        </div>
-        <div class="detail-row">
-          <span class="label">Weight:</span>
-          <span class="value">{{
-            pet.physical.currentWeight ? `${pet.physical.currentWeight} lbs` : '-'
-          }}</span>
-        </div>
-        <div class="detail-row">
-          <span class="label">Spayed/Neutered:</span>
-          <span class="value">
-            {{ pet.medical.spayedOrNeutered ? 'Yes' : 'No' }}
-          </span>
-        </div>
-      </div>
-
-      <div class="detail-section">
-        <h4>Status & Location</h4>
-        <div class="detail-row">
-          <span class="label">Location:</span>
-          <span class="value">{{ pet.details.shelterLocation || '-' }}</span>
-        </div>
-        <div class="detail-row">
-          <span class="label">Intake Date:</span>
-          <span class="value">{{ pet.details.intakeDate || '-' }}</span>
-        </div>
-
-        <template v-if="pet.details.status === 'foster'">
-          <div class="detail-row">
-            <span class="label">Foster Parent:</span>
-            <span class="value">{{ pet.foster.parentName || '-' }}</span>
+    <div class="details-wrapper" :class="{ 'is-expanded': isExpanded }">
+      <div class="expand-inner">
+        <div class="card-details">
+          <div class="detail-section">
+            <h4>Basic Info</h4>
+            <div class="detail-row">
+              <span class="label">Litter:</span>
+              <span class="value">{{ pet.litterName || '-' }}</span>
+            </div>
+            <div class="detail-row">
+              <span class="label">Color:</span>
+              <span class="value">{{ pet.physical.color || '-' }}</span>
+            </div>
+            <div class="detail-row">
+              <span class="label">Weight:</span>
+              <span class="value">{{
+                pet.physical.currentWeight ? `${pet.physical.currentWeight} lbs` : '-'
+              }}</span>
+            </div>
+            <div class="detail-row">
+              <span class="label">{{ getSpayNeuterLabel(pet.sex) }}:</span>
+              <span class="value">
+                {{ pet.medical.spayedOrNeutered ? 'Yes' : 'No' }}
+              </span>
+            </div>
           </div>
-        </template>
-        <template v-if="pet.details.status === 'adopted'">
-          <div class="detail-row">
-            <span class="label">Adopter:</span>
-            <span class="value">{{ pet.adoption.adoptedBy || '-' }}</span>
+
+          <div class="detail-section">
+            <h4>Status & Location</h4>
+            <div class="detail-row">
+              <span class="label">Location:</span>
+              <span class="value">{{ pet.details.shelterLocation || '-' }}</span>
+            </div>
+            <div class="detail-row">
+              <span class="label">Intake Date:</span>
+              <span class="value">{{ pet.details.intakeDate || '-' }}</span>
+            </div>
+
+            <template v-if="pet.details.status === 'foster'">
+              <div class="detail-row">
+                <span class="label">Foster Parent:</span>
+                <span class="value">{{ pet.foster.parentName || '-' }}</span>
+              </div>
+            </template>
+            <template v-if="pet.details.status === 'adopted'">
+              <div class="detail-row">
+                <span class="label">Adopter:</span>
+                <span class="value">{{ pet.adoption.adoptedBy || '-' }}</span>
+              </div>
+            </template>
           </div>
-        </template>
-      </div>
 
-      <div class="detail-section">
-        <h4>Behavior</h4>
-        <div class="detail-row">
-          <span class="label">Energy:</span>
-          <span class="value capitalize">{{ pet.behavior?.energyLevel || '-' }}</span>
-        </div>
-        <div class="tags-row">
-          <span class="tag" :class="pet.behavior?.isGoodWithKids ? 'yes' : 'no'">Kids</span>
-          <span class="tag" :class="pet.behavior?.isGoodWithCats ? 'yes' : 'no'">Cats</span>
-          <span class="tag" :class="pet.behavior?.isGoodWithDogs ? 'yes' : 'no'">Dogs</span>
-        </div>
-      </div>
+          <div class="detail-section">
+            <h4>Behavior</h4>
+            <div class="detail-row">
+              <span class="label">Energy:</span>
+              <span class="value capitalize">{{ pet.behavior?.energyLevel || '-' }}</span>
+            </div>
+            <div class="tags-row">
+              <span class="tag" :class="pet.behavior?.isGoodWithKids ? 'yes' : 'no'">Kids</span>
+              <span class="tag" :class="pet.behavior?.isGoodWithCats ? 'yes' : 'no'">Cats</span>
+              <span class="tag" :class="pet.behavior?.isGoodWithDogs ? 'yes' : 'no'">Dogs</span>
+            </div>
+          </div>
 
-      <div class="card-actions">
-        <Button
-          v-if="pet.details.status === 'available'"
-          title="Adopted"
-          color="blue"
-          full-width
-          :onClick="() => emit('mark-adopted', pet)"
-        />
-        <Button title="Edit Pet" color="white" full-width :onClick="() => emit('edit', pet)" />
+          <div class="card-actions">
+            <Button
+              v-if="pet.details.status === 'available'"
+              title="Adopted"
+              color="blue"
+              full-width
+              :onClick="() => emit('mark-adopted', pet)"
+            />
+            <Button title="Edit Pet" color="white" full-width :onClick="() => emit('edit', pet)" />
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -179,9 +216,13 @@ function formatDoB(dateString?: string | null) {
   border-radius: 12px;
   box-shadow: 0 2px 8px rgb(0 0 0 / 5%);
   overflow: hidden;
-  border: 1px solid var(--border-color);
+  border: 1px solid var(--color-neutral-border);
   margin-bottom: 16px;
   transition: all 0.2s;
+}
+
+.pet-card:active {
+  transform: scale(0.98);
 }
 
 .pet-card.expanded {
@@ -207,7 +248,7 @@ function formatDoB(dateString?: string | null) {
   height: 64px;
   border-radius: 12px;
   overflow: hidden;
-  background: #f1f5f9;
+  background: var(--color-neutral-weak);
   flex-shrink: 0;
 }
 
@@ -254,11 +295,11 @@ function formatDoB(dateString?: string | null) {
 
 .info-pill {
   font-size: 0.8rem;
-  color: #64748b;
-  background: #f8fafc;
+  color: var(--text-secondary);
+  background: var(--color-neutral-surface);
   padding: 2px 8px;
   border-radius: 6px;
-  border: 1px solid #e2e8f0;
+  border: 1px solid var(--color-neutral-border);
   text-transform: capitalize;
 }
 
@@ -297,14 +338,14 @@ function formatDoB(dateString?: string | null) {
 }
 
 .status-badge.gray {
-  background: #f1f5f9;
-  color: #64748b;
+  background: var(--color-neutral-weak);
+  color: var(--text-secondary);
 }
 
 .expand-icon {
-  color: #94a3b8;
+  color: var(--text-secondary);
   transition: transform 0.3s;
-  margin-top: 4px; 
+  margin-top: 4px;
 }
 
 .expand-icon.rotated {
@@ -313,7 +354,11 @@ function formatDoB(dateString?: string | null) {
 
 .card-body {
   padding: 0 16px 16px;
-  padding-left: 92px; 
+  padding-left: 92px;
+}
+
+.expand-inner {
+  min-height: 0;
 }
 
 .quick-stats {
@@ -330,7 +375,7 @@ function formatDoB(dateString?: string | null) {
 
 .stat .label {
   font-size: 0.65rem;
-  color: #94a3b8;
+  color: var(--text-secondary);
   text-transform: uppercase;
   letter-spacing: 0.5px;
   font-weight: 600;
@@ -338,7 +383,7 @@ function formatDoB(dateString?: string | null) {
 
 .stat .value {
   font-size: 0.9rem;
-  color: #334155;
+  color: var(--text-primary);
   font-weight: 500;
 }
 
@@ -368,11 +413,11 @@ function formatDoB(dateString?: string | null) {
 }
 
 .detail-row .label {
-  color: #64748b;
+  color: var(--text-secondary);
 }
 
 .detail-row .value {
-  color: #334155;
+  color: var(--text-primary);
   font-weight: 500;
   text-align: right;
 }
@@ -406,6 +451,7 @@ function formatDoB(dateString?: string | null) {
 
 .card-actions {
   display: flex;
+  flex-direction: column;
   gap: 12px;
   margin-top: 24px;
 }
@@ -426,8 +472,38 @@ function formatDoB(dateString?: string | null) {
 }
 
 .action-btn.archive {
-  background: #fff;
-  border: 1px solid #cbd5e1;
-  color: #64748b;
+  background: var(--text-inverse);
+  border: 1px solid var(--color-neutral-border);
+  color: var(--text-secondary);
 }
+
+/* CSS Grid Animation Wrappers */
+.summary-wrapper,
+.details-wrapper {
+  display: grid;
+  transition: grid-template-rows 0.4s ease, opacity 0.3s ease;
+  overflow: hidden;
+}
+
+.summary-wrapper {
+  grid-template-rows: 1fr;
+  opacity: 1;
+}
+
+.summary-wrapper.is-collapsed {
+  grid-template-rows: 0fr;
+  opacity: 0;
+}
+
+.details-wrapper {
+  grid-template-rows: 0fr;
+  opacity: 0;
+}
+
+.details-wrapper.is-expanded {
+  grid-template-rows: 1fr;
+  opacity: 1;
+}
+
+
 </style>

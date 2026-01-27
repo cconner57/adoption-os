@@ -177,6 +177,6 @@ defineProps<{
 
 .helper-text {
   font-size: 0.85rem;
-  color: hsl(from var(--color-neutral) h s 50%);
+  color: var(--color-neutral-text-soft);
 }
 </style>

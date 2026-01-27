@@ -240,8 +240,8 @@ const selected = computed({
 }
 
 .time-card:hover {
-  background-color: hsl(from var(--color-neutral) h s 98%);
-  border-color: hsl(from var(--color-neutral) h s 80%);
+  background-color: var(--color-neutral-surface);
+  border-color: var(--color-neutral-border-strong);
 }
 
 .time-card > input {

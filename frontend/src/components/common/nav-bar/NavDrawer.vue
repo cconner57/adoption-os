@@ -295,7 +295,7 @@ svg[data-open='true'] .hx-bot {
 }
 
 .drawer-close:hover {
-  background-color: hsl(from var(--color-neutral) h s 95%);
+  background-color: var(--color-neutral-weak);
 }
 
 .drawer-close:focus-visible {
@@ -325,13 +325,13 @@ svg[data-open='true'] .hx-bot {
 
 .nav-link:hover,
 .nav-link:active {
-  background-color: hsl(from var(--color-neutral) h s 95%);
+  background-color: var(--color-neutral-weak);
   color: var(--color-primary);
   transform: translateX(4px);
 }
 
 .nav-link.router-link-active {
-  background-color: hsl(from var(--color-primary) h s 95%); 
+  background-color: var(--color-primary-weak); 
   color: var(--color-primary);
 }
 
@@ -352,7 +352,7 @@ svg[data-open='true'] .hx-bot {
   text-decoration: none;
   font-weight: 700;
   font-size: 1.1rem;
-  box-shadow: 0 4px 12px hsl(from var(--color-primary) h s l / 15%);
+  box-shadow: 0 4px 12px oklch(from var(--color-primary) l c h / 0.15);
   transition:
     transform 0.2s,
     box-shadow 0.2s;
@@ -360,8 +360,8 @@ svg[data-open='true'] .hx-bot {
 
 .donate-btn:hover {
   transform: translateY(-2px);
-  box-shadow: 0 6px 16px hsl(from var(--color-primary) h s l / 20%);
-  background: hsl(from var(--color-primary) h s 40%);
+  box-shadow: 0 6px 16px oklch(from var(--color-primary) l c h / 0.20);
+  background: var(--color-primary-strong);
 }
 
 .donate-btn:active {

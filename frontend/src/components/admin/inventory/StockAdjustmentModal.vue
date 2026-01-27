@@ -82,7 +82,7 @@ const save = () => {
 
 .subtitle {
   margin: 0 0 24px;
-  color: hsl(from var(--color-neutral) h s 50%);
+  color: var(--color-neutral-text-soft);
 }
 
 .stock-adjuster {
@@ -107,7 +107,7 @@ const save = () => {
 }
 
 .adjust-btn:hover {
-  background: hsl(from var(--color-neutral) h s 98%);
+  background: var(--color-neutral-surface);
 }
 
 .qty-input {
@@ -122,7 +122,7 @@ const save = () => {
 
 .threshold-info {
   font-size: 0.85rem;
-  color: hsl(from var(--color-neutral) h s 50%);
+  color: var(--color-neutral-text-soft);
   margin-bottom: 24px;
 }
 

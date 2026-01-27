@@ -90,12 +90,12 @@ function getStatusColor(status?: string | null) {
   border-collapse: collapse;
 
   th {
-    background: hsl(from var(--color-neutral) h s 98%);
+    background: var(--color-neutral-surface);
     padding: 12px 16px;
     text-align: left;
     font-size: 0.85rem;
     font-weight: 600;
-    color: hsl(from var(--color-neutral) h s 40%);
+    color: var(--color-neutral-strong);
     position: sticky;
     top: 0;
     z-index: 10;
@@ -109,11 +109,11 @@ function getStatusColor(status?: string | null) {
   }
 
   tr:nth-child(even) {
-    background-color: hsl(from var(--color-neutral) h s 98%);
+    background-color: var(--color-neutral-surface);
   }
 
   tr:hover {
-    background: hsl(from var(--color-neutral) h s 95%);
+    background: var(--color-neutral-weak);
   }
 }
 
@@ -146,7 +146,7 @@ function getStatusColor(status?: string | null) {
 }
 
 .text-muted {
-  color: hsl(from var(--color-neutral) h s 50%);
+  color: var(--color-neutral-text-soft);
 }
 
 .text-center {

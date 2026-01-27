@@ -355,7 +355,7 @@ const { formState, touched, handleBlur, hasAttemptedSubmit, selectedAnimal } = d
       display: flex;
       align-items: flex-start;
       gap: 16px;
-      background: hsl(from var(--color-neutral) h s 98%);
+      background: var(--color-neutral-surface);
       padding: 16px;
       border-radius: 12px;
       border: 1px solid var(--border-color);
@@ -393,7 +393,7 @@ const { formState, touched, handleBlur, hasAttemptedSubmit, selectedAnimal } = d
     .field-label {
       font-size: 0.875rem;
       font-weight: 600;
-      color: hsl(from var(--color-neutral) h s 30%);
+      color: var(--color-neutral-strong);
     }
 
     .gender-toggle {
@@ -410,7 +410,7 @@ const { formState, touched, handleBlur, hasAttemptedSubmit, selectedAnimal } = d
         background: transparent;
         border-radius: 6px;
         font-weight: 500;
-        color: hsl(from var(--color-neutral) h s 50%);
+        color: var(--color-neutral-text-soft);
         cursor: pointer;
         padding: 0 4px;
         transition: all 0.2s;
@@ -435,7 +435,7 @@ const { formState, touched, handleBlur, hasAttemptedSubmit, selectedAnimal } = d
       justify-content: center;
       width: 48px;
       height: 48px;
-      border: 1px solid hsl(from var(--color-danger) h s 90%);
+      border: 1px solid var(--color-danger-light);
       background: var(--text-inverse);
       color: var(--color-danger);
       border-radius: 8px;
@@ -445,7 +445,7 @@ const { formState, touched, handleBlur, hasAttemptedSubmit, selectedAnimal } = d
       margin-top: 29px;
 
       &:hover {
-        background: hsl(from var(--color-danger) h s 98%);
+        background: var(--color-danger-surface);
       }
 
       @media (width <= 640px) {
@@ -464,7 +464,7 @@ const { formState, touched, handleBlur, hasAttemptedSubmit, selectedAnimal } = d
       background: var(--text-inverse);
       border: 1px dashed var(--border-color);
       border-radius: 8px;
-      color: hsl(from var(--color-neutral) h s 50%);
+      color: var(--color-neutral-text-soft);
       font-weight: 500;
       cursor: pointer;
       transition: all 0.2s;

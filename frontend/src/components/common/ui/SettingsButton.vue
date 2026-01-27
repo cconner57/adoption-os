@@ -44,16 +44,16 @@ const emit = defineEmits<{
   align-items: center;
   justify-content: center;
   transition: all 0.2s;
-  color: hsl(from var(--color-neutral) h s 50%);
+  color: var(--color-neutral-text-soft);
 
   &:hover {
-    background: hsl(from var(--color-neutral) h s 98%);
+    background: var(--color-neutral-surface);
     color: var(--text-primary);
     border-color: var(--color-secondary);
   }
 
   &.active {
-    background: hsl(from var(--color-neutral) h s 95%);
+    background: var(--color-neutral-weak);
     border-color: var(--color-secondary);
     color: var(--text-primary);
   }

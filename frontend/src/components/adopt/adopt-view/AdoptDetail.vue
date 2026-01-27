@@ -382,7 +382,7 @@ function onImgError() {
   }
 
   .adopt-detail__traits p {
-    background-color: hsl(from var(--color-primary) h s 95%);
+    background-color: var(--color-primary-weak);
     padding: 4px 12px;
     border-radius: 16px;
   }

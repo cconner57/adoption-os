@@ -251,8 +251,8 @@ onMounted(() => {
   gap: 8px;
 
   &.warning {
-    background: hsl(from var(--color-danger) h s 95%);
-    border-color: hsl(from var(--color-danger) h s 80%);
+    background: var(--color-danger-weak);
+    border-color: var(--color-danger-border-strong);
     color: var(--color-danger);
   }
 }
@@ -319,7 +319,7 @@ onMounted(() => {
   }
 
   &.active {
-    background: hsl(from var(--color-neutral) h s 95%);
+    background: var(--color-neutral-weak);
     border-left: 4px solid var(--color-secondary);
   }
 }
@@ -346,7 +346,7 @@ onMounted(() => {
 
 .mac {
   font-family: monospace;
-  color: hsl(from var(--color-neutral) h s 50%);
+  color: var(--color-neutral-text-soft);
   font-size: 0.8rem;
 }
 
@@ -356,7 +356,7 @@ onMounted(() => {
   flex-direction: column;
   align-items: flex-end;
   gap: 2px;
-  color: hsl(from var(--color-neutral) h s 50%);
+  color: var(--color-neutral-text-soft);
 }
 
 .details-panel {
@@ -403,7 +403,7 @@ onMounted(() => {
   .field-lbl, label {
     font-size: 0.75rem;
     text-transform: uppercase;
-    color: hsl(from var(--color-neutral) h s 50%);
+    color: var(--color-neutral-text-soft);
     font-weight: 600;
   }
 

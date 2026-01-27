@@ -112,7 +112,7 @@ const weekDays = computed(() => {
   gap: 16px;
 
   &.today {
-    border: 2px solid hsl(from var(--color-secondary) h s 80%);
+    border: 2px solid var(--color-secondary-border-strong);
   }
 }
 
@@ -124,7 +124,7 @@ const weekDays = computed(() => {
   .day-name {
     display: block;
     font-size: 0.9rem;
-    color: hsl(from var(--color-neutral) h s 50%);
+    color: var(--color-neutral-text-soft);
     text-transform: uppercase;
     font-weight: 600;
   }
@@ -149,13 +149,13 @@ const weekDays = computed(() => {
   border-left: 4px solid transparent;
 
   &.volunteer {
-    background: hsl(from var(--color-secondary) h s 95%);
+    background: var(--color-secondary-weak);
     border-left-color: var(--color-secondary);
     color: var(--color-secondary);
   }
 
   &.vet {
-    background: hsl(from var(--color-primary) h s 95%);
+    background: var(--color-primary-weak);
     border-left-color: var(--color-primary);
     color: var(--color-primary);
   }

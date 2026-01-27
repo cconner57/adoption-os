@@ -123,7 +123,7 @@ function handleClick(item: NavItem, navigate?: (e: MouseEvent) => void) {
   border-bottom: none;
   width: 100%;
   text-align: left;
-  color: hsl(from var(--color-neutral) h s 50%);
+  color: var(--color-neutral-text-soft);
   font-weight: 500;
   font-size: 0.95rem;
   font-family: inherit;
@@ -135,12 +135,12 @@ function handleClick(item: NavItem, navigate?: (e: MouseEvent) => void) {
 }
 
 .nav-item:hover {
-  background-color: hsl(from var(--color-neutral) h s 95%);
+  background-color: var(--color-neutral-weak);
   color: var(--text-primary);
 }
 
 .nav-item.active {
-  background-color: hsl(from var(--color-secondary) h s l / 12%);
+  background-color: oklch(from var(--color-secondary) l c h / 0.12);
   color: var(--color-secondary);
   border-left-color: var(--color-secondary);
   font-weight: 600;

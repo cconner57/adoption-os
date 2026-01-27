@@ -149,7 +149,7 @@ watch(
   .topic {
     margin: 4px 0 0;
     font-size: 0.85rem;
-    color: hsl(from var(--color-neutral) h s 50%);
+    color: var(--color-neutral-text-soft);
   }
 }
 
@@ -246,7 +246,7 @@ watch(
 
   p {
     margin: 0;
-    color: hsl(from var(--color-neutral) h s 50%);
+    color: var(--color-neutral-text-soft);
   }
 
   .highlight {
@@ -260,7 +260,7 @@ watch(
   gap: 16px;
 
   &:hover {
-    background: hsl(from var(--color-neutral) h s 98%);
+    background: var(--color-neutral-surface);
     margin: 0 -20px;
     padding: 4px 20px;
   }
@@ -269,7 +269,7 @@ watch(
 .avatar {
   width: 40px;
   height: 40px;
-  background: hsl(from var(--color-neutral) h s 95%);
+  background: var(--color-neutral-weak);
   border-radius: 8px;
   display: flex;
   align-items: center;
@@ -294,7 +294,7 @@ watch(
 
   .timestamp {
     font-size: 0.75rem;
-    color: hsl(from var(--color-neutral) h s 60%);
+    color: var(--color-neutral-text-soft);
   }
 }
 
@@ -308,7 +308,7 @@ watch(
   display: flex;
   align-items: center;
   justify-content: center;
-  color: hsl(from var(--color-neutral) h s 50%);
+  color: var(--color-neutral-text-soft);
   font-style: italic;
 }
 </style>

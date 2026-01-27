@@ -96,22 +96,22 @@ h2 {
 }
 
 .time-card:has(> input:focus-visible) {
-  box-shadow: 0 0 0 3px hsl(from var(--color-secondary) h s l / 45%);
+  box-shadow: 0 0 0 3px oklch(from var(--color-secondary) l c h / 0.45);
 }
 
 .time-card__content small {
-  color: hsl(from var(--color-neutral) h s 50%);
+  color: var(--color-neutral-text-soft);
   display: block;
   margin-top: 4px;
 }
 
 @supports not (selector(:has(*))) {
   .time-card > input:checked + .time-card__content {
-    background: hsl(from var(--color-primary) h s 95%);
+    background: var(--color-primary-weak);
     border-radius: 10px;
     margin: -12px;
     padding: 12px;
-    box-shadow: 0 0 0 2px hsl(from var(--color-primary) h s 80%) inset;
+    box-shadow: 0 0 0 2px var(--color-primary-border-strong) inset;
   }
 }
 

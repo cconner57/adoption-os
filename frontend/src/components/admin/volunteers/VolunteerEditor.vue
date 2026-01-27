@@ -30,7 +30,7 @@ watch(
   () => props.volunteer,
   (newVal) => {
     if (newVal) {
-      formData.value = JSON.parse(JSON.stringify(newVal))
+      formData.value = structuredClone(newVal)
     } else {
 
       formData.value = {
@@ -84,7 +84,7 @@ function handleSave() {
           @update:modelValue="(id) => (activeTab = id as string)"
           style="
             width: 200px;
-            background: hsl(from var(--color-neutral) h s 98%);
+            background: var(--color-neutral-surface);
             border-right: 1px solid var(--border-color);
             padding-top: 16px;
           "

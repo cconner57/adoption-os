@@ -420,7 +420,7 @@ const handleSaveCampaign = async (updated: ICampaign) => {
 
     tr.is-winner {
         /* User requested matching color from winner circle (L60) */
-        background-color: hsl(from var(--color-warning) h s 60%);
+        background-color: var(--color-warning-text-soft);
         color: #fff; /* Ensure text is readable on darker background */
         td { font-weight: 600; }
     }
@@ -428,8 +428,8 @@ const handleSaveCampaign = async (updated: ICampaign) => {
 
 .winner-label {
     /* Lighter gold for the badge to contrast with the row */
-    background: hsl(from var(--color-warning) h s 80%);
-    color: hsl(from var(--color-warning) h s 30%); /* Darker text for contrast */
+    background: var(--color-warning-border-strong);
+    color: var(--color-warning-strong); /* Darker text for contrast */
     font-size: 0.65rem;
     padding: 3px 0; /* Removing horizontal padding, using width instead */
     width: 60px;    /* Fixed width to approximate button width */
@@ -474,7 +474,7 @@ const handleSaveCampaign = async (updated: ICampaign) => {
 
 .progress-bar {
   height: 8px;
-  background: hsl(from var(--color-neutral) h s 95%);
+  background: var(--color-neutral-weak);
   border-radius: 4px;
   overflow: hidden;
   margin-top: 8px;

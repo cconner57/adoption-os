@@ -206,7 +206,7 @@ onUnmounted(() => {
 
 .combobox-wrapper:focus-within {
   border-color: var(--color-secondary);
-  box-shadow: 0 0 0 2px hsl(from var(--color-secondary) h s l / 10%);
+  box-shadow: 0 0 0 2px oklch(from var(--color-secondary) l c h / 0.10);
 }
 
 .selected-tags {
@@ -220,9 +220,9 @@ onUnmounted(() => {
   display: inline-flex;
   align-items: center;
   gap: 4px;
-  background: hsl(from var(--color-primary) h s 95%);
+  background: var(--color-primary-weak);
   color: var(--text-primary);
-  border: 1px solid hsl(from var(--color-primary) h s 80%);
+  border: 1px solid var(--color-primary-border-strong);
   padding: 2px 8px;
   border-radius: 12px;
   font-size: 0.85rem;
@@ -233,7 +233,7 @@ onUnmounted(() => {
   background: none;
   border: none;
   cursor: pointer;
-  color: hsl(from var(--color-danger) h s 60%);
+  color: var(--color-danger-text-soft);
   font-size: 1.1rem;
   line-height: 0.8;
   padding: 0 2px;
@@ -302,11 +302,11 @@ onUnmounted(() => {
   font-size: 0.95rem;
 
   &:hover {
-    background: hsl(from var(--color-neutral) h s 96%);
+    background: var(--color-neutral-weak);
   }
 
   &.selected {
-    background: hsl(from var(--color-primary) h s 96%);
+    background: var(--color-primary-weak);
     color: var(--color-primary);
     font-weight: 500;
   }

@@ -185,7 +185,7 @@ const goHome = () => router.push('/kiosk')
   background: none;
   border: none;
   font-size: 1.1rem;
-  color: hsl(from var(--color-neutral) h s 50%);
+  color: var(--color-neutral-text-soft);
   font-weight: 500;
   cursor: pointer;
 }
@@ -199,7 +199,7 @@ const goHome = () => router.push('/kiosk')
   }
 
   .date-badge {
-    color: hsl(from var(--color-neutral) h s 50%);
+    color: var(--color-neutral-text-soft);
     font-size: 1.1rem;
   }
 }
@@ -275,11 +275,11 @@ const goHome = () => router.push('/kiosk')
   }
 
   th {
-    background: hsl(from var(--color-neutral) h s 95%);
+    background: var(--color-neutral-weak);
     text-align: center;
     font-size: 0.85rem;
     text-transform: uppercase;
-    color: hsl(from var(--color-neutral) h s 50%);
+    color: var(--color-neutral-text-soft);
   }
 }
 
@@ -373,8 +373,8 @@ const goHome = () => router.push('/kiosk')
   border: 1px solid transparent;
 
   &.checked {
-    background: hsl(from var(--color-primary) h s 98%);
-    border-color: hsl(from var(--color-primary) h s 80%);
+    background: var(--color-primary-surface);
+    border-color: var(--color-primary-border-strong);
   }
 
   span {

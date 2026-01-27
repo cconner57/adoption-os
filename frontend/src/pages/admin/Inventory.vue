@@ -249,9 +249,9 @@ onMounted(() => {
 }
 
 .alert-banner {
-  background: hsl(from var(--color-warning) h s 95%);
-  border: 1px solid hsl(from var(--color-warning) h s 80%);
-  color: hsl(from var(--color-warning) h s 40%);
+  background: var(--color-warning-weak);
+  border: 1px solid var(--color-warning-border-strong);
+  color: var(--color-warning-strong);
   padding: 12px 16px;
   border-radius: 8px;
   display: flex;
@@ -282,14 +282,14 @@ onMounted(() => {
   gap: 8px;
 
   &.warning-bg {
-    border-color: hsl(from var(--color-danger) h s 80%);
-    background: hsl(from var(--color-danger) h s 95%);
+    border-color: var(--color-danger-border-strong);
+    background: var(--color-danger-weak);
   }
 }
 
 .stat-label {
   font-size: 0.85rem;
-  color: hsl(from var(--color-neutral) h s 50%);
+  color: var(--color-neutral-text-soft);
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.5px;
@@ -343,8 +343,8 @@ onMounted(() => {
   th {
     text-align: left;
     padding: 16px;
-    background: hsl(from var(--color-neutral) h s 98%);
-    color: hsl(from var(--color-neutral) h s 50%);
+    background: var(--color-neutral-surface);
+    color: var(--color-neutral-text-soft);
     font-weight: 600;
     font-size: 0.85rem;
     text-transform: uppercase;
@@ -369,7 +369,7 @@ onMounted(() => {
 }
 
 .cat-badge {
-  background: hsl(from var(--color-neutral) h s 95%);
+  background: var(--color-neutral-weak);
   color: var(--text-primary);
   padding: 2px 8px;
   border-radius: 4px;
@@ -395,7 +395,7 @@ onMounted(() => {
 
 .threshold-sub {
   font-size: 0.75rem;
-  color: hsl(from var(--color-neutral) h s 50%);
+  color: var(--color-neutral-text-soft);
 }
 
 .progress-bar {
@@ -415,7 +415,7 @@ onMounted(() => {
 .empty-state {
   padding: 40px;
   text-align: center;
-  color: hsl(from var(--color-neutral) h s 50%);
+  color: var(--color-neutral-text-soft);
 }
 
 </style>

@@ -261,7 +261,7 @@ const handleLogDonation = () => {
 
 .stat-label {
   font-size: 0.85rem;
-  color: hsl(from var(--color-neutral) h s 50%);
+  color: var(--color-neutral-text-soft);
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.5px;
@@ -301,8 +301,8 @@ const handleLogDonation = () => {
   th {
     text-align: left;
     padding: 16px;
-    background: hsl(from var(--color-neutral) h s 98%);
-    color: hsl(from var(--color-neutral) h s 50%);
+    background: var(--color-neutral-surface);
+    color: var(--color-neutral-text-soft);
     font-weight: 600;
     font-size: 0.85rem;
     text-transform: uppercase;
@@ -323,7 +323,7 @@ const handleLogDonation = () => {
 
 .date-cell {
   font-family: monospace;
-  color: hsl(from var(--color-neutral) h s 50%);
+  color: var(--color-neutral-text-soft);
 }
 
 .fw-bold {
@@ -343,7 +343,7 @@ const handleLogDonation = () => {
 }
 
 .pet-badge {
-  background: hsl(from var(--color-secondary) h s 95%);
+  background: var(--color-secondary-weak);
   color: var(--color-secondary);
   padding: 2px 6px;
   border-radius: 4px;
@@ -354,7 +354,7 @@ const handleLogDonation = () => {
 }
 
 .notes-text {
-  color: hsl(from var(--color-neutral) h s 50%);
+  color: var(--color-neutral-text-soft);
   font-style: italic;
 }
 
@@ -365,7 +365,7 @@ const handleLogDonation = () => {
 .empty-state {
   padding: 40px;
   text-align: center;
-  color: hsl(from var(--color-neutral) h s 50%);
+  color: var(--color-neutral-text-soft);
 }
 
 .modal-overlay {
@@ -393,7 +393,7 @@ const handleLogDonation = () => {
 
   .subtitle {
     margin-top: 0;
-    color: hsl(from var(--color-neutral) h s 50%);
+    color: var(--color-neutral-text-soft);
     margin-bottom: 20px;
     font-size: 0.9rem;
   }

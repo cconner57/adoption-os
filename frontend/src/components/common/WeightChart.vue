@@ -201,7 +201,7 @@ svg {
   align-items: center;
   justify-content: center;
   height: 100%;
-  color: hsl(from var(--color-neutral) h s 50%);
+  color: var(--color-neutral-text-soft);
   font-size: 0.9rem;
 }
 

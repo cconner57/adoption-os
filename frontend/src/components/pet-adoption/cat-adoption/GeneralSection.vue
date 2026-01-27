@@ -429,7 +429,7 @@ function handleAgreementUpdate(val: string | number | boolean | null) {
   .remove-btn:hover {
     color: var(--color-danger);
     border-color: var(--color-danger);
-    background-color: hsl(from var(--color-danger) h s 95%);
+    background-color: var(--color-danger-weak);
   }
 
   @container (max-width: 480px) {

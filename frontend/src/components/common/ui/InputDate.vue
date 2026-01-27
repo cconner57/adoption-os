@@ -104,7 +104,7 @@ input {
 input:focus {
     outline: none;
     border-color: var(--color-primary);
-    box-shadow: 0 0 0 3px hsl(from var(--color-primary) h s l / 20%);
+    box-shadow: 0 0 0 3px oklch(from var(--color-primary) l c h / 0.20);
 }
 
 /* Placeholder styling for date inputs is tricky, usually relies on 'is-empty' class or pseudo elements */

@@ -145,8 +145,8 @@ const toggleOption = (value: string) => {
   }
 
   &:hover {
-    border-color: hsl(from var(--color-primary) h s 80%);
-    background: hsl(from var(--color-primary) h s 95%);
+    border-color: var(--color-primary-border-strong);
+    background: var(--color-primary-weak);
   }
 }
 
@@ -171,11 +171,11 @@ const toggleOption = (value: string) => {
 
 @supports not (selector(:has(*))) {
   .chip > input:checked + span {
-    background: hsl(from var(--color-primary) h s 95%);
+    background: var(--color-primary-weak);
     border-radius: 999px;
     padding: 6px 10px;
     margin: -6px -10px;
-    box-shadow: 0 0 0 2px hsl(from var(--color-primary) h s 80%) inset;
+    box-shadow: 0 0 0 2px var(--color-primary-border-strong) inset;
   }
 
   .chip > input:focus-visible + span {

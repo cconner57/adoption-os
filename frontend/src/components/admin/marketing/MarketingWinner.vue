@@ -92,7 +92,7 @@ const notifyWinner = (method: 'email' | 'text' | 'call') => {
 
 .winner-card {
     text-align: center;
-    background: hsl(from var(--color-warning) h s 60%);
+    background: var(--color-warning-text-soft);
     padding: 32px 24px;
     border-radius: 8px;
     border: 1px solid #f3f4f6;

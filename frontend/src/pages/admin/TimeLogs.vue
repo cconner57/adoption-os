@@ -171,7 +171,7 @@ onMounted(() => {
   border: none;
   padding: 12px 4px;
   font-size: 1rem;
-  color: hsl(from var(--color-neutral) h s 50%);
+  color: var(--color-neutral-text-soft);
   cursor: pointer;
   border-bottom: 2px solid transparent;
   font-weight: 500;

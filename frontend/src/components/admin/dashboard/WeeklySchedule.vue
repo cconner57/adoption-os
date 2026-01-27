@@ -170,7 +170,7 @@ const weekDays = computed(() => {
 }
 
 .calendar-day {
-  background-color: hsl(from var(--color-neutral) h s 98%);
+  background-color: var(--color-neutral-surface);
   border-radius: 8px;
   padding: 8px;
   min-height: 120px;
@@ -182,8 +182,8 @@ const weekDays = computed(() => {
 
 .calendar-day.today {
   background-color: var(--text-inverse);
-  border-color: hsl(from var(--color-secondary) h s 70%);
-  box-shadow: 0 0 0 2px hsl(from var(--color-secondary) h s l / 10%);
+  border-color: oklch(from var(--color-secondary) 70% c h);
+  box-shadow: 0 0 0 2px oklch(from var(--color-secondary) l c h / 0.10);
 }
 
 .calendar-day.today .day-header {
@@ -224,25 +224,25 @@ const weekDays = computed(() => {
 }
 
 .event-pill.feeding {
-  background-color: hsl(from var(--color-secondary) h s 96%);
+  background-color: var(--color-secondary-weak);
   color: var(--color-secondary);
   border-left-color: var(--color-secondary);
 }
 
 .event-pill.adoption {
-  background-color: hsl(from var(--color-tertiary) h s 96%);
+  background-color: var(--color-tertiary-weak);
   color: var(--color-tertiary);
   border-left-color: var(--color-tertiary);
 }
 
 .event-pill.transport {
-  background-color: hsl(from var(--color-warning) h s 96%);
-  color: hsl(from var(--color-warning) h s 40%);
+  background-color: var(--color-warning-weak);
+  color: var(--color-warning-strong);
   border-left-color: var(--color-warning);
 }
 
 .event-pill.vet {
-  background-color: hsl(from var(--color-danger) h s 96%);
+  background-color: var(--color-danger-weak);
   color: var(--color-danger);
   border-left-color: var(--color-danger);
 }

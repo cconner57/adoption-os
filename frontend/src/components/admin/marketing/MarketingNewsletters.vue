@@ -98,7 +98,7 @@ const getStatusColor = (status: string) => {
 
 .meta {
   font-size: 0.85rem;
-  color: hsl(from var(--color-neutral) h s 50%);
+  color: var(--color-neutral-text-soft);
 }
 
 .item-stats {
@@ -109,7 +109,7 @@ const getStatusColor = (status: string) => {
 .stat-lbl {
   display: block;
   font-size: 0.75rem;
-  color: hsl(from var(--color-neutral) h s 50%);
+  color: var(--color-neutral-text-soft);
   text-transform: uppercase;
 }
 
@@ -123,6 +123,6 @@ const getStatusColor = (status: string) => {
   border: none;
   font-size: 1.2rem;
   cursor: pointer;
-  color: hsl(from var(--color-neutral) h s 50%);
+  color: var(--color-neutral-text-soft);
 }
 </style>

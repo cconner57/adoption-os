@@ -172,12 +172,12 @@ onUnmounted(() => {
   user-select: none;
 
   &:hover {
-    border-color: hsl(from var(--color-primary) h s 80%);
+    border-color: var(--color-primary-border-strong);
   }
 
   &.is-open {
     border-color: var(--color-primary);
-    box-shadow: 0 0 0 2px hsl(from var(--color-primary) h s l / 20%);
+    box-shadow: 0 0 0 2px oklch(from var(--color-primary) l c h / 0.20);
   }
 }
 
@@ -230,11 +230,11 @@ onUnmounted(() => {
   transition: background 0.1s;
 
   &:hover {
-    background-color: hsl(from var(--color-neutral) h s 96%);
+    background-color: var(--color-neutral-weak);
   }
 
   &.is-selected {
-    background-color: hsl(from var(--color-primary) h s 95%);
+    background-color: var(--color-primary-weak);
     color: var(--color-primary);
     font-weight: 500;
   }

@@ -179,7 +179,7 @@ onUnmounted(() => {
       cursor: pointer;
 
       &:hover {
-        background-color: hsl(from var(--color-secondary) h s 40%);
+        background-color: var(--color-secondary-strong);
       }
     }
   }

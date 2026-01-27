@@ -91,6 +91,7 @@ const userInitials = computed(() => {
 
 <style>
 /* Global style to ensure teleported mobile headers are visible */
+
 /* This MUST be global/unscoped because Teleport moves content outside of scoped component's reach */
 .mobile-header-title {
   display: none !important; /* Force hide on desktop by default */
@@ -157,7 +158,7 @@ const userInitials = computed(() => {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  background-color: hsl(from var(--color-neutral) h s 99%);
+  background-color: var(--color-neutral-surface);
 }
 
 .user-info {
@@ -176,7 +177,7 @@ const userInitials = computed(() => {
     justify-content: center;
     font-weight: 700;
     font-size: 0.9rem;
-    box-shadow: 0 2px 8px hsl(from var(--color-tertiary) h s l / 20%);
+    box-shadow: 0 2px 8px oklch(from var(--color-tertiary) l c h / 0.20);
   }
 
   .details {
@@ -192,7 +193,7 @@ const userInitials = computed(() => {
 
     .role {
       font-size: 0.75rem;
-      color: hsl(from var(--color-neutral) h s 50%);
+      color: var(--color-neutral-text-soft);
       font-weight: 500;
       text-transform: uppercase;
       letter-spacing: 0.05em;
@@ -202,7 +203,7 @@ const userInitials = computed(() => {
 
 .logout-btn {
   background: var(--text-inverse);
-  border: 1px solid hsl(from var(--color-danger) h s 90%);
+  border: 1px solid var(--color-danger-light);
   cursor: pointer;
   font-size: 1.1rem;
   width: 40px;
@@ -215,7 +216,7 @@ const userInitials = computed(() => {
   color: var(--color-danger);
 
   &:hover {
-    background-color: hsl(from var(--color-danger) h s 95%);
+    background-color: var(--color-danger-weak);
     transform: translateY(-2px);
   }
 }
@@ -225,7 +226,7 @@ const userInitials = computed(() => {
   display: flex;
   flex-direction: column;
   overflow: hidden;
-  background-color: hsl(from var(--color-neutral) h s 98%);
+  background-color: var(--color-neutral-surface);
 }
 
 .top-bar {

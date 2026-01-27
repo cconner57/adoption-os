@@ -228,18 +228,18 @@ const formatSize = (bytes: number) => {
 }
 
 .upload-container:hover {
-  background-color: hsl(from var(--color-neutral) h s 95%);
-  border-color: hsl(from var(--color-neutral) h s 60%);
+  background-color: var(--color-neutral-weak);
+  border-color: var(--color-neutral-text-soft);
 }
 
 .upload-container.is-dragging {
-  background-color: hsl(from var(--color-neutral) h s 90%);
+  background-color: var(--color-neutral-light);
   border-color: var(--color-primary);
 }
 
 .has-error .upload-container {
   border-color: var(--color-danger);
-  background-color: hsl(from var(--color-danger) h s 95%);
+  background-color: var(--color-danger-weak);
 }
 
 .file-input {
@@ -254,7 +254,7 @@ const formatSize = (bytes: number) => {
 }
 
 .cloud-icon {
-  color: hsl(from var(--color-neutral) h s 60%);
+  color: var(--color-neutral-text-soft);
   background: var(--border-color);
   padding: 8px;
   border-radius: 50%;
@@ -278,7 +278,7 @@ const formatSize = (bytes: number) => {
 }
 
 .drag-text {
-  color: hsl(from var(--color-neutral) h s 40%);
+  color: var(--color-neutral-strong);
   font-size: 0.875rem;
 }
 
@@ -314,14 +314,14 @@ const formatSize = (bytes: number) => {
 
 .file-size {
   font-size: 0.75rem;
-  color: hsl(from var(--color-neutral) h s 40%);
+  color: var(--color-neutral-strong);
 }
 
 .remove-btn {
   background: none;
   border: none;
   cursor: pointer;
-  color: hsl(from var(--color-neutral) h s 60%);
+  color: var(--color-neutral-text-soft);
   padding: 4px;
   border-radius: 4px;
   transition: color 0.2s;
@@ -329,6 +329,6 @@ const formatSize = (bytes: number) => {
 
 .remove-btn:hover {
   color: var(--color-danger);
-  background-color: hsl(from var(--color-danger) h s 95%);
+  background-color: var(--color-danger-weak);
 }
 </style>

@@ -55,7 +55,7 @@ const currentYear = computed(() => new Date().getFullYear())
   }
 
   a:hover {
-    color: hsl(from var(--text-inverse) h s 90%);
+    color: var(--text-inverse-light);
   }
 }
 

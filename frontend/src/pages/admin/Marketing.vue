@@ -122,7 +122,7 @@ onMounted(() => {
   display: flex;
   align-items: center;
   gap: 8px;
-  color: hsl(from var(--color-neutral) h s 50%);
+  color: var(--color-neutral-text-soft);
   cursor: pointer;
   border-bottom: 2px solid transparent;
   font-weight: 500;

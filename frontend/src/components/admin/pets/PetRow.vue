@@ -511,15 +511,15 @@ const colCount = computed(() => {
 }
 
 .pet-row.even-row {
-  background-color: hsl(from var(--color-neutral) h s 94%);
+  background-color: var(--color-neutral-weak);
 }
 
 .pet-row:hover {
-  background-color: hsl(from var(--color-neutral) h s 95%);
+  background-color: var(--color-neutral-weak);
 }
 
 .pet-row.expanded {
-  background-color: hsl(from var(--color-secondary) h s 95%);
+  background-color: var(--color-secondary-weak);
   border-bottom: none;
 }
 
@@ -543,7 +543,7 @@ td {
 .expanded-content {
   padding: 24px;
   border-top: 1px dashed var(--border-color);
-  background-color: hsl(from var(--color-neutral) h s 98%);
+  background-color: var(--color-neutral-surface);
   border-bottom: 2px solid var(--border-color);
 }
 
@@ -555,7 +555,7 @@ td {
 
 .detail-section h4 {
   font-size: 0.85rem;
-  color: hsl(from var(--color-neutral) h s 50%);
+  color: var(--color-neutral-text-soft);
   text-transform: uppercase;
   margin-bottom: 12px;
   font-weight: 700;
@@ -571,7 +571,7 @@ td {
 
 .label {
   font-size: 0.8rem;
-  color: hsl(from var(--color-neutral) h s 50%);
+  color: var(--color-neutral-text-soft);
 }
 
 .value {
@@ -638,7 +638,7 @@ td {
 }
 
 .p-tag {
-  background: hsl(from var(--color-secondary) h s 96%);
+  background: var(--color-secondary-weak);
   color: var(--color-secondary);
   padding: 2px 8px;
   border-radius: 12px;
@@ -688,10 +688,10 @@ td {
 }
 
 .setting-tag.active {
-  background: hsl(from var(--color-secondary) h s 96%);
+  background: var(--color-secondary-weak);
   color: var(--color-secondary);
   border-color: #bbf7d0;
-  border-color: hsl(from var(--color-secondary) h s 90%);
+  border-color: var(--color-secondary-light);
   font-weight: 500;
 }
 
@@ -700,7 +700,7 @@ td {
   height: 48px;
   border-radius: 8px;
   overflow: hidden;
-  background: hsl(from var(--color-neutral) h s 95%);
+  background: var(--color-neutral-weak);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -722,33 +722,33 @@ td {
 }
 
 .status-badge.green {
-  background-color: hsl(from var(--color-primary) h s 95%);
+  background-color: var(--color-primary-weak);
   color: var(--color-primary);
 }
 
 .status-badge.orange {
-  background-color: hsl(from var(--color-warning) h s 95%);
+  background-color: var(--color-warning-weak);
   color: var(--color-warning);
 }
 
 .status-badge.blue {
-  background-color: hsl(from var(--color-secondary) h s 95%);
+  background-color: var(--color-secondary-weak);
   color: var(--color-secondary);
 }
 
 .status-badge.purple {
-  background-color: hsl(from var(--color-secondary) h s 92%);
+  background-color: var(--color-secondary-weak);
   color: var(--color-secondary);
 }
 
 .status-badge.red {
-  background-color: hsl(from var(--color-danger) h s 95%);
+  background-color: var(--color-danger-weak);
   color: var(--color-danger);
 }
 
 .status-badge.gray {
-  background-color: hsl(from var(--color-neutral) h s 95%);
-  color: hsl(from var(--color-neutral) h s 50%);
+  background-color: var(--color-neutral-weak);
+  color: var(--color-neutral-text-soft);
 }
 
 .mono-text {
@@ -794,22 +794,22 @@ td {
 }
 
 .icon-btn.edit:hover {
-  background: hsl(from var(--color-secondary) h s 95%);
+  background: var(--color-secondary-weak);
   color: var(--color-secondary);
 }
 
 .icon-btn.archive:hover {
-  background: hsl(from var(--color-danger) h s 95%);
+  background: var(--color-danger-weak);
   color: var(--color-danger);
 }
 
 .expand-btn {
   transition: transform 0.2s;
-  color: hsl(from var(--color-neutral) h s 50%);
+  color: var(--color-neutral-text-soft);
 }
 
 .expand-btn:hover {
-  background: hsl(from var(--color-neutral) h s 95%);
+  background: var(--color-neutral-weak);
   color: var(--text-primary);
 }
 

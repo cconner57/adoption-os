@@ -92,7 +92,7 @@ const getStatusLabel = (status: ITrip['status']) => {
   h3 {
     margin: 0;
     font-size: 1.1rem;
-    color: hsl(from var(--color-neutral) h s 50%);
+    color: var(--color-neutral-text-soft);
   }
 }
 
@@ -112,7 +112,7 @@ const getStatusLabel = (status: ITrip['status']) => {
 
   &.selected {
     border-color: var(--color-secondary);
-    background: hsl(from var(--color-secondary) h s 98%);
+    background: var(--color-secondary-surface);
   }
 
   &.active-trip {
@@ -121,7 +121,7 @@ const getStatusLabel = (status: ITrip['status']) => {
 
   &.urgent-trip {
     border-left-color: var(--color-danger);
-    background: hsl(from var(--color-danger) h s 98%);
+    background: var(--color-danger-surface);
   }
 }
 
@@ -160,7 +160,7 @@ const getStatusLabel = (status: ITrip['status']) => {
 }
 
 .pet-capsule {
-  background: hsl(from var(--color-neutral) h s 95%);
+  background: var(--color-neutral-weak);
   padding: 4px 10px;
   border-radius: 12px;
   font-size: 0.85rem;
@@ -169,7 +169,7 @@ const getStatusLabel = (status: ITrip['status']) => {
 
 .more-pets {
   font-size: 0.8rem;
-  color: hsl(from var(--color-neutral) h s 50%);
+  color: var(--color-neutral-text-soft);
   align-self: center;
 }
 </style>

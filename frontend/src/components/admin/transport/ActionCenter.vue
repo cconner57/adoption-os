@@ -246,7 +246,7 @@ const updateVehicle = () => {
   }
 
   .trip-id {
-    color: hsl(from var(--color-neutral) h s 50%);
+    color: var(--color-neutral-text-soft);
     font-family: monospace;
   }
 }
@@ -263,7 +263,7 @@ const updateVehicle = () => {
   .section-label {
     font-size: 0.8rem;
     text-transform: uppercase;
-    color: hsl(from var(--color-neutral) h s 50%);
+    color: var(--color-neutral-text-soft);
     font-weight: 700;
     margin-bottom: 12px;
     letter-spacing: 0.05em;
@@ -292,7 +292,7 @@ const updateVehicle = () => {
 }
 
 .status-helper {
-  color: hsl(from var(--color-neutral) h s 50%);
+  color: var(--color-neutral-text-soft);
   font-style: italic;
   text-align: center;
 }
@@ -346,25 +346,25 @@ const updateVehicle = () => {
   font-weight: 700;
 
   &.adopted {
-    background: hsl(from var(--color-primary) h s 95%);
+    background: var(--color-primary-weak);
     color: var(--color-primary);
   }
 
   &.shelter {
-    background: hsl(from var(--color-secondary) h s 95%);
+    background: var(--color-secondary-weak);
     color: var(--color-secondary);
   }
 }
 
 .pet-reason {
-  color: hsl(from var(--color-neutral) h s 50%);
+  color: var(--color-neutral-text-soft);
   font-size: 0.85rem;
   font-weight: 500;
 }
 
 .pet-description {
   font-size: 0.9rem;
-  color: hsl(from var(--color-neutral) h s 50%);
+  color: var(--color-neutral-text-soft);
   line-height: 1.4;
   background: #fff;
   padding: 8px;
@@ -388,7 +388,7 @@ const updateVehicle = () => {
 }
 
 .no-logs {
-  color: hsl(from var(--color-neutral) h s 50%);
+  color: var(--color-neutral-text-soft);
   font-style: italic;
 }
 </style>

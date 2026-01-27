@@ -222,11 +222,11 @@ onMounted(() => {
   border-radius: 6px;
   cursor: pointer;
   font-weight: 500;
-  color: hsl(from var(--color-neutral) h s 50%);
+  color: var(--color-neutral-text-soft);
   transition: all 0.2s;
 
   &:hover {
-    background: hsl(from var(--color-neutral) h s 98%);
+    background: var(--color-neutral-surface);
     border-color: var(--border-color);
     color: var(--text-primary);
   }
@@ -239,7 +239,7 @@ onMounted(() => {
 .current-period {
   font-size: 1.2rem;
   font-weight: 600;
-  color: hsl(from var(--color-neutral) h s 50%);
+  color: var(--color-neutral-text-soft);
   margin: 0;
   min-width: 200px;
   text-align: center;
@@ -260,7 +260,7 @@ onMounted(() => {
   border-radius: 6px;
   font-size: 0.9rem;
   font-weight: 500;
-  color: hsl(from var(--color-neutral) h s 50%);
+  color: var(--color-neutral-text-soft);
   cursor: pointer;
 
   &.active {
@@ -285,7 +285,7 @@ onMounted(() => {
   gap: 6px;
 
   &:hover {
-    background-color: hsl(from var(--color-secondary) h s 40%);
+    background-color: var(--color-secondary-strong);
   }
 }
 
@@ -300,7 +300,7 @@ onMounted(() => {
   align-items: center;
   gap: 8px;
   font-size: 0.9rem;
-  color: hsl(from var(--color-neutral) h s 50%);
+  color: var(--color-neutral-text-soft);
 }
 
 .dot {

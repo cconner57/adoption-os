@@ -72,7 +72,7 @@ defineEmits<{
   }
 
   .subtitle {
-    color: hsl(from var(--color-neutral) h s 50%);
+    color: var(--color-neutral-text-soft);
     margin-bottom: 20px;
     font-size: 0.9rem;
   }
@@ -116,7 +116,7 @@ defineEmits<{
 }
 
 .admin-badge {
-  background: hsl(from var(--color-secondary) h s 95%);
+  background: var(--color-secondary-weak);
   color: var(--color-secondary);
   font-size: 0.7rem;
   padding: 2px 6px;

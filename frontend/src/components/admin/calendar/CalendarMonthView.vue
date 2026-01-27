@@ -131,7 +131,7 @@ const monthDays = computed(() => {
   text-align: center;
   margin-bottom: 12px;
   font-weight: 600;
-  color: hsl(from var(--color-neutral) h s 50%);
+  color: var(--color-neutral-text-soft);
 }
 
 .month-grid {
@@ -150,11 +150,11 @@ const monthDays = computed(() => {
   padding: 8px;
 
   &.empty {
-    background-color: hsl(from var(--color-neutral) h s 98%);
+    background-color: var(--color-neutral-surface);
   }
 
   &.today {
-    background-color: hsl(from var(--color-secondary) h s 95%);
+    background-color: var(--color-secondary-weak);
 
     .date-number {
       color: var(--color-secondary);
@@ -184,7 +184,7 @@ const monthDays = computed(() => {
   padding: 4px 6px;
   border-radius: 4px;
   font-size: 0.75rem;
-  background-color: hsl(from var(--color-neutral) h s 95%);
+  background-color: var(--color-neutral-weak);
   cursor: pointer;
   white-space: normal;
   line-height: 1.3;
@@ -213,7 +213,7 @@ const monthDays = computed(() => {
   }
 
   &.volunteer {
-    background-color: hsl(from var(--color-secondary) h s 95%);
+    background-color: var(--color-secondary-weak);
     color: var(--color-secondary);
 
     .dot {
@@ -222,7 +222,7 @@ const monthDays = computed(() => {
   }
 
   &.vet {
-    background-color: hsl(from var(--color-primary) h s 95%);
+    background-color: var(--color-primary-weak);
     color: var(--color-primary);
 
     .dot {

@@ -27,21 +27,21 @@ defineProps<{
 }
 
 .tag.default.neutral {
-  background-color: hsl(from var(--color-neutral) h s 90%);
-  color: hsl(from var(--color-neutral) h s 20%); 
-  border-color: hsl(from var(--color-neutral) h s 85%);
+  background-color: var(--color-neutral-light);
+  color: var(--color-neutral-dark); 
+  border-color: var(--color-neutral-border);
 }
 
 .tag.default.primary {
-  background-color: hsl(from var(--color-primary) h s 92%);
+  background-color: var(--color-primary-weak);
   color: var(--color-primary);
-  border-color: hsl(from var(--color-primary) h s 85%);
+  border-color: var(--color-primary-border);
 }
 
 .tag.default.secondary {
-  background-color: hsl(from var(--color-secondary) h s 92%);
+  background-color: var(--color-secondary-weak);
   color: var(--color-secondary);
-  border-color: hsl(from var(--color-secondary) h s 85%);
+  border-color: var(--color-secondary-border);
 }
 
 .tag.outline {
@@ -50,8 +50,8 @@ defineProps<{
 }
 
 .tag.outline.neutral {
-  border-color: hsl(from var(--color-neutral) h s 80%);
-  color: hsl(from var(--color-neutral) h s 30%);
+  border-color: var(--color-neutral-border-strong);
+  color: var(--color-neutral-strong);
 }
 
 .tag.outline.primary {
@@ -65,6 +65,6 @@ defineProps<{
 }
 
 .tag.ghost.neutral {
-  color: hsl(from var(--color-neutral) h s 50%);
+  color: var(--color-neutral-text-soft);
 }
 </style>

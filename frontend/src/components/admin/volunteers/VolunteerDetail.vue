@@ -211,16 +211,16 @@ function getShiftCapsuleConfig(shift: IShift | { status: string }) {
   switch (displayStatus) {
     case 'all_good':
     case 'completed':
-      return { color: 'hsl(from var(--color-primary) h s 95%)', textColor: 'var(--color-primary)' }
+      return { color: 'var(--color-primary-weak)', textColor: 'var(--color-primary)' }
     case 'late':
-      return { color: 'hsl(from var(--color-warning) h s 95%)', textColor: 'var(--color-warning)' }
+      return { color: 'var(--color-warning-weak)', textColor: 'var(--color-warning)' }
     case 'no_show':
     case 'missed':
-      return { color: 'hsl(from var(--color-danger) h s 95%)', textColor: 'var(--color-danger)' }
+      return { color: 'var(--color-danger-weak)', textColor: 'var(--color-danger)' }
     case 'cancelled':
       return {
-        color: 'hsl(from var(--color-neutral) h s 95%)',
-        textColor: 'hsl(from var(--color-neutral) h s 50%)',
+        color: 'var(--color-neutral-weak)',
+        textColor: 'var(--color-neutral-text-soft)',
       }
     case 'covered':
     case 'covered 24h':
@@ -236,7 +236,7 @@ function getShiftCapsuleConfig(shift: IShift | { status: string }) {
     default:
       
       return {
-        color: 'hsl(from var(--color-secondary) h s 95%)',
+        color: 'var(--color-secondary-weak)',
         textColor: 'var(--color-secondary)',
       }
   }
@@ -362,7 +362,7 @@ function getStatusColors(status: string) {
                 : totalReliabilityScore > 0
                   ? 'var(--color-warning)'
                   : totalReliabilityScore === 0
-                    ? 'hsl(from var(--color-neutral) h s 50%)' // Neutral
+                    ? 'var(--color-neutral-text-soft)' // Neutral
                     : 'var(--color-danger)',
           }"
           >{{ totalReliabilityScore }}%</span
@@ -825,7 +825,7 @@ function getStatusColors(status: string) {
   width: 80px;
   height: 80px;
   border-radius: 50%;
-  background: hsl(from var(--color-secondary) h s 90%);
+  background: var(--color-secondary-light);
   color: var(--color-secondary);
   font-size: 2rem;
   font-weight: 700;
@@ -865,7 +865,7 @@ function getStatusColors(status: string) {
     color: var(--text-primary);
 
     &:hover {
-      background: hsl(from var(--color-neutral) h s 98%);
+      background: var(--color-neutral-surface);
     }
   }
 }
@@ -900,7 +900,7 @@ function getStatusColors(status: string) {
 .metric-label {
   font-size: 0.75rem;
   text-transform: uppercase;
-  color: hsl(from var(--color-neutral) h s 50%);
+  color: var(--color-neutral-text-soft);
   font-weight: 600;
 }
 
@@ -972,7 +972,7 @@ function getStatusColors(status: string) {
   font-size: 0.95rem;
 
   label {
-    color: hsl(from var(--color-neutral) h s 50%);
+    color: var(--color-neutral-text-soft);
     font-weight: 500;
   }
 
@@ -986,7 +986,7 @@ function getStatusColors(status: string) {
 
 .skill-tag {
   display: inline-block;
-  background: hsl(from var(--color-neutral) h s 95%);
+  background: var(--color-neutral-weak);
   padding: 6px 12px;
   border-radius: 6px;
   font-size: 0.85rem;
@@ -996,7 +996,7 @@ function getStatusColors(status: string) {
 }
 
 .bio {
-  color: hsl(from var(--color-neutral) h s 50%);
+  color: var(--color-neutral-text-soft);
   line-height: 1.5;
   
 }
@@ -1007,7 +1007,7 @@ function getStatusColors(status: string) {
   label {
     display: block;
     font-size: 0.85rem;
-    color: hsl(from var(--color-neutral) h s 50%);
+    color: var(--color-neutral-text-soft);
     margin-bottom: 8px;
     font-weight: 600;
   }
@@ -1016,7 +1016,7 @@ function getStatusColors(status: string) {
     margin: 0;
     color: var(--text-primary);
     line-height: 1.5;
-    background: hsl(from var(--color-neutral) h s 98%);
+    background: var(--color-neutral-surface);
     padding: 12px;
     border-radius: 8px;
   }
@@ -1036,7 +1036,7 @@ function getStatusColors(status: string) {
   font-size: 0.9rem;
 
   label {
-    color: hsl(from var(--color-neutral) h s 50%);
+    color: var(--color-neutral-text-soft);
   }
 
   span {
@@ -1050,7 +1050,7 @@ function getStatusColors(status: string) {
   padding: 10px;
   background: var(--text-inverse);
   border: 1px dashed var(--border-color);
-  color: hsl(from var(--color-neutral) h s 50%);
+  color: var(--color-neutral-text-soft);
   border-radius: 8px;
   cursor: pointer;
   font-weight: 600;
@@ -1059,7 +1059,7 @@ function getStatusColors(status: string) {
   &:hover {
     border-color: var(--color-secondary);
     color: var(--color-secondary);
-    background: hsl(from var(--color-secondary) h s 98%);
+    background: var(--color-secondary-surface);
   }
 }
 
@@ -1078,7 +1078,7 @@ function getStatusColors(status: string) {
   display: flex;
   flex-direction: column;
   align-items: center;
-  background: hsl(from var(--color-neutral) h s 98%);
+  background: var(--color-neutral-surface);
   padding: 8px 16px;
   border-radius: 8px;
 
@@ -1091,7 +1091,7 @@ function getStatusColors(status: string) {
   .month {
     font-size: 0.8rem;
     text-transform: uppercase;
-    color: hsl(from var(--color-neutral) h s 50%);
+    color: var(--color-neutral-text-soft);
   }
 }
 
@@ -1105,7 +1105,7 @@ function getStatusColors(status: string) {
   }
 
   .shift-time {
-    color: hsl(from var(--color-neutral) h s 50%);
+    color: var(--color-neutral-text-soft);
     font-size: 0.9rem;
   }
 }
@@ -1118,27 +1118,27 @@ function getStatusColors(status: string) {
   text-transform: capitalize;
 
   &.green {
-    background: hsl(from var(--color-primary) h s 95%);
+    background: var(--color-primary-weak);
     color: var(--color-primary);
   }
 
   &.orange {
-    background: hsl(from var(--color-warning) h s 95%);
+    background: var(--color-warning-weak);
     color: var(--color-warning);
   }
 
   &.red {
-    background: hsl(from var(--color-danger) h s 95%);
+    background: var(--color-danger-weak);
     color: var(--color-danger);
   }
 
   &.gray {
-    background: hsl(from var(--color-neutral) h s 95%);
-    color: hsl(from var(--color-neutral) h s 50%);
+    background: var(--color-neutral-weak);
+    color: var(--color-neutral-text-soft);
   }
 
   &.blue {
-    background: hsl(from var(--color-secondary) h s 95%);
+    background: var(--color-secondary-weak);
     color: var(--color-secondary);
   }
 
@@ -1153,8 +1153,8 @@ function getStatusColors(status: string) {
   }
 
   &.neutral {
-    background: hsl(from var(--color-neutral) h s 95%);
-    color: hsl(from var(--color-neutral) h s 50%);
+    background: var(--color-neutral-weak);
+    color: var(--color-neutral-text-soft);
   }
 
   &.small {
@@ -1179,7 +1179,7 @@ function getStatusColors(status: string) {
   th {
     text-align: left;
     padding: 12px;
-    color: hsl(from var(--color-neutral) h s 50%);
+    color: var(--color-neutral-text-soft);
     font-size: 0.9rem;
     border-bottom: 1px solid var(--border-color);
   }
@@ -1208,13 +1208,13 @@ function getStatusColors(status: string) {
   cursor: pointer;
 
   &:hover {
-    background: hsl(from var(--color-danger) h s 98%);
+    background: var(--color-danger-surface);
   }
 }
 
 .incident-card {
-  border: 1px solid hsl(from var(--color-danger) h s 80%);
-  background: hsl(from var(--color-danger) h s 98%);
+  border: 1px solid var(--color-danger-border-strong);
+  background: var(--color-danger-surface);
   border-radius: 8px;
   padding: 16px;
   margin-bottom: 16px;
@@ -1235,37 +1235,37 @@ function getStatusColors(status: string) {
 
   &.low {
     color: var(--color-warning);
-    border: 1px solid hsl(from var(--color-warning) h s 80%);
+    border: 1px solid var(--color-warning-border-strong);
   }
 
   &.medium {
-    color: hsl(from var(--color-warning) h s 40%);
-    border: 1px solid hsl(from var(--color-warning) h s 60%);
+    color: var(--color-warning-strong);
+    border: 1px solid var(--color-warning-text-soft);
   }
 
   &.high {
     color: var(--color-danger);
-    border: 1px solid hsl(from var(--color-danger) h s 80%);
+    border: 1px solid var(--color-danger-border-strong);
   }
 }
 
 .inc-desc {
   margin: 0 0 12px;
-  color: hsl(from var(--color-danger) h s 30%);
+  color: var(--color-danger-strong);
   line-height: 1.5;
 }
 
 .inc-footer {
   font-size: 0.85rem;
-  color: hsl(from var(--color-danger) h s 40%);
+  color: var(--color-danger-strong);
   font-style: italic;
 }
 
 .empty-state {
   text-align: center;
-  color: hsl(from var(--color-neutral) h s 50%);
+  color: var(--color-neutral-text-soft);
   padding: 40px;
-  background: hsl(from var(--color-neutral) h s 98%);
+  background: var(--color-neutral-surface);
   border-radius: 12px;
 }
 
@@ -1298,7 +1298,7 @@ function getStatusColors(status: string) {
   display: flex;
   align-items: center;
   padding: 16px;
-  background: hsl(from var(--color-neutral) h s 98%);
+  background: var(--color-neutral-surface);
   border: 1px solid var(--border-color);
   border-radius: 12px;
   gap: 16px;
@@ -1311,7 +1311,7 @@ function getStatusColors(status: string) {
     filter: none;
     background: var(--text-inverse);
     border-color: var(--color-warning);
-    box-shadow: 0 4px 6px hsl(from var(--color-warning) h s l / 10%);
+    box-shadow: 0 4px 6px oklch(from var(--color-warning) l c h / 0.10);
   }
 }
 
@@ -1331,14 +1331,14 @@ function getStatusColors(status: string) {
 
 .badge-desc {
   font-size: 0.8rem;
-  color: hsl(from var(--color-neutral) h s 50%);
+  color: var(--color-neutral-text-soft);
   line-height: 1.3;
 }
 
 .badge-status {
   font-size: 0.7rem;
   font-weight: 800;
-  color: hsl(from var(--color-neutral) h s 60%);
+  color: var(--color-neutral-text-soft);
   letter-spacing: 0.5px;
 
   .earned & {
@@ -1348,7 +1348,7 @@ function getStatusColors(status: string) {
 
 .text-center {
   text-align: center;
-  color: hsl(from var(--color-neutral) h s 50%);
+  color: var(--color-neutral-text-soft);
 }
 
 .suggestion-card {
@@ -1370,7 +1370,7 @@ function getStatusColors(status: string) {
 
 .sug-icon {
   font-size: 1.5rem;
-  background: hsl(from var(--color-neutral) h s 95%);
+  background: var(--color-neutral-weak);
   width: 40px;
   height: 40px;
   border-radius: 8px;
@@ -1387,7 +1387,7 @@ function getStatusColors(status: string) {
 
 .sug-desc {
   font-size: 0.9rem;
-  color: hsl(from var(--color-neutral) h s 50%);
+  color: var(--color-neutral-text-soft);
   line-height: 1.4;
 }
 </style>
@@ -1431,11 +1431,11 @@ function getStatusColors(status: string) {
 }
 
 .edit-btn:hover {
-  background: hsl(from var(--color-warning) h s 90%);
+  background: var(--color-warning-light);
 }
 
 .delete-btn:hover {
-  background: hsl(from var(--color-danger) h s 90%);
+  background: var(--color-danger-light);
 }
 
 .verify-actions {
@@ -1450,7 +1450,7 @@ function getStatusColors(status: string) {
 }
 
 .action-btn.green {
-  background: hsl(from var(--color-primary) h s 95%);
+  background: var(--color-primary-weak);
   color: var(--color-primary);
   border: 1px solid var(--color-primary);
 }
@@ -1461,7 +1461,7 @@ function getStatusColors(status: string) {
 }
 
 .action-btn.red {
-  background: hsl(from var(--color-danger) h s 95%);
+  background: var(--color-danger-weak);
   color: var(--color-danger);
   border: 1px solid var(--color-danger);
 }
@@ -1483,7 +1483,7 @@ function getStatusColors(status: string) {
 }
 
 .action-btn.orange {
-  background: hsl(from var(--color-warning) h s 95%);
+  background: var(--color-warning-weak);
   color: var(--color-warning);
   border: 1px solid var(--color-warning);
 }

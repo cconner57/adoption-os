@@ -300,13 +300,13 @@ import Footer from '../components/common/footer/Footer.vue'
 }
 
 .cat-card .illustration img {
-  border-color: hsl(from var(--color-tertiary) h s 90%);
+  border-color: var(--color-tertiary-light);
 }
 
 .cat-card .qr-placeholder {
   background-color: var(--color-tertiary-weak);
   color: var(--color-tertiary);
-  border: 2px solid hsl(from var(--color-tertiary) h s 90%);
+  border: 2px solid var(--color-tertiary-light);
 }
 
 .btn-paypal {

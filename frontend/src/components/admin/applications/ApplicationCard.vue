@@ -224,7 +224,7 @@ const displayFields = computed(() => {
 
 .app-card.unread {
   border-left-color: var(--color-secondary);
-  background: hsl(from var(--color-secondary) h s 98%);
+  background: var(--color-secondary-surface);
 }
 
 .app-card.expanded {
@@ -261,18 +261,18 @@ const displayFields = computed(() => {
 
 .app-header .date {
   font-size: 0.85rem;
-  color: hsl(from var(--color-neutral) h s 50%);
+  color: var(--color-neutral-text-soft);
 }
 
 .email {
   margin: 0 0 8px;
   font-size: 0.9rem;
-  color: hsl(from var(--color-neutral) h s 50%);
+  color: var(--color-neutral-text-soft);
 }
 
 .details-preview {
   font-size: 0.9rem;
-  color: hsl(from var(--color-neutral) h s 50%);
+  color: var(--color-neutral-text-soft);
   display: flex;
   gap: 16px;
 }
@@ -290,7 +290,7 @@ const displayFields = computed(() => {
 
 .expand-icon {
   font-size: 0.8rem;
-  color: hsl(from var(--color-neutral) h s 50%);
+  color: var(--color-neutral-text-soft);
   transition: transform 0.2s;
 }
 
@@ -374,7 +374,7 @@ const displayFields = computed(() => {
 .question {
   font-size: 0.85rem;
   font-weight: 600;
-  color: hsl(from var(--color-neutral) h s 50%);
+  color: var(--color-neutral-text-soft);
 }
 
 

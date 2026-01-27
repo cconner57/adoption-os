@@ -81,7 +81,7 @@ function toggle() {
 .toggle-switch {
   width: 44px; 
   height: 24px;
-  background-color: hsl(from var(--color-neutral) h s 80%);
+  background-color: var(--color-neutral-border-strong);
   border-radius: 999px;
   padding: 2px;
   transition: background-color 0.2s ease;

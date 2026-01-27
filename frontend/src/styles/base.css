@@ -7,17 +7,90 @@
 
 :root {
   /* ========================================================================
-     Strict 8-Color Palette
+     Strict 8-Color Palette (OKLCH)
      ======================================================================== */
-  --color-primary: #00a5ad; /* Green/Teal - Theme 1 */
-  --color-secondary: #1976d2; /* Blue - Theme 2 */
-  --color-tertiary: #6b5b95; /* Purple - Theme 3 */
-  --color-danger: #c73a67; /* Red - Alerts/Error */
-  --color-warning: #deb024; /* Yellow - Warning */
-  --color-neutral: #1f2121; /* Dark Grey - Neutral/Text */
+  --color-primary: oklch(0.65 0.16 195); /* Vibrant Teal - Theme 1 */
+  --color-secondary: oklch(0.55 0.22 260); /* Deep Blue/Purple - Theme 2 */
+  --color-tertiary: oklch(0.65 0.18 310); /* Pink/Purple - Theme 3 */
+  --color-danger: oklch(0.6 0.2 20); /* Vibrant Red - Alerts/Error */
+  --color-warning: oklch(0.75 0.18 85); /* Warm Yellow - Warning */
+  --color-neutral: oklch(0.25 0.04 260); /* Cool Dark Grey - Neutral/Text */
   --text-primary: var(--color-neutral); /* Main text color */
-  --text-secondary: #374151; /* Secondary text color - Darkened for AA compliance */
-  --text-inverse: #f8f8f3; /* White - Inverse text/Background */
+  --text-secondary: oklch(0.45 0.06 260); /* Cool Grey text color */
+  --text-inverse: oklch(0.99 0.01 260); /* Cool White - Inverse text/Background */
+
+  /* Color Variations */
+  --color-primary-light: oklch(from var(--color-primary) 93% c h);
+  --color-primary-dark: oklch(from var(--color-primary) 45% c h);
+  --color-secondary-light: oklch(from #1976d2 90% c h);
+  --color-secondary-dark: oklch(from #1976d2 10% c h);
+  --color-tertiary-light: oklch(from #6b5b95 90% c h);
+  --color-tertiary-dark: oklch(from #6b5b95 10% c h);
+  --color-danger-light: oklch(from #c73a67 90% c h);
+  --color-danger-dark: oklch(from #c73a67 10% c h);
+  --color-warning-light: oklch(from #deb024 90% c h);
+  --color-warning-dark: oklch(from #deb024 10% c h);
+  --color-neutral-light: oklch(from #1f2121 90% c h);
+  --color-neutral-dark: oklch(from #1f2121 10% c h);
+
+  /* Color Hover States */
+  --color-primary-hover: oklch(from #00a5ad 95% c h);
+  --color-secondary-hover: oklch(from #1976d2 95% c h);
+  --color-tertiary-hover: oklch(from #6b5b95 95% c h);
+  --color-danger-hover: oklch(from #c73a67 95% c h);
+  --color-warning-hover: oklch(from #deb024 95% c h);
+  --color-neutral-hover: oklch(from #1f2121 95% c h);
+
+  /* Weak Variants (Backgrounds) - 95% Lightness */
+  --color-primary-weak: oklch(from #00a5ad 95% c h);
+  --color-secondary-weak: oklch(from #1976d2 95% c h);
+  --color-tertiary-weak: oklch(from #6b5b95 95% c h);
+  --color-danger-weak: oklch(from #c73a67 95% c h);
+  --color-warning-weak: oklch(from #deb024 95% c h);
+  --color-neutral-weak: oklch(from #1f2121 95% c h);
+
+  /* Surface Variants (Subtle Backgrounds) - 98% Lightness */
+  --color-primary-surface: oklch(from #00a5ad 98% c h);
+  --color-secondary-surface: oklch(from #1976d2 98% c h);
+  --color-tertiary-surface: oklch(from #6b5b95 98% c h);
+  --color-danger-surface: oklch(from #c73a67 98% c h);
+  --color-warning-surface: oklch(from #deb024 98% c h);
+  --color-neutral-surface: oklch(from #1f2121 98% c h);
+
+  /* Border Variants - 85% Lightness */
+  --color-primary-border: oklch(from #00a5ad 85% c h);
+  --color-secondary-border: oklch(from #1976d2 85% c h);
+  --color-tertiary-border: oklch(from #6b5b95 85% c h);
+  --color-danger-border: oklch(from #c73a67 85% c h);
+  --color-warning-border: oklch(from #deb024 85% c h);
+  --color-neutral-border: oklch(from #1f2121 85% c h);
+
+  /* Soft Text Variants - 50% Lightness */
+  --color-primary-text-soft: oklch(from #00a5ad 50% c h);
+  --color-secondary-text-soft: oklch(from #1976d2 50% c h);
+  --color-tertiary-text-soft: oklch(from #6b5b95 50% c h);
+  --color-danger-text-soft: oklch(from #c73a67 50% c h);
+  --color-warning-text-soft: oklch(from #deb024 50% c h);
+  --color-neutral-text-soft: oklch(from #1f2121 50% c h);
+
+  /* Strong Variants - 40% Lightness */
+  --color-primary-strong: oklch(from #00a5ad 40% c h);
+  --color-secondary-strong: oklch(from #1976d2 40% c h);
+  --color-tertiary-strong: oklch(from #6b5b95 40% c h);
+  --color-danger-strong: oklch(from #c73a67 40% c h);
+  --color-warning-strong: oklch(from #deb024 40% c h);
+  --color-neutral-strong: oklch(from #1f2121 40% c h);
+
+  /* Strong Border Variants - 80% Lightness */
+  --color-primary-border-strong: oklch(from #00a5ad 80% c h);
+  --color-secondary-border-strong: oklch(from #1976d2 80% c h);
+  --color-tertiary-border-strong: oklch(from #6b5b95 80% c h);
+  --color-danger-border-strong: oklch(from #c73a67 80% c h);
+  --color-warning-border-strong: oklch(from #deb024 80% c h);
+  --color-neutral-border-strong: oklch(from #1f2121 80% c h);
+
+  /* Shadow Colors */
+  --shadow-color: oklch(from #1f2121 10% c h);
 
   /* Legacy Aliases Removed */
   --border-color: #e0e0e0; /* Exception: Common border */
@@ -48,148 +121,6 @@
   --font-size-h6: 1rem;
 }
 
-/* Dark mode disabled for now
-@media (prefers-color-scheme: dark) {
-  :root {
-    --color-primary: #008991;
-    --color-neutral: #f3f4f6;
-    --text-primary: #f3f4f6;
-    --text-secondary: #9ca3af;
-    --text-inverse: #1f2121;
-    --border-color: #374151;
-  }
-}
-*/
-
-@media (width >= 321px) and (width <= 430px) {
-  :root {
-    --layout-padding-side: 2.85rem;
-  }
-}
-
-@media (width >= 1025px) and (width <= 1440px) {
-  :root {
-    --layout-padding-side: 10rem;
-  }
-}
-
-@media (width >= 1441px) {
-  :root {
-    --layout-padding-side: 15rem;
-  }
-}
-
-*,
-*::before,
-*::after {
-  box-sizing: border-box;
-}
-
-* {
-  margin: 0;
-  padding: 0;
-  font: inherit;
-  font-family: var(--font-regular);
-}
-
-html {
-  color-scheme: light;
-  hanging-punctuation: first last;
-}
-
-body {
-  min-height: 100dvh;
-}
-
-html,
-body {
-  background: var(--color-primary); /* Matches bottom safe area on mobile */
-  color: var(--text-primary);
-  min-height: 100%;
-}
-
-#app {
-  background: var(--text-inverse); /* Keeps content area white */
-  min-height: 100dvh;
-}
-
-html,
-body,
-#app {
-  max-width: 100dvw;
-  overflow-x: clip;
-}
-
-img,
-picture,
-svg,
-video {
-  display: block;
-  height: auto;
-  max-width: 100%;
-}
-
-img {
-  max-width: 100%;
-  height: auto;
-  vertical-align: middle;
-  font-style: italic;
-  background-repeat: no-repeat;
-  background-size: cover;
-  shape-margin: 0.75rem;
-}
-
-h1,
-h2,
-h3,
-h4,
-h5,
-h6 {
-  text-wrap: balance;
-  font-family: var(--font-regular);
-  color: var(--text-primary);
-  font-weight: 700;
-  line-height: 1.2;
-}
-
-h1 {
-  font-size: var(--font-size-h1);
-}
-
-h2 {
-  font-size: var(--font-size-h2);
-}
-
-h3 {
-  font-size: var(--font-size-h3);
-}
-
-h4 {
-  font-size: var(--font-size-h4);
-}
-
-h5 {
-  font-size: var(--font-size-h5);
-}
-
-h6 {
-  font-size: var(--font-size-h6);
-}
-
-p {
-  max-width: 75ch;
-  text-wrap: pretty;
-  font-family: var(--font-regular);
-  font-weight: 300;
-  font-size: 1rem;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  :has(:target) {
-    scroll-behavior: smooth;
-    scroll-padding-top: 3rem;
-  }
-}
 
 /* Global Scrollbar Styling */
 ::-webkit-scrollbar {
@@ -211,8 +142,45 @@ p {
   background-color: #9ca3af;
 }
 
-/* Firefox */
-* {
+/* Firefox Scrollbar Support merged */
+html {
   scrollbar-width: thin;
   scrollbar-color: #d1d5db #fff;
+}
+
+/* View Transitions */
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation-duration: 0.3s;
+  mix-blend-mode: normal;
+}
+
+::view-transition-old(root) {
+  animation-name: fade-out;
+}
+
+::view-transition-new(root) {
+  animation-name: fade-in;
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fade-out {
+  from {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  to {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
 }

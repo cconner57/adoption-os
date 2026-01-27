@@ -91,7 +91,7 @@ const updateCol = (key: string, val: boolean) => {
   padding: 8px 16px;
   font-size: 0.8rem;
   font-weight: 600;
-  color: hsl(from var(--color-neutral) h s 50%);
+  color: var(--color-neutral-text-soft);
   text-transform: uppercase;
   border-bottom: 1px solid var(--border-color);
   margin-bottom: 4px;
@@ -108,7 +108,7 @@ const updateCol = (key: string, val: boolean) => {
   transition: background 0.2s;
 
   &:hover {
-    background: hsl(from var(--color-neutral) h s 95%);
+    background: var(--color-neutral-weak);
   }
 
   input[type='checkbox'] {

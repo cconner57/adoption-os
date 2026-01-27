@@ -40,7 +40,7 @@ const exitKiosk = () => {
 .kiosk-layout {
   width: 100vw;
   height: 100vh;
-  background: hsl(from var(--color-neutral) h s 98%);
+  background: var(--color-neutral-surface);
   display: flex;
   flex-direction: column;
   overflow: hidden;
@@ -71,17 +71,17 @@ const exitKiosk = () => {
 .clock-display {
   font-size: 1.25rem;
   font-weight: 600;
-  color: hsl(from var(--color-neutral) h s 50%);
+  color: var(--color-neutral-text-soft);
   font-variant-numeric: tabular-nums;
 }
 
 .exit-btn {
-  background: hsl(from var(--color-neutral) h s 95%);
+  background: var(--color-neutral-weak);
   border: none;
   padding: 8px 16px;
   border-radius: 8px;
   font-weight: 600;
-  color: hsl(from var(--color-neutral) h s 40%);
+  color: var(--color-neutral-strong);
   cursor: pointer;
 }
 

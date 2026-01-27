@@ -66,15 +66,15 @@ const medicalNeedsItems = computed(() => [
     title: 'Apollo',
     subtitle: 'Neuter Surgery',
     statusLabel: 'Tomorrow',
-    statusColor: 'hsl(from var(--color-warning) h s 90%)',
-    statusTextColor: 'hsl(from var(--color-warning) h s 40%)',
+    statusColor: 'var(--color-warning-light)',
+    statusTextColor: 'var(--color-warning-strong)',
   },
   {
     id: 2,
     title: 'Luna',
     subtitle: 'Rabies Booster',
     statusLabel: 'Overdue',
-    statusColor: 'hsl(from var(--color-danger) h s 95%)',
+    statusColor: 'var(--color-danger-weak)',
     statusTextColor: 'var(--color-danger)',
   },
   {
@@ -82,7 +82,7 @@ const medicalNeedsItems = computed(() => [
     title: 'Max',
     subtitle: 'Eye Infection Check',
     statusLabel: 'Today',
-    statusColor: 'hsl(from var(--color-warning) h s 95%)',
+    statusColor: 'var(--color-warning-weak)',
     statusTextColor: 'var(--color-warning)',
   },
 ])
@@ -93,7 +93,7 @@ const inventoryAlertsItems = computed(() => [
     title: 'Kitten Formula',
     subtitle: '2 cans remaining',
     statusLabel: 'Critical',
-    statusColor: 'hsl(from var(--color-danger) h s 95%)',
+    statusColor: 'var(--color-danger-weak)',
     statusTextColor: 'var(--color-danger)',
   },
   {
@@ -101,7 +101,7 @@ const inventoryAlertsItems = computed(() => [
     title: 'Paper Towels',
     subtitle: '4 rolls remaining',
     statusLabel: 'Low',
-    statusColor: 'hsl(from var(--color-warning) h s 95%)',
+    statusColor: 'var(--color-warning-weak)',
     statusTextColor: 'var(--color-warning)',
   },
   {
@@ -109,7 +109,7 @@ const inventoryAlertsItems = computed(() => [
     title: 'Rabies Support',
     subtitle: '5 doses remaining',
     statusLabel: 'Low',
-    statusColor: 'hsl(from var(--color-warning) h s 95%)',
+    statusColor: 'var(--color-warning-weak)',
     statusTextColor: 'var(--color-warning)',
   },
 ])
@@ -141,7 +141,7 @@ const recentApplicationsItems = computed(() => [
     title: 'John Doe',
     subtitle: 'for Buddy',
     statusLabel: 'new',
-    statusColor: 'hsl(from var(--color-secondary) h s 95%)',
+    statusColor: 'var(--color-secondary-weak)',
     statusTextColor: 'var(--color-secondary)',
   },
   {
@@ -149,7 +149,7 @@ const recentApplicationsItems = computed(() => [
     title: 'Jane Smith',
     subtitle: 'for Luna',
     statusLabel: 'review',
-    statusColor: 'hsl(from var(--color-tertiary) h s 95%)',
+    statusColor: 'var(--color-tertiary-weak)',
     statusTextColor: 'var(--color-tertiary)',
   },
   {
@@ -157,7 +157,7 @@ const recentApplicationsItems = computed(() => [
     title: 'Robert B.',
     subtitle: 'for Max',
     statusLabel: 'pending',
-    statusColor: 'hsl(from var(--color-warning) h s 95%)',
+    statusColor: 'var(--color-warning-weak)',
     statusTextColor: 'var(--color-warning)',
   },
 ])
@@ -189,24 +189,24 @@ const newIntakesItems = computed(() => [
     title: 'Simba',
     subtitle: 'Tabby Cat',
     statusLabel: 'Stray',
-    statusColor: 'hsl(from var(--color-warning) h s 90%)',
-    statusTextColor: 'hsl(from var(--color-warning) h s 40%)',
+    statusColor: 'var(--color-warning-light)',
+    statusTextColor: 'var(--color-warning-strong)',
   },
   {
     id: 2,
     title: 'Rocky',
     subtitle: 'Boxer Mix',
     statusLabel: 'Surrender',
-    statusColor: 'hsl(from var(--color-warning) h s 90%)',
-    statusTextColor: 'hsl(from var(--color-warning) h s 40%)',
+    statusColor: 'var(--color-warning-light)',
+    statusTextColor: 'var(--color-warning-strong)',
   },
   {
     id: 3,
     title: 'Daisy',
     subtitle: 'Golden Ret.',
     statusLabel: 'Transfer',
-    statusColor: 'hsl(from var(--color-warning) h s 90%)',
-    statusTextColor: 'hsl(from var(--color-warning) h s 40%)',
+    statusColor: 'var(--color-warning-light)',
+    statusTextColor: 'var(--color-warning-strong)',
   },
 ])
 </script>

@@ -240,7 +240,7 @@ onMounted(() => {
   border: none;
   padding: 12px 16px;
   font-size: 1rem;
-  color: hsl(from var(--color-neutral) h s 50%);
+  color: var(--color-neutral-text-soft);
   cursor: pointer;
   border-bottom: 2px solid transparent;
   display: flex;
@@ -252,7 +252,7 @@ onMounted(() => {
 
 .tab-btn:hover {
   color: var(--text-primary);
-  background-color: hsl(from var(--color-neutral) h s 95%);
+  background-color: var(--color-neutral-weak);
   border-top-left-radius: 8px;
   border-top-right-radius: 8px;
 }
@@ -264,8 +264,8 @@ onMounted(() => {
 }
 
 .count-badge {
-  background: hsl(from var(--color-neutral) h s 95%);
-  color: hsl(from var(--color-neutral) h s 50%);
+  background: var(--color-neutral-weak);
+  color: var(--color-neutral-text-soft);
   font-size: 0.75rem;
   padding: 2px 8px;
   border-radius: 12px;
@@ -273,7 +273,7 @@ onMounted(() => {
 }
 
 .tab-btn.active .count-badge {
-  background: hsl(from var(--color-secondary) h s 95%);
+  background: var(--color-secondary-weak);
   color: var(--color-secondary);
 }
 
@@ -335,7 +335,7 @@ onMounted(() => {
 }
 
 .expand-arrow {
-  color: hsl(from var(--color-neutral) h s 50%);
+  color: var(--color-neutral-text-soft);
   font-size: 0.8rem;
   transition: transform 0.2s ease;
 }

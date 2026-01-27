@@ -219,7 +219,7 @@ watch(
 }
 
 .breed {
-  color: hsl(from var(--color-neutral) h s 50%);
+  color: var(--color-neutral-text-soft);
   font-size: 0.95rem;
 }
 
@@ -247,7 +247,7 @@ watch(
     border: none;
 
     &:hover {
-      background: hsl(from var(--color-secondary) h s 40%);
+      background: var(--color-secondary-strong);
     }
   }
 }
@@ -307,7 +307,7 @@ watch(
   border-radius: 6px;
   font-size: 0.8rem;
   font-weight: 600;
-  color: hsl(from var(--color-neutral) h s 50%);
+  color: var(--color-neutral-text-soft);
   cursor: pointer;
 
   &:hover {
@@ -334,7 +334,7 @@ watch(
   justify-content: center;
   height: 100%;
   text-align: center;
-  color: hsl(from var(--color-neutral) h s 50%);
+  color: var(--color-neutral-text-soft);
 
   h2 {
     color: var(--text-primary);

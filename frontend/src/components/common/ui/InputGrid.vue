@@ -162,7 +162,7 @@ const toggleSelection = (row: string, col: string) => {
 
 .grid-header {
   display: grid;
-  background-color: hsl(from var(--color-neutral) h s 95%);
+  background-color: var(--color-neutral-weak);
   border-bottom: 1px solid var(--border-color);
   font-weight: 600;
   color: var(--text-primary);
@@ -195,7 +195,7 @@ const toggleSelection = (row: string, col: string) => {
 
 .row-label {
   padding: 12px;
-  background-color: hsl(from var(--color-neutral) h s 95%);
+  background-color: var(--color-neutral-weak);
   font-weight: 500;
   color: var(--text-primary);
   display: flex;
@@ -213,7 +213,7 @@ const toggleSelection = (row: string, col: string) => {
   background-color: var(--text-inverse);
 
   &:hover {
-    background-color: hsl(from var(--color-neutral) h s 98%);
+    background-color: var(--color-neutral-surface);
     box-shadow: 0 0 0 1px var(--border-color) inset;
   }
 

@@ -311,7 +311,7 @@ function setEndOfYear() {
 }
 
 .section-box {
-  background: hsl(from var(--color-neutral) h s 98%);
+  background: var(--color-neutral-surface);
   padding: 16px;
   border-radius: 8px;
   border: 1px solid var(--border-color);

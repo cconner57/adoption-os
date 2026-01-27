@@ -203,7 +203,7 @@ function selectVolunteer(vol: IVolunteer) {
   justify-content: center;
 
   &:hover {
-    background: hsl(from var(--color-secondary) h s 40%);
+    background: var(--color-secondary-strong);
   }
 }
 
@@ -220,7 +220,7 @@ function selectVolunteer(vol: IVolunteer) {
 
 .sort-label {
   font-size: 0.8rem;
-  color: hsl(from var(--color-neutral) h s 50%);
+  color: var(--color-neutral-text-soft);
 }
 
 .sort-options {
@@ -236,7 +236,7 @@ function selectVolunteer(vol: IVolunteer) {
 
 .empty-list {
   text-align: center;
-  color: hsl(from var(--color-neutral) h s 50%);
+  color: var(--color-neutral-text-soft);
   padding: 24px;
   font-size: 0.9rem;
 }
@@ -251,7 +251,7 @@ function selectVolunteer(vol: IVolunteer) {
   margin-bottom: 4px;
 
   &:hover {
-    background: hsl(from var(--color-neutral) h s 98%);
+    background: var(--color-neutral-surface);
   }
 
   &.selected {
@@ -274,7 +274,7 @@ function selectVolunteer(vol: IVolunteer) {
   width: 40px;
   height: 40px;
   border-radius: 50%;
-  background: hsl(from var(--color-secondary) h s 90%);
+  background: var(--color-secondary-light);
   color: var(--color-secondary);
   font-weight: 700;
   display: flex;
@@ -308,11 +308,11 @@ function selectVolunteer(vol: IVolunteer) {
 
   &.active {
     background: var(--color-primary);
-    box-shadow: 0 0 4px hsl(from var(--color-primary) h s l / 40%);
+    box-shadow: 0 0 4px oklch(from var(--color-primary) l c h / 0.40);
   }
 
   &.inactive {
-    background: hsl(from var(--color-neutral) h s 80%);
+    background: var(--color-neutral-border-strong);
   }
 
   &.pending {
@@ -322,7 +322,7 @@ function selectVolunteer(vol: IVolunteer) {
 
 .role {
   font-size: 0.8rem;
-  color: hsl(from var(--color-neutral) h s 50%);
+  color: var(--color-neutral-text-soft);
 }
 
 .vol-score {
@@ -338,7 +338,7 @@ function selectVolunteer(vol: IVolunteer) {
   }
 
   &.neutral {
-    color: hsl(from var(--color-neutral) h s 50%);
+    color: var(--color-neutral-text-soft);
   }
 
   &.low {
@@ -361,14 +361,14 @@ function selectVolunteer(vol: IVolunteer) {
   width: 40px;
   height: 40px;
   border-radius: 50%;
-  background: hsl(from var(--color-neutral) h s 90%);
+  background: var(--color-neutral-light);
   margin-right: 12px;
   animation: pulse 1.5s infinite;
 }
 
 .skeleton-text {
   height: 12px;
-  background: hsl(from var(--color-neutral) h s 90%);
+  background: var(--color-neutral-light);
   border-radius: 4px;
   margin-bottom: 6px;
   animation: pulse 1.5s infinite;

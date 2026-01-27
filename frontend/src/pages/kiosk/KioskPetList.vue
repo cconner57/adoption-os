@@ -73,7 +73,7 @@ const goHome = () => router.push('/kiosk')
             <h2>{{ pet.name }}</h2>
             <Capsules
               :label="pet.status"
-              color="hsl(from var(--color-primary) h s 95%)"
+              color="var(--color-primary-weak)"
               size="sm"
             />
           </div>
@@ -113,7 +113,7 @@ const goHome = () => router.push('/kiosk')
   background: none;
   border: none;
   font-size: 1.2rem;
-  color: hsl(from var(--color-neutral) h s 50%);
+  color: var(--color-neutral-text-soft);
   cursor: pointer;
   font-weight: 600;
 }
@@ -188,7 +188,7 @@ const goHome = () => router.push('/kiosk')
 }
 
 .breed {
-  color: hsl(from var(--color-neutral) h s 50%);
+  color: var(--color-neutral-text-soft);
   margin: 0 0 16px;
   font-size: 1rem;
 }

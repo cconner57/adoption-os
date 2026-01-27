@@ -54,38 +54,38 @@ const colorClass = computed(() => {
 
 /* Base Themes (Pastel Background + Strong Text) */
 .capsule--green {
-  background-color: hsl(from var(--color-primary) h s 92%);
+  background-color: var(--color-primary-weak);
   color: var(--color-primary);
 }
 
 .capsule--blue {
-  background-color: hsl(from var(--color-secondary) h s 92%);
+  background-color: var(--color-secondary-weak);
   color: var(--color-secondary);
 }
 
 .capsule--orange {
-  background-color: hsl(from var(--color-warning) h s 92%);
+  background-color: var(--color-warning-weak);
   color: var(--color-warning);
 }
 
 .capsule--red {
-  background-color: hsl(from var(--color-danger) h s 92%);
+  background-color: var(--color-danger-weak);
   color: var(--color-danger);
 }
 
 .capsule--purple {
-  background-color: hsl(from var(--color-tertiary) h s 92%);
+  background-color: var(--color-tertiary-weak);
   color: var(--color-tertiary);
 }
 
 .capsule--gray {
-  background-color: hsl(from var(--color-neutral) h s 94%);
-  color: hsl(from var(--color-neutral) h s 40%);
+  background-color: var(--color-neutral-weak);
+  color: var(--color-neutral-strong);
 }
 
 .capsule--white {
   background-color: #fff;
-  color: hsl(from var(--color-neutral) h s 50%);
+  color: var(--color-neutral-text-soft);
   border: 1px solid var(--border-color);
 }
 

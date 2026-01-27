@@ -115,7 +115,7 @@ const messageText = () => {
 }
 
 .success-message {
-  color: hsl(from var(--color-neutral) h s 30%);
+  color: var(--color-neutral-strong);
   font-size: 1.1rem;
   margin-bottom: 40px;
   line-height: 1.6;

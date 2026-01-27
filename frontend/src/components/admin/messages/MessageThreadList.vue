@@ -95,7 +95,7 @@ defineEmits<{
 
 .user-badge {
   font-size: 0.8rem;
-  color: hsl(from var(--color-neutral) h s 50%);
+  color: var(--color-neutral-text-soft);
   display: block;
   margin-top: 4px;
 }
@@ -113,12 +113,12 @@ defineEmits<{
   align-items: center;
   font-size: 0.75rem;
   font-weight: 700;
-  color: hsl(from var(--color-neutral) h s 50%);
+  color: var(--color-neutral-text-soft);
 
   .add-btn {
     background: none;
     border: none;
-    color: hsl(from var(--color-neutral) h s 50%);
+    color: var(--color-neutral-text-soft);
     cursor: pointer;
     font-size: 1.2rem;
     line-height: 1;
@@ -154,12 +154,12 @@ defineEmits<{
   font-size: 0.95rem;
 
   &:hover {
-    background: hsl(from var(--color-neutral) h s 90%);
+    background: var(--color-neutral-light);
     color: var(--text-primary);
   }
 
   &.active {
-    background: hsl(from var(--color-secondary) h s 95%);
+    background: var(--color-secondary-weak);
     color: var(--color-secondary);
     font-weight: 500;
   }

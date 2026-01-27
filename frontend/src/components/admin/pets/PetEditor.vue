@@ -381,7 +381,7 @@ const tabs = [
 
 .editor-sidebar {
   width: 200px;
-  background: hsl(from var(--color-neutral) h s 98%);
+  background: var(--color-neutral-surface);
   border-right: 1px solid var(--border-color);
   padding-top: 16px;
   flex-shrink: 0;

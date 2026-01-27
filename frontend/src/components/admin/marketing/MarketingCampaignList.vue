@@ -287,7 +287,7 @@ const formatDate = (dateString: string) => {
 
 .empty-text {
   font-style: italic;
-  color: hsl(from var(--color-neutral) h s 60%);
+  color: var(--color-neutral-text-soft);
   font-size: 0.9rem;
 }
 
@@ -328,13 +328,13 @@ const formatDate = (dateString: string) => {
 
 .camp-dates {
   font-size: 0.9rem;
-  color: hsl(from var(--color-neutral) h s 50%);
+  color: var(--color-neutral-text-soft);
   margin-bottom: 0;
 }
 
 .progress-bar {
   height: 8px;
-  background: hsl(from var(--color-neutral) h s 95%);
+  background: var(--color-neutral-weak);
   border-radius: 4px;
   overflow: hidden;
   margin-top: 8px;
@@ -359,7 +359,7 @@ const formatDate = (dateString: string) => {
     display: flex;
     align-items: center;
     gap: 6px;
-    background: hsl(from var(--color-tertiary) h s 96%);
+    background: var(--color-tertiary-weak);
     width: fit-content;
     padding: 2px 8px;
     border-radius: 8px;

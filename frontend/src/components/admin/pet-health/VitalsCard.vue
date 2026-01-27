@@ -81,7 +81,7 @@ function getStatusColor(status?: string | null) {
   h3 {
     margin: 0 0 16px;
     font-size: 1rem;
-    color: hsl(from var(--color-neutral) h s 50%);
+    color: var(--color-neutral-text-soft);
   }
 }
 
@@ -99,7 +99,7 @@ function getStatusColor(status?: string | null) {
   label {
     font-size: 0.75rem;
     text-transform: uppercase;
-    color: hsl(from var(--color-neutral) h s 50%);
+    color: var(--color-neutral-text-soft);
     font-weight: 600;
   }
 }
@@ -118,28 +118,28 @@ function getStatusColor(status?: string | null) {
   text-transform: capitalize;
 
   &.green {
-    background: hsl(from var(--color-primary) h s 95%);
+    background: var(--color-primary-weak);
     color: var(--color-primary);
   }
 
   &.orange {
-    background: hsl(from var(--color-warning) h s 95%);
+    background: var(--color-warning-weak);
     color: var(--color-warning);
   }
 
   &.red {
-    background: hsl(from var(--color-danger) h s 95%);
+    background: var(--color-danger-weak);
     color: var(--color-danger);
   }
 
   &.blue {
-    background: hsl(from var(--color-secondary) h s 95%);
+    background: var(--color-secondary-weak);
     color: var(--color-secondary);
   }
 
   &.gray {
-    background: hsl(from var(--color-neutral) h s 95%);
-    color: hsl(from var(--color-neutral) h s 50%);
+    background: var(--color-neutral-weak);
+    color: var(--color-neutral-text-soft);
   }
 }
 
@@ -155,7 +155,7 @@ function getStatusColor(status?: string | null) {
   label {
     font-size: 0.75rem;
     text-transform: uppercase;
-    color: hsl(from var(--color-neutral) h s 50%);
+    color: var(--color-neutral-text-soft);
     font-weight: 600;
     display: block;
     margin-bottom: 8px;
@@ -163,7 +163,7 @@ function getStatusColor(status?: string | null) {
 }
 
 .note-box {
-  background: hsl(from var(--color-neutral) h s 98%);
+  background: var(--color-neutral-surface);
   border-radius: 8px;
   padding: 12px;
   border: 1px solid var(--border-color);
@@ -179,7 +179,7 @@ function getStatusColor(status?: string | null) {
 
 .note-author {
   font-size: 0.75rem;
-  color: hsl(from var(--color-neutral) h s 50%);
+  color: var(--color-neutral-text-soft);
   display: block;
   text-align: right;
   font-weight: 500;

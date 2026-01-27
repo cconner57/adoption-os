@@ -49,7 +49,7 @@ const toggleSex = (value: string) => {
 
 const applyFilters = () => {
   emit('apply', localFilters.value)
-  
+
   emit('close')
 }
 </script>
@@ -126,7 +126,7 @@ const applyFilters = () => {
 <style scoped>
 .filter-panel {
   width: 100%;
-  max-width: 800px; 
+  max-width: 800px;
   background: #fff;
   border-radius: 24px;
   padding: 24px;
@@ -212,7 +212,7 @@ footer {
 
 @media (width <= 480px) {
   footer {
-    flex-direction: column-reverse; 
+    flex-direction: column-reverse;
     align-items: stretch;
   }
 
@@ -222,7 +222,7 @@ footer {
     gap: 12px;
 
     button {
-      width: 100%; 
+      width: 100%;
     }
   }
 }

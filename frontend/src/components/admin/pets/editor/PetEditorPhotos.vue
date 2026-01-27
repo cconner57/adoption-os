@@ -293,7 +293,7 @@ function removePhoto(index: number) {
 }
 
 .action-pill:hover {
-  background: hsl(from var(--color-neutral) h s 95%);
+  background: var(--color-neutral-weak);
 }
 
 .action-pill.active {
@@ -336,14 +336,14 @@ function removePhoto(index: number) {
   cursor: pointer;
   color: var(--color-primary);
   transition: all 0.2s;
-  background: hsl(from var(--color-primary) h s l / 2%);
+  background: oklch(from var(--color-primary) l c h / 0.2);
   padding: 8px;
   text-align: center;
 }
 
 .add-photo-btn:hover,
 .add-photo-btn.is-dragging {
-  background: hsl(from var(--color-primary) h s l / 8%);
+  background: oklch(from var(--color-primary) l c h / 0.8);
   border-color: var(--color-primary);
   border-style: solid;
 }

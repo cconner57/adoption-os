@@ -277,7 +277,7 @@ watch(
   label {
     font-weight: 500;
     font-size: 0.9rem;
-    color: hsl(from var(--color-neutral) h s 50%);
+    color: var(--color-neutral-text-soft);
   }
 }
 
@@ -441,7 +441,7 @@ watch(
 
 .preview-label {
   margin-top: 16px;
-  color: hsl(from var(--color-neutral) h s 50%);
+  color: var(--color-neutral-text-soft);
   font-size: 0.9rem;
 }
 

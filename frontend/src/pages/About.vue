@@ -260,7 +260,7 @@ const { vScrollReveal } = useScrollReveal()
       content: '✓';
       position: absolute;
       left: 0;
-      color: hsl(from var(--color-primary) h s 85%);
+      color: var(--color-primary-border);
       font-weight: 700;
     }
   }
@@ -302,7 +302,7 @@ const { vScrollReveal } = useScrollReveal()
 
       .small {
         font-size: 0.85rem;
-        color: hsl(from var(--color-neutral) h s 40%);
+        color: var(--color-neutral-strong);
         margin-top: 12px;
       }
     }

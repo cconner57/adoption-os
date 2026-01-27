@@ -167,7 +167,7 @@ const handleAction = (action: string, inc: IIncident) => {
 
 .inc-date {
   font-size: 0.9rem;
-  color: hsl(from var(--color-neutral) h s 50%);
+  color: var(--color-neutral-text-soft);
 }
 
 .inc-body {
@@ -187,7 +187,7 @@ const handleAction = (action: string, inc: IIncident) => {
   padding-top: 16px;
   border-top: 1px solid var(--border-color);
   font-size: 0.9rem;
-  color: hsl(from var(--color-neutral) h s 50%);
+  color: var(--color-neutral-text-soft);
 
   strong {
     color: var(--text-primary);
@@ -234,7 +234,7 @@ const handleAction = (action: string, inc: IIncident) => {
     border-radius: 4px;
 
     &:hover {
-      background: hsl(from var(--color-neutral) h s 98%);
+      background: var(--color-neutral-surface);
     }
   }
 }
@@ -242,7 +242,7 @@ const handleAction = (action: string, inc: IIncident) => {
 .empty-state {
   text-align: center;
   padding: 40px;
-  color: hsl(from var(--color-neutral) h s 50%);
+  color: var(--color-neutral-text-soft);
   font-style: italic;
 }
 </style>

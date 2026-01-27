@@ -175,7 +175,7 @@ const updateVehicleInfo = (info: string) => {
 }
 
 .user-role-badge {
-  background: hsl(from var(--color-secondary) h s 95%);
+  background: var(--color-secondary-weak);
   color: var(--color-secondary);
   padding: 6px 12px;
   border-radius: 20px;

@@ -2,6 +2,7 @@
 import { computed, onMounted, ref, watch } from 'vue'
 
 import PetCard from '../../components/admin/pets/PetCard.vue'
+import PetCardSkeleton from '../../components/admin/pets/PetCardSkeleton.vue'
 import PetEditor from '../../components/admin/pets/PetEditor.vue'
 import PetTable from '../../components/admin/pets/PetTable.vue'
 import TableSettings from '../../components/admin/pets/TableSettings.vue'
@@ -177,8 +178,18 @@ async function handleSavePet(petData: Partial<IPet>) {
 async function handleQuickAdopt(pet: IPet) {
   if (!confirm(`Mark ${pet.name} as Adopted?`)) return
 
+  // Use structuredClone to ensure we have a clean object without reactivity/proxies
   const updatedPet = structuredClone(pet)
+
+  // Update status
+  if (!updatedPet.details) updatedPet.details = { status: 'adopted' }
   updatedPet.details.status = 'adopted'
+
+  // Set default adoption date if missing
+  if (!updatedPet.adoption) updatedPet.adoption = {}
+  if (!updatedPet.adoption.date) {
+    updatedPet.adoption.date = new Date().toISOString().split('T')[0]
+  }
 
   await handleSavePet(updatedPet)
 }
@@ -246,7 +257,10 @@ const statusOptions = [
       </div>
     </div>
 
-    <TableSkeleton v-if="isLoading" :rows="10" :columns="11" />
+    <div class="desktop-skeleton-wrapper" v-if="isLoading">
+      <TableSkeleton :rows="10" :columns="11" />
+    </div>
+
     <PetTable
       v-else
       :pets="filteredPets"
@@ -259,9 +273,14 @@ const statusOptions = [
       @mark-adopted="handleQuickAdopt"
     />
 
-    <div v-if="!isLoading" class="mobile-pet-list">
-      <template v-for="pet in filteredPets" :key="pet.id">
+    <div class="mobile-pet-list">
+      <template v-if="isLoading">
+        <PetCardSkeleton v-for="n in 5" :key="n" />
+      </template>
+      <template v-else>
         <PetCard
+          v-for="pet in filteredPets"
+          :key="pet.id"
           :pet="pet"
           :status-filter="statusFilter"
           @edit="handleEditPet"
@@ -329,11 +348,11 @@ const statusOptions = [
 }
 
 .count-badge {
-  background: hsl(from var(--color-neutral) h s 95%);
+  background: var(--color-neutral-weak);
   padding: 4px 12px;
   border-radius: 20px;
   font-size: 0.9rem;
-  color: hsl(from var(--color-neutral) h s 50%);
+  color: var(--color-neutral-text-soft);
   font-weight: 600;
 }
 
@@ -400,7 +419,8 @@ const statusOptions = [
     flex: 1;
   }
 
-  :deep(.table-container) {
+  :deep(.table-container),
+  .desktop-skeleton-wrapper {
     display: none;
   }
 

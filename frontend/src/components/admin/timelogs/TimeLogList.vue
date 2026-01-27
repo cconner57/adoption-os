@@ -134,8 +134,8 @@ const handleAction = (action: string, log: ITimeLog) => {
   th {
     text-align: left;
     padding: 16px;
-    background: hsl(from var(--color-neutral) h s 98%);
-    color: hsl(from var(--color-neutral) h s 50%);
+    background: var(--color-neutral-surface);
+    color: var(--color-neutral-text-soft);
     font-weight: 600;
     font-size: 0.85rem;
     text-transform: uppercase;
@@ -163,7 +163,7 @@ const handleAction = (action: string, log: ITimeLog) => {
 }
 
 .time-pill {
-  background: hsl(from var(--color-neutral) h s 98%);
+  background: var(--color-neutral-surface);
   padding: 2px 6px;
   border-radius: 4px;
   font-size: 0.85rem;
@@ -176,7 +176,7 @@ const handleAction = (action: string, log: ITimeLog) => {
 }
 
 .active-badge {
-  background: hsl(from var(--color-primary) h s 95%);
+  background: var(--color-primary-weak);
   color: var(--color-primary);
   font-size: 0.75rem;
   padding: 2px 6px;
@@ -197,10 +197,10 @@ const handleAction = (action: string, log: ITimeLog) => {
   padding: 4px 8px;
   border-radius: 4px;
   cursor: pointer;
-  color: hsl(from var(--color-neutral) h s 50%);
+  color: var(--color-neutral-text-soft);
 
   &:hover {
-    background: hsl(from var(--color-neutral) h s 98%);
+    background: var(--color-neutral-surface);
     color: var(--text-primary);
   }
 }
@@ -236,14 +236,14 @@ const handleAction = (action: string, log: ITimeLog) => {
     border-radius: 4px;
 
     &:hover {
-      background: hsl(from var(--color-neutral) h s 98%);
+      background: var(--color-neutral-surface);
     }
 
     &.danger {
       color: var(--color-danger);
 
       &:hover {
-        background: hsl(from var(--color-danger) h s 98%);
+        background: var(--color-danger-surface);
       }
     }
   }
@@ -252,7 +252,7 @@ const handleAction = (action: string, log: ITimeLog) => {
 .empty-state {
   text-align: center;
   padding: 40px;
-  color: hsl(from var(--color-neutral) h s 50%);
+  color: var(--color-neutral-text-soft);
   font-style: italic;
 }
 </style>

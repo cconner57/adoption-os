@@ -93,10 +93,10 @@ defineEmits<{
   table-layout: fixed; 
 
   th {
-    background: hsl(from var(--color-neutral) h s 98%);
+    background: var(--color-neutral-surface);
     padding: 12px 16px;
     font-weight: 600;
-    color: hsl(from var(--color-neutral) h s 50%);
+    color: var(--color-neutral-text-soft);
     font-size: 0.9rem;
     border-bottom: 1px solid var(--border-color);
     position: sticky;

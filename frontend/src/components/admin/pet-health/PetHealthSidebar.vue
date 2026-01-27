@@ -156,7 +156,7 @@ function formatDate(date: string) {
 
   &.active {
     background: #eff6ff;
-    border-color: hsl(from var(--color-secondary) h s 80%);
+    border-color: var(--color-secondary-border-strong);
   }
 }
 
@@ -190,7 +190,7 @@ function formatDate(date: string) {
 
 .pet-meta {
   font-size: 0.8rem;
-  color: hsl(from var(--color-neutral) h s 50%);
+  color: var(--color-neutral-text-soft);
   margin-top: 2px;
 }
 

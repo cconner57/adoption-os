@@ -94,7 +94,7 @@ h3 {
   }
 
   &.selected {
-    background: hsl(from var(--color-secondary) h s 95%);
+    background: var(--color-secondary-weak);
     color: var(--color-secondary);
     font-weight: 600;
   }

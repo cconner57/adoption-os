@@ -372,7 +372,7 @@ async function handleDeleteShift(shiftId: string | number) {
     padding: 10px 12px;
     border: 1px solid var(--border-color);
     border-radius: 8px;
-    background: hsl(from var(--color-neutral) h s 98%);
+    background: var(--color-neutral-surface);
     outline: none;
 
     &:focus {
@@ -401,7 +401,7 @@ async function handleDeleteShift(shiftId: string | number) {
   align-items: center;
   justify-content: center;
   height: 100%;
-  color: hsl(from var(--color-neutral) h s 50%);
+  color: var(--color-neutral-text-soft);
 
   .icon {
     font-size: 4rem;
@@ -445,7 +445,7 @@ async function handleDeleteShift(shiftId: string | number) {
   transition: background-color 0.2s;
 
   &:hover {
-    background-color: hsl(from var(--color-secondary) h s 40%);
+    background-color: var(--color-secondary-strong);
   }
 }
 
@@ -454,7 +454,7 @@ async function handleDeleteShift(shiftId: string | number) {
   padding: 48px;
   border-radius: 12px;
   text-align: center;
-  color: hsl(from var(--color-neutral) h s 50%);
+  color: var(--color-neutral-text-soft);
   border: 1px dashed var(--border-color);
 }
 </style>

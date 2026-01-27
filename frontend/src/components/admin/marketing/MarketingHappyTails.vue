@@ -103,7 +103,7 @@ const approveStory = (story: IHappyTail) => {
 
 .date {
   font-size: 0.8rem;
-  color: hsl(from var(--color-neutral) h s 50%);
+  color: var(--color-neutral-text-soft);
 }
 
 .adopter {
@@ -114,7 +114,7 @@ const approveStory = (story: IHappyTail) => {
 
 .story-body {
   font-style: italic;
-  color: hsl(from var(--color-neutral) h s 40%);
+  color: var(--color-neutral-strong);
   margin-bottom: 16px;
   line-height: 1.5;
   flex: 1;

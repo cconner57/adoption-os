@@ -95,7 +95,7 @@ const emit = defineEmits(['close'])
 }
 
 .modal-message {
-  color: hsl(from var(--color-neutral) h s 30%);
+  color: var(--color-neutral-strong);
   margin-bottom: 32px;
   line-height: 1.5;
   text-align: center;

@@ -118,7 +118,7 @@ const handleLogin = async () => {
 }
 
 .logo-area p {
-  color: hsl(from var(--color-neutral) h s 50%);
+  color: var(--color-neutral-text-soft);
   font-size: 1rem;
 }
 
@@ -132,7 +132,7 @@ const handleLogin = async () => {
   color: var(--color-danger);
   font-size: 0.9rem;
   text-align: center;
-  background-color: hsl(from var(--color-danger) h s 95%);
+  background-color: var(--color-danger-weak);
   padding: 10px;
   border-radius: 8px;
 }

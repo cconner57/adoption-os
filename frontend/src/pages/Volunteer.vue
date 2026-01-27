@@ -412,7 +412,7 @@ const handleReset = () => {
   }
 
   .validation-summary {
-    background-color: hsl(from var(--color-danger) h s 98%);
+    background-color: var(--color-danger-surface);
     border: 1px solid var(--color-danger);
     border-radius: 12px;
     padding: 16px;
@@ -433,7 +433,7 @@ const handleReset = () => {
     }
 
     .tag.is-danger {
-      background-color: hsl(from var(--color-danger) h s 92%);
+      background-color: var(--color-danger-weak);
       color: var(--color-danger);
       padding: 4px 12px;
       border-radius: 16px;

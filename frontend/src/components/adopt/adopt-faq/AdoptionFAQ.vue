@@ -6,51 +6,46 @@ const faqs = ref([
     question: 'Can I adopt if I rent my home?',
     answer:
       'Yes, you can adopt if you rent your home. We recommend checking with your landlord and providing proof of pet approval if necessary.',
-    expanded: true,
   },
   {
     question: 'Do you have a return policy?',
     answer:
       'Yes, we have a no-questions-asked return policy within the first 30 days of adoption to ensure the best fit for both the pet and the adopter.',
-    expanded: true,
   },
   {
     question: 'Are there any age restrictions for adopters?',
     answer: 'Adopters must be at least 21 years old to adopt a pet from us.',
-    expanded: true,
   },
   {
     question: "Can I return the pet if it doesn't work out?",
     answer: 'Yes, we have a no-questions-asked return policy within the first 30 days of adoption.',
-    expanded: false,
   },
   {
     question: 'Can I foster a pet before adopting?',
     answer:
       'Yes, we encourage fostering as it helps pets adjust to home life and allows you to see if the pet is a good fit for your family.',
-    expanded: false,
   },
   {
     question: 'Do you offer support after adoption?',
     answer:
       'Yes, we provide lifetime support to our adopters, including behavioral advice and resources.',
-    expanded: false,
   },
 ])
-
-const toggleFaq = (faqIndex: number) => {
-  faqs.value[faqIndex].expanded = !faqs.value[faqIndex].expanded
-}
 </script>
 
 <template>
   <div class="adopt-detail__adoption-faq">
     <h2>Adoption FAQs</h2>
-    <ul>
-      <li v-for="(faqItem, faqIndex) in faqs" :key="faqIndex">
-        <p @click="toggleFaq(faqIndex)" class="faq-question">
+    <div class="faq-list">
+      <details
+        v-for="(faqItem, faqIndex) in faqs"
+        :key="faqIndex"
+        name="adoption-details-group"
+        class="faq-details"
+      >
+        <summary class="faq-question">
           <svg
-            :class="['arrow', faqItem.expanded ? 'rotated-arrow' : '']"
+            class="arrow"
             width="24"
             height="24"
             viewBox="0 0 24 24"
@@ -68,10 +63,10 @@ const toggleFaq = (faqIndex: number) => {
             />
           </svg>
           {{ faqItem.question }}
-        </p>
-        <p v-if="faqItem.expanded" class="faq-answer">{{ faqItem.answer }}</p>
-      </li>
-    </ul>
+        </summary>
+        <p class="faq-answer">{{ faqItem.answer }}</p>
+      </details>
+    </div>
   </div>
 </template>
 
@@ -79,10 +74,10 @@ const toggleFaq = (faqIndex: number) => {
 .adopt-detail__adoption-faq {
   width: 50%;
 
-  ul {
-    list-style: none;
-    padding: 0;
-    margin: 0;
+  .faq-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
   }
 
   h2 {
@@ -91,6 +86,19 @@ const toggleFaq = (faqIndex: number) => {
 
     @media (width <= 440px) {
       font-size: 1.25rem;
+    }
+  }
+
+  details {
+    &[open] .arrow {
+      transform: rotate(90deg);
+    }
+  }
+
+  summary {
+    list-style: none;
+    &::-webkit-details-marker {
+      display: none;
     }
   }
 
@@ -107,7 +115,7 @@ const toggleFaq = (faqIndex: number) => {
   }
 
   .faq-answer {
-    margin: 8px 0 16px 34px;
+    margin: 8px 0 0 34px;
     color: var(--text-primary);
     line-height: 1.4;
     font-weight: 400;
@@ -116,14 +124,6 @@ const toggleFaq = (faqIndex: number) => {
   @media (width >= 321px) and (width <= 430px) {
     width: 100%;
     margin-right: 0;
-
-    ul {
-      padding: 0;
-
-      li {
-        margin-bottom: 12px;
-      }
-    }
 
     .faq-question {
       font-size: 1rem;
@@ -138,9 +138,5 @@ const toggleFaq = (faqIndex: number) => {
 
 .arrow {
   transition: transform 0.2s;
-}
-
-.rotated-arrow {
-  transform: rotate(90deg);
 }
 </style>

@@ -31,3 +31,7 @@ export const formatDate = (dateString: string, birthday?: boolean) => {
     day: 'numeric',
   })
 }
+
+export const escapeRegExp = (string: string) => {
+  return string.replace(/[.*+?^${}()|[\]\\]/g, String.raw`\$&`)
+}

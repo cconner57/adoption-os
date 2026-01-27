@@ -17,6 +17,7 @@ import ApplicationHeader from '../components/volunteer/application-header/Applic
 import { useMetrics } from '../composables/useMetrics'
 import { useAdoptionStore } from '../stores/adoption'
 import { usePetStore } from '../stores/pets'
+import { vibrate } from '../utils/haptics'
 
 const router = useRouter()
 const adoptionStore = useAdoptionStore()
@@ -60,6 +61,7 @@ const handleSubmit = async () => {
   } else {
     submitMetric('form_submit', { form: 'adoption', petId: selectedPet.value?.id })
     console.log('Submitting form...')
+    vibrate(50)
     await adoptionStore.submitApplication()
     petStore.clearSelectedPet()
     globalThis.scrollTo({ top: 0, behavior: 'smooth' })

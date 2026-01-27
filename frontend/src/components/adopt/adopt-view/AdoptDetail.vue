@@ -2,7 +2,9 @@
 import { ref } from 'vue'
 
 import type { IPet } from '../../../models/common.ts'
-import { formatDate } from '../../../utils/common.ts'
+import { calculateAge } from '../../../utils/date'
+import { formatDate } from '../../../utils/dateUtils'
+import { vibrate } from '../../../utils/haptics.ts'
 import Button from '../../common/ui/Button.vue'
 import Capsules from '../../common/ui/Capsules.vue'
 import AdditionalInfo from '../additional-info/AdditionalInfo.vue'
@@ -17,6 +19,7 @@ const props = defineProps<{
 const isDrawerOpen = ref(false)
 
 const handleStartAdoption = () => {
+  vibrate(50)
   sessionStorage.setItem(
     'adoption_pet',
     JSON.stringify({ petId: props.pet.id, petName: props.pet.name, species: props.pet.species }),
@@ -60,14 +63,14 @@ function onImgError() {
       <div v-else class="img-fallback" aria-hidden="true"></div>
       <div class="adopt-detail__info">
         <div class="adopt-detail__info__main">
-          <h1>{{ pet.name }}</h1>
+          <h1 class="text-balance">{{ pet.name }}</h1>
           <div class="adopt-detail__traits">
             <Capsules v-if="pet?.species" :label="pet?.species" />
             <Capsules v-if="pet?.sex" :label="pet?.sex" />
-            <Capsules
-              v-if="pet?.physical?.dateOfBirth"
-              :label="formatDate(pet?.physical?.dateOfBirth, true)"
-            />
+              <Capsules
+                v-if="pet?.physical?.dateOfBirth"
+                :label="calculateAge(pet?.physical?.dateOfBirth)"
+              />
           </div>
           <p>{{ pet?.descriptions?.fun }}</p>
           <div class="adopt-detail__actions">

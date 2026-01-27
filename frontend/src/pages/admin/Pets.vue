@@ -8,6 +8,7 @@ import PetTable from '../../components/admin/pets/PetTable.vue'
 import TableSettings from '../../components/admin/pets/TableSettings.vue'
 import { Button, InputField, Select, TableSkeleton,Toast } from '../../components/common/ui'
 import type { IPet } from '../../models/common'
+import { usePetStore } from '../../stores/pets'
 
 const showToast = ref(false)
 const toastMessage = ref('')
@@ -19,8 +20,10 @@ function showNotification(message: string, type: 'success' | 'error' = 'success'
   showToast.value = true
 }
 
-const pets = ref<IPet[]>([])
-const isLoading = ref(false)
+const petStore = usePetStore()
+
+// const pets = ref<IPet[]>([]) // Removed, using store.adminPets
+// const isLoading = ref(false) // Removed, using store.isFetching
 const isEditorOpen = ref(false)
 const selectedPet = ref<IPet | null>(null)
 const searchQuery = ref('')
@@ -44,7 +47,7 @@ const visibleColumns = ref({
 })
 
 async function fetchPets() {
-  isLoading.value = true
+  // isLoading is handled by store
   try {
     const params = new URLSearchParams()
     if (statusFilter.value !== 'all') {
@@ -53,22 +56,10 @@ async function fetchPets() {
     if (searchQuery.value) {
       params.append('search', searchQuery.value)
     }
-
-    const response = await fetch(`${import.meta.env.VITE_API_URL}/pets?${params.toString()}`, {
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token')}`,
-      },
-    })
-
-    if (!response.ok) throw new Error('Failed to fetch pets')
-    const data = await response.json()
-
-    pets.value = Array.isArray(data) ? data : data.data || []
+    // API URL is handled in store
+    await petStore.fetchAdminPets(params)
   } catch (error) {
     console.error('Error fetching pets:', error)
-  } finally {
-    isLoading.value = false
   }
 }
 
@@ -101,7 +92,7 @@ watch(
 
 const filteredPets = computed(() => {
 
-  let result = pets.value
+  let result = petStore.adminPets
 
   if (speciesFilter.value !== 'all') {
     result = result.filter((p) => p.species === speciesFilter.value)
@@ -157,13 +148,13 @@ async function handleSavePet(petData: Partial<IPet>) {
 
     if (petData.id) {
 
-      const idx = pets.value.findIndex((p) => p.id === petData.id)
+      const idx = petStore.adminPets.findIndex((p) => p.id === petData.id)
       if (idx !== -1) {
-        pets.value[idx] = finalPet
+        petStore.adminPets[idx] = finalPet
       }
     } else {
 
-      pets.value.unshift(finalPet)
+      petStore.adminPets.unshift(finalPet)
     }
 
     isEditorOpen.value = false
@@ -257,7 +248,7 @@ const statusOptions = [
       </div>
     </div>
 
-    <div class="desktop-skeleton-wrapper" v-if="isLoading">
+    <div class="desktop-skeleton-wrapper" v-if="petStore.isFetching">
       <TableSkeleton :rows="10" :columns="11" />
     </div>
 
@@ -274,7 +265,7 @@ const statusOptions = [
     />
 
     <div class="mobile-pet-list">
-      <template v-if="isLoading">
+      <template v-if="petStore.isFetching">
         <PetCardSkeleton v-for="n in 5" :key="n" />
       </template>
       <template v-else>
@@ -293,7 +284,7 @@ const statusOptions = [
     <PetEditor
       :is-open="isEditorOpen"
       :pet="selectedPet"
-      :available-pets="pets"
+      :available-pets="petStore.adminPets"
       @close="isEditorOpen = false"
       @save="handleSavePet"
       @archive="handleArchivePet"

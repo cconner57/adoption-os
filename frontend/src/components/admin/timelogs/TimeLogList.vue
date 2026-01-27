@@ -2,6 +2,7 @@
 import { ref } from 'vue'
 
 import type { ITimeLog } from '../../../stores/mockTimeLogs'
+import { vibrate } from '../../../utils/haptics'
 import { Capsules, InputSelectGroup } from '../../common/ui'
 import Button from '../../common/ui/Button.vue'
 
@@ -26,15 +27,18 @@ const closeIds = () => (activeMenuId.value = null)
 const getLogStatusColor = (status: ITimeLog['status']) => {
   switch (status) {
     case 'approved':
-      return '#d1fae5' 
+      return '#d1fae5'
     case 'flagged':
-      return '#fee2e2' 
+      return '#fee2e2'
     default:
-      return '#f3f4f6' 
+      return '#f3f4f6'
   }
 }
 
 const handleAction = (action: string, log: ITimeLog) => {
+  if (action === 'delete') {
+    vibrate(200)
+  }
   activeMenuId.value = null
   emit('logAction', action, log)
 }

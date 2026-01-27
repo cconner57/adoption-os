@@ -19,10 +19,48 @@
     <title>I Dream of Home Rescue</title>
     <meta name="apple-mobile-web-app-title" content="IDOHR">
     <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+    <style>
+      #loading-screen {
+        position: fixed;
+        inset: 0;
+        z-index: 9999;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        background-color: oklch(from #1f2121 98% 0.01 h);
+        transition: opacity 0.3s ease-out;
+      }
+      
+      #loading-screen img {
+        width: 80px;
+        height: 80px;
+        /* Using filter to colorize the SVG if it's black/monochrome, or just let it be. 
+           Theme color is #00a5ad. The user requested "match your administrative theme".
+           The background is very light. The logo should probably be visible.
+        */
+        animation: pulse 2s infinite ease-in-out;
+      }
+
+      @keyframes pulse {
+        0%, 100% { transform: scale(1); opacity: 1; }
+        50% { transform: scale(1.1); opacity: 0.8; }
+      }
+
+      /* Automatically hide when app is mounted (not empty) */
+      #app:not(:empty) ~ #loading-screen {
+        opacity: 0;
+        pointer-events: none;
+        display: none; /* Ensure it's removed from layout */
+      }
+    </style>
     <!--app-head-->
   </head>
   <body>
     <div id="app"></div>
+    <div id="loading-screen">
+      <img src="/images/paw.svg" alt="Loading..." />
+    </div>
     <script type="module" src="/src/main.ts"></script>
   </body>
 </html>

@@ -164,7 +164,9 @@ const router = createRouter({
     },
   ],
   scrollBehavior(to, from, savedPosition) {
-    if (savedPosition) return savedPosition
+    if (to.path.startsWith('/admin') && savedPosition) {
+      return savedPosition
+    }
     return { top: 0 }
   },
 })

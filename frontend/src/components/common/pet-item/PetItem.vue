@@ -70,7 +70,7 @@ function handleAdopt() {
     />
     <div v-else class="img-fallback" aria-hidden="true" @click="handleAdopt"></div>
     <div class="info-section">
-      <h3>{{ props.name }}</h3>
+      <h3 class="text-balance">{{ props.name }}</h3>
       <div v-if="props.capsules.length > 0" class="capsules">
         <template v-for="capText in props.capsules" :key="capText">
           <Capsules v-if="capText && capText !== 'Invalid Date'">{{ capText }}</Capsules>

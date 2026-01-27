@@ -1,16 +1,19 @@
+import { defineStore } from 'pinia'
 import { computed, ref } from 'vue'
 
 import type { IApplicationItem } from '../components/admin/applications/ApplicationCard.vue'
 import { API_ENDPOINTS } from '../constants/api'
 import { mapApplicationToItem } from '../pages/admin/utils'
 
-export function useApplications() {
+export const useApplicationsStore = defineStore('applications', () => {
   const activeTab = ref<'volunteer' | 'surrender' | 'adoption' | 'history'>('adoption')
   const filterStatus = ref<'all' | 'pending' | 'approved' | 'denied'>('all')
   const currentYear = new Date().getFullYear()
   const selectedYear = ref(currentYear)
   const applications = ref<IApplicationItem[]>([])
   const loading = ref(true)
+  const lastUpdated = ref(0) // Cache timestamp
+  const CACHE_DURATION = 5 * 60 * 1000 // 5 minutes
 
   // Resend Email State
   const resendingAppId = ref<string | null>(null)
@@ -37,7 +40,15 @@ export function useApplications() {
     return filteredApplications.value.filter(app => app.status === 'autodeleted')
   })
 
-  const fetchApplications = async (autoFocus = false) => {
+  const fetchApplications = async (autoFocus = false, forceRefresh = false) => {
+    // Cache check
+    const now = Date.now()
+    if (!forceRefresh && applications.value.length > 0 && (now - lastUpdated.value < CACHE_DURATION)) {
+      console.log('Using cached applications')
+      loading.value = false
+      return
+    }
+
     loading.value = true
     try {
       const token = localStorage.getItem('token')
@@ -61,12 +72,12 @@ export function useApplications() {
       }
 
       // Sort Newest first
-      rawApps.forEach(a => console.log('Parsed App:', a.id, a.status, a.type)) // DEBUG
       rawApps = rawApps.sort((a, b) => {
         return new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
       })
 
       applications.value = rawApps.map(mapApplicationToItem)
+      lastUpdated.value = Date.now()
 
       // Update App Badge
       const pendingCount = applications.value.filter((a) => a.status === 'pending').length
@@ -74,7 +85,7 @@ export function useApplications() {
         navigator.setAppBadge(pendingCount).catch((e) => console.error('Error setting badge', e))
       }
 
-      // Auto-switch tabs logic
+      // Auto-switch tabs logic - ONLY on initial load or explicit autoFocus request, not regular refreshes
       if (autoFocus && activeTab.value !== 'history') {
         const adoptionCount = applications.value.filter((a) => a.type === 'adoption').length
         const volunteerCount = applications.value.filter((a) => a.type === 'volunteer').length
@@ -91,7 +102,8 @@ export function useApplications() {
           activeTab.value = 'history'
           filterStatus.value = 'all'
           selectedYear.value = currentYear - 1
-          fetchApplications()
+          // Recursively fetch for history without autoFocus to avoid infinite loop
+          fetchApplications(false, true)
           return
         }
       }
@@ -100,7 +112,7 @@ export function useApplications() {
       if (autoFocus && activeTab.value === 'history' && applications.value.length === 0) {
         activeTab.value = 'adoption'
         selectedYear.value = currentYear
-        fetchApplications(false)
+        fetchApplications(false, true)
         return
       }
 
@@ -123,6 +135,11 @@ export function useApplications() {
     }).then((res) => {
       if (res.ok) {
         app.status = status
+        // Update badge after status change
+        const pendingCount = applications.value.filter((a) => a.status === 'pending').length
+        if ('setAppBadge' in navigator) {
+          navigator.setAppBadge(pendingCount).catch((e) => console.error('Error setting badge', e))
+        }
       }
     })
   }
@@ -188,4 +205,4 @@ export function useApplications() {
     viewOriginal,
     resendEmail,
   }
-}
+})

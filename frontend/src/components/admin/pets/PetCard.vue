@@ -2,7 +2,8 @@
 import { ref } from 'vue'
 
 import type { IPet } from '../../../models/common'
-import { calculateAge, formatDigitDate, formatIntakeDate } from '../../../utils/date'
+import { calculateAge, formatIntakeDate } from '../../../utils/date'
+import { formatDate } from '../../../utils/dateUtils'
 import { formatSpayNeuter, getSpayNeuterLabel, getStatusColor } from '../../../utils/pet'
 import { Button, Icon } from '../../common/ui'
 
@@ -77,7 +78,7 @@ const isExpanded = ref(false)
             </div>
             <div class="stat">
               <span class="label">DATE OF BIRTH</span>
-              <span class="value">{{ formatDigitDate(pet.physical.dateOfBirth) }}</span>
+              <span class="value">{{ formatDate(pet.physical.dateOfBirth) }}</span>
             </div>
           </div>
         </div>

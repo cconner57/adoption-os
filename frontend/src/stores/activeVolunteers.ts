@@ -10,7 +10,17 @@ export const useActiveVolunteersStore = defineStore('activeVolunteers', () => {
   const weeklyShifts = ref<IShift[]>([])
   const error = ref<string | null>(null)
 
-  const fetchActiveCount = async () => {
+  const lastUpdatedCount = ref(0)
+  const CACHE_DURATION = 5 * 60 * 1000 // 5 minutes
+
+  const fetchActiveCount = async (forceRefresh = false) => {
+    // Cache check
+    const now = Date.now()
+    if (!forceRefresh && activeCount.value > 0 && (now - lastUpdatedCount.value < CACHE_DURATION)) {
+      isFetching.value = false
+      return
+    }
+
     isFetching.value = true
     error.value = null
     try {
@@ -30,6 +40,7 @@ export const useActiveVolunteersStore = defineStore('activeVolunteers', () => {
       const data = json.data || {}
 
       activeCount.value = data.metadata?.totalRecords || 0
+      lastUpdatedCount.value = Date.now()
     } catch (e: unknown) {
       console.error('Error fetching active volunteers:', e)
       if (e instanceof Error) {

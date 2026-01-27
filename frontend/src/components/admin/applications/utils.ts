@@ -1,19 +1,7 @@
+import { formatDate as formatGlobalDate } from '../../../../utils/dateUtils'
+
 export const formatDate = (dateStr: string) => {
-  // If YYYY-MM-DD (Mock/Truncated), force UTC to avoid shift
-  if (dateStr.length <= 10) {
-    return new Date(dateStr).toLocaleDateString('en-US', {
-      month: 'short',
-      day: 'numeric',
-      year: 'numeric',
-      timeZone: 'UTC',
-    })
-  }
-  // Otherwise (ISO), use Local time
-  return new Date(dateStr).toLocaleDateString(undefined, {
-    month: 'short',
-    day: 'numeric',
-    year: 'numeric',
-  })
+  return formatGlobalDate(dateStr)
 }
 
 export const getStatusColor = (status: string) => {

@@ -23,7 +23,7 @@ export default defineConfig(({ mode }) => {
         short_name: 'IDOHR',
         description: 'Adoption Management System',
         theme_color: '#00a5ad',
-        background_color: '#ffffff',
+        background_color: '#fbfbfb',
         start_url: '/admin',
         scope: '/admin/',
         display: 'standalone',
@@ -37,6 +37,36 @@ export default defineConfig(({ mode }) => {
             src: '/images/idohr-logo.png',
             sizes: '512x512',
             type: 'image/png'
+          }
+        ],
+        shortcuts: [
+          {
+            name: 'Pet Records',
+            short_name: 'Records',
+            description: 'Manage Pet Records',
+            url: '/admin/pets',
+            icons: [{ src: '/images/paw.svg', sizes: '96x96', type: 'image/svg+xml' }]
+          },
+          {
+            name: 'Applications',
+            short_name: 'Apps',
+            description: 'Review Adoptions',
+            url: '/admin/applications',
+            icons: [{ src: '/images/idohr-logo.png', sizes: '192x192', type: 'image/png' }]
+          },
+          {
+            name: 'Donate',
+            short_name: 'Donate',
+            description: 'Support IDOHR',
+            url: '/donate',
+            icons: [{ src: '/images/heart.svg', sizes: '96x96', type: 'image/svg+xml' }]
+          },
+          {
+            name: 'Volunteer',
+            short_name: 'Volunteer',
+            description: 'Join the Team',
+            url: '/volunteer',
+            icons: [{ src: '/images/hand.svg', sizes: '96x96', type: 'image/svg+xml' }]
           }
         ]
       },

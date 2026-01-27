@@ -198,3 +198,8 @@ button, .btn, a.btn, label, .clickable {
     transform: translateY(-10px);
   }
 }
+
+/* Typography Utilities */
+.text-balance {
+  text-wrap: balance;
+}

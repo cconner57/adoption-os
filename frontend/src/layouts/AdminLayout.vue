@@ -1,18 +1,20 @@
 <script setup lang="ts">
-import { computed,ref } from 'vue'
+import { computed } from 'vue'
 import { useRouter } from 'vue-router'
 
 import { SidebarNav } from '../components/common/ui'
+import { usePermissions } from '../composables/usePermissions'
+import { usePullToRefresh } from '../composables/usePullToRefresh'
 import { useAuthStore } from '../stores/auth'
+import { useUIStore } from '../stores/ui'
 
 const router = useRouter()
 
 const authStore = useAuthStore()
-
-const isMobileMenuOpen = ref(false)
+const uiStore = useUIStore()
 
 const toggleMobileMenu = () => {
-  isMobileMenuOpen.value = !isMobileMenuOpen.value
+  uiStore.adminState.isSidebarOpen = !uiStore.adminState.isSidebarOpen
 }
 
 const handleLogout = () => {
@@ -20,25 +22,34 @@ const handleLogout = () => {
   router.push('/login')
 }
 
-const navItems = [
-  { label: 'Overview', to: '/admin', icon: 'dashboard', exact: true },
-  { label: 'Calendar', to: '/admin/calendar', icon: 'calendar' },
-  { label: 'Pet Records', to: '/admin/pets', icon: 'pawPrint', viewBox: '0 0 128 128' },
-  { label: 'Applications', to: '/admin/applications', icon: 'fileText' },
-  { label: 'File Vault', to: '/admin/files', icon: 'folder' },
-  { label: 'Medical', to: '/admin/pet-health', icon: 'activity' },
-  { label: 'Volunteers', to: '/admin/volunteers', icon: 'users' },
-  { label: 'Transport', to: '/admin/transport', icon: 'truck' },
-  { label: 'Timesheets', to: '/admin/time-logs', icon: 'clock' },
-  { label: 'Messages', to: '/admin/messages', icon: 'mail' },
-  { label: 'Donations', to: '/admin/donations', icon: 'dollar' },
-  { label: 'Inventory', to: '/admin/inventory', icon: 'box' },
-  { label: 'Marketing', to: '/admin/marketing', icon: 'megaphone' },
-  { label: 'Intake Kiosk', to: '/admin/kiosk', icon: 'monitor' },
-  { label: 'Smart Kennel Cards', to: '/admin/kennel-displays', icon: 'tag' },
-  { label: 'Event Signage', to: '/admin/event-displays', icon: 'sign' },
-  { label: 'Settings', to: '/admin/settings', icon: 'cog' },
-]
+const { can, ROLES } = usePermissions()
+
+const navItems = computed(() => {
+  const allItems = [
+    { label: 'Overview', to: '/admin', icon: 'dashboard', exact: true },
+    { label: 'Calendar', to: '/admin/calendar', icon: 'calendar' },
+    { label: 'Pet Records', to: '/admin/pets', icon: 'pawPrint', viewBox: '0 0 128 128' },
+    { label: 'Applications', to: '/admin/applications', icon: 'fileText' },
+    { label: 'File Vault', to: '/admin/files', icon: 'folder' },
+    { label: 'Medical', to: '/admin/pet-health', icon: 'activity' },
+    { label: 'Volunteers', to: '/admin/volunteers', icon: 'users', requiredLevel: ROLES.ADMIN },
+    { label: 'Transport', to: '/admin/transport', icon: 'truck' },
+    { label: 'Timesheets', to: '/admin/time-logs', icon: 'clock' },
+    { label: 'Messages', to: '/admin/messages', icon: 'mail' },
+    { label: 'Donations', to: '/admin/donations', icon: 'dollar' },
+    { label: 'Inventory', to: '/admin/inventory', icon: 'box' },
+    { label: 'Marketing', to: '/admin/marketing', icon: 'megaphone' },
+    { label: 'Intake Kiosk', to: '/admin/kiosk', icon: 'monitor' },
+    { label: 'Smart Kennel Cards', to: '/admin/kennel-displays', icon: 'tag' },
+    { label: 'Event Signage', to: '/admin/event-displays', icon: 'sign' },
+    { label: 'Settings', to: '/admin/settings', icon: 'cog' },
+  ]
+
+  return allItems.filter(item => {
+    if (!item.requiredLevel) return true
+    return can(item.requiredLevel)
+  })
+})
 
 const userName = computed(() => authStore.user?.Name || 'Admin User')
 const userInitials = computed(() => {
@@ -50,18 +61,25 @@ const userInitials = computed(() => {
     .substring(0, 2)
     .toUpperCase()
   })
+
+  // Initialize Pull to Refresh (PWA Only)
+  usePullToRefresh(async () => {
+    // Current reloading logic is handled inside the composable via window.location.reload()
+    // But we can add specific data refetching here if needed in the future
+    console.log('Refreshing data...')
+  })
 </script>
 
 <template>
   <div class="admin-layout">
 
-    <aside class="sidebar" :class="{ 'mobile-open': isMobileMenuOpen }">
+    <aside class="sidebar" :class="{ 'mobile-open': uiStore.adminState.isSidebarOpen }">
       <div class="sidebar-header">
         <img src="/images/idohr-logo.jpg" alt="IDOHR Logo" class="logo" />
         <h2>Admin</h2>
       </div>
 
-      <SidebarNav :items="navItems" variant="dashboard" @click="isMobileMenuOpen = false" />
+      <SidebarNav :items="navItems" variant="dashboard" @click="uiStore.adminState.isSidebarOpen = false" />
 
       <div class="sidebar-footer">
         <div class="user-info">
@@ -75,7 +93,7 @@ const userInitials = computed(() => {
       </div>
     </aside>
 
-    <div v-if="isMobileMenuOpen" class="sidebar-overlay" @click="isMobileMenuOpen = false"></div>
+    <div v-if="uiStore.adminState.isSidebarOpen" class="sidebar-overlay" @click="uiStore.adminState.isSidebarOpen = false"></div>
 
     <div class="main-content">
       <header class="top-bar">

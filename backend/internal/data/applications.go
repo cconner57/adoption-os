@@ -272,7 +272,8 @@ func (m ApplicationModel) GetAll(typeFilter string, statusFilter string, yearFil
 	}
 
 	if statusFilter != "" && statusFilter != "all" {
-		whereClause += fmt.Sprintf(" AND status = $%d", argCount)
+		whereClause += fmt.Sprintf(" AND LOWER(status) = LOWER($%d)", argCount)
+		// args is already correct
 		args = append(args, statusFilter)
 		argCount++
 	}

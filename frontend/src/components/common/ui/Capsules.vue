@@ -55,27 +55,27 @@ const colorClass = computed(() => {
 /* Base Themes (Pastel Background + Strong Text) */
 .capsule--green {
   background-color: var(--color-primary-weak);
-  color: var(--color-primary);
+  color: var(--color-primary-strong);
 }
 
 .capsule--blue {
   background-color: var(--color-secondary-weak);
-  color: var(--color-secondary);
+  color: var(--color-secondary-strong);
 }
 
 .capsule--orange {
   background-color: var(--color-warning-weak);
-  color: var(--color-warning);
+  color: var(--color-warning-strong);
 }
 
 .capsule--red {
   background-color: var(--color-danger-weak);
-  color: var(--color-danger);
+  color: var(--color-danger-strong);
 }
 
 .capsule--purple {
   background-color: var(--color-tertiary-weak);
-  color: var(--color-tertiary);
+  color: var(--color-tertiary-strong);
 }
 
 .capsule--gray {

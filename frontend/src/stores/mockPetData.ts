@@ -8728,7 +8728,7 @@ export const mockPetsData: IPet[] = ([
     details: { status: 'available' },
     profileSettings: { isSpotlightFeatured: true },
     photos: [],
-    
+
     adoption: {},
     foster: {},
     returned: { isReturned: false },
@@ -8745,7 +8745,7 @@ export const mockPetsData: IPet[] = ([
       size: 'medium',
       color: 'Gray & White',
       coatLength: 'short',
-      dateOfBirth: '2025-01-01', 
+      dateOfBirth: '2025-01-01',
       breed: 'Unknown',
     },
     behavior: {

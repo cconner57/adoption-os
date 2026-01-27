@@ -92,12 +92,12 @@ onUnmounted(() => {
 }
 
 .success .icon {
-  background: oklch(from var(--color-primary) l c h / 0.10);
+  background: oklch(from var(--color-primary) l c h / 10%);
   color: var(--color-primary);
 }
 
 .error .icon {
-  background: oklch(from var(--color-danger) l c h / 0.10);
+  background: oklch(from var(--color-danger) l c h / 10%);
   color: var(--color-danger);
 }
 

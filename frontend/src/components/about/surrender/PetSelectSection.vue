@@ -96,7 +96,7 @@ h2 {
 }
 
 .time-card:has(> input:focus-visible) {
-  box-shadow: 0 0 0 3px oklch(from var(--color-secondary) l c h / 0.45);
+  box-shadow: 0 0 0 3px oklch(from var(--color-secondary) l c h / 45%);
 }
 
 .time-card__content small {

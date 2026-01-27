@@ -352,7 +352,7 @@ svg[data-open='true'] .hx-bot {
   text-decoration: none;
   font-weight: 700;
   font-size: 1.1rem;
-  box-shadow: 0 4px 12px oklch(from var(--color-primary) l c h / 0.15);
+  box-shadow: 0 4px 12px oklch(from var(--color-primary) l c h / 15%);
   transition:
     transform 0.2s,
     box-shadow 0.2s;
@@ -360,7 +360,7 @@ svg[data-open='true'] .hx-bot {
 
 .donate-btn:hover {
   transform: translateY(-2px);
-  box-shadow: 0 6px 16px oklch(from var(--color-primary) l c h / 0.20);
+  box-shadow: 0 6px 16px oklch(from var(--color-primary) l c h / 20%);
   background: var(--color-primary-strong);
 }
 

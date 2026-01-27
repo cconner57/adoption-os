@@ -109,6 +109,11 @@ const router = createRouter({
           component: () => import('../pages/admin/Marketing.vue'),
         },
         {
+          path: 'files',
+          name: 'admin-files',
+          component: () => import('../pages/admin/FileVault.vue'),
+        },
+        {
           path: 'transport',
           name: 'admin-transport',
           component: () => import('../pages/admin/Transport.vue'),
@@ -188,7 +193,7 @@ router.beforeEach(async (to, from, next) => {
   }
 
   if (!authStore.user && authStore.isAuthenticated) {
-    
+
   }
 
   if (to.path === '/login' && authStore.isAuthenticated) {
@@ -198,11 +203,11 @@ router.beforeEach(async (to, from, next) => {
 
   if (to.path.startsWith('/admin')) {
     if (!authStore.isAuthenticated) {
-      
+
       next('/login')
       return
     }
-    
+
   }
 
   next()

@@ -33,7 +33,7 @@ const stats = computed(() => [
   },
   {
     id: 'vols',
-    label: 'Volunteers',
+    label: isTablet.value ? 'Volunteers' : 'Active Volunteers',
     value: '16',
     icon: 'users',
     color: 'var(--color-secondary)',
@@ -58,15 +58,11 @@ function handleCardClick(route?: string) {
 
 <template>
   <div class="stats-grid">
-    <div
+    <button
       v-for="stat in stats"
       :key="stat.id"
       class="stat-card"
       @click="handleCardClick(stat.to)"
-      @keydown.enter="handleCardClick(stat.to)"
-      @keydown.space.prevent="handleCardClick(stat.to)"
-      role="button"
-      :tabindex="0"
     >
       <div class="stat-icon-wrapper" :style="{ color: stat.color }">
         <Icon :name="stat.icon" size="40" :viewBox="stat.viewBox" />
@@ -75,7 +71,7 @@ function handleCardClick(route?: string) {
         <span class="stat-value">{{ stat.value }}</span>
         <span class="stat-label">{{ stat.label }}</span>
       </div>
-    </div>
+    </button>
   </div>
 </template>
 
@@ -110,7 +106,7 @@ function handleCardClick(route?: string) {
 
 .stat-card:focus-visible {
   border-color: var(--color-primary);
-  box-shadow: 0 0 0 2px oklch(from var(--color-primary) l c h / 0.20);
+  box-shadow: 0 0 0 2px oklch(from var(--color-primary) l c h / 20%);
 }
 
 .stat-icon-wrapper {

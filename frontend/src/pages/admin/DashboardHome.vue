@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { computed, onMounted, ref } from 'vue'
 
+import ActionItemsWidget from '../../components/admin/dashboard/ActionItemsWidget.vue'
 import DashboardListWidget from '../../components/admin/dashboard/DashboardListWidget.vue'
 import StatisticsGrid from '../../components/admin/dashboard/StatisticsGrid.vue'
 import WeeklySchedule from '../../components/admin/dashboard/WeeklySchedule.vue'
@@ -224,8 +225,13 @@ const newIntakesItems = computed(() => [
 
     <StatisticsGrid :pendingCount="pendingCount" :adoptablePetsCount="adoptablePetsCount" />
 
-    <div class="dashboard-widgets">
-      <WeeklySchedule />
+    <!-- Row 1: Action Items, Low Inventory, Quick Actions -->
+    <div class="dashboard-row-three">
+      <ActionItemsWidget />
+
+      <DashboardListWidget title="Low Inventory" :items="inventoryAlertsItems">
+        <template #icon><Icon name="box" size="20" /></template>
+      </DashboardListWidget>
 
       <div class="widget quick-actions">
         <h3>Quick Actions</h3>
@@ -246,29 +252,35 @@ const newIntakesItems = computed(() => [
       </div>
     </div>
 
-    <div class="widgets-row-three">
+    <!-- Row 2: Weekly Schedule (5 days) & Urgent Medical -->
+    <div class="dashboard-row-two-one">
+      <WeeklySchedule :daysToShow="5" />
       <DashboardListWidget title="Urgent Medical" :items="medicalNeedsItems">
         <template #icon><Icon name="activity" size="20" /></template>
       </DashboardListWidget>
-      <DashboardListWidget title="Low Inventory" :items="inventoryAlertsItems">
-        <template #icon><Icon name="alert" size="20" /></template>
-      </DashboardListWidget>
+    </div>
+
+    <!-- Row 3: Remaining Widgets -->
+    <div class="dashboard-row-three">
       <DashboardListWidget title="Active Now" :items="activeVolunteersItems">
         <template #icon><Icon name="pin" size="20" /></template>
       </DashboardListWidget>
-    </div>
-
-    <div class="widgets-row-three">
       <DashboardListWidget title="Recent Applications" :items="recentApplicationsItems">
         <template #icon><Icon name="clipboard" size="20" /></template>
       </DashboardListWidget>
       <DashboardListWidget title="Recent Donations" :items="recentDonationsItems">
         <template #icon><Icon name="donate" size="20" /></template>
       </DashboardListWidget>
-      <DashboardListWidget title="New Intakes" :items="newIntakesItems">
+
+    </div>
+
+    <!-- Row 4: New Intakes (Optional/Overflow) -->
+    <div class="dashboard-row-three">
+       <DashboardListWidget title="New Intakes" :items="newIntakesItems">
         <template #icon><Icon name="paw" size="20" /></template>
       </DashboardListWidget>
     </div>
+
   </div>
 </template>
 
@@ -304,58 +316,64 @@ const newIntakesItems = computed(() => [
   font-size: 1.1rem;
 }
 
-.dashboard-widgets {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 24px;
-  min-width: 0; /* Prevent grid blowout */
-
-  @media (width <= 900px) {
-    grid-template-columns: 1fr;
-    gap: 16px; /* Tighter gap for mobile */
-  }
-}
-
-.widgets-row-three {
+/* 3-Column Grid */
+.dashboard-row-three {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 24px;
-  min-width: 0; /* Prevent grid blowout */
+  min-width: 0;
 
-  @media (width <= 900px) {
+  @media (width <= 1100px) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  @media (width <= 768px) {
     grid-template-columns: 1fr;
+    gap: 16px;
+  }
+}
+
+/* 2:1 Split Grid (Calendar takes 2/3) */
+.dashboard-row-two-one {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 24px;
+  min-width: 0;
+
+  @media (width <= 1100px) {
+    grid-template-columns: 1fr;
+  }
+
+  @media (width <= 768px) {
     gap: 16px;
   }
 }
 
 .widget {
   background: var(--text-inverse);
-  padding: 24px;
+  padding: 16px; /* Reduced from 24px */
   border-radius: 16px;
   border: 1px solid var(--border-color);
   box-shadow: 0 4px 6px rgb(0 0 0 / 5%);
   display: flex;
   flex-direction: column;
-  min-width: 0; /* Essential for grid items to shrink */
-  overflow: hidden; /* Prevent internal content from spilling out */
+  min-width: 0;
+  overflow: hidden;
+  min-height: 450px; /* Match other widgets */
 }
 
 .widget h3 {
-  font-size: 1.1rem;
+  font-size: 1rem; /* Reduced from 1.1rem */
   margin: 0;
   font-weight: 700;
   color: var(--text-primary);
 }
 
-.quick-actions {
-  grid-column: span 1;
-}
-
 .action-buttons {
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 8px; /* Reduced from 12px */
   flex: 1;
-  margin-top: 16px;
+  margin-top: 12px; /* Reduced from 16px */
 }
 </style>

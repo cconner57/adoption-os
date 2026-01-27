@@ -15,6 +15,7 @@ const {
   filteredApplications,
   pendingGroup,
   approvedGroup,
+  deletedGroup,
   resendingAppId,
   resendSuccessAppId,
   fetchApplications,
@@ -34,6 +35,7 @@ const expandedId = ref<string | null>(null)
 const isPendingOpen = ref(true)
 const isApprovedOpen = ref(true)
 const isFiltersOpen = ref(false)
+const isDeletedOpen = ref(false)
 
 const toggleExpand = (id: string) => {
   if (expandedId.value === id) {
@@ -112,7 +114,7 @@ onMounted(() => {
         <span class="tab-icon">{{ tab.icon }}</span>
         {{ tab.label }}
         <span class="count-badge">
-          {{ applications.filter((a) => a.type === tab.id && a.status === 'pending').length }}
+          {{ applications.filter((a) => a.type === tab.id && a.status.toLowerCase() === 'pending').length }}
         </span>
       </button>
     </div>
@@ -127,7 +129,7 @@ onMounted(() => {
 
       <template v-else>
         <!-- Pending / Denied / Needs Info Section -->
-        <div class="section-container" v-if="pendingGroup.length > 0">
+        <div class="section-container">
           <div class="section-header" @click="isPendingOpen = !isPendingOpen">
              <div class="section-title-group">
               <h2>Pending & Denied</h2>
@@ -139,7 +141,11 @@ onMounted(() => {
           </div>
 
           <div v-if="isPendingOpen" class="section-content">
+            <div v-if="pendingGroup.length === 0" class="empty-section-state">
+              No pending applications
+            </div>
             <ApplicationCard
+              v-else
               v-for="app in pendingGroup"
               :key="app.id"
               :app="app"
@@ -177,6 +183,35 @@ onMounted(() => {
               :isResending="resendingAppId === app.id"
               :isResendSuccess="resendSuccessAppId === app.id"
               @toggle="toggleExpand(app.id)"
+              @update-status="updateStatus"
+              @view-original="viewOriginal"
+              @resend-email="resendEmail"
+            />
+          </div>
+        </div>
+
+        <!-- Deleted / Expired Section -->
+        <div class="section-container" v-if="deletedGroup.length > 0">
+           <div class="section-header" @click="isDeletedOpen = !isDeletedOpen">
+             <div class="section-title-group">
+              <h2>Deleted / Expired</h2>
+              <span class="count-badge">{{ deletedGroup.length }}</span>
+             </div>
+             <div class="expand-arrow" :class="{ 'rotated': !isDeletedOpen }">
+               ▼
+             </div>
+          </div>
+
+          <div v-if="isDeletedOpen" class="section-content">
+            <ApplicationCard
+              v-for="app in deletedGroup"
+              :key="app.id"
+              :app="app"
+              :expanded="false"
+              :isExpandedId="false"
+              :isResending="resendingAppId === app.id"
+              :isResendSuccess="resendSuccessAppId === app.id"
+              @toggle="() => {}"
               @update-status="updateStatus"
               @view-original="viewOriginal"
               @resend-email="resendEmail"
@@ -440,5 +475,16 @@ onMounted(() => {
 @keyframes fadeIn {
   from { opacity: 0; transform: translateY(-5px); }
   to { opacity: 1; transform: translateY(0); }
+}
+
+.empty-section-state {
+  text-align: center;
+  padding: 20px;
+  color: var(--color-neutral-text-soft);
+  font-size: 0.9rem;
+  font-style: italic;
+  background: #fff;
+  border-radius: 8px;
+  border: 1px dashed #e5e7eb;
 }
 </style>

@@ -336,14 +336,14 @@ function removePhoto(index: number) {
   cursor: pointer;
   color: var(--color-primary);
   transition: all 0.2s;
-  background: oklch(from var(--color-primary) l c h / 0.2);
+  background: oklch(from var(--color-primary) l c h / 20%);
   padding: 8px;
   text-align: center;
 }
 
 .add-photo-btn:hover,
 .add-photo-btn.is-dragging {
-  background: oklch(from var(--color-primary) l c h / 0.8);
+  background: oklch(from var(--color-primary) l c h / 80%);
   border-color: var(--color-primary);
   border-style: solid;
 }

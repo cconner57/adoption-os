@@ -9,15 +9,15 @@
   /* ========================================================================
      Strict 8-Color Palette (OKLCH)
      ======================================================================== */
-  --color-primary: oklch(0.65 0.16 195); /* Vibrant Teal - Theme 1 */
-  --color-secondary: oklch(0.55 0.22 260); /* Deep Blue/Purple - Theme 2 */
-  --color-tertiary: oklch(0.65 0.18 310); /* Pink/Purple - Theme 3 */
-  --color-danger: oklch(0.6 0.2 20); /* Vibrant Red - Alerts/Error */
-  --color-warning: oklch(0.75 0.18 85); /* Warm Yellow - Warning */
-  --color-neutral: oklch(0.25 0.04 260); /* Cool Dark Grey - Neutral/Text */
+  --color-primary: oklch(65.66% 0.1117 200.913deg); /* User-specified Brand Teal */
+  --color-secondary: oklch(50% 0.22 260deg); /* Deep Blue/Purple - Fixed typo & darkened */
+  --color-tertiary: oklch(55% 0.18 310deg); /* Pink/Purple - Darkened */
+  --color-danger: oklch(60% 0.2 20deg); /* Vibrant Red - Alerts/Error */
+  --color-warning: oklch(75% 0.18 85deg); /* Warm Yellow - Warning */
+  --color-neutral: oklch(25% 0.04 260deg); /* Cool Dark Grey - Neutral/Text */
   --text-primary: var(--color-neutral); /* Main text color */
-  --text-secondary: oklch(0.45 0.06 260); /* Cool Grey text color */
-  --text-inverse: oklch(0.99 0.01 260); /* Cool White - Inverse text/Background */
+  --text-secondary: oklch(40% 0.06 260deg); /* Cool Grey text color - Darkened from 45% */
+  --text-inverse: oklch(99% 0.01 260deg); /* Cool White - Inverse text/Background */
 
   /* Color Variations */
   --color-primary-light: oklch(from var(--color-primary) 93% c h);
@@ -41,21 +41,21 @@
   --color-warning-hover: oklch(from #deb024 95% c h);
   --color-neutral-hover: oklch(from #1f2121 95% c h);
 
-  /* Weak Variants (Backgrounds) - 95% Lightness */
-  --color-primary-weak: oklch(from #00a5ad 95% c h);
-  --color-secondary-weak: oklch(from #1976d2 95% c h);
-  --color-tertiary-weak: oklch(from #6b5b95 95% c h);
-  --color-danger-weak: oklch(from #c73a67 95% c h);
-  --color-warning-weak: oklch(from #deb024 95% c h);
-  --color-neutral-weak: oklch(from #1f2121 95% c h);
+  /* Weak Variants (Backgrounds) - 96% Lightness, Low Chroma (Pastel) */
+  --color-primary-weak: oklch(from #00a5ad 96% 0.04 h);
+  --color-secondary-weak: oklch(from #1976d2 96% 0.04 h);
+  --color-tertiary-weak: oklch(from #6b5b95 96% 0.04 h);
+  --color-danger-weak: oklch(from #c73a67 96% 0.04 h);
+  --color-warning-weak: oklch(from #deb024 96% 0.04 h);
+  --color-neutral-weak: oklch(from #1f2121 96% 0.02 h); /* Even lower for neutral */
 
   /* Surface Variants (Subtle Backgrounds) - 98% Lightness */
-  --color-primary-surface: oklch(from #00a5ad 98% c h);
-  --color-secondary-surface: oklch(from #1976d2 98% c h);
-  --color-tertiary-surface: oklch(from #6b5b95 98% c h);
-  --color-danger-surface: oklch(from #c73a67 98% c h);
-  --color-warning-surface: oklch(from #deb024 98% c h);
-  --color-neutral-surface: oklch(from #1f2121 98% c h);
+  --color-primary-surface: oklch(from #00a5ad 98% 0.02 h);
+  --color-secondary-surface: oklch(from #1976d2 98% 0.02 h);
+  --color-tertiary-surface: oklch(from #6b5b95 98% 0.02 h);
+  --color-danger-surface: oklch(from #c73a67 98% 0.02 h);
+  --color-warning-surface: oklch(from #deb024 98% 0.02 h);
+  --color-neutral-surface: oklch(from #1f2121 98% 0.01 h);
 
   /* Border Variants - 85% Lightness */
   --color-primary-border: oklch(from #00a5ad 85% c h);
@@ -122,30 +122,42 @@
 }
 
 
-/* Global Scrollbar Styling */
+/* Global Scrollbar Styling - Hide for Native Feel but allow scroll */
 ::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
+  width: 0;
+  background: transparent;
 }
 
-::-webkit-scrollbar-track {
-  background: #fff;
-}
-
-::-webkit-scrollbar-thumb {
-  background-color: #d1d5db;
-  border-radius: 4px;
-  border: 2px solid #fff; /* Creates padding effect */
-}
-
-::-webkit-scrollbar-thumb:hover {
-  background-color: #9ca3af;
-}
-
-/* Firefox Scrollbar Support merged */
 html {
-  scrollbar-width: thin;
-  scrollbar-color: #d1d5db #fff;
+  scrollbar-width: none;
+  -ms-overflow-style: none; /* IE 10+ */
+  background-color: var(--text-inverse); /* Cool White to match Admin pages and prevent black flicker */
+}
+
+/* Base Native App Feel */
+body {
+  background-color: var(--text-inverse); /* Cool White to match Admin pages and prevent black flicker */
+  -webkit-tap-highlight-color: transparent;
+  user-select: none;
+  overscroll-behavior-y: none; /* Prevent pull-to-refresh on body if implemented elsewhere */
+}
+
+/* Allow text selection on content that matters */
+p, h1, h2, h3, h4, h5, h6, span, td, th, li, a {
+  user-select: text;
+}
+
+/* Fix iOS Zoom on Inputs */
+input, textarea, select, button {
+  font-size: 16px !important; /* Forces 16px to prevent zoom */
+  max-width: 100%;
+}
+
+/* Button & Interactive - No Selection */
+button, .btn, a.btn, label, .clickable {
+  user-select: none;
+  cursor: pointer;
+  touch-action: manipulation; /* Improves tap response */
 }
 
 /* View Transitions */
@@ -168,6 +180,7 @@ html {
     opacity: 0;
     transform: translateY(10px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);
@@ -179,6 +192,7 @@ html {
     opacity: 1;
     transform: translateY(0);
   }
+
   to {
     opacity: 0;
     transform: translateY(-10px);

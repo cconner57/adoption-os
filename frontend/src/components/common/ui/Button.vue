@@ -85,6 +85,7 @@ const classes = computed(() => {
 button {
   display: inline-flex;
   align-items: center;
+  gap: 6px;
   font-weight: 600;
   border-radius: 6px;
   transition: all 0.2s ease;

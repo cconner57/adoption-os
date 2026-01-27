@@ -25,6 +25,7 @@ const navItems = [
   { label: 'Calendar', to: '/admin/calendar', icon: 'calendar' },
   { label: 'Pet Records', to: '/admin/pets', icon: 'pawPrint', viewBox: '0 0 128 128' },
   { label: 'Applications', to: '/admin/applications', icon: 'fileText' },
+  { label: 'File Vault', to: '/admin/files', icon: 'folder' },
   { label: 'Medical', to: '/admin/pet-health', icon: 'activity' },
   { label: 'Volunteers', to: '/admin/volunteers', icon: 'users' },
   { label: 'Transport', to: '/admin/transport', icon: 'truck' },
@@ -111,7 +112,7 @@ const userInitials = computed(() => {
 <style scoped>
 .admin-layout {
   display: flex;
-  height: 100vh;
+  height: 100dvh;
   width: 100vw;
   background-color: #f3f4f6;
   overflow: hidden;
@@ -177,7 +178,7 @@ const userInitials = computed(() => {
     justify-content: center;
     font-weight: 700;
     font-size: 0.9rem;
-    box-shadow: 0 2px 8px oklch(from var(--color-tertiary) l c h / 0.20);
+    box-shadow: 0 2px 8px oklch(from var(--color-tertiary) l c h / 20%);
   }
 
   .details {

@@ -1311,7 +1311,7 @@ function getStatusColors(status: string) {
     filter: none;
     background: var(--text-inverse);
     border-color: var(--color-warning);
-    box-shadow: 0 4px 6px oklch(from var(--color-warning) l c h / 0.10);
+    box-shadow: 0 4px 6px oklch(from var(--color-warning) l c h / 10%);
   }
 }
 

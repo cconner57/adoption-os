@@ -206,7 +206,7 @@ onUnmounted(() => {
 
 .combobox-wrapper:focus-within {
   border-color: var(--color-secondary);
-  box-shadow: 0 0 0 2px oklch(from var(--color-secondary) l c h / 0.10);
+  box-shadow: 0 0 0 2px oklch(from var(--color-secondary) l c h / 10%);
 }
 
 .selected-tags {

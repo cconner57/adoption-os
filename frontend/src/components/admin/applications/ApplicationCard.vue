@@ -57,8 +57,9 @@ const displayFields = computed(() => {
     :class="{
       unread: app.status === 'pending',
       expanded: expanded,
+      'no-action': app.status === 'autodeleted'
     }"
-    @click="$emit('toggle')"
+    @click="app.status !== 'autodeleted' && $emit('toggle')"
   >
 
     <div class="card-summary">
@@ -82,7 +83,7 @@ const displayFields = computed(() => {
           :color="getStatusColor(app.status)"
           size="sm"
         />
-        <div class="expand-icon" :class="{ rotated: expanded }">▼</div>
+        <div v-if="app.status !== 'autodeleted'" class="expand-icon" :class="{ rotated: expanded }">▼</div>
       </div>
     </div>
 
@@ -169,7 +170,7 @@ const displayFields = computed(() => {
         hours.
       </div>
 
-      <div class="full-application" v-if="app.fullApplication">
+      <div class="full-application" v-if="app.fullApplication && app.status !== 'autodeleted'">
         <h4>Application Information</h4>
         <div class="qa-grid">
           <div v-for="field in displayFields" :key="field.key" class="qa-item">
@@ -231,6 +232,15 @@ const displayFields = computed(() => {
   background: #fff;
   border-color: #d1d5db;
   box-shadow: 0 8px 24px rgb(0 0 0 / 8%);
+  cursor: default;
+}
+
+.app-card.no-action {
+  cursor: default;
+  background: #fafafa;
+}
+
+.app-card.no-action .card-summary {
   cursor: default;
 }
 

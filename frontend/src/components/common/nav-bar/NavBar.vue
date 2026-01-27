@@ -37,13 +37,13 @@ const isTablet = useIsTablet()
     <nav v-else class="nav-blurred" aria-label="Primary navigation">
       <div class="nav-container">
         <section class="nav-links">
-          <RouterLink to="/" class="nav-item" active-class="active"><p>Home</p></RouterLink>
+          <RouterLink to="/" class="nav-item" active-class="active"><p data-text="Home">Home</p></RouterLink>
           <RouterLink
             to="/about"
             class="nav-item"
             active-class="active"
             :class="{ active: route.path.startsWith('/surrender') }"
-            ><p>About</p></RouterLink
+            ><p data-text="About">About</p></RouterLink
           >
           <RouterLink
             to="/adopt"
@@ -52,10 +52,10 @@ const isTablet = useIsTablet()
             :class="{
               active: route.path.startsWith('/adopt') || route.path.startsWith('/pet-adoption'),
             }"
-            ><p>Adopt</p></RouterLink
+            ><p data-text="Adopt">Adopt</p></RouterLink
           >
           <RouterLink to="/volunteer" class="nav-item" active-class="active"
-            ><p>Volunteer</p></RouterLink
+            ><p data-text="Volunteer">Volunteer</p></RouterLink
           >
         </section>
         <Button title="Donate" color="green" @click="goToDonate(router)" />
@@ -67,6 +67,7 @@ const isTablet = useIsTablet()
 <style scoped lang="css">
 .nav-bar {
   nav {
+    view-transition-name: page-navbar;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -75,7 +76,7 @@ const isTablet = useIsTablet()
     top: 0;
     left: 0;
     right: 0;
-    z-index: 1000;
+    z-index: 2000;
     width: 100%;
     margin: 0 auto;
     overflow: hidden;
@@ -107,6 +108,17 @@ const isTablet = useIsTablet()
         p {
           font-size: 1.2rem;
           font-weight: 500;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+        }
+
+        p::after {
+          content: attr(data-text);
+          font-weight: 600;
+          height: 0;
+          overflow: hidden;
+          visibility: hidden;
         }
       }
 
@@ -127,11 +139,10 @@ const isTablet = useIsTablet()
   }
 
   .nav-blurred {
-    background-color: hsl(
-      from var(--color-primary) h s 25% / 85%
-    );
+    background-color: oklch(52% 0.10 205deg / 85.1%); /* Final User-specified OKLCH (Medium-Dark Teal) */
     backdrop-filter: blur(10px);
-    backdrop-filter: blur(10px);
+    /* stylelint-disable-next-line property-no-vendor-prefix */
+    -webkit-backdrop-filter: blur(10px);
     transition:
       background-color 0.3s ease,
       backdrop-filter 0.3s ease;

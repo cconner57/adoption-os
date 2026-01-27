@@ -26,11 +26,15 @@ export function useApplications() {
 
   // Group helpers
   const pendingGroup = computed(() => {
-    return filteredApplications.value.filter(app => ['pending', 'denied', 'needs_info', 'autodeleted'].includes(app.status))
+    return filteredApplications.value.filter(app => ['pending', 'denied', 'needs_info'].includes(app.status))
   })
 
   const approvedGroup = computed(() => {
     return filteredApplications.value.filter(app => app.status === 'approved')
+  })
+
+  const deletedGroup = computed(() => {
+    return filteredApplications.value.filter(app => app.status === 'autodeleted')
   })
 
   const fetchApplications = async (autoFocus = false) => {
@@ -57,6 +61,7 @@ export function useApplications() {
       }
 
       // Sort Newest first
+      rawApps.forEach(a => console.log('Parsed App:', a.id, a.status, a.type)) // DEBUG
       rawApps = rawApps.sort((a, b) => {
         return new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
       })
@@ -169,6 +174,7 @@ export function useApplications() {
     filteredApplications,
     pendingGroup,
     approvedGroup,
+    deletedGroup,
     resendingAppId,
     resendSuccessAppId,
     fetchApplications,

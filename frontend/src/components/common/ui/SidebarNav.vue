@@ -140,10 +140,15 @@ function handleClick(item: NavItem, navigate?: (e: MouseEvent) => void) {
 }
 
 .nav-item.active {
-  background-color: oklch(from var(--color-secondary) l c h / 0.12);
-  color: var(--color-secondary);
-  border-left-color: var(--color-secondary);
-  font-weight: 600;
+  background-color: var(--color-neutral-weak);
+  color: var(--text-primary);
+  border-left-color: var(--color-primary);
+  font-weight: 700;
+}
+
+.nav-item.active .icon {
+  color: var(--color-primary); /* Use primary brand color for icon */
+  opacity: 1;
 }
 
 .nav-item .icon {

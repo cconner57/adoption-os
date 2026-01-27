@@ -15,6 +15,15 @@ const formatTime = (timeStr: string) => {
   return `${hour12}:${m} ${ampm}`
 }
 
+const props = withDefaults(
+  defineProps<{
+    daysToShow?: number
+  }>(),
+  {
+    daysToShow: 7,
+  },
+)
+
 const getWeekRange = () => {
   const today = new Date()
   const day = today.getDay()
@@ -43,7 +52,7 @@ const weekDays = computed(() => {
   const { mondayObject } = getWeekRange()
   const shifts = volunteerStore.weeklyShifts || []
 
-  return days.map((name, index) => {
+  return days.slice(0, props.daysToShow).map((name, index) => {
 
     const currentDay = new Date(mondayObject)
     currentDay.setDate(mondayObject.getDate() + index)
@@ -156,6 +165,27 @@ const weekDays = computed(() => {
   flex-wrap: wrap; /* Allow legend to wrap on mobile */
 }
 
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+}
+
+.dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+.dot.feeding { background-color: var(--color-secondary); }
+.dot.adoption { background-color: var(--color-tertiary); }
+.dot.transport { background-color: var(--color-warning); }
+.dot.vet { background-color: var(--color-danger); }
+.dot.default { background-color: var(--color-neutral-text-soft); }
+
 .calendar-scroll-container {
   overflow-x: auto;
   width: 100%;
@@ -164,9 +194,9 @@ const weekDays = computed(() => {
 
 .calendar-grid {
   display: grid;
-  grid-template-columns: repeat(7, 1fr);
+  grid-template-columns: repeat(v-bind('props.daysToShow'), 1fr);
   gap: 12px;
-  min-width: 800px; /* Force minimum width to trigger scroll inside container */
+  min-width: 0; /* Let it shrink if needed within the container */
 }
 
 .calendar-day {
@@ -183,7 +213,7 @@ const weekDays = computed(() => {
 .calendar-day.today {
   background-color: var(--text-inverse);
   border-color: oklch(from var(--color-secondary) 70% c h);
-  box-shadow: 0 0 0 2px oklch(from var(--color-secondary) l c h / 0.10);
+  box-shadow: 0 0 0 2px oklch(from var(--color-secondary) l c h / 10%);
 }
 
 .calendar-day.today .day-header {

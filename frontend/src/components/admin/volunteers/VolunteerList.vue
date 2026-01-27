@@ -308,7 +308,7 @@ function selectVolunteer(vol: IVolunteer) {
 
   &.active {
     background: var(--color-primary);
-    box-shadow: 0 0 4px oklch(from var(--color-primary) l c h / 0.40);
+    box-shadow: 0 0 4px oklch(from var(--color-primary) l c h / 40%);
   }
 
   &.inactive {

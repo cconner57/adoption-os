@@ -2,8 +2,9 @@
 import { ref } from 'vue'
 
 import type { IPet } from '../../../models/common'
-import { calculateAge } from '../../../utils/date'
-import { Button } from '../../common/ui'
+import { calculateAge, formatDigitDate, formatIntakeDate } from '../../../utils/date'
+import { formatSpayNeuter, getSpayNeuterLabel, getStatusColor } from '../../../utils/pet'
+import { Button, Icon } from '../../common/ui'
 
 defineProps<{
   pet: IPet
@@ -17,52 +18,6 @@ const emit = defineEmits<{
 }>()
 
 const isExpanded = ref(false)
-
-function getStatusColor(status: string) {
-  const map: Record<string, string> = {
-    available: 'green',
-    'adoption-pending': 'orange',
-    adopted: 'blue',
-    foster: 'purple',
-    hold: 'red',
-    intake: 'gray',
-    archived: 'gray',
-  }
-  return map[status] || 'gray'
-}
-
-function formatDigitDate(dateString?: string | null) {
-  if (!dateString) return '-'
-  const date = new Date(dateString)
-  if (Number.isNaN(date.getTime())) return '-'
-
-  // Format as MM/DD/YYYY
-  const mm = String(date.getMonth() + 1).padStart(2, '0')
-  const dd = String(date.getDate()).padStart(2, '0')
-  const yyyy = date.getFullYear()
-
-  return `${mm}/${dd}/${yyyy}`
-}
-
-function formatSpayNeuter(pet: IPet) {
-  if (!pet.medical.spayedOrNeutered) {
-    return 'No'
-  }
-
-  const dateStr = pet.medical.spayedOrNeuteredDate
-  if (dateStr) {
-     return formatDigitDate(dateStr)
-  }
-
-  return 'Yes'
-}
-
-function getSpayNeuterLabel(sex?: string) {
-  const s = sex?.toLowerCase()
-  if (s === 'female') return 'Spayed'
-  if (s === 'male') return 'Neutered'
-  return 'Spayed/Neutered'
-}
 </script>
 
 
@@ -164,7 +119,7 @@ function getSpayNeuterLabel(sex?: string) {
             </div>
             <div class="detail-row">
               <span class="label">Intake Date:</span>
-              <span class="value">{{ pet.details.intakeDate || '-' }}</span>
+              <span class="value">{{ formatIntakeDate(pet.details.intakeDate) }}</span>
             </div>
 
             <template v-if="pet.details.status === 'foster'">
@@ -197,12 +152,17 @@ function getSpayNeuterLabel(sex?: string) {
           <div class="card-actions">
             <Button
               v-if="pet.details.status === 'available'"
-              title="Adopted"
               color="blue"
               full-width
               :onClick="() => emit('mark-adopted', pet)"
-            />
-            <Button title="Edit Pet" color="white" full-width :onClick="() => emit('edit', pet)" />
+            >
+              <Icon name="check" size="16" />
+              <span>Adopted</span>
+            </Button>
+            <Button color="white" full-width :onClick="() => emit('edit', pet)">
+              <Icon name="edit-2" size="16" />
+              <span>Edit Pet</span>
+            </Button>
           </div>
         </div>
       </div>

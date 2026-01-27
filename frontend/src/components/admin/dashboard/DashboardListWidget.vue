@@ -5,7 +5,7 @@ export interface IListItem {
   id: number | string
   title: string
   subtitle: string
-  
+
   statusLabel?: string
   statusColor?: string
   statusTextColor?: string
@@ -29,7 +29,7 @@ defineProps<{
           <span class="item-title">{{ item.title }}</span>
           <span class="item-subtitle">{{ item.subtitle }}</span>
         </div>
-        
+
         <slot name="action" :item="item">
           <Capsules
             v-if="item.statusLabel"
@@ -47,16 +47,17 @@ defineProps<{
 <style scoped>
 .widget {
   background: var(--text-inverse);
-  padding: 24px;
+  padding: 16px; /* Reduced from 24px */
   border-radius: 16px;
   border: 1px solid var(--border-color);
   box-shadow: 0 4px 6px rgb(0 0 0 / 5%);
   display: flex;
   flex-direction: column;
+  min-height: 450px; /* Match Action Items widget height */
 }
 
 .widget h3 {
-  font-size: 1.1rem;
+  font-size: 1rem; /* Reduced from 1.1rem */
   margin: 0;
   font-weight: 700;
   color: var(--text-primary);
@@ -66,9 +67,9 @@ defineProps<{
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 16px;
+  margin-bottom: 12px; /* Reduced from 16px */
   border-bottom: 1px solid var(--border-color);
-  padding-bottom: 12px;
+  padding-bottom: 8px; /* Reduced from 12px */
 }
 
 .list-widget {
@@ -77,14 +78,14 @@ defineProps<{
   margin: 0;
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 8px; /* Reduced from 12px */
 }
 
 .list-item {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding-bottom: 12px;
+  padding-bottom: 8px; /* Reduced from 12px */
   border-bottom: 1px solid var(--border-color);
 }
 
@@ -100,12 +101,12 @@ defineProps<{
 
 .item-title {
   font-weight: 600;
-  font-size: 0.95rem;
+  font-size: 0.9rem; /* Reduced from 0.95rem */
   color: var(--text-primary);
 }
 
 .item-subtitle {
-  font-size: 0.85rem;
+  font-size: 0.8rem; /* Reduced from 0.85rem */
   color: var(--text-secondary);
 }
 </style>

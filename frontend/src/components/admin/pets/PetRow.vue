@@ -3,7 +3,7 @@
 import { computed } from 'vue'
 
 import type { IPet } from '../../../models/common'
-import { calculateAge,formatDate } from '../../../utils/date'
+import { calculateAge, formatDigitDate, formatIntakeDate } from '../../../utils/date'
 import { Button, Icon } from '../../common/ui'
 
 const props = defineProps<{
@@ -36,7 +36,7 @@ function getStatusColor(status: string) {
 }
 
 function formatDoB(dateString?: string | null) {
-  return formatDate(dateString)
+  return formatDigitDate(dateString)
 }
 
 function formatCurrency(amount?: number | null) {
@@ -142,14 +142,14 @@ const colCount = computed(() => {
       <Icon
         v-if="pet.medical?.spayedOrNeutered"
         name="check"
-        size="18"
+        size="22"
         style="color: var(--color-primary)"
         title="Spayed/Neutered"
       />
       <Icon
         v-else
         name="cross"
-        size="18"
+        size="22"
         class="text-muted"
         title="Not Spayed/Neutered"
       />
@@ -173,7 +173,7 @@ const colCount = computed(() => {
     </td>
     <td v-if="visibleColumns.intake">
       <span v-if="pet.details?.intakeDate">
-        {{ pet.details.intakeDate }}
+        {{ formatIntakeDate(pet.details.intakeDate) }}
       </span>
       <span v-else class="text-muted">-</span>
     </td>
@@ -197,19 +197,25 @@ const colCount = computed(() => {
       <div class="row-actions" @click.stop>
         <Button
           v-if="pet.details.status === 'available'"
-          title="Adopted"
-          color="blue"
           size="small"
-          :onClick="() => emit('mark-adopted', pet)"
-          style="padding: 4px 10px; height: 30px; font-size: 0.85rem"
-        />
+          variant="secondary"
+          color="green"
+          title="Adopt"
+          class="row-btn"
+          @click="emit('mark-adopted', pet)"
+        >
+          <span>Adopted</span>
+        </Button>
         <Button
-          title="Edit"
-          color="white"
           size="small"
-          :onClick="() => emit('edit', pet)"
-          style="padding: 4px 10px; height: 30px; font-size: 0.85rem"
-        />
+          variant="secondary"
+          color="white"
+          title="Edit"
+          class="row-btn"
+          @click="emit('edit', pet)"
+        >
+          <span>Edit</span>
+        </Button>
       </div>
     </td>
   </tr>
@@ -300,7 +306,7 @@ const colCount = computed(() => {
             <h4>Adoption & Status</h4>
             <div class="detail-item">
               <span class="label">Intake Date:</span>
-              <span class="value">{{ pet.details.intakeDate || '-' }}</span>
+              <span class="value">{{ formatIntakeDate(pet.details.intakeDate) }}</span>
             </div>
             <div class="detail-item">
               <span class="label">Location:</span>
@@ -660,6 +666,7 @@ td {
 .line-clamp-5 {
   display: -webkit-box;
   -webkit-line-clamp: 5;
+  line-clamp: 5;
   -webkit-box-orient: vertical;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -675,6 +682,13 @@ td {
   gap: 4px;
   margin-top: 4px;
   align-items: flex-start;
+}
+
+
+
+.row-btn {
+  min-width: 90px;
+  justify-content: center;
 }
 
 .setting-tag {
@@ -722,8 +736,8 @@ td {
 }
 
 .status-badge.green {
-  background-color: var(--color-primary-weak);
-  color: var(--color-primary);
+  background-color: var(--color-neutral-weak);
+  color: var(--text-primary);
 }
 
 .status-badge.orange {
@@ -773,10 +787,10 @@ td {
 
 .row-actions {
   display: flex;
-  flex-direction: column;
+  flex-direction: row; /* Changed from column */
   gap: 8px;
-  justify-content: center;
-  align-items: stretch;
+  justify-content: flex-end; /* Align to right */
+  align-items: center;
 }
 
 .icon-btn {
@@ -796,6 +810,29 @@ td {
 .icon-btn.edit:hover {
   background: var(--color-secondary-weak);
   color: var(--color-secondary);
+}
+
+.action-btn {
+  background: var(--color-neutral-surface);
+  color: var(--text-secondary);
+  border: 1px solid var(--border-color);
+}
+
+.action-btn:hover {
+  background: var(--color-neutral-weak);
+  color: var(--text-primary);
+  border-color: var(--color-neutral-border-strong);
+}
+
+.action-btn.adopt {
+  color: var(--color-primary);
+  background: var(--color-primary-weak);
+  border-color: transparent;
+}
+
+.action-btn.adopt:hover {
+  background: var(--color-primary);
+  color: var(--text-inverse);
 }
 
 .icon-btn.archive:hover {

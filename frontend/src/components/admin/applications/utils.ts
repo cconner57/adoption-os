@@ -24,6 +24,8 @@ export const getStatusColor = (status: string) => {
       return 'red'
     case 'needs_info':
       return 'orange'
+    case 'autodeleted':
+      return 'red'
     default:
       return 'neutral'
   }
@@ -37,6 +39,8 @@ export const getStatusText = (status: string) => {
       return 'Denied'
     case 'needs_info':
       return 'Needs Info'
+    case 'autodeleted':
+      return 'Auto-Deleted'
     default:
       return 'Pending'
   }

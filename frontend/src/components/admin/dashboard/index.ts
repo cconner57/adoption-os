@@ -1,0 +1,5 @@
+export { default as ActionItemsWidget } from './ActionItemsWidget.vue'
+export { default as DashboardListWidget } from './DashboardListWidget.vue'
+export { default as StatCard } from './StatCard.vue'
+export { default as StatisticsGrid } from './StatisticsGrid.vue'
+export { default as WeeklySchedule } from './WeeklySchedule.vue'

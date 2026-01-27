@@ -177,7 +177,7 @@ onUnmounted(() => {
 
   &.is-open {
     border-color: var(--color-primary);
-    box-shadow: 0 0 0 2px oklch(from var(--color-primary) l c h / 0.20);
+    box-shadow: 0 0 0 2px oklch(from var(--color-primary) l c h / 20%);
   }
 }
 

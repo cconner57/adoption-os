@@ -4,7 +4,7 @@ import PetRow from './PetRow.vue'
 
 defineProps<{
   pets: IPet[]
-  visibleColumns: Record<string, boolean>  
+  visibleColumns: Record<string, boolean>
   expandedPetId: string | null
   statusFilter: string
 }>()
@@ -63,26 +63,16 @@ defineEmits<{
   background: var(--text-inverse);
   border-radius: 12px;
   box-shadow: 0 4px 6px rgb(0 0 0 / 5%);
-  overflow: auto; 
+  overflow: auto;
   flex: 1;
   z-index: 1;
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE */
 
   &::-webkit-scrollbar {
-    width: 8px;
-    height: 8px;
-  }
-
-  &::-webkit-scrollbar-track {
-    background: #f1f5f9;
-  }
-
-  &::-webkit-scrollbar-thumb {
-    background: #cbd5e1;
-    border-radius: 4px;
-  }
-
-  &::-webkit-scrollbar-thumb:hover {
-    background: #94a3b8;
+    width: 0;
+    height: 0;
+    background: transparent;
   }
 }
 
@@ -90,7 +80,7 @@ defineEmits<{
   width: 100%;
   border-collapse: collapse;
   text-align: left;
-  table-layout: fixed; 
+  table-layout: fixed;
 
   th {
     background: var(--color-neutral-surface);
@@ -103,7 +93,7 @@ defineEmits<{
     top: 0;
     z-index: 10;
     white-space: nowrap;
-    overflow: hidden; 
+    overflow: hidden;
     text-overflow: ellipsis;
   }
 }
@@ -155,7 +145,7 @@ defineEmits<{
 }
 
 .col-actions {
-  width: 100px;
+  width: 210px;
   text-align: right;
 }
 

@@ -888,12 +888,16 @@ func (m PetModel) SeedAdoptionDates() error {
 	dobIdx := 3
 	breedIdx := 5
 	sexIdx := 10
+	firstSetIdx := 25
+	secondSetIdx := 26
+	thirdSetIdx := 27
+	rabiesIdx := 28
+	spayNeuterDateIdx := 29
+	spayNeuterStatusIdx := 30
+	microchipIdIdx := 12
+	microchipCompanyIdx := 13
 	statusIdx := 37
 	dateIdx := 39
-	spayNeuterDateIdx := 29
-	microchipIdIdx := 12
-
-	microchipCompanyIdx := 13
 	intakeDateIdx := 1 // NT-Date column
 
 	countUpdated := 0
@@ -991,19 +995,19 @@ func (m PetModel) SeedAdoptionDates() error {
 		}
 		physicalUpdateJSON, _ := json.Marshal(physicalUpdateMap)
 
-		// 2.5 Prepare Medical Update (Microchip)
+		// Prepare medical update object
 		medicalUpdateMap := map[string]interface{}{}
+
+		// 1. Process Microchip
+		microchipMap := map[string]interface{}{}
 		microchipId := strings.TrimSpace(row[microchipIdIdx])
 		microchipCompany := strings.TrimSpace(row[microchipCompanyIdx])
-
-		microchipMap := map[string]interface{}{}
 
 		if microchipId != "" {
 			microchipMap["microchipID"] = microchipId
 			medicalUpdateMap["microchipped"] = true
 		} else {
 			microchipMap["microchipID"] = nil
-			// medicalUpdateMap["microchipped"] = false
 		}
 
 		if microchipCompany != "" {
@@ -1011,35 +1015,53 @@ func (m PetModel) SeedAdoptionDates() error {
 		} else {
 			microchipMap["microchipCompany"] = nil
 		}
-
 		medicalUpdateMap["microchip"] = microchipMap
 
-		// 2.6 Prepare Medical Update (Spay/Neuter)
+		// 2. Process Spay/Neuter
 		spayDatePtr := parseToISO(row[spayNeuterDateIdx])
+		spayStatus := strings.ToLower(strings.TrimSpace(row[spayNeuterStatusIdx]))
+
 		if spayDatePtr != nil {
-			medicalUpdateMap["spayedOrNeutered"] = true
 			medicalUpdateMap["spayedOrNeuteredDate"] = *spayDatePtr
+			medicalUpdateMap["spayedOrNeutered"] = true
+		} else if spayStatus == "true" || spayStatus == "yes" {
+			medicalUpdateMap["spayedOrNeutered"] = true
+			medicalUpdateMap["spayedOrNeuteredDate"] = nil
 		} else {
 			medicalUpdateMap["spayedOrNeutered"] = false
 			medicalUpdateMap["spayedOrNeuteredDate"] = nil
 		}
 
+		// 3. Process Vaccinations (Feline Distemper / FVRCP series)
+		vaxMap := map[string]interface{}{}
+		fvrpSeries := map[string]interface{}{"isComplete": false}
+
+		vax1 := parseToISO(row[firstSetIdx])
+		if vax1 != nil {
+			fvrpSeries["round1"] = map[string]interface{}{"dateAdministered": *vax1}
+		}
+		vax2 := parseToISO(row[secondSetIdx])
+		if vax2 != nil {
+			fvrpSeries["round2"] = map[string]interface{}{"dateAdministered": *vax2}
+		}
+		vax3 := parseToISO(row[thirdSetIdx])
+		if vax3 != nil {
+			fvrpSeries["round3"] = map[string]interface{}{"dateAdministered": *vax3}
+			fvrpSeries["isComplete"] = true
+		}
+		vaxMap["felineDistemper"] = fvrpSeries
+
+		// 4. Process Rabies
+		rabiesDate := parseToISO(row[rabiesIdx])
+		if rabiesDate != nil {
+			vaxMap["rabies"] = map[string]interface{}{"dateAdministered": *rabiesDate}
+		}
+		medicalUpdateMap["vaccinations"] = vaxMap
+
 		medicalUpdateJSON, _ := json.Marshal(medicalUpdateMap)
 
-		// Prepare details update
-		// We want to merge intakeDate into existing details if possible, but simplest is to just overwrite using the same pattern as others if we want full sync.
-		// But `details` might have other stuff.
-		// The previous code had `detailsJSON` only for intake in INSERT.
-		// UPDATE didn't touch details except passing it?
-		// Wait, UPDATE query line 751 sets `details = $7`.
-		// But in loop, passing `row[intakeIdx]` was only for INSERT previously (lines 781-782, 796).
-		// NOW: We want to update details even for existing pets.
-
+		// 5. Prepare Intake/Details Update
 		detailsMap := map[string]interface{}{}
-		// Logic: We don't fetch existing pet to merge details here easily (requires SELECT).
-		// We are doing a blind UPDATE.
-		// `details = details || $7` (merge) strategy is best for SQL.
-
 		if intakeDatePtr != nil {
 			detailsMap["intakeDate"] = *intakeDatePtr
 		} else {
@@ -1047,10 +1069,7 @@ func (m PetModel) SeedAdoptionDates() error {
 		}
 		detailsUpdateJSON, _ := json.Marshal(detailsMap)
 
-		// 3. Try UPDATE first
-		// We use || to merge the new payload.
-		// adoption column is replaced fully.
-		// physical, medical, details are merged.
+		// 6. Try UPDATE first (Case-insensitive name match)
 		updateQuery := `
 			UPDATE pets
 			SET adoption = $1,
@@ -1071,7 +1090,7 @@ func (m PetModel) SeedAdoptionDates() error {
 			continue
 		}
 
-		// 4. If not found, INSERT new pet
+		// 7. If not found, INSERT new pet
 		sex := strings.ToLower(strings.TrimSpace(row[sexIdx]))
 		if sex == "" {
 			sex = "unknown"
@@ -1083,11 +1102,8 @@ func (m PetModel) SeedAdoptionDates() error {
 			status = "available"
 		}
 
-		// Use the intakeDate we parsed
-		// We can reuse detailsMap
 		detailsJSON, _ := json.Marshal(detailsMap)
 
-		// Construct full physical object for new pet
 		physicalMap := map[string]interface{}{
 			"breed":       breed,
 			"dateOfBirth": nil,
@@ -1097,12 +1113,10 @@ func (m PetModel) SeedAdoptionDates() error {
 		}
 		physicalJSON, _ := json.Marshal(physicalMap)
 
-		medicalJSON, _ := json.Marshal(medicalUpdateMap) // Reuse the map we built above
+		medicalJSON, _ := json.Marshal(medicalUpdateMap)
 
 		emptyJSON := json.RawMessage("{}")
 		emptyArray := json.RawMessage("[]")
-
-		// Default settings
 		defaultSettings := map[string]interface{}{"isSpotlightFeatured": false}
 		settingsJSON, _ := json.Marshal(defaultSettings)
 

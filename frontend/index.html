@@ -10,7 +10,7 @@
       type="font/ttf"
       crossorigin
     />
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5, viewport-fit=cover" />
     <meta name="theme-color" content="#00a5ad" />
     <meta
       name="description"
@@ -28,21 +28,18 @@
         flex-direction: column;
         align-items: center;
         justify-content: center;
-        background-color: oklch(from #1f2121 98% 0.01 h);
-        transition: opacity 0.3s ease-out;
+        /* Using a clean white background to make the teal paw POP */
+        background-color: #f8f8f3; 
+        transition: opacity 0.4s ease-out;
       }
       
       #loading-screen img {
-        width: 80px;
-        height: 80px;
-        /* Using filter to colorize the SVG if it's black/monochrome, or just let it be. 
-           Theme color is #00a5ad. The user requested "match your administrative theme".
-           The background is very light. The logo should probably be visible.
-        */
-        animation: pulse 2s infinite ease-in-out;
+        width: 100px; /* Slightly larger for better visibility */
+        height: 100px;
+        animation: logo-pulse 2.5s infinite ease-in-out;
       }
 
-      @keyframes pulse {
+      @keyframes logo-pulse {
         0%, 100% { transform: scale(1); opacity: 1; }
         50% { transform: scale(1.1); opacity: 0.8; }
       }

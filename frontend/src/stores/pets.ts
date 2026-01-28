@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia'
-import { ref } from 'vue'
+import { type Ref, ref } from 'vue'
 
 import { API_ENDPOINTS } from '../constants/api'
 import type { IPet } from '../models/common'
@@ -95,22 +95,18 @@ export const usePetStore = defineStore('pets', () => {
 
   const updatePet = async (pet: IPet) => {
     // Optimistic update
-    const index = currentPets.value.findIndex((p) => p.id === pet.id)
-    if (index !== -1) {
-      currentPets.value[index] = pet
-    }
-    if (selectedPet.value?.id === pet.id) {
-       // Only update if it's the currently selected pet in detailed view
-       // But wait, selectedPet is a partial object in store definition:
-       // selectedPet: { id?: string, name?: string ... } | null
-       // So we might not need to update it fully here, or just basic info.
-       // The store typings for selectedPet are weirdly minimal compared to IPet.
-       // Let's just update currentPets for now to satisfy the list view.
+    const updateInList = (list: Ref<IPet[]>) => {
+      const idx = list.value.findIndex((p: IPet) => p.id === pet.id)
+      if (idx !== -1) {
+        list.value[idx] = { ...pet }
+      }
     }
 
-    // Sanitize payload: Remove fields that the backend does not expect in the body
-    // because DisallowUnknownFields is enabled on the server.
-    const payload = JSON.parse(JSON.stringify(pet))
+    updateInList(currentPets)
+    updateInList(adminPets)
+
+    // Sanitize payload: Remove read-only fields that the backend does not expect
+    const payload: Partial<IPet> = structuredClone(pet)
     delete payload.id
     delete payload.createdAt
     delete payload.updatedAt

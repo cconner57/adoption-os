@@ -91,7 +91,7 @@ update-be:
 	@echo "1. Pulling latest code..."
 	git pull
 	@echo "2. Building new binary..."
-	go build -o $(BINARY_NAME)-new $(BACKEND_PATH)
+	cd backend && go build -o ../$(BINARY_NAME)-new ./cmd/api
 	@echo "3. Swapping binaries..."
 	mv $(BINARY_NAME)-new $(BINARY_NAME)
 	@echo "4. Restarting server..."
@@ -107,7 +107,7 @@ deploy:
 	@make build-fe
 	@echo "frontend built."
 	@echo "Updating backend..."
-	go build -o $(BINARY_NAME)-new $(BACKEND_PATH)
+	cd backend && go build -o ../$(BINARY_NAME)-new ./cmd/api
 	mv $(BINARY_NAME)-new $(BINARY_NAME)
 	@-pkill $(BINARY_NAME) || true
 	@nohup ./$(BINARY_NAME) $(PROD_FLAGS) > server.log 2>&1 &

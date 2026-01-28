@@ -7,7 +7,7 @@ import { mapApplicationToItem } from '../pages/admin/utils'
 
 export const useApplicationsStore = defineStore('applications', () => {
   const activeTab = ref<'volunteer' | 'surrender' | 'adoption' | 'history'>('adoption')
-  const filterStatus = ref<'all' | 'pending' | 'approved' | 'denied'>('all')
+  const filterStatus = ref<'all' | 'pending' | 'adopted' | 'rejected'>('all')
   const currentYear = new Date().getFullYear()
   const selectedYear = ref(currentYear)
   const applications = ref<IApplicationItem[]>([])
@@ -22,18 +22,24 @@ export const useApplicationsStore = defineStore('applications', () => {
   const filteredApplications = computed(() => {
     return applications.value.filter((app) => {
       const typeMatch = activeTab.value === 'history' ? true : app.type === activeTab.value
-      const statusMatch = filterStatus.value === 'all' || app.status === filterStatus.value
+      const statusMatch = (() => {
+        if (filterStatus.value === 'all') return true
+        if (filterStatus.value === 'pending') return ['submitted', 'under_review', 'video_requested', 'payment_pending', 'contract_pending'].includes(app.status)
+        if (filterStatus.value === 'adopted') return app.status === 'adopted'
+        if (filterStatus.value === 'rejected') return ['rejected', 'denied'].includes(app.status) // Handle legacy denied if needed
+        return false
+      })()
       return typeMatch && statusMatch
     })
   })
 
   // Group helpers
   const pendingGroup = computed(() => {
-    return filteredApplications.value.filter(app => ['pending', 'denied', 'needs_info'].includes(app.status))
+    return filteredApplications.value.filter(app => ['submitted', 'under_review', 'video_requested', 'payment_pending', 'contract_pending'].includes(app.status))
   })
 
   const approvedGroup = computed(() => {
-    return filteredApplications.value.filter(app => app.status === 'approved')
+    return filteredApplications.value.filter(app => app.status === 'adopted')
   })
 
   const deletedGroup = computed(() => {
@@ -80,7 +86,7 @@ export const useApplicationsStore = defineStore('applications', () => {
       lastUpdated.value = Date.now()
 
       // Update App Badge
-      const pendingCount = applications.value.filter((a) => a.status === 'pending').length
+      const pendingCount = applications.value.filter((a) => ['submitted', 'under_review'].includes(a.status)).length
       if ('setAppBadge' in navigator) {
         navigator.setAppBadge(pendingCount).catch((e) => console.error('Error setting badge', e))
       }
@@ -136,7 +142,7 @@ export const useApplicationsStore = defineStore('applications', () => {
       if (res.ok) {
         app.status = status
         // Update badge after status change
-        const pendingCount = applications.value.filter((a) => a.status === 'pending').length
+        const pendingCount = applications.value.filter((a) => ['submitted', 'under_review'].includes(a.status)).length
         if ('setAppBadge' in navigator) {
           navigator.setAppBadge(pendingCount).catch((e) => console.error('Error setting badge', e))
         }

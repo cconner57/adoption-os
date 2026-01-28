@@ -166,24 +166,7 @@ async function handleSavePet(petData: Partial<IPet>) {
   }
 }
 
-async function handleQuickAdopt(pet: IPet) {
-  if (!confirm(`Mark ${pet.name} as Adopted?`)) return
 
-  // Use structuredClone to ensure we have a clean object without reactivity/proxies
-  const updatedPet = structuredClone(pet)
-
-  // Update status
-  if (!updatedPet.details) updatedPet.details = { status: 'adopted' }
-  updatedPet.details.status = 'adopted'
-
-  // Set default adoption date if missing
-  if (!updatedPet.adoption) updatedPet.adoption = {}
-  if (!updatedPet.adoption.date) {
-    updatedPet.adoption.date = new Date().toISOString().split('T')[0]
-  }
-
-  await handleSavePet(updatedPet)
-}
 
 function handleArchivePet(pet: IPet) {
   if (confirm(`Are you sure you want to archive ${pet.name}?`)) {
@@ -261,7 +244,6 @@ const statusOptions = [
       @toggle-expand="handleToggleExpand"
       @edit="handleEditPet"
       @archive="handleArchivePet"
-      @mark-adopted="handleQuickAdopt"
     />
 
     <div class="mobile-pet-list">
@@ -276,7 +258,6 @@ const statusOptions = [
           :status-filter="statusFilter"
           @edit="handleEditPet"
           @archive="handleArchivePet"
-          @mark-adopted="handleQuickAdopt"
         />
       </template>
     </div>

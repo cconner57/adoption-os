@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, ref } from 'vue'
+import { computed, ref, toRaw } from 'vue'
 
 import type { IPet } from '../../../models/common'
 import { usePetStore } from '../../../stores/pets'
@@ -21,7 +21,7 @@ const itemsPerPage = 5
 
 // --- Action Logic ---
 const actionItems = computed(() => {
-  const allPets = petStore.currentPets
+  const allPets = petStore.adminPets
   const items: { pet: IPet; type: 'spayNeuter' | 'rabies'; label: string }[] = []
 
   allPets.forEach((pet) => {
@@ -97,7 +97,7 @@ const canSave = computed(() => {
 const saveResolution = async () => {
   if (!selectedPet.value || !actionType.value || !canSave.value) return
 
-  const petToUpdate = structuredClone(selectedPet.value) as IPet
+  const petToUpdate = structuredClone(toRaw(selectedPet.value)) as IPet
 
   if (actionType.value === 'spayNeuter') {
     petToUpdate.medical.spayedOrNeutered = true // Always true if we are resolving this

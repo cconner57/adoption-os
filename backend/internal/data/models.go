@@ -12,6 +12,8 @@ type Models struct {
 	Applications  ApplicationModel
 	Marketing     MarketingModel
 	Notifications NotificationModel
+	Contracts     ContractModel
+	Invitations   InvitationModel
 }
 
 func NewModels(db *sql.DB) Models {
@@ -25,5 +27,7 @@ func NewModels(db *sql.DB) Models {
 		Applications:  ApplicationModel{DB: db},
 		Marketing:     MarketingModel{DB: db},
 		Notifications: NotificationModel{DB: db},
+		Contracts:     ContractModel{DB: db},
+		Invitations:   InvitationModel{DB: db},
 	}
 }

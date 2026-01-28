@@ -4,7 +4,7 @@ import { computed, ref, watch } from 'vue'
 import { usePermissions } from '../../../composables/usePermissions'
 import type { IVolunteer } from '../../../stores/mockVolunteerData'
 import {
-  Button,
+  EditorDrawer,
   SidebarNav,
 } from '../../common/ui'
 import AppDetailsForm from './forms/AppDetailsForm.vue'
@@ -73,68 +73,60 @@ function updateFormData(updates: Partial<IVolunteer>) {
 </script>
 
 <template>
-  <div v-if="isOpen" class="editor-overlay" @click.self="emit('close')">
-    <div class="editor-drawer">
-
-      <header class="editor-header">
-        <h2>{{ volunteer ? `Edit ${volunteer.firstName}` : 'Add New Volunteer' }}</h2>
-        <div class="header-actions">
-          <Button color="white" title="Cancel" @click="emit('close')" />
-          <Button color="green" title="Save Changes" @click="handleSave" :loading="isSaving" :disabled="!canEdit" />
-        </div>
-      </header>
-
+  <EditorDrawer
+    :is-open="isOpen"
+    :title="volunteer ? `Edit ${volunteer.firstName}` : 'Add New Volunteer'"
+    save-label="Save Changes"
+    :is-saving="isSaving"
+    :can-save="canEdit"
+    width="800px"
+    @close="emit('close')"
+    @save="handleSave"
+  >
+    <template #pre-body>
       <div class="permission-warning" v-if="!canEdit">
-         ⚠️ You do not have permission to edit this user.
+        ⚠️ You do not have permission to edit this user.
       </div>
+    </template>
+    <template #sidebar>
+      <SidebarNav
+        variant="editor"
+        :items="navItems"
+        :modelValue="activeTab"
+        @update:modelValue="(id) => (activeTab = id as string)"
+      />
+    </template>
+    <template #content>
+      <GeneralInfoForm
+        v-if="activeTab === 'general'"
+        :form-data="formData"
+        :can-edit="canEdit"
+        @update:form-data="updateFormData"
+      />
 
-      <div class="editor-body">
-        <SidebarNav
-          variant="editor"
-          :items="navItems"
-          :modelValue="activeTab"
-          @update:modelValue="(id) => (activeTab = id as string)"
-          style="
-            width: 200px;
-            background: var(--color-neutral-surface);
-            border-right: 1px solid var(--border-color);
-            padding-top: 16px;
-          "
-        />
+      <BioSkillsForm
+        v-if="activeTab === 'bio'"
+        :form-data="formData"
+        :can-edit="canEdit"
+        @update:form-data="updateFormData"
+      />
 
-        <div class="editor-content">
-          <GeneralInfoForm
-            v-if="activeTab === 'general'"
-            :form-data="formData"
-            :can-edit="canEdit"
-            @update:form-data="updateFormData"
-          />
+      <AppDetailsForm
+        v-if="activeTab === 'preferences'"
+        :form-data="formData"
+        :can-edit="canEdit"
+        @update:form-data="updateFormData"
+      />
 
-          <BioSkillsForm
-            v-if="activeTab === 'bio'"
-            :form-data="formData"
-            :can-edit="canEdit"
-            @update:form-data="updateFormData"
-          />
-
-          <AppDetailsForm
-            v-if="activeTab === 'preferences'"
-            :form-data="formData"
-            :can-edit="canEdit"
-            @update:form-data="updateFormData"
-          />
-
-          <SettingsForm
-            v-if="activeTab === 'settings'"
-            :form-data="formData"
-            :can-edit="canEdit"
-            @update:form-data="updateFormData"
-            @archive="emit('archive')"
-          />
-        </div>
-      </div>
-    </div>
-  </div>
+      <SettingsForm
+        v-if="activeTab === 'settings'"
+        :form-data="formData"
+        :can-edit="canEdit"
+        @update:form-data="updateFormData"
+        @archive="emit('archive')"
+      />
+    </template>
+  </EditorDrawer>
 </template>
 
 <style scoped>
@@ -155,64 +147,9 @@ function updateFormData(updates: Partial<IVolunteer>) {
   width: 800px;
   background: #fff;
   height: 100%;
-  box-shadow: -4px 0 24px rgb(0 0 0 / 15%);
-  display: flex;
-  flex-direction: column;
-  animation: slideIn 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
 }
 
-@keyframes slideIn {
-  from {
-    transform: translateX(100%);
-    opacity: 0;
-  }
-
-  to {
-    transform: translateX(0);
-    opacity: 1;
-  }
-}
-
-.editor-header {
-  padding: 24px 32px;
-  border-bottom: 1px solid var(--border-color);
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  background: #fff;
-}
-
-.header-left h2 {
-  font-size: 1.5rem;
-  font-weight: 700;
-  color: var(--text-primary);
-  margin-bottom: 4px;
-}
-
-.subtitle {
-  color: var(--text-secondary);
-  font-size: 0.95rem;
-}
-
-.header-actions {
-  display: flex;
-  gap: 12px;
-}
-
-.editor-body {
-  flex: 1;
-  display: flex;
-  overflow: hidden;
-  background: var(--bg-secondary);
-}
-
-.editor-content {
-  flex: 1;
-  padding: 32px;
-  overflow-y: auto;
-  background: #fff;
-  border-left: 1px solid var(--border-color);
-}
+/* Scoped styles removed as they are now handled by EditorDrawer */
 
 .permission-warning {
   background: #fefce8;

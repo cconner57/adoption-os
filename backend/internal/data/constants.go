@@ -193,7 +193,22 @@ var DogBreeds = []string{
 }
 
 // -------------------------------------------------------------------------
-//  5. HELPERS
+//  6. APPLICATIONS
+// -------------------------------------------------------------------------
+
+var ApplicationStatuses = []string{
+	"submitted",
+	"under_review",
+	"video_requested",
+	"payment_pending",
+	"contract_pending",
+	"adoption_pending",
+	"adopted",
+	"rejected",
+}
+
+// -------------------------------------------------------------------------
+//  7. HELPERS
 // -------------------------------------------------------------------------
 
 // IsPermittedValue checks if a value exists in a permitted list.

@@ -15,7 +15,6 @@ defineProps<{
 const emit = defineEmits<{
   edit: [pet: IPet]
   archive: [pet: IPet]
-  'mark-adopted': [pet: IPet]
 }>()
 
 const isExpanded = ref(false)
@@ -151,15 +150,6 @@ const isExpanded = ref(false)
           </div>
 
           <div class="card-actions">
-            <Button
-              v-if="pet.details.status === 'available'"
-              color="blue"
-              full-width
-              :onClick="() => emit('mark-adopted', pet)"
-            >
-              <Icon name="check" size="16" />
-              <span>Adopted</span>
-            </Button>
             <Button color="white" full-width :onClick="() => emit('edit', pet)">
               <Icon name="edit-2" size="16" />
               <span>Edit Pet</span>

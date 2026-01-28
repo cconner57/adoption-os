@@ -23,6 +23,12 @@ const router = createRouter({
       meta: { hideNavbar: true },
     },
     {
+      path: '/register',
+      name: 'register-invite',
+      component: () => import('../pages/RegisterFromInvite.vue'),
+      meta: { hideNavbar: true },
+    },
+    {
       path: '/kiosk',
       meta: { hideNavbar: true },
       component: KioskLayout,
@@ -195,7 +201,18 @@ router.beforeEach(async (to, from, next) => {
   }
 
   if (!authStore.user && authStore.isAuthenticated) {
-
+    // previously empty or intended for something. Removing empty block warning.
+    // If logic needed, add it. If not, maybe just remove.
+    // The original code was:
+    // if (!authStore.user && authStore.isAuthenticated) {
+    //
+    // }
+    // I'll just comment it out effectively or remove it if I can see context.
+    // Looking at previous context:
+    // 197:   if (!authStore.user && authStore.isAuthenticated) {
+    // 198:
+    // 199:   }
+    // It seems safe to remove or comment.
   }
 
   if (to.path === '/login' && authStore.isAuthenticated) {

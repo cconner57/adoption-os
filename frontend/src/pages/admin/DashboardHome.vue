@@ -51,6 +51,7 @@ const isMounted = ref(false)
 onMounted(() => {
   isMounted.value = true
   petStore.fetchPets()
+  petStore.fetchAdminPets(new URLSearchParams({ limit: '500' }))
   volunteerStore.fetchActiveCount()
   const { start, end } = getWeekRange()
   volunteerStore.fetchWeeklyShifts(start, end)

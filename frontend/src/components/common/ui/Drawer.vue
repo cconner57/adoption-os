@@ -1,12 +1,20 @@
 <script setup lang="ts">
-import { onUnmounted, watch } from 'vue'
+import { computed, onMounted,onUnmounted, ref, watch } from 'vue'
 
 import Icon from './Icon.vue'
 
-const props = defineProps<{
-  isOpen: boolean
-  title: string
-}>()
+const props = withDefaults(
+  defineProps<{
+    isOpen: boolean
+    title: string
+    placement?: 'right' | 'left' | 'bottom'
+    mobilePlacement?: 'right' | 'left' | 'bottom'
+  }>(),
+  {
+    placement: 'right',
+    mobilePlacement: 'bottom',
+  }
+)
 
 const emit = defineEmits<{
   close: []
@@ -28,6 +36,43 @@ watch(
 onUnmounted(() => {
   document.body.style.overflow = ''
 })
+
+// Window resizing logic for responsive placement
+const windowWidth = ref(typeof window !== 'undefined' ? window.innerWidth : 1024)
+
+function onResize() {
+  windowWidth.value = window.innerWidth
+}
+
+onMounted(() => {
+  if (typeof window !== 'undefined') {
+    window.addEventListener('resize', onResize)
+  }
+})
+
+onUnmounted(() => {
+  if (typeof window !== 'undefined') {
+    window.removeEventListener('resize', onResize)
+  }
+})
+
+const effectivePlacement = computed(() => {
+  if (windowWidth.value <= 600) {
+    return props.mobilePlacement
+  }
+  return props.placement
+})
+
+const transitionName = computed(() => {
+  switch (effectivePlacement.value) {
+    case 'bottom':
+      return 'slide-bottom'
+    case 'left':
+      return 'slide-left'
+    default:
+      return 'slide-right'
+  }
+})
 </script>
 
 <template>
@@ -38,8 +83,12 @@ onUnmounted(() => {
     </Transition>
 
     <!-- Drawer Content -->
-    <Transition name="slide">
-      <div v-if="isOpen" class="drawer-panel">
+    <Transition :name="transitionName">
+      <div
+        v-if="isOpen"
+        class="drawer-panel"
+        :class="[`placement-${effectivePlacement}`]"
+      >
         <header class="drawer-header">
           <h3>{{ title }}</h3>
           <button class="close-btn" @click="emit('close')" aria-label="Close drawer">
@@ -70,22 +119,43 @@ onUnmounted(() => {
 
 .drawer-panel {
   position: fixed;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  width: 100%;
-  max-width: 400px;
   background: var(--text-inverse);
   box-shadow: -4px 0 24px rgb(0 0 0 / 15%);
   z-index: 9999;
   display: flex;
   flex-direction: column;
-  border-left: 1px solid var(--border-color);
+}
 
-  @media (width <= 600px) {
-    max-width: 100%;
-    border-left: none;
-  }
+/* Right Placement (Default Desktop) */
+.drawer-panel.placement-right {
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: 100%;
+  max-width: 400px;
+  border-left: 1px solid var(--border-color);
+}
+
+/* Left Placement */
+.drawer-panel.placement-left {
+  top: 0;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  max-width: 400px;
+  border-right: 1px solid var(--border-color);
+}
+
+/* Bottom Placement (Mobile Sheet) */
+.drawer-panel.placement-bottom {
+  inset: auto 0 0 0; /* Override top */
+  width: 100%;
+  max-width: 100%;
+  height: 90vh; /* 90% of screen */
+  border-top-left-radius: 20px;
+  border-top-right-radius: 20px;
+  border-top: 1px solid var(--border-color);
+  box-shadow: 0 -4px 24px rgb(0 0 0 / 15%);
 }
 
 .drawer-header {
@@ -148,13 +218,36 @@ onUnmounted(() => {
   opacity: 0;
 }
 
-.slide-enter-active,
-.slide-leave-active {
+/* Slide Right */
+.slide-right-enter-active,
+.slide-right-leave-active {
   transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-.slide-enter-from,
-.slide-leave-to {
+.slide-right-enter-from,
+.slide-right-leave-to {
   transform: translateX(100%);
+}
+
+/* Slide Left */
+.slide-left-enter-active,
+.slide-left-leave-active {
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.slide-left-enter-from,
+.slide-left-leave-to {
+  transform: translateX(-100%);
+}
+
+/* Slide Bottom */
+.slide-bottom-enter-active,
+.slide-bottom-leave-active {
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.slide-bottom-enter-from,
+.slide-bottom-leave-to {
+  transform: translateY(100%);
 }
 </style>

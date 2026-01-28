@@ -13,7 +13,6 @@ defineEmits<{
   toggleExpand: [pet: IPet]
   edit: [pet: IPet]
   archive: [pet: IPet]
-  markAdopted: [pet: IPet]
 }>()
 </script>
 
@@ -49,7 +48,6 @@ defineEmits<{
             @toggle-expand="$emit('toggleExpand', pet)"
             @edit="$emit('edit', pet)"
             @archive="$emit('archive', pet)"
-            @mark-adopted="$emit('markAdopted', pet)"
           />
         </template>
       </tbody>

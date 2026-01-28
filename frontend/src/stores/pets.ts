@@ -108,13 +108,21 @@ export const usePetStore = defineStore('pets', () => {
        // Let's just update currentPets for now to satisfy the list view.
     }
 
+    // Sanitize payload: Remove fields that the backend does not expect in the body
+    // because DisallowUnknownFields is enabled on the server.
+    const payload = JSON.parse(JSON.stringify(pet))
+    delete payload.id
+    delete payload.createdAt
+    delete payload.updatedAt
+
     try {
       const response = await fetch(`${API_ENDPOINTS.PETS}/${pet.id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
+          Authorization: `Bearer ${localStorage.getItem('token')}`,
         },
-        body: JSON.stringify(pet),
+        body: JSON.stringify(payload),
       })
 
       if (!response.ok) throw new Error('Failed to update pet')

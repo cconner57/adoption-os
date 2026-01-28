@@ -97,7 +97,22 @@ const userInitials = computed(() => {
 
     <div class="main-content">
       <header class="top-bar">
-        <button class="menu-toggle" @click="toggleMobileMenu">☰</button>
+        <button class="menu-toggle" @click="toggleMobileMenu" aria-label="Open menu">
+          <svg
+            width="28"
+            height="28"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-linecap="round"
+            stroke-width="2.2"
+            aria-hidden="true"
+          >
+            <line x1="3" y1="6" x2="21" y2="6" />
+            <line x1="3" y1="12" x2="21" y2="12" />
+            <line x1="3" y1="18" x2="21" y2="18" />
+          </svg>
+        </button>
         <div id="mobile-header-target"></div>
       </header>
 
@@ -270,7 +285,6 @@ const userInitials = computed(() => {
   display: none;
   background: none;
   border: none;
-  font-size: 1.5rem;
   cursor: pointer;
   color: var(--text-primary);
   padding: 4px;

@@ -4,14 +4,31 @@ export const formatDate = (dateStr: string) => {
   return formatGlobalDate(dateStr)
 }
 
+export const formatKey = (key: string) => {
+  const withSpaces = key.replace(/([a-z])([A-Z])/g, '$1 $2').replace(/_/g, ' ')
+  return withSpaces
+    .split(' ')
+    .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
+    .join(' ')
+}
+
 export const getStatusColor = (status: string) => {
   switch (status) {
-    case 'approved':
+    case 'adopted':
+    case 'video_approved': // legacy/mapped
       return 'green'
-    case 'denied':
+    case 'rejected':
+    case 'denied': // legacy
       return 'red'
-    case 'needs_info':
+    case 'under_review':
+    case 'needs_info': // legacy
       return 'orange'
+    case 'video_requested':
+      return 'blue'
+    case 'payment_pending':
+      return 'purple'
+    case 'contract_pending':
+      return 'teal' // or cyan
     case 'autodeleted':
       return 'red'
     default:
@@ -21,16 +38,24 @@ export const getStatusColor = (status: string) => {
 
 export const getStatusText = (status: string) => {
   switch (status) {
-    case 'approved':
-      return 'Approved'
-    case 'denied':
-      return 'Denied'
-    case 'needs_info':
-      return 'Needs Info'
+    case 'adopted':
+      return 'Adopted'
+    case 'rejected':
+      return 'Rejected'
+    case 'under_review':
+      return 'Under Review'
+    case 'video_requested':
+      return 'Video Requested'
+    case 'payment_pending':
+      return 'Payment Pending'
+    case 'contract_pending':
+      return 'Contract Pending'
     case 'autodeleted':
       return 'Auto-Deleted'
+    case 'submitted':
+      return 'Submitted'
     default:
-      return 'Pending'
+      return formatKey(status) // Fallback for legacy "approved", "pending" etc if not mapped
   }
 }
 
@@ -42,13 +67,7 @@ export const getDaysPending = (dateStr: string) => {
   return Math.ceil(diffTime / (1000 * 60 * 60 * 24))
 }
 
-export const formatKey = (key: string) => {
-  const withSpaces = key.replace(/([a-z])([A-Z])/g, '$1 $2').replace(/_/g, ' ')
-  return withSpaces
-    .split(' ')
-    .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
-    .join(' ')
-}
+
 
 export const getSignatureSrc = (data: string) => {
   if (!data) return ''
@@ -60,9 +79,21 @@ export const getSignatureSrc = (data: string) => {
   return `data:image/png;base64,${data}`
 }
 
+interface PetLike {
+  name?: string
+  Name?: string
+  speciesBreedSize?: string
+  SpeciesBreedSize?: string
+  species?: string
+  Species?: string
+  age?: string | number
+  Age?: string | number
+}
+
 const formatPetObject = (val: unknown): string => {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const v = val as any
+  if (typeof val !== 'object' || val === null) return ''
+
+  const v = val as PetLike
   const name = v.name || v.Name
   const breed = v.speciesBreedSize || v.SpeciesBreedSize || v.species || v.Species
   const age = v.age || v.Age

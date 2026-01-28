@@ -7,7 +7,16 @@ import Button from '../../common/ui/Button.vue'
 export interface IApplicationItem {
   id: string
   type: string
-  status: 'pending' | 'approved' | 'denied' | 'needs_info' | 'autodeleted' | 'all' | 'video_approved'
+  status:
+    | 'submitted'
+    | 'under_review'
+    | 'video_requested'
+    | 'payment_pending'
+    | 'contract_pending'
+    | 'adopted'
+    | 'rejected'
+    | 'autodeleted'
+    | 'all'
   date: string
   applicantName: string
   email: string
@@ -55,7 +64,7 @@ const displayFields = computed(() => {
   <div
     class="app-card"
     :class="{
-      unread: app.status === 'pending',
+      unread: app.status === 'submitted',
       expanded: expanded,
       'no-action': app.status === 'autodeleted'
     }"
@@ -92,45 +101,86 @@ const displayFields = computed(() => {
 
       <div class="action-bar">
         <div class="action-group left">
-          <!-- Pending State Actions -->
-          <template v-if="app.status === 'pending'">
+          <!-- Submitted State Actions -->
+          <template v-if="app.status === 'submitted'">
             <Button
-              title="Approve"
+              title="Start Review"
               size="small"
               variant="primary"
               theme="primary"
-              :onClick="() => $emit('update-status', app, 'approved')"
+              :onClick="() => $emit('update-status', app, 'under_review')"
             />
             <Button
               title="Deny"
               size="small"
               variant="secondary"
               theme="danger"
-              :onClick="() => $emit('update-status', app, 'denied')"
+              :onClick="() => $emit('update-status', app, 'rejected')"
             />
           </template>
 
-          <!-- Approved State Actions (Video Tour - Adoption Only) -->
-          <template v-if="app.status === 'approved' && app.type === 'adoption'">
-            <Button
-              title="Confirm Video Tour"
+          <!-- Under Review Actions -->
+          <template v-if="app.status === 'under_review'">
+             <Button
+              title="Request Video Tour"
               size="small"
               variant="primary"
               theme="primary"
-              :onClick="() => $emit('update-status', app, 'video_approved')"
+              :onClick="() => $emit('update-status', app, 'video_requested')"
             />
             <Button
-              title="Reject Video Tour"
+              title="Reject"
               size="small"
               variant="secondary"
               theme="danger"
-              :onClick="() => $emit('update-status', app, 'denied')"
+              :onClick="() => $emit('update-status', app, 'rejected')"
             />
           </template>
 
-          <!-- Video Approved State -->
-          <template v-if="app.status === 'video_approved'">
-            <span class="text-sm text-green-600 font-medium px-2">✓ Video Verified</span>
+          <!-- Video Requested State -->
+           <template v-if="app.status === 'video_requested'">
+            <span class="text-sm text-blue-600 font-medium px-2">Waiting for Video via Text</span>
+             <Button
+              title="Approve Video"
+              size="small"
+              variant="primary"
+              theme="primary"
+              :onClick="() => $emit('update-status', app, 'payment_pending')"
+            />
+            <Button
+              title="Deny Video"
+              size="small"
+              variant="secondary"
+              theme="danger"
+              :onClick="() => $emit('update-status', app, 'rejected')"
+            />
+          </template>
+
+          <!-- Payment Pending State -->
+          <template v-if="app.status === 'payment_pending'">
+             <Button
+              title="Mark Paid"
+              size="small"
+              variant="primary"
+              theme="primary"
+              :onClick="() => $emit('update-status', app, 'contract_pending')"
+            />
+          </template>
+
+          <!-- Contract Pending State -->
+          <template v-if="app.status === 'contract_pending'">
+             <Button
+              title="Finalize Adoption"
+              size="small"
+              variant="primary"
+              theme="primary"
+              :onClick="() => $emit('update-status', app, 'adopted')"
+            />
+          </template>
+
+          <!-- Adopted State -->
+          <template v-if="app.status === 'adopted'">
+            <span class="text-sm text-green-600 font-medium px-2">✓ Adopted</span>
           </template>
         </div>
 
@@ -153,7 +203,7 @@ const displayFields = computed(() => {
       </div>
 
       <div
-        v-if="app.status === 'pending' && getDaysPending(app.date) > 5"
+        v-if="app.status === 'submitted' && getDaysPending(app.date) > 5"
         class="mt-4 p-3 bg-red-50 border border-red-200 rounded-md text-sm text-red-700 flex items-center gap-2"
         style="margin-bottom: 20px"
       >
@@ -162,7 +212,7 @@ const displayFields = computed(() => {
       </div>
 
       <div
-        v-if="app.status === 'denied'"
+        v-if="app.status === 'rejected'"
         class="mt-4 p-3 bg-red-50 border border-red-200 rounded-md text-sm text-red-700 flex items-center gap-2"
         style="margin-bottom: 20px"
       >

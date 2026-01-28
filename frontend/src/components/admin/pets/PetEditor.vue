@@ -3,7 +3,7 @@
 import { ref, watch } from 'vue'
 import type { IPet, TEnvironment, TPetStatus, TSpecies } from '../../../models/common'
 import type { TPetBreed } from '../../../constants/breeds'
-import { SidebarNav, Button } from '../../common/ui'
+import { EditorDrawer, SidebarNav } from '../../common/ui'
 import { useSettingsStore } from '../../../stores/settings'
 import PetEditorBasic from './editor/PetEditorBasic.vue'
 import PetEditorPhysical from './editor/PetEditorPhysical.vue'
@@ -271,188 +271,47 @@ const tabs = [
 </script>
 
 <template>
-  <div class="pet-editor-overlay" :class="{ open: isOpen }" @click.self="handleClose">
-    <div class="pet-editor-drawer">
-      <div class="drawer-header">
-        <h2>{{ pet ? `Edit ${pet.name}` : 'Add New Pet' }}</h2>
-        <div class="header-actions">
-          <Button color="white" title="Cancel" @click="handleClose" />
-          <Button color="green" title="Save Pet" @click="handleSave" />
-        </div>
+  <EditorDrawer
+    :is-open="isOpen"
+    :title="pet ? `Edit ${pet.name}` : 'Add New Pet'"
+    save-label="Save Pet"
+    :is-saving="false"
+    width="900px"
+    @close="handleClose"
+    @save="handleSave"
+  >
+    <template #sidebar>
+      <SidebarNav :items="tabs" v-model="activeTab" variant="editor" />
+    </template>
+    <template #content>
+      <div v-if="formData">
+        <form @submit.prevent>
+          <PetEditorBasic
+            v-if="activeTab === 'basic'"
+            v-model="formData"
+            :available-pets="availablePets"
+          />
+          <PetEditorPhysical v-if="activeTab === 'physical'" v-model="formData" />
+          <PetEditorBehavior
+            v-if="activeTab === 'behavior'"
+            v-model="formData"
+            :available-pets="availablePets"
+          />
+          <PetEditorMedical v-if="activeTab === 'medical'" v-model="formData" />
+          <PetEditorStatus v-if="activeTab === 'status'" v-model="formData" />
+          <PetEditorStory v-if="activeTab === 'descriptions'" v-model="formData" />
+          <PetEditorPhotos v-if="activeTab === 'photos'" v-model="formData" />
+          <PetEditorSettings
+            v-if="activeTab === 'settings'"
+            v-model="formData"
+            @archive="emit('archive', pet)"
+          />
+        </form>
       </div>
-
-      <div class="drawer-body">
-        <SidebarNav :items="tabs" v-model="activeTab" variant="editor" class="editor-sidebar" />
-
-        <div class="tab-content" v-if="formData">
-          <form @submit.prevent>
-            <PetEditorBasic
-              v-if="activeTab === 'basic'"
-              v-model="formData"
-              :available-pets="availablePets"
-            />
-            <PetEditorPhysical v-if="activeTab === 'physical'" v-model="formData" />
-            <PetEditorBehavior
-              v-if="activeTab === 'behavior'"
-              v-model="formData"
-              :available-pets="availablePets"
-            />
-            <PetEditorMedical v-if="activeTab === 'medical'" v-model="formData" />
-            <PetEditorStatus v-if="activeTab === 'status'" v-model="formData" />
-            <PetEditorStory v-if="activeTab === 'descriptions'" v-model="formData" />
-            <PetEditorPhotos v-if="activeTab === 'photos'" v-model="formData" />
-            <PetEditorSettings
-              v-if="activeTab === 'settings'"
-              v-model="formData"
-              @archive="emit('archive', pet)"
-            />
-          </form>
-        </div>
-      </div>
-    </div>
-  </div>
+    </template>
+  </EditorDrawer>
 </template>
 
 <style scoped>
-.pet-editor-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  background: rgb(0 0 0 / 50%);
-  display: flex;
-  justify-content: flex-end;
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity 0.3s;
-  z-index: 1000;
-}
-
-.pet-editor-overlay.open {
-  opacity: 1;
-  pointer-events: auto;
-}
-
-.pet-editor-drawer {
-  width: 900px;
-  max-width: 95vw;
-  background: #fff;
-  height: 100%;
-  box-shadow: -4px 0 20px rgb(0 0 0 / 10%);
-  display: flex;
-  flex-direction: column;
-  transform: translateX(100%);
-  transition: transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
-}
-
-.pet-editor-overlay.open .pet-editor-drawer {
-  transform: translateX(0);
-}
-
-.drawer-header {
-  padding: 24px 32px;
-  border-bottom: 1px solid var(--border-color);
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  background: #fff;
-  z-index: 10;
-}
-
-.drawer-header h2 {
-  font-size: 1.5rem;
-  font-weight: 700;
-  margin: 0;
-  color: var(--text-primary);
-}
-
-.header-actions {
-  display: flex;
-  gap: 12px;
-}
-
-.drawer-body {
-  flex: 1;
-  overflow: hidden;
-  display: flex;
-  flex-direction: row;
-}
-
-.editor-sidebar {
-  width: 200px;
-  background: var(--color-neutral-surface);
-  border-right: 1px solid var(--border-color);
-  padding-top: 16px;
-  flex-shrink: 0;
-}
-
-.tab-content {
-  flex: 1;
-  padding: 32px;
-  overflow-y: auto;
-  background: var(--text-inverse);
-}
-
-.sidebar-nav::-webkit-scrollbar,
-.tab-content::-webkit-scrollbar {
-  width: 6px;
-}
-
-.sidebar-nav::-webkit-scrollbar-thumb,
-.tab-content::-webkit-scrollbar-thumb {
-  background-color: var(--border-color);
-  border-radius: 3px;
-}
-
-@media (width <= 768px) {
-  .pet-editor-drawer {
-    width: 100vw;
-    max-width: 100vw;
-  }
-
-  .drawer-header {
-    padding: 16px;
-  }
-
-  .drawer-body {
-    flex-direction: column;
-  }
-
-  .editor-sidebar {
-    width: 100%;
-    height: auto;
-    border-right: none;
-    border-bottom: 1px solid var(--border-color);
-    padding: 0;
-    display: flex;
-    flex-direction: row;
-    overflow-x: auto;
-    white-space: nowrap;
-    gap: 0;
-    background: #fff;
-  }
-
-  :deep(.nav-item) {
-    flex: 0 0 auto;
-    width: auto;
-    margin: 0;
-    border-left: none;
-    border-bottom: 3px solid transparent;
-    padding: 12px 16px;
-    justify-content: center;
-    border-radius: 0;
-  }
-
-  :deep(.nav-item.active) {
-    background: transparent;
-    border-left: none;
-    border-bottom-color: var(--color-secondary);
-    color: var(--color-secondary);
-  }
-
-  .tab-content {
-    padding: 16px;
-  }
-}
+/* Scoped styles removed as they are now handled by EditorDrawer */
 </style>

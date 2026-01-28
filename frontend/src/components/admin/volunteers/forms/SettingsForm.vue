@@ -1,5 +1,6 @@
-import { Button, Select } from '../../../common/ui'
+<script setup lang="ts">
 import type { IVolunteer } from '../../../../stores/mockVolunteerData'
+import { Button, Select } from '../../../common/ui'
 
 defineProps<{
   formData: Partial<IVolunteer>

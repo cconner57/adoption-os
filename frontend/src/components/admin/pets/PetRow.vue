@@ -18,7 +18,6 @@ const emit = defineEmits<{
   'toggle-expand': [pet: IPet]
   edit: [pet: IPet]
   archive: [pet: IPet]
-  'mark-adopted': [pet: IPet]
 }>()
 
 function getStatusColor(status: string) {
@@ -193,19 +192,8 @@ const colCount = computed(() => {
       </span>
     </td>
 
-    <td v-if="visibleColumns.actions" align="right">
+    <td v-if="visibleColumns.actions">
       <div class="row-actions" @click.stop>
-        <Button
-          v-if="pet.details.status === 'available'"
-          size="small"
-          variant="secondary"
-          color="green"
-          title="Adopt"
-          class="row-btn"
-          @click="emit('mark-adopted', pet)"
-        >
-          <span>Adopted</span>
-        </Button>
         <Button
           size="small"
           variant="secondary"
@@ -618,7 +606,7 @@ td {
   padding: 2px 6px;
   border-radius: 4px;
   background: #f1f5f9;
-  color: #94a3b8;
+  color: #475569;
   border: 1px solid #e2e8f0;
 }
 

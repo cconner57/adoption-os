@@ -193,3 +193,23 @@ func (app *application) requireLogin(next http.Handler) http.Handler {
 		next.ServeHTTP(w, r)
 	})
 }
+
+// Admin Authorization Middleware
+func (app *application) requireAdmin(next http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		userID := app.contextGetUser(r)
+
+		user, err := app.models.Users.Get(userID)
+		if err != nil {
+			app.serverErrorResponse(w, r, err)
+			return
+		}
+
+		if user.Role != "ADMIN" && user.Role != "SUPER_ADMIN" {
+			app.JSONError(w, http.StatusForbidden, "Insufficient permissions")
+			return
+		}
+
+		next.ServeHTTP(w, r)
+	})
+}

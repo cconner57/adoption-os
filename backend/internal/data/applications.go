@@ -368,4 +368,5 @@ func (m ApplicationModel) Update(app *Application) error {
 func ValidateApplication(v *validator.Validator, app *Application) {
 	v.Check(app.Type != "", "type", "must be provided")
 	v.Check(app.Status != "", "status", "must be provided")
+	v.Check(IsPermittedValue(app.Status, ApplicationStatuses...), "status", "must be a valid status")
 }

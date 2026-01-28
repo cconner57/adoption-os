@@ -56,11 +56,16 @@ func (app *application) routes() http.Handler {
 	mux.Handle("PUT /v1/marketing/campaigns/{id}", app.requireLogin(http.HandlerFunc(app.updateCampaignHandler)))
 
 	// User Authentication
-	mux.HandleFunc("POST /api/users", app.registerUserHandler)
+	mux.HandleFunc("POST /api/register", app.registerUserHandler)
+	mux.HandleFunc("GET /api/validate-invite/{token}", app.validateInviteHandler)
+	mux.Handle("POST /api/contracts/generate", app.requireLogin(app.requireAdmin(http.HandlerFunc(app.generateContractHandler))))
+	mux.HandleFunc("POST /api/contracts/submit", app.submitContractHandler)
+	mux.HandleFunc("POST /api/users", app.registerUserHandler) // Keep existing alias if needed, or remove. keeping for safety.
 	mux.HandleFunc("POST /api/login", app.loginUserHandler)
 	mux.HandleFunc("POST /api/users/logout", app.logoutUserHandler)
 	mux.Handle("GET /api/users/me", app.requireLogin(http.HandlerFunc(app.profileUserHandler)))
 	mux.Handle("PUT /api/users", app.requireLogin(http.HandlerFunc(app.updateUserHandler)))
+	mux.Handle("POST /api/admin/invite", app.requireLogin(app.requireAdmin(http.HandlerFunc(app.inviteUserHandler))))
 
 	// Static Files (Uploads)
 	// fileServer := http.FileServer(http.Dir("./uploads"))
